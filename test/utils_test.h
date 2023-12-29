@@ -1,1 +1,1 @@
-void utils_test(void);
+int utils_test();

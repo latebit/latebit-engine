@@ -1,4 +1,9 @@
+#ifndef __MANAGER_H__
+#define __MANAGER_H__
+
 #include <string>
+
+#include "Manager.h"
 
 namespace df {
 class Manager {
@@ -20,3 +25,5 @@ class Manager {
   virtual void shutDown();
 };
 };  // namespace df
+
+#endif

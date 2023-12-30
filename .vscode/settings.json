@@ -56,6 +56,7 @@
     "ratio": "cpp",
     "semaphore": "cpp",
     "stop_token": "cpp",
-    "thread": "cpp"
+    "thread": "cpp",
+    "valarray": "cpp"
   }
 }

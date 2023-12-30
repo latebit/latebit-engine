@@ -20,21 +20,24 @@ int assert(const std::string name, bool assertion, const std::string message) {
 int assert_string(std::string name, std::string got, std::string want) {
   const bool assertion = got.compare(want) == 0;
 
-  std::ostringstream message;
-  message << "wanted \'" << want << "\' got \'" << got << "\'";
-  std::string result_message = message.str();
+  std::string message = "wanted '" + want + "' got '" + got + "'";
 
-  return assert(name, assertion, result_message);
+  return assert(name, assertion, message);
 }
 
 int assert_regex(std::string name, std::string want, std::string pattern) {
   std::regex expression(pattern);
   const bool assertion = std::regex_match(want, expression);
 
-  std::ostringstream message;
-  message << "string \'" << want << "\' doesn't match pattern \'" << pattern
-          << "\'";
-  std::string result_message = message.str();
+  std::string message =
+      "string '" + want + "' doesn't match pattern  '" + pattern + "'";
 
-  return assert(name, assertion, result_message);
+  return assert(name, assertion, message);
+}
+
+int assert_float(std::string name, float got, float want) {
+  std::string message =
+      "wanted '" + std::to_string(want) + "' got '" + std::to_string(got) + "'";
+
+  return assert(name, got == want, message);
 }

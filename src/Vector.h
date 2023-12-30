@@ -1,3 +1,6 @@
+#ifndef __VECTOR_H__
+#define __VECTOR_H__
+
 #include <string>
 
 namespace df {
@@ -35,3 +38,4 @@ class Vector {
 };
 
 }  // namespace df
+#endif

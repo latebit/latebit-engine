@@ -1,0 +1,1 @@
+int Object_test();

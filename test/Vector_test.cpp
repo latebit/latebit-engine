@@ -5,11 +5,6 @@
 
 #include "test.h"
 
-int assert_vector(std::string name, df::Vector *got, df::Vector *want) {
-  return assert(name, *got == *want,
-                "wanted " + want->toString() + " got " + got->toString());
-}
-
 int Vector_getMagnitude_test() {
   df::Vector *p_null = new df::Vector();
   df::Vector *p_unary = new df::Vector(1);

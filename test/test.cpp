@@ -4,6 +4,7 @@
 #include <regex>
 #include <sstream>
 
+#include "../src/Vector.h"
 #include "test.h"
 
 int assert(const std::string name, bool assertion, const std::string message) {
@@ -40,4 +41,16 @@ int assert_float(std::string name, float got, float want) {
       "wanted '" + std::to_string(want) + "' got '" + std::to_string(got) + "'";
 
   return assert(name, got == want, message);
+}
+
+int assert_int(std::string name, int got, int want) {
+  std::string message =
+      "wanted '" + std::to_string(want) + "' got '" + std::to_string(got) + "'";
+
+  return assert(name, got == want, message);
+}
+
+int assert_vector(std::string name, df::Vector *p_got, df::Vector *p_want) {
+  return assert(name, *p_got == *p_want,
+                "wanted " + p_want->toString() + " got " + p_got->toString());
 }

@@ -1,3 +1,6 @@
+#ifndef __EVENT_STEP_H__
+#define __EVENT_STEP_H__
+
 #include "Event.h"
 
 namespace df {
@@ -15,3 +18,5 @@ class EventStep : public Event {
   int getStepCount();
 };
 }  // namespace df
+
+#endif

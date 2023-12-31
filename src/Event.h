@@ -1,3 +1,5 @@
+#ifndef __EVENT_H__
+#define __EVENT_H__
 #include <string>
 namespace df {
 const std::string UNDEFINED_EVENT = "df::undefined";
@@ -13,3 +15,4 @@ class Event {
   std::string getType() const;
 };
 }  // namespace df
+#endif

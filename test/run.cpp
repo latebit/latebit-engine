@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "Event_test.h"
 #include "ObjectListIterator_test.h"
 #include "ObjectList_test.h"
 #include "Object_test.h"
@@ -19,6 +20,8 @@ int main() {
   result += ObjectList_test();
   std::cout << "[[[ ObjectListIterator_test ]]]" << std::endl;
   result += ObjectListIterator_test();
+  std::cout << "[[[ Event_test ]]]" << std::endl;
+  result += Event_test();
 
   if (result == 0) {
     std::cout << "Success! All " << getAssertions()

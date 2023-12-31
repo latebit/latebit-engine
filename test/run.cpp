@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "EventStep_test.h"
 #include "Event_test.h"
 #include "ObjectListIterator_test.h"
 #include "ObjectList_test.h"
@@ -8,24 +9,34 @@
 #include "test.h"
 #include "utils_test.h"
 
+void suite(std::string name) { std::cout << "\n[[[ " + name + " ]]]\n\n"; }
+
 int main() {
   int result = 0;
-  std::cout << "[[[ utils_test ]]]" << std::endl;
+  suite("utils_test");
   result += utils_test();
-  std::cout << "[[[ Vector_test ]]]" << std::endl;
+
+  suite("Vector_test");
   result += Vector_test();
-  std::cout << "[[[ Object_test ]]]" << std::endl;
+
+  suite("Object_test");
   result += Object_test();
-  std::cout << "[[[ ObjectList_test ]]]" << std::endl;
+
+  suite("ObjectList_test");
   result += ObjectList_test();
-  std::cout << "[[[ ObjectListIterator_test ]]]" << std::endl;
+
+  suite("ObjectListIterator_test");
   result += ObjectListIterator_test();
-  std::cout << "[[[ Event_test ]]]" << std::endl;
+
+  suite("Event_test");
   result += Event_test();
 
+  suite("EventStep_test");
+  result += EventStep_test();
+
   if (result == 0) {
-    std::cout << "Success! All " << getAssertions()
-              << " tests passed successfully" << std::endl;
+    std::cout << "Success! All " << getAssertions() << " tests passed."
+              << std::endl;
   } else {
     printf("Failure. %d failed tests.\n", result);
   }

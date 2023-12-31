@@ -1,6 +1,9 @@
 #include "GameManager.h"
 
+#include "EventStep.h"
 #include "LogManager.h"
+#include "ObjectListIterator.h"
+#include "WorldManager.h"
 #include "utils.h"
 
 namespace df {
@@ -9,6 +12,9 @@ GameManager::GameManager() {}
 
 int GameManager::startUp(int frame_time) {
   setType("GameManager");
+  LM.startUp();
+  WM.startUp();
+
   frame_time = frame_time;
   game_over = false;
   p_clock = new Clock;
@@ -34,8 +40,16 @@ void GameManager::run() {
   while (!game_over) {
     p_clock->delta();
 
-    // Simulate work, to be replaced
-    sleep(10);
+    // Send a step event to all Objects
+    auto step = new EventStep;
+    auto objects = WM.getAllObjects();
+    auto iterator = ObjectListIterator(&objects);
+    for (iterator.first(); !iterator.isDone(); iterator.next()) {
+      iterator.currentObject()->eventHandler(step);
+    }
+
+    // Update the World
+    WM.update();
 
     loop_time = p_clock->split();
     p_clock->delta();

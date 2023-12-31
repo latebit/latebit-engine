@@ -7,7 +7,12 @@
 #include "../src/Vector.h"
 #include "test.h"
 
+int ASSERTIONS = 0;
+int getAssertions() { return ASSERTIONS; }
+
 int assert(const std::string name, bool assertion, const std::string message) {
+  ASSERTIONS++;
+
   if (!assertion) {
     std::cout << "FAIL: " << name << std::endl;
     std::cout << "      " << message << std::endl;

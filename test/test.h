@@ -5,6 +5,9 @@
 
 #include "../src/Vector.h"
 
+// Number of assertions in this run
+int getAssertions();
+
 int assert(const std::string name, bool assertion,
            const std::string message = "wanted true got false");
 int assert_string(std::string name, std::string want, std::string got);

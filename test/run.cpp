@@ -6,6 +6,7 @@
 #include "ObjectList_test.h"
 #include "Object_test.h"
 #include "Vector_test.h"
+#include "WorldManager_test.h"
 #include "test.h"
 #include "utils_test.h"
 
@@ -33,6 +34,9 @@ int main() {
 
   suite("EventStep_test");
   result += EventStep_test();
+
+  suite("WorldManager_test");
+  result += WorldManager_test();
 
   if (result == 0) {
     std::cout << "Success! All " << getAssertions() << " tests passed."

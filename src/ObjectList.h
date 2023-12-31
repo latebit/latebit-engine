@@ -1,3 +1,6 @@
+#ifndef __OBJECT_LIST_H__
+#define __OBJECT_LIST_H__
+
 #include "Object.h"
 
 namespace df {
@@ -28,3 +31,5 @@ class ObjectList {
 };
 
 }  // namespace df
+
+#endif

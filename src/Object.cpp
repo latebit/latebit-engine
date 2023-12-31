@@ -1,13 +1,16 @@
 #include "Object.h"
 
+#include "WorldManager.h"
+
 namespace df {
 
 Object::Object() {
   static int id = 0;
   setId(id++);
+  WM.insertObject(this);
 }
 
-Object::~Object() {}
+Object::~Object() { WM.removeObject(this); }
 
 void Object::setId(int id) { m_id = id; }
 

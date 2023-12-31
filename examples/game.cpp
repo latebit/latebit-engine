@@ -4,6 +4,7 @@
 #include "../src/GameManager.h"
 #include "../src/LogManager.h"
 #include "../src/Object.h"
+#include "../src/WorldManager.h"
 #include "../src/utils.h"
 
 class CustomEvent : public df::Event {
@@ -29,20 +30,7 @@ class Enemy : public df::Object {
 
 int main() {
   LM.setFlush(true);
-
-  // GM.startUp();
-  // GM.run();
-
-  Enemy *enemies[5] = {
-      new Enemy, new Enemy, new Enemy, new Enemy, new Enemy,
-  };
-
-  const df::EventStep *step = new df::EventStep;
-  const CustomEvent *custom = new CustomEvent;
-  for (int i = 0; i < 5; i++) {
-    enemies[i]->eventHandler(step);
-    enemies[i]->eventHandler(custom);
-  }
+  WM.startUp();
 
   return 0;
 }

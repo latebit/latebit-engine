@@ -20,7 +20,6 @@ int ObjectList_fullList_test() {
 
   result +=
       assert_int("errors upon adding", subject->insert(new df::Object), -1);
-  subject->remove(item);
 
   return result;
 }

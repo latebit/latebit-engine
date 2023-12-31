@@ -1,3 +1,6 @@
+#ifndef __OBJECT_H__
+#define __OBJECT_H__
+
 #include <string>
 
 #include "Vector.h"
@@ -24,3 +27,5 @@ class Object {
   Vector getPosition() const;
 };
 }  // namespace df
+
+#endif

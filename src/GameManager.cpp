@@ -41,12 +41,7 @@ void GameManager::run() {
     p_clock->delta();
 
     // Send a step event to all Objects
-    auto step = new EventStep;
-    auto objects = WM.getAllObjects();
-    auto iterator = ObjectListIterator(&objects);
-    for (iterator.first(); !iterator.isDone(); iterator.next()) {
-      iterator.currentObject()->eventHandler(step);
-    }
+    onEvent(new EventStep);
 
     // Update the World
     WM.update();

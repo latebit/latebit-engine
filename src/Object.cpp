@@ -25,4 +25,6 @@ void Object::setPosition(Vector p) { m_position = p; }
 Vector Object::getPosition() const { return m_position; }
 
 int Object::eventHandler(const Event* p_e) { return 0; }
+
+int Object::draw() { return 0; }
 }  // namespace df

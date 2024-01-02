@@ -1,5 +1,6 @@
 #include "GameManager.h"
 
+#include "DisplayManager.h"
 #include "EventStep.h"
 #include "LogManager.h"
 #include "ObjectListIterator.h"
@@ -12,15 +13,25 @@ GameManager::GameManager() {}
 
 int GameManager::startUp(int frame_time) {
   setType("GameManager");
-  LM.startUp();
-  WM.startUp();
+  if (LM.startUp() != 0) {
+    return -1;
+  }
+
+  if (WM.startUp() != 0) {
+    return -1;
+  }
+
+  if (DM.startUp() != 0) {
+    return -1;
+  }
 
   frame_time = frame_time;
   game_over = false;
   p_clock = new Clock;
   LM.writeLog("(GameManager::startUp) game_over=%b, frame_time=%d", game_over,
               frame_time);
-  return 0;
+
+  return Manager::startUp();
 }
 
 GameManager& GameManager::getInstance() {
@@ -31,6 +42,7 @@ GameManager& GameManager::getInstance() {
 void GameManager::shutDown() {
   setGameOver(true);
   LM.shutDown();
+  Manager::shutDown();
 }
 
 void GameManager::run() {
@@ -45,6 +57,8 @@ void GameManager::run() {
 
     // Update the World
     WM.update();
+    WM.draw();
+    DM.swapBuffers();
 
     loop_time = p_clock->split();
     p_clock->delta();

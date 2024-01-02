@@ -28,6 +28,7 @@ class Object {
   Vector getPosition() const;
 
   virtual int eventHandler(const Event *p_e);
+  virtual int draw();
 };
 }  // namespace df
 

@@ -1,6 +1,7 @@
 # Compiler and flags
 CXX = clang++
 CFLAGS:= $(CFLAGS) -std=c++11
+SMLFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 
 # Directories
 SRC_DIR = src
@@ -29,11 +30,11 @@ all: $(TEST_EXECUTABLE) $(GAME_EXECUTABLE)
 
 # Link object files to create the test executable
 $(TEST_EXECUTABLE): $(OBJ_FILES)
-	$(CXX) $(CFLAGS) -o $@ $(OBJ_FILES)
+	$(CXX) $(CFLAGS) $(SMLFLAGS) -o $@ $(OBJ_FILES)
 
 # Link object files to create the game executable
 $(GAME_EXECUTABLE): $(SRC_FILES:.cpp=.o) $(EXAMPLES_DIR)/game.cpp
-	$(CXX) $(CXXFLAGS) -o $@ $(SRC_FILES:.cpp=.o) $(EXAMPLES_DIR)/game.cpp
+	$(CXX) $(CXXFLAGS) $(SMLFLAGS) -o $@ $(SRC_FILES:.cpp=.o) $(EXAMPLES_DIR)/game.cpp
 
 # Run the examples
 game: $(GAME_EXECUTABLE)

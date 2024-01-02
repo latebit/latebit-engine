@@ -29,6 +29,7 @@ class WorldManager : public Manager {
 
   void update();
   int markForDelete(Object *p_o);
+  void draw();
 };
 }  // namespace df
 

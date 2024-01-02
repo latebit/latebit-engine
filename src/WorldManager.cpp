@@ -74,4 +74,13 @@ int WorldManager::markForDelete(Object* p_o) {
 
   return m_deletions.insert(p_o);
 }
+void WorldManager::draw() {
+  auto iterator = new ObjectListIterator(&m_updates);
+
+  for (iterator->first(); !iterator->isDone(); iterator->next()) {
+    auto object = iterator->currentObject();
+
+    if (object != nullptr) object->draw();
+  }
+}
 }  // namespace df

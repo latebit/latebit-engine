@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <iostream>
 
 #include "EventStep_test.h"
@@ -7,10 +8,11 @@
 #include "Object_test.h"
 #include "Vector_test.h"
 #include "WorldManager_test.h"
+#include "colors.h"
 #include "test.h"
 #include "utils_test.h"
 
-void suite(std::string name) { std::cout << "\n[[[ " + name + " ]]]\n\n"; }
+void suite(std::string name) { std::cout << yellow("\n" + name + "\n"); }
 
 int main() {
   int result = 0;
@@ -39,10 +41,13 @@ int main() {
   result += WorldManager_test();
 
   if (result == 0) {
-    std::cout << "Success! All " << getAssertions() << " tests passed."
+    std::cout << std::endl
+              << green("Success! All " + getAssertions() + " tests passed.")
               << std::endl;
   } else {
-    printf("Failure. %d failed tests.\n", result);
+    std::cout << std::endl
+              << green("Failure. " + std::to_string(result) + " failed tests.")
+              << std::endl;
   }
 
   return result;

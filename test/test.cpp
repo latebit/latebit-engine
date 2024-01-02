@@ -5,21 +5,22 @@
 #include <sstream>
 
 #include "../src/Vector.h"
+#include "colors.h"
 #include "test.h"
 
 int ASSERTIONS = 0;
-int getAssertions() { return ASSERTIONS; }
+std::string getAssertions() { return std::to_string(ASSERTIONS); }
 
 int assert(const std::string name, bool assertion, const std::string message) {
   ASSERTIONS++;
 
   if (!assertion) {
-    std::cout << "FAIL: " << name << std::endl;
+    std::cout << red("FAIL: " + name) << std::endl;
     std::cout << "      " << message << std::endl;
     return 1;
   }
 
-  std::cout << " OK : " << name << std::endl;
+  std::cout << green("PASS: " + name) << std::endl;
   return 0;
 }
 

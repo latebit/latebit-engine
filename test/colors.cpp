@@ -3,7 +3,7 @@
 #include <iostream>
 
 bool supportsEscapeSequences =
-    (std::cout << "\033[31mTest\033[0m", std::cout.flush(), true);
+    (std::cout << "\033[31m\033[0m", std::cout.flush(), true);
 
 std::string color(std::string color, std::string s) {
   if (supportsEscapeSequences) {

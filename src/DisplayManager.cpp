@@ -8,6 +8,7 @@ DisplayManager::DisplayManager() {
   m_window_horizontal_chars = WINDOW_HORIZONTAL_CHARS_DEFAULT;
   m_window_vertical_chars = WINDOW_VERTICAL_CHARS_DEFAULT;
   m_window_vertical_pixels = WINDOW_VERTICAL_PIXELS_DEFAULT;
+  m_background_color = WINDOW_BACKGROUND_COLOR_DEFAULT;
   m_p_window = NULL;
 }
 
@@ -55,7 +56,7 @@ int DisplayManager::drawCh(Vector world_pos, char ch, Color color) const {
 
   static sf::RectangleShape background;
   background.setSize(sf::Vector2f(width, height));
-  background.setFillColor(toSFColor(WINDOW_BACKGROUND_COLOR_DEFAULT));
+  background.setFillColor(toSFColor(m_background_color));
   background.setPosition(pixel_pos.getX() - width / 10,
                          pixel_pos.getY() + height / 5);
   m_p_window->draw(background);
@@ -78,6 +79,31 @@ int DisplayManager::drawCh(Vector world_pos, char ch, Color color) const {
   return 0;
 }
 
+int DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
+                               Color color) const {
+  Vector start = world_pos;
+  switch (a) {
+    case ALIGN_CENTER:
+      start.setX(world_pos.getX() - s.size() / 2);
+    case ALIGN_RIGHT:
+      start.setX(world_pos.getX() - s.size());
+    case ALIGN_LEFT:
+    default:
+      break;
+  }
+
+  for (int i = 0; i < s.size(); i++) {
+    Vector pos(start.getX() + i, start.getY());
+    if (drawCh(pos, s[i], color) != 0) {
+      return -1;
+    }
+  }
+
+  return 0;
+}
+
+void DisplayManager::setBackground(Color color) { m_background_color = color; }
+
 int DisplayManager::getHorizontal() const { return m_window_horizontal_chars; }
 
 int DisplayManager::getVertical() const { return m_window_vertical_chars; }
@@ -97,7 +123,7 @@ int DisplayManager::swapBuffers() {
   m_p_window->display();
 
   // clears second buffer
-  m_p_window->clear();
+  m_p_window->clear(toSFColor(m_background_color));
 
   return 0;
 }

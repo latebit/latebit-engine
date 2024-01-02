@@ -12,6 +12,7 @@ class Object {
   int m_id;
   std::string m_type;
   Vector m_position;
+  int m_altitude;
 
  public:
   Object();
@@ -26,6 +27,9 @@ class Object {
 
   void setPosition(Vector p);
   Vector getPosition() const;
+
+  void setAltitude(int a);
+  int getAltitude() const;
 
   virtual int eventHandler(const Event *p_e);
   virtual int draw();

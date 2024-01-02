@@ -42,12 +42,24 @@ class Enemy : public df::Object {
   int draw() { return DM.drawCh(getPosition(), '1', df::Color::RED); }
 };
 
+class Star : public df::Object {
+ public:
+  Star() {
+    setType("Star");
+    setAltitude(0);
+    setPosition(df::Vector(3, 0));
+  }
+
+  int draw() { return DM.drawCh(getPosition(), '*', df::Color::YELLOW); }
+};
+
 int main() {
   LM.setFlush(true);
 
   GM.startUp();
 
   new Enemy;
+  new Star;
 
   GM.run();
 

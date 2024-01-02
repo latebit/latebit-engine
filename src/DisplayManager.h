@@ -11,6 +11,12 @@
 
 namespace df {
 
+enum Alignment {
+  ALIGN_LEFT,
+  ALIGN_CENTER,
+  ALIGN_RIGHT,
+};
+
 const int WINDOW_HORIZONTAL_PIXELS_DEFAULT = 1024;
 const int WINDOW_VERTICAL_PIXELS_DEFAULT = 768;
 const int WINDOW_HORIZONTAL_CHARS_DEFAULT = 80;
@@ -37,6 +43,7 @@ class DisplayManager : public Manager {
   int m_window_vertical_pixels;
   int m_window_horizontal_chars;
   int m_window_vertical_chars;
+  Color m_background_color;
 
  public:
   static DisplayManager &getInstance();
@@ -46,6 +53,10 @@ class DisplayManager : public Manager {
   void shutDown() override;
 
   int drawCh(Vector world_pos, char ch, Color color) const;
+  int drawString(Vector world_pos, std::string s, Alignment a,
+                 Color color) const;
+
+  void setBackground(Color color);
 
   int getHorizontal() const;
 

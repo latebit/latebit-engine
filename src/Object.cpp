@@ -7,6 +7,9 @@ namespace df {
 Object::Object() {
   static int id = 0;
   setId(id++);
+  m_type = "Object";
+  m_position = Vector();
+  m_altitude = MAX_ALTITUDE / 2;
   WM.insertObject(this);
 }
 
@@ -23,6 +26,12 @@ std::string Object::getType() const { return m_type; }
 void Object::setPosition(Vector p) { m_position = p; }
 
 Vector Object::getPosition() const { return m_position; }
+
+void Object::setAltitude(int a) {
+  if (a < MAX_ALTITUDE && a >= 0) m_altitude = a;
+}
+
+int Object::getAltitude() const { return m_altitude; }
 
 int Object::eventHandler(const Event* p_e) { return 0; }
 

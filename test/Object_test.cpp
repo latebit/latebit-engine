@@ -21,5 +21,15 @@ int Object_test() {
   auto got = subject->getPosition();
   result += assert_vector("updates position", &got, position);
 
+  subject->setAltitude(1);
+  result += assert_int("updates altitude", subject->getAltitude(), 1);
+
+  subject->setAltitude(10);
+  result +=
+      assert_int("prevents out of bounds (max)", subject->getAltitude(), 1);
+  subject->setAltitude(-1);
+  result +=
+      assert_int("prevents out of bounds (min)", subject->getAltitude(), 1);
+
   return result;
 }

@@ -77,10 +77,12 @@ int WorldManager::markForDelete(Object* p_o) {
 void WorldManager::draw() {
   auto iterator = new ObjectListIterator(&m_updates);
 
-  for (iterator->first(); !iterator->isDone(); iterator->next()) {
-    auto object = iterator->currentObject();
+  for (int i = 0; i < MAX_ALTITUDE; i++) {
+    for (iterator->first(); !iterator->isDone(); iterator->next()) {
+      auto object = iterator->currentObject();
 
-    if (object != nullptr) object->draw();
+      if (object != nullptr && object->getAltitude() == i) object->draw();
+    }
   }
 }
 }  // namespace df

@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "../src/Clock.h"
+#include "EventCollision_test.h"
 #include "EventKeyboard_test.h"
 #include "EventStep_test.h"
 #include "Event_test.h"
@@ -58,6 +59,11 @@ int main() {
   suite("WorldManager_test");
   result += WorldManager_test();
   timing(c.delta());
+
+  suite("EventCollision_test");
+  result += EventCollision_test();
+  timing(c.delta());
+
   auto final = c.getNow();
 
   if (result == 0) {

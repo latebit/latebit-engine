@@ -1,5 +1,6 @@
 #include "WorldManager.h"
 
+#include "LogManager.h"
 #include "ObjectListIterator.h"
 
 #define WM df::WorldManager::getInstance()
@@ -17,7 +18,7 @@ int WorldManager::startUp() {
   setType("WorldManager");
   m_deletions = ObjectList();
   m_updates = ObjectList();
-
+  LM.writeLog("WorldManager::WorldManager(): Created WorldManager");
   return Manager::startUp();
 }
 

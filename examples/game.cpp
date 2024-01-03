@@ -2,6 +2,7 @@
 
 #include "../src/Colors.h"
 #include "../src/DisplayManager.h"
+#include "../src/EventKeyboard.h"
 #include "../src/EventStep.h"
 #include "../src/GameManager.h"
 #include "../src/LogManager.h"
@@ -16,24 +17,20 @@ class CustomEvent : public df::Event {
 
 class Enemy : public df::Object {
  public:
-  int count;
-  Enemy() {
-    setType("Enemy");
-    count = 0;
-  }
+  Enemy() { setType("Enemy"); }
 
   int eventHandler(const df::Event *p_e) {
     if (p_e->getType() == df::STEP_EVENT) {
-      count++;
-
-      if (count % 30 == 0) {
-        auto p = getPosition();
-        setPosition(df::Vector(p.getX() + 1, p.getY()));
-      }
-
       return 1;
-    } else if (p_e->getType() == "CustomEvent") {
-      printf("Enemy %d receives CustomEvent\n", getId());
+    } else if (p_e->getType() == df::KEYBOARD_EVENT) {
+      auto e = (df::EventKeyboard *)p_e;
+      if (e->getKeyboardAction() == df::EventKeyboardAction::KEY_PRESSED) {
+        if (e->getKey() == df::Keyboard::LEFTARROW) {
+          setPosition(getPosition() + df::Vector(-1, 0));
+        } else if (e->getKey() == df::Keyboard::RIGHTARROW) {
+          setPosition(getPosition() + df::Vector(1, 0));
+        }
+      }
       return 1;
     }
     return 0;

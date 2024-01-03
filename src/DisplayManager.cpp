@@ -1,5 +1,7 @@
 #include "DisplayManager.h"
 
+#include "LogManager.h"
+
 namespace df {
 
 DisplayManager::DisplayManager() {
@@ -10,6 +12,7 @@ DisplayManager::DisplayManager() {
   m_window_vertical_pixels = WINDOW_VERTICAL_PIXELS_DEFAULT;
   m_background_color = WINDOW_BACKGROUND_COLOR_DEFAULT;
   m_p_window = NULL;
+  LM.writeLog("DisplayManager::DisplayManager(): Created DisplayManager");
 }
 
 DisplayManager& DisplayManager::getInstance() {

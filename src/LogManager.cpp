@@ -16,15 +16,6 @@ LogManager::LogManager() {
   stdoutLog("LogManager::LogManager(): Created LogManager");
 }
 
-void LogManager::stdoutLog(const char* fmt, ...) const {
-  printf("[%s] ", getTimeString());
-  va_list args;
-  va_start(args, fmt);
-  vprintf(fmt, args);
-  va_end(args);
-  printf("\n");
-}
-
 LogManager::~LogManager() {
   if (isStarted()) {
     shutDown();
@@ -75,5 +66,14 @@ int LogManager::writeLog(const char* fmt, ...) const {
   }
 
   return 0;
+}
+
+void LogManager::stdoutLog(const char* fmt, ...) const {
+  printf("[%s] ", getTimeString());
+  va_list args;
+  va_start(args, fmt);
+  vprintf(fmt, args);
+  va_end(args);
+  printf("\n");
 }
 }  // namespace df

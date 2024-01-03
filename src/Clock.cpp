@@ -24,7 +24,7 @@ long int Clock::split() const {
 
 long int Clock::getNow() {
   auto now = chrono::high_resolution_clock::now();
-  return chrono::duration_cast<chrono::milliseconds>(now.time_since_epoch())
+  return chrono::duration_cast<chrono::microseconds>(now.time_since_epoch())
       .count();
 }
 

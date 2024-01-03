@@ -6,8 +6,8 @@
 
 namespace df {
 
-// duration of a frame in ms
-const int FRAME_TIME_DEFAULT = 33;  // ~30fps
+// duration of a frame in microseconds
+const int FRAME_TIME_DEFAULT = 33333;  // ~30fps
 
 class GameManager : public Manager {
  private:

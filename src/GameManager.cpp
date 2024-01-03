@@ -75,8 +75,7 @@ void GameManager::run() {
     WM.draw();
     DM.swapBuffers();
 
-    loop_time = p_clock->split();
-    p_clock->delta();
+    loop_time = p_clock->delta();
     sleep(frame_time - loop_time);
   }
 }

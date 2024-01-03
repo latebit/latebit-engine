@@ -17,6 +17,6 @@ char *getTimeString() {
   return time_str;
 }
 
-void sleep(long int ms) {
-  std::this_thread::sleep_for(std::chrono::milliseconds(ms));
+void sleep(long int microseconds) {
+  std::this_thread::sleep_for(std::chrono::microseconds(microseconds));
 }

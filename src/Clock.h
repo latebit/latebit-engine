@@ -7,9 +7,6 @@ class Clock {
  private:
   long int m_previous_time;
 
-  // Returns current time in milliseconds
-  static long int getNow();
-
  public:
   Clock();
 
@@ -19,6 +16,9 @@ class Clock {
 
   // Like delta, but does not override last time
   long int split() const;
+
+  // Returns current time in milliseconds
+  static long int getNow();
 };
 
 }  // namespace df

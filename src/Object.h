@@ -7,6 +7,12 @@
 #include "Vector.h"
 
 namespace df {
+enum Solidness {
+  HARD,
+  SOFT,
+  SPECTRAL,
+};
+
 class Object {
  private:
   int m_id;
@@ -15,6 +21,7 @@ class Object {
   int m_altitude;
   Vector m_direction;
   float m_speed;
+  Solidness m_solidness;
 
  public:
   Object();
@@ -43,6 +50,10 @@ class Object {
   Vector getVelocity() const;
 
   Vector predictPosition();
+
+  bool isSolid() const;
+  void setSolidness(Solidness s);
+  Solidness getSolidness() const;
 
   virtual int eventHandler(const Event *p_e);
   virtual int draw();

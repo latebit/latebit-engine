@@ -10,6 +10,7 @@ Object::Object() {
   m_type = "Object";
   m_position = Vector();
   m_altitude = MAX_ALTITUDE / 2;
+  m_solidness = HARD;
   WM.insertObject(this);
 }
 
@@ -47,6 +48,11 @@ Vector Object::getVelocity() const {
 }
 
 Vector Object::predictPosition() { return m_position + getVelocity(); }
+
+bool Object::isSolid() const { return m_solidness != SPECTRAL; }
+
+void Object::setSolidness(Solidness s) { m_solidness = s; }
+Solidness Object::getSolidness() const { return m_solidness; }
 
 int Object::eventHandler(const Event* p_e) { return 0; }
 

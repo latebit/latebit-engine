@@ -15,6 +15,7 @@ GameManager::GameManager() {
   frame_time = FRAME_TIME_DEFAULT;
   game_over = false;
   p_clock = new Clock;
+  LM.writeLog("GameManager::GameManager(): Created GameManager");
 }
 
 int GameManager::startUp(int frame_time) {
@@ -40,6 +41,7 @@ int GameManager::startUp(int frame_time) {
 
   frame_time = frame_time;
 
+  LM.writeLog("GameManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
@@ -52,6 +54,7 @@ void GameManager::shutDown() {
   setGameOver(true);
   LM.shutDown();
   Manager::shutDown();
+  LM.writeLog("GameManager::shutDown(): Shut down successfully");
 }
 
 void GameManager::run() {

@@ -7,7 +7,12 @@
 
 namespace df {
 
-WorldManager::WorldManager() {}
+WorldManager::WorldManager() {
+  setType("WorldManager");
+  m_deletions = ObjectList();
+  m_updates = ObjectList();
+  LM.writeLog("WorldManager::WorldManager(): Created WorldManager");
+}
 
 WorldManager& WorldManager::getInstance() {
   static WorldManager instance;
@@ -15,10 +20,7 @@ WorldManager& WorldManager::getInstance() {
 }
 
 int WorldManager::startUp() {
-  setType("WorldManager");
-  m_deletions = ObjectList();
-  m_updates = ObjectList();
-  LM.writeLog("WorldManager::WorldManager(): Created WorldManager");
+  LM.writeLog("WorldManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
@@ -34,6 +36,7 @@ void WorldManager::shutDown() {
   m_updates.clear();
 
   Manager::shutDown();
+  LM.writeLog("WorldManager::shutDown(): Shut down successfully");
 }
 
 int WorldManager::insertObject(Object* p_o) { return m_updates.insert(p_o); }

@@ -35,9 +35,12 @@ int DisplayManager::startUp() {
 
   sf::Font font;
   if (font.loadFromFile(FONT_FILE_DEFAULT) == false) {
+    LM.writeLog("DisplayManager::startUp(): Warning! Font file not found");
     return -1;
   }
   m_font = font;
+
+  LM.writeLog("DisplayManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
@@ -45,6 +48,7 @@ void DisplayManager::shutDown() {
   m_p_window->close();
   delete m_p_window;
   Manager::shutDown();
+  LM.writeLog("DisplayManager::shutDown(): Shut down successfully");
 }
 
 int DisplayManager::drawCh(Vector world_pos, char ch, Color color) const {

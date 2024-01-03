@@ -109,13 +109,14 @@ int InputManager::startUp() {
 
   sf::RenderWindow* p_win = DM.getWindow();
   p_win->setKeyRepeatEnabled(false);
-
+  LM.writeLog("InputManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
 void InputManager::shutDown() {
   DM.getWindow()->setKeyRepeatEnabled(true);
-  return Manager::shutDown();
+  Manager::shutDown();
+  LM.writeLog("InputManager::shutDown(): Shut down successfully");
 }
 
 void InputManager::getInput() const {

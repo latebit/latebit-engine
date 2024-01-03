@@ -13,6 +13,8 @@ class Object {
   std::string m_type;
   Vector m_position;
   int m_altitude;
+  Vector m_direction;
+  float m_speed;
 
  public:
   Object();
@@ -30,6 +32,17 @@ class Object {
 
   void setAltitude(int a);
   int getAltitude() const;
+
+  void setDirection(Vector d);
+  Vector getDirection() const;
+
+  void setSpeed(float s);
+  float getSpeed() const;
+
+  void setVelocity(Vector v);
+  Vector getVelocity() const;
+
+  Vector predictPosition();
 
   virtual int eventHandler(const Event *p_e);
   virtual int draw();

@@ -1,35 +1,68 @@
 #include "../src/Object.h"
 
+#include "Object_test.h"
 #include "test.h"
 
-int Object_test() {
-  df::Object *subject;
+int altitude_test() {
+  int result = 0;
+  df::Object subject;
+
+  subject.setAltitude(1);
+  result += assert_int("updates altitude", subject.getAltitude(), 1);
+
+  subject.setAltitude(10);
+  result +=
+      assert_int("prevents out of bounds (max)", subject.getAltitude(), 1);
+  subject.setAltitude(-1);
+  result +=
+      assert_int("prevents out of bounds (min)", subject.getAltitude(), 1);
+
+  return result;
+}
+
+int kinematics_test() {
+  df::Object subject;
   int result = 0;
 
-  subject = new df::Object;
-  result += assert_int("sets an id", subject->getId(), 0);
-  subject = new df::Object;
-  result += assert_int("increments id", subject->getId(), 1);
-  subject->setId(10);
-  result += assert_int("updates id", subject->getId(), 10);
+  subject.setSpeed(1);
+  result += assert_float("updates speed", subject.getSpeed(), 1);
 
-  subject->setType("type");
-  result += assert_string("updates type", subject->getType(), "type");
+  subject.setDirection(df::Vector(1, 1));
+  result += assert_vector("updates direction", subject.getDirection(),
+                          df::Vector(1, 1));
+
+  subject.setVelocity(df::Vector(1, 1));
+  result += assert_vector("updates velocity", subject.getVelocity(),
+                          df::Vector(1, 1));
+
+  subject.setSpeed(2);
+  subject.setDirection(df::Vector(1, 0));
+  result += assert_vector("updates velocity", subject.getVelocity(),
+                          df::Vector(2, 0));
+
+  return result;
+}
+
+int Object_test() {
+  df::Object subject;
+  int result = 0;
+
+  result += assert_int("sets an id", subject.getId(), 0);
+  subject = df::Object();
+  result += assert_int("increments id", subject.getId(), 1);
+  subject.setId(10);
+  result += assert_int("updates id", subject.getId(), 10);
+
+  subject.setType("type");
+  result += assert_string("updates type", subject.getType(), "type");
 
   auto position = df::Vector(1, 2);
-  subject->setPosition(position);
-  auto got = subject->getPosition();
+  subject.setPosition(position);
+  auto got = subject.getPosition();
   result += assert_vector("updates position", got, position);
 
-  subject->setAltitude(1);
-  result += assert_int("updates altitude", subject->getAltitude(), 1);
-
-  subject->setAltitude(10);
-  result +=
-      assert_int("prevents out of bounds (max)", subject->getAltitude(), 1);
-  subject->setAltitude(-1);
-  result +=
-      assert_int("prevents out of bounds (min)", subject->getAltitude(), 1);
+  result += altitude_test();
+  result += kinematics_test();
 
   return result;
 }

@@ -19,7 +19,7 @@ enum Alignment {
 
 const int WINDOW_HORIZONTAL_PIXELS_DEFAULT = 1024;
 const int WINDOW_VERTICAL_PIXELS_DEFAULT = 768;
-const int WINDOW_HORIZONTAL_CHARS_DEFAULT = 80;
+const int WINDOW_HORIZONTAL_CHARS_DEFAULT = 64;
 const int WINDOW_VERTICAL_CHARS_DEFAULT = 24;
 const int WINDOW_STYLE_DEFAULT = sf::Style::Titlebar | sf::Style::Close;
 const Color WINDOW_BACKGROUND_COLOR_DEFAULT = BLACK;
@@ -41,8 +41,8 @@ class DisplayManager : public Manager {
   sf::RenderWindow *m_p_window;
   int m_window_horizontal_pixels;
   int m_window_vertical_pixels;
-  int m_window_horizontal_chars;
-  int m_window_vertical_chars;
+  int m_window_horizontal_cells;
+  int m_window_vertical_cells;
   Color m_background_color;
 
  public:
@@ -58,9 +58,9 @@ class DisplayManager : public Manager {
 
   void setBackground(Color color);
 
-  int getHorizontal() const;
+  int getHorizontalCells() const;
 
-  int getVertical() const;
+  int getVerticalCells() const;
 
   int getHorizontalPixels() const;
 

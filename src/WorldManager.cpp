@@ -49,10 +49,11 @@ ObjectList WorldManager::getAllObjects() const { return m_updates; }
 
 ObjectList WorldManager::objectsOfType(std::string type) const {
   ObjectList result;
-  df::ObjectListIterator* iterator = new ObjectListIterator(&m_updates);
-  for (iterator->first(); !iterator->isDone(); iterator->next()) {
-    if (iterator->currentObject()->getType() == type) {
-      result.insert(iterator->currentObject());
+  auto i_updates = ObjectListIterator(&m_updates);
+
+  for (i_updates.first(); !i_updates.isDone(); i_updates.next()) {
+    if (i_updates.currentObject()->getType() == type) {
+      result.insert(i_updates.currentObject());
     }
   }
 
@@ -60,22 +61,31 @@ ObjectList WorldManager::objectsOfType(std::string type) const {
 }
 
 void WorldManager::update() {
-  auto iterator = new ObjectListIterator(&m_deletions);
-  for (iterator->first(); !iterator->isDone(); iterator->next()) {
-    removeObject(iterator->currentObject());
-    delete iterator->currentObject();
+  auto i_deletions = ObjectListIterator(&m_deletions);
+  for (i_deletions.first(); !i_deletions.isDone(); i_deletions.next()) {
+    removeObject(i_deletions.currentObject());
+    delete i_deletions.currentObject();
   }
   m_deletions.clear();
+
+  auto i_updates = ObjectListIterator(&m_updates);
+  for (i_updates.first(); !i_updates.isDone(); i_updates.next()) {
+    auto object = i_updates.currentObject();
+    auto old_position = object->getPosition();
+    auto new_position = object->predictPosition();
+
+    if (old_position != new_position) {
+      // TODO: enrich with collision checks
+      object->setPosition(new_position);
+    }
+  }
 }
 
 int WorldManager::markForDelete(Object* p_o) {
   // Prevents marking the same object for deletion twice
-  auto iterator = new ObjectListIterator(&m_deletions);
-
-  for (iterator->first(); !iterator->isDone(); iterator->next()) {
-    if (iterator->currentObject() == p_o) {
-      return 0;
-    }
+  auto i_deletions = ObjectListIterator(&m_deletions);
+  for (i_deletions.first(); !i_deletions.isDone(); i_deletions.next()) {
+    if (i_deletions.currentObject() == p_o) return 0;
   }
 
   return m_deletions.insert(p_o);

@@ -36,15 +36,23 @@ class Enemy : public df::Object {
     return 0;
   }
 
-  int draw() { return DM.drawCh(getPosition(), '1', df::Color::RED); }
+  int draw() {
+    return DM.drawString(df::Vector(1, 0),
+                         "11111111111111111111111111111111111111111111111111111"
+                         "11111111111111111111111111",
+                         df::ALIGN_LEFT, df::Color::RED);
+  }
 };
 
-class Star : public df::Object {
+class Flake : public df::Object {
  public:
-  Star() {
-    setType("Star");
+  Flake() {
+    setType("Flake");
     setAltitude(0);
-    setPosition(df::Vector(3, 0));
+    setPosition(
+        df::Vector(rand() % (DM.getHorizontalCells() + 1),
+                   rand() % DM.getVerticalCells() - DM.getVerticalCells() / 2));
+    setVelocity(df::Vector(0, 0.1));
   }
 
   int draw() { return DM.drawCh(getPosition(), '*', df::Color::YELLOW); }
@@ -56,7 +64,10 @@ int main() {
   GM.startUp();
 
   new Enemy;
-  new Star;
+
+  for (int i = 0; i < 10000; i++) {
+    new Flake;
+  }
 
   GM.run();
 

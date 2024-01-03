@@ -7,8 +7,8 @@ namespace df {
 DisplayManager::DisplayManager() {
   setType("DisplayManager");
   m_window_horizontal_pixels = WINDOW_HORIZONTAL_PIXELS_DEFAULT;
-  m_window_horizontal_chars = WINDOW_HORIZONTAL_CHARS_DEFAULT;
-  m_window_vertical_chars = WINDOW_VERTICAL_CHARS_DEFAULT;
+  m_window_horizontal_cells = WINDOW_HORIZONTAL_CHARS_DEFAULT;
+  m_window_vertical_cells = WINDOW_VERTICAL_CHARS_DEFAULT;
   m_window_vertical_pixels = WINDOW_VERTICAL_PIXELS_DEFAULT;
   m_background_color = WINDOW_BACKGROUND_COLOR_DEFAULT;
   m_p_window = NULL;
@@ -111,9 +111,11 @@ int DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
 
 void DisplayManager::setBackground(Color color) { m_background_color = color; }
 
-int DisplayManager::getHorizontal() const { return m_window_horizontal_chars; }
+int DisplayManager::getHorizontalCells() const {
+  return m_window_horizontal_cells;
+}
 
-int DisplayManager::getVertical() const { return m_window_vertical_chars; }
+int DisplayManager::getVerticalCells() const { return m_window_vertical_cells; }
 
 int DisplayManager::getHorizontalPixels() const {
   return m_window_horizontal_pixels;
@@ -140,9 +142,9 @@ int DisplayManager::swapBuffers() {
 
 sf::RenderWindow* DisplayManager::getWindow() const { return m_p_window; }
 
-float charHeight() { return DM.getVerticalPixels() / DM.getVertical(); }
+float charHeight() { return DM.getVerticalPixels() / DM.getVerticalCells(); }
 
-float charWidth() { return DM.getHorizontalPixels() / DM.getHorizontal(); }
+float charWidth() { return DM.getHorizontalPixels() / DM.getHorizontalCells(); }
 
 Vector spacesToPixels(Vector spaces) {
   return Vector(spaces.getX() * charWidth(), spaces.getY() * charHeight());

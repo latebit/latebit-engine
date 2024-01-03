@@ -85,25 +85,25 @@ int Vector_eq_test() {
 }
 
 int Vector_plus_test() {
-  df::Vector *a, *b, got, *want;
+  df::Vector *a, *b, got, want;
 
   int result = 0;
 
   a = new df::Vector;
   b = new df::Vector;
   got = *a + *b;
-  want = new df::Vector;
-  result += assert_vector("sums zero vectors", &got, want);
+  want = df::Vector();
+  result += assert_vector("sums zero vectors", got, want);
 
   b = new df::Vector(1, 1);
   got = *a + *b;
-  want = new df::Vector(1, 1);
-  result += assert_vector("handles zero vector", &got, want);
+  want = df::Vector(1, 1);
+  result += assert_vector("handles zero vector", got, want);
 
   a = new df::Vector(1, 2);
   got = *a + *b;
-  want = new df::Vector(2, 3);
-  result += assert_vector("handles any other vector", &got, want);
+  want = df::Vector(2, 3);
+  result += assert_vector("handles any other vector", got, want);
 
   return result;
 }

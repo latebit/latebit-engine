@@ -20,6 +20,8 @@ WorldManager& WorldManager::getInstance() {
 }
 
 int WorldManager::startUp() {
+  m_deletions = ObjectList();
+  m_updates = ObjectList();
   LM.writeLog("WorldManager::startUp(): Started successfully");
   return Manager::startUp();
 }

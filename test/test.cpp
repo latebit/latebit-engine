@@ -56,7 +56,7 @@ int assert_int(std::string name, int got, int want) {
   return assert(name, got == want, message);
 }
 
-int assert_vector(std::string name, df::Vector *p_got, df::Vector *p_want) {
-  return assert(name, *p_got == *p_want,
-                "wanted " + p_want->toString() + " got " + p_got->toString());
+int assert_vector(std::string name, df::Vector p_got, df::Vector p_want) {
+  return assert(name, p_got == p_want,
+                "wanted " + p_want.toString() + " got " + p_got.toString());
 }

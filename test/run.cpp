@@ -1,6 +1,7 @@
 #include <iomanip>
 #include <iostream>
 
+#include "EventKeyboard_test.h"
 #include "EventStep_test.h"
 #include "Event_test.h"
 #include "ObjectListIterator_test.h"
@@ -36,6 +37,9 @@ int main() {
 
   suite("EventStep_test");
   result += EventStep_test();
+
+  suite("EventKeyboard_test");
+  result += EventKeyboard_test();
 
   suite("WorldManager_test");
   result += WorldManager_test();

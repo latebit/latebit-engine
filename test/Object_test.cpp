@@ -16,10 +16,10 @@ int Object_test() {
   subject->setType("type");
   result += assert_string("updates type", subject->getType(), "type");
 
-  auto position = new df::Vector(1, 2);
-  subject->setPosition(*position);
+  auto position = df::Vector(1, 2);
+  subject->setPosition(position);
   auto got = subject->getPosition();
-  result += assert_vector("updates position", &got, position);
+  result += assert_vector("updates position", got, position);
 
   subject->setAltitude(1);
   result += assert_int("updates altitude", subject->getAltitude(), 1);

@@ -52,9 +52,12 @@ GameManager& GameManager::getInstance() {
 
 void GameManager::shutDown() {
   setGameOver(true);
-  LM.shutDown();
+  IM.shutDown();
+  DM.shutDown();
+  WM.shutDown();
   Manager::shutDown();
   LM.writeLog("GameManager::shutDown(): Shut down successfully");
+  LM.shutDown();
 }
 
 void GameManager::run() {

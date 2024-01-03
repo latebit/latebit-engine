@@ -5,6 +5,7 @@
 #include "DisplayManager.h"
 #include "EventKeyboard.h"
 #include "EventMouse.h"
+#include "GameManager.h"
 #include "LogManager.h"
 #include "SFML/Window.hpp"
 
@@ -114,7 +115,9 @@ int InputManager::startUp() {
 }
 
 void InputManager::shutDown() {
-  DM.getWindow()->setKeyRepeatEnabled(true);
+  auto win = DM.getWindow();
+  if (win != nullptr) win->setKeyRepeatEnabled(true);
+
   Manager::shutDown();
   LM.writeLog("InputManager::shutDown(): Shut down successfully");
 }
@@ -122,6 +125,8 @@ void InputManager::shutDown() {
 void InputManager::getInput() const {
   sf::Event event;
   auto win = DM.getWindow();
+
+  if (win == nullptr) return;
 
   while (win->pollEvent(event)) {
     Keyboard::Key key;
@@ -149,6 +154,10 @@ void InputManager::getInput() const {
         btn = fromSFMLMouseButton(event.mouseButton.button);
         onEvent(new df::EventMouse(df::EventMouseAction::CLICKED, btn, pos));
         break;
+      case sf::Event::Closed:
+        GM.shutDown();
+        // This is meant to break out of the while loop
+        return;
       default:
         break;
     }

@@ -54,7 +54,6 @@ int main() {
   LM.setFlush(true);
 
   GM.startUp();
-  DM.setBackground(df::Color::CYAN);
 
   new Enemy;
   new Star;

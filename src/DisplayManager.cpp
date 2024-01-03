@@ -124,7 +124,10 @@ int DisplayManager::getVerticalPixels() const {
 }
 
 int DisplayManager::swapBuffers() {
-  if (m_p_window == nullptr) return -1;
+  if (m_p_window == nullptr) {
+    LM.writeLog("DisplayManager::swapBuffers(): Window is null");
+    return -1;
+  }
 
   // displays current buffer
   m_p_window->display();

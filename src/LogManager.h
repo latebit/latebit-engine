@@ -24,6 +24,8 @@ class LogManager : public Manager {
   void shutDown() override;
   void setFlush(bool do_flush = true);
   int writeLog(const char *fmt, ...) const;
+  // To be used when the logger is not yet initialized
+  void stdoutLog(const char *fmt, ...) const;
 };
 
 }  // namespace df

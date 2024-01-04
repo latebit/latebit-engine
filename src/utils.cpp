@@ -1,5 +1,6 @@
 #include "utils.h"
 
+#include <cmath>
 #include <cstdio>
 #include <ctime>
 #include <thread>
@@ -19,4 +20,9 @@ char *getTimeString() {
 
 void sleep(long int microseconds) {
   std::this_thread::sleep_for(std::chrono::microseconds(microseconds));
+}
+
+bool positionsMatch(df::Vector p1, df::Vector p2) {
+  return std::abs(p1.getX() - p2.getX()) <= 1 &&
+         std::abs(p1.getY() - p2.getY()) <= 1;
 }

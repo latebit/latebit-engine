@@ -29,4 +29,13 @@ void ObjectList::clear() { m_count = 0; }
 int ObjectList::getCount() const { return m_count; }
 bool ObjectList::isEmpty() const { return m_count == 0; }
 bool ObjectList::isFull() const { return m_count != 0 && m_count >= MAX_SIZE; }
+int ObjectList::find(Object* p_o) const {
+  for (int i = 0; i < m_count; i++) {
+    if (m_p_obj[i] == p_o) {
+      return i;
+    }
+  }
+
+  return -1;
+}
 }  // namespace df

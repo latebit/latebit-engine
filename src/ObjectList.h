@@ -28,6 +28,7 @@ class ObjectList {
   int getCount() const;
   bool isEmpty() const;
   bool isFull() const;
+  int find(Object *p_o) const;
 };
 
 }  // namespace df

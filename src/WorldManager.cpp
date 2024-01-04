@@ -1,7 +1,9 @@
 #include "WorldManager.h"
 
+#include "EventCollision.h"
 #include "LogManager.h"
 #include "ObjectListIterator.h"
+#include "utils.h"
 
 #define WM df::WorldManager::getInstance()
 
@@ -60,6 +62,63 @@ ObjectList WorldManager::objectsOfType(std::string type) const {
   return result;
 }
 
+ObjectList WorldManager::getCollisions(Object* p_o, Vector where) const {
+  ObjectList collisions;
+  auto i_updates = ObjectListIterator(&m_updates);
+
+  for (i_updates.first(); !i_updates.isDone(); i_updates.next()) {
+    auto p_current = i_updates.currentObject();
+    if (p_current == p_o) continue;
+
+    if (p_current->isSolid() &&
+        positionsMatch(p_current->getPosition(), where)) {
+      collisions.insert(p_current);
+    }
+  }
+
+  return collisions;
+}
+
+int WorldManager::moveObject(Object* p_o, Vector where) {
+  // Spectral objects can just move
+  if (!p_o->isSolid()) {
+    p_o->setPosition(where);
+    return 0;
+  }
+
+  ObjectList collisions = getCollisions(p_o, where);
+
+  // In absence of collisions, just move
+  if (collisions.isEmpty()) {
+    p_o->setPosition(where);
+    return 0;
+  }
+
+  bool move = true;
+  auto i_collisions = ObjectListIterator(&collisions);
+
+  for (i_collisions.first(); !i_collisions.isDone(); i_collisions.next()) {
+    auto p_current = i_collisions.currentObject();
+    auto event = EventCollision(p_o, p_current, where);
+    p_o->eventHandler(&event);
+    p_current->eventHandler(&event);
+
+    if (p_o->getSolidness() == HARD && p_current->getSolidness() == HARD) {
+      move = false;
+      break;
+    }
+  }
+
+  if (move) {
+    p_o->setPosition(where);
+    return 0;
+  } else {
+    return -1;
+  }
+
+  return 0;
+}
+
 void WorldManager::update() {
   auto i_deletions = ObjectListIterator(&m_deletions);
   for (i_deletions.first(); !i_deletions.isDone(); i_deletions.next()) {
@@ -75,8 +134,7 @@ void WorldManager::update() {
     auto new_position = object->predictPosition();
 
     if (old_position != new_position) {
-      // TODO: enrich with collision checks
-      object->setPosition(new_position);
+      moveObject(object, new_position);
     }
   }
 }

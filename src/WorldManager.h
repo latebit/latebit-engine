@@ -29,6 +29,9 @@ class WorldManager : public Manager {
   ObjectList getAllObjects() const;
   ObjectList objectsOfType(std::string type) const;
 
+  ObjectList getCollisions(Object *p_o, Vector where) const;
+  int moveObject(Object *p_o, Vector where);
+
   void update();
   int markForDelete(Object *p_o);
   void draw();

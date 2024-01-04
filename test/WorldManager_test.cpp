@@ -2,7 +2,10 @@
 
 #include <iostream>
 
+#include "../src/DisplayManager.h"
+#include "../src/EventOut.h"
 #include "../src/Vector.h"
+#include "../src/utils.h"
 #include "test.h"
 
 int WorldManager_getCollisions_test() {
@@ -157,6 +160,37 @@ int WorldManager_moveObject_test() {
   return result;
 }
 
+bool WorldManager_outOfBounds_test_emitted = false;
+int WorldManager_outOfBounds_test() {
+  int result = 0;
+
+  class TestObject : public df::Object {
+   public:
+    int eventHandler(const df::Event* p_e) {
+      if (p_e->getType() == df::OUT_EVENT) {
+        WorldManager_outOfBounds_test_emitted = true;
+        return 1;
+      }
+      return 0;
+    }
+  };
+
+  auto obj1 = new TestObject;
+
+  obj1->setPosition(df::Vector(0, 0));
+
+  WM.moveObject(obj1, df::Vector(-1, 0));
+  result += assert("emits out of bounds event",
+                   WorldManager_outOfBounds_test_emitted);
+
+  WorldManager_outOfBounds_test_emitted = false;
+  WM.moveObject(obj1, df::Vector(-2, 0));
+  result += assert("does not emit out of bounds if already out",
+                   !WorldManager_outOfBounds_test_emitted);
+
+  return result;
+}
+
 int WorldManager_test() {
   int result = 0;
 
@@ -198,6 +232,7 @@ int WorldManager_test() {
 
   result += WorldManager_getCollisions_test();
   result += WorldManager_moveObject_test();
+  result += WorldManager_outOfBounds_test();
 
   return result;
 }

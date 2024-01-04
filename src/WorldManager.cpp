@@ -1,6 +1,8 @@
 #include "WorldManager.h"
 
+#include "DisplayManager.h"
 #include "EventCollision.h"
+#include "EventOut.h"
 #include "LogManager.h"
 #include "ObjectListIterator.h"
 #include "utils.h"
@@ -82,7 +84,7 @@ ObjectList WorldManager::getCollisions(Object* p_o, Vector where) const {
 int WorldManager::moveObject(Object* p_o, Vector where) {
   // Spectral objects can just move
   if (!p_o->isSolid()) {
-    p_o->setPosition(where);
+    moveAndCheckBounds(p_o, where);
     return 0;
   }
 
@@ -90,11 +92,11 @@ int WorldManager::moveObject(Object* p_o, Vector where) {
 
   // In absence of collisions, just move
   if (collisions.isEmpty()) {
-    p_o->setPosition(where);
+    moveAndCheckBounds(p_o, where);
     return 0;
   }
 
-  bool move = true;
+  bool shouldMove = true;
   auto i_collisions = ObjectListIterator(&collisions);
 
   for (i_collisions.first(); !i_collisions.isDone(); i_collisions.next()) {
@@ -103,20 +105,43 @@ int WorldManager::moveObject(Object* p_o, Vector where) {
     p_o->eventHandler(&event);
     p_current->eventHandler(&event);
 
+    // If hitting a hard object, don't move
     if (p_o->getSolidness() == HARD && p_current->getSolidness() == HARD) {
-      move = false;
+      shouldMove = false;
       break;
     }
   }
 
-  if (move) {
-    p_o->setPosition(where);
+  if (shouldMove) {
+    moveAndCheckBounds(p_o, where);
     return 0;
   } else {
     return -1;
   }
 
   return 0;
+}
+
+void WorldManager::moveAndCheckBounds(Object* p_o, Vector where) const {
+  auto old_position = p_o->getPosition();
+  p_o->setPosition(where);
+
+  if (isOutOfBounds(where) && !isOutOfBounds(old_position)) {
+    auto event = EventOut();
+    p_o->eventHandler(&event);
+  }
+}
+
+bool WorldManager::isOutOfBounds(Vector where) const {
+  auto x = where.getX();
+  auto y = where.getY();
+
+  if (x < 0 || x >= DM.getHorizontalCells() || y < 0 ||
+      y >= DM.getVerticalCells()) {
+    return true;
+  }
+
+  return false;
 }
 
 void WorldManager::update() {

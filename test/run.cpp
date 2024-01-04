@@ -4,6 +4,7 @@
 #include "../src/Clock.h"
 #include "EventCollision_test.h"
 #include "EventKeyboard_test.h"
+#include "EventOut_test.h"
 #include "EventStep_test.h"
 #include "Event_test.h"
 #include "ObjectListIterator_test.h"
@@ -62,6 +63,10 @@ int main() {
 
   suite("EventCollision_test");
   result += EventCollision_test();
+  timing(c.delta());
+
+  suite("EventOut_test");
+  result += EventOut_test();
   timing(c.delta());
 
   auto final = c.getNow();

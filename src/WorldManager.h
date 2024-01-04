@@ -19,6 +19,9 @@ class WorldManager : public Manager {
   ObjectList m_updates;
   ObjectList m_deletions;
 
+  bool isOutOfBounds(Vector p) const;
+  void moveAndCheckBounds(Object *p_o, Vector where) const;
+
  public:
   static WorldManager &getInstance();
 

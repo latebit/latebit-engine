@@ -11,6 +11,7 @@ Object::Object() {
   m_position = Vector();
   m_altitude = MAX_ALTITUDE / 2;
   m_solidness = HARD;
+  m_direction = Vector();
   WM.insertObject(this);
 }
 

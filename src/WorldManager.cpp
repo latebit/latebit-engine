@@ -136,12 +136,8 @@ bool WorldManager::isOutOfBounds(Vector where) const {
   auto x = where.getX();
   auto y = where.getY();
 
-  if (x < 0 || x >= DM.getHorizontalCells() || y < 0 ||
-      y >= DM.getVerticalCells()) {
-    return true;
-  }
-
-  return false;
+  return (x < 0 || y < 0 || x >= DM.getHorizontalCells() ||
+          y >= DM.getVerticalCells());
 }
 
 void WorldManager::update() {

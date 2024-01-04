@@ -15,7 +15,7 @@ class EventStep : public Event {
   EventStep(int count);
 
   void setStepCount(int count);
-  int getStepCount();
+  int getStepCount() const;
 };
 }  // namespace df
 

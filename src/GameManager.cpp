@@ -18,7 +18,7 @@ GameManager::GameManager() {
   LM.writeLog("GameManager::GameManager(): Created GameManager");
 }
 
-int GameManager::startUp(int frame_time) {
+int GameManager::startUp(int ft) {
   if (LM.startUp() != 0) {
     printf("GameManager::startUp(): Error starting LogManager\n");
     return -1;
@@ -39,7 +39,7 @@ int GameManager::startUp(int frame_time) {
     return -1;
   }
 
-  frame_time = frame_time;
+  frame_time = ft;
 
   LM.writeLog("GameManager::startUp(): Started successfully");
   return Manager::startUp();
@@ -63,12 +63,13 @@ void GameManager::shutDown() {
 void GameManager::run() {
   long int adjust_time = 0;
   long int loop_time = 0;
+  long int steps = 0;
 
   while (!game_over) {
     p_clock->delta();
 
     // Send a step event to all Objects
-    onEvent(new EventStep);
+    onEvent(new EventStep(steps++));
 
     IM.getInput();
     WM.update();

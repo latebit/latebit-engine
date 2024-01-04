@@ -67,6 +67,17 @@ int ObjectList_emptyList_test() {
   return result;
 }
 
+int ObjectList_find_test() {
+  std::cout << "ObjectList_find_test\n";
+  int result = 0;
+  auto subject = new df::ObjectList;
+  auto item = new df::Object;
+  subject->insert(item);
+  result += assert_int("finds item", subject->find(item), 0);
+  result += assert_int("does not find item", subject->find(new df::Object), -1);
+  return result;
+}
+
 int ObjectList_test() {
   int result = 0;
 
@@ -74,6 +85,7 @@ int ObjectList_test() {
   result += ObjectList_oneItem_test();
   result += ObjectList_manyItems_test();
   result += ObjectList_fullList_test();
+  result += ObjectList_find_test();
 
   return result;
 }

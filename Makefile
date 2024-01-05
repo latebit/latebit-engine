@@ -34,15 +34,18 @@ $(TEST_EXECUTABLE): $(OBJ_FILES)
 
 # Link object files to create the game executable
 $(GAME_EXECUTABLE): $(SRC_FILES:.cpp=.o) $(EXAMPLES_DIR)/game.cpp
-	$(CXX) $(CXXFLAGS) $(SMLFLAGS) -o $@ $(SRC_FILES:.cpp=.o) $(EXAMPLES_DIR)/game.cpp
+	$(CXX) $(CXXFLAGS) -g $(SMLFLAGS) -o $@ $(SRC_FILES:.cpp=.o) $(EXAMPLES_DIR)/game.cpp
 
 # Run the examples
 game: $(GAME_EXECUTABLE)
 	./$(GAME_EXECUTABLE)
+
+debug: $(GAME_EXECUTABLE)
+	gdb $(GAME_EXECUTABLE)
 
 # Run the tests
 test: $(TEST_EXECUTABLE)
 	./$(TEST_EXECUTABLE)
 
 clean:
-	rm -f $(OBJ_FILES) $(TEST_EXECUTABLE)
+	rm -f $(OBJ_FILES) $(TEST_EXECUTABLE) $(GAME_EXECUTABLE)

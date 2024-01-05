@@ -8,44 +8,12 @@
 #include "../includes/GameManager.h"
 #include "../includes/LogManager.h"
 #include "../includes/Object.h"
+#include "../includes/ResourceManager.h"
+#include "../includes/Sprite.h"
+#include "../includes/SpriteParser.h"
 #include "../includes/Vector.h"
 #include "../includes/WorldManager.h"
 #include "../includes/utils.h"
-
-class CustomEvent : public df::Event {
- public:
-  CustomEvent() { setType("CustomEvent"); }
-};
-
-class Enemy : public df::Object {
- public:
-  Enemy() {
-    setType("Enemy");
-    setAltitude(df::MAX_ALTITUDE - 1);
-  }
-
-  int eventHandler(const df::Event *p_e) {
-    if (p_e->getType() == df::STEP_EVENT) {
-      return 1;
-    } else if (p_e->getType() == df::KEYBOARD_EVENT) {
-      auto e = (df::EventKeyboard *)p_e;
-      if (e->getKeyboardAction() == df::EventKeyboardAction::KEY_PRESSED) {
-        if (e->getKey() == df::Keyboard::LEFTARROW) {
-          setPosition(getPosition() + df::Vector(-1, 0));
-        } else if (e->getKey() == df::Keyboard::RIGHTARROW) {
-          setPosition(getPosition() + df::Vector(1, 0));
-        }
-      }
-      return 1;
-    }
-    return 0;
-  }
-
-  int draw() {
-    return DM.drawString(df::Vector(1, 0), "Snow", df::ALIGN_LEFT,
-                         df::Color::RED);
-  }
-};
 
 int getRandom(int max, int min = 0) {
   int delta = max - min;
@@ -96,16 +64,53 @@ class Flake : public df::Object {
   }
 };
 
+class Ship : public df::Object {
+ private:
+  int m_current_frame;
+  df::Sprite *m_sprite;
+
+ public:
+  Ship() {
+    setType("Ship");
+    setSolidness(df::SPECTRAL);
+    setAltitude(df::MAX_ALTITUDE - 1);
+    setPosition(df::Vector(7, 7));
+    m_current_frame = 0;
+    m_sprite = RM.getSprite("sprite");
+  }
+
+  int eventHandler(const df::Event *p_e) {
+    if (p_e->getType() == df::STEP_EVENT && m_sprite != nullptr &&
+        m_sprite->getFrameCount() > 0) {
+      auto p_event_step = dynamic_cast<const df::EventStep *>(p_e);
+      if (p_event_step->getStepCount() % m_sprite->getSlowdown() == 0) {
+        m_current_frame =
+            p_event_step->getStepCount() % m_sprite->getFrameCount();
+        return 1;
+      }
+    }
+
+    return 0;
+  }
+
+  int draw() {
+    if (m_sprite == nullptr) return -1;
+
+    return m_sprite->draw(m_current_frame, getPosition());
+  }
+};
+
 int main() {
   LM.setFlush(true);
 
   GM.startUp();
 
-  new Enemy;
-
-  for (int i = 0; i < 1000; i++) {
-    new Flake;
+  if (RM.loadSprite("examples/sprite.txt", "sprite") != 0) {
+    LM.writeLog("Failed to load sprite");
+    return 1;
   }
+
+  new Ship;
 
   GM.run();
 

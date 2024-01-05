@@ -58,7 +58,10 @@
     "stop_token": "cpp",
     "thread": "cpp",
     "valarray": "cpp",
-    "iomanip": "cpp"
+    "iomanip": "cpp",
+    "fstream": "cpp",
+    "condition_variable": "cpp",
+    "mutex": "cpp"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

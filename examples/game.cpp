@@ -3,11 +3,13 @@
 #include "../src/Colors.h"
 #include "../src/DisplayManager.h"
 #include "../src/EventKeyboard.h"
+#include "../src/EventOut.h"
 #include "../src/EventStep.h"
 #include "../src/GameManager.h"
 #include "../src/LogManager.h"
 #include "../src/Object.h"
 #include "../src/Vector.h"
+#include "../src/WorldManager.h"
 #include "../src/utils.h"
 
 class CustomEvent : public df::Event {
@@ -17,7 +19,10 @@ class CustomEvent : public df::Event {
 
 class Enemy : public df::Object {
  public:
-  Enemy() { setType("Enemy"); }
+  Enemy() {
+    setType("Enemy");
+    setAltitude(df::MAX_ALTITUDE - 1);
+  }
 
   int eventHandler(const df::Event *p_e) {
     if (p_e->getType() == df::STEP_EVENT) {
@@ -37,25 +42,58 @@ class Enemy : public df::Object {
   }
 
   int draw() {
-    return DM.drawString(df::Vector(1, 0),
-                         "11111111111111111111111111111111111111111111111111111"
-                         "11111111111111111111111111",
-                         df::ALIGN_LEFT, df::Color::RED);
+    return DM.drawString(df::Vector(1, 0), "Snow", df::ALIGN_LEFT,
+                         df::Color::RED);
   }
 };
 
+int getRandom(int max, int min = 0) {
+  int delta = max - min;
+  return min + rand() % (delta + 1);
+}
+
 class Flake : public df::Object {
- public:
-  Flake() {
-    setType("Flake");
-    setAltitude(0);
+ private:
+  void resetPositionAndVelocity() {
     setPosition(
-        df::Vector(rand() % (DM.getHorizontalCells() + 1),
-                   rand() % DM.getVerticalCells() - DM.getVerticalCells() / 2));
-    setVelocity(df::Vector(0, 0.1));
+        df::Vector(getRandom(DM.getHorizontalCells()), -1 * getRandom(5, 1)));
+    setVelocity(df::Vector(0.1, 0.05 * getRandom(6)));
+    m_step_check = getRandom(120, 1);
   }
 
-  int draw() { return DM.drawCh(getPosition(), '*', df::Color::YELLOW); }
+  int m_step_check = 1;
+
+ public:
+  Flake() {
+    resetPositionAndVelocity();
+    setSolidness(df::SPECTRAL);
+    setType("Flake");
+  }
+
+  int draw() {
+    return DM.drawCh(getPosition(), '*', df::Color::WHITE,
+                     df::Color::UNDEFINED_COLOR);
+  }
+
+  int eventHandler(const df::Event *p_e) {
+    if (p_e->getType() == df::OUT_EVENT) {
+      resetPositionAndVelocity();
+      return 1;
+    }
+    if (p_e->getType() == df::STEP_EVENT) {
+      auto p_event_step = dynamic_cast<const df::EventStep *>(p_e);
+
+      auto steps = p_event_step->getStepCount();
+      if (steps % m_step_check == 0) {
+        df::Vector v = getVelocity();
+        float x = v.getX() * -1;
+        setVelocity(df::Vector(x, v.getY()));
+      };
+
+      return 1;
+    }
+    return 0;
+  }
 };
 
 int main() {
@@ -65,7 +103,7 @@ int main() {
 
   new Enemy;
 
-  for (int i = 0; i < 10000; i++) {
+  for (int i = 0; i < 1000; i++) {
     new Flake;
   }
 

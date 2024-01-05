@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "../includes/Clock.h"
+#include "Colors_test.h"
 #include "EventCollision_test.h"
 #include "EventKeyboard_test.h"
 #include "EventOut_test.h"
@@ -77,6 +78,10 @@ int main() {
 
   suite("Sprite_test");
   result += Sprite_test();
+  timing(c.delta());
+
+  suite("Colors_test");
+  result += Colors_test();
   timing(c.delta());
 
   auto final = c.getNow();

@@ -51,7 +51,8 @@ void DisplayManager::shutDown() {
   LM.writeLog("DisplayManager::shutDown(): Shut down successfully");
 }
 
-int DisplayManager::drawCh(Vector world_pos, char ch, Color color) const {
+int DisplayManager::drawCh(Vector world_pos, char ch, Color fg,
+                           Color bg) const {
   if (m_p_window == nullptr) {
     return -1;
   }
@@ -61,12 +62,14 @@ int DisplayManager::drawCh(Vector world_pos, char ch, Color color) const {
   auto width = charWidth();
   auto height = charHeight();
 
-  static sf::RectangleShape background;
-  background.setSize(sf::Vector2f(width, height));
-  background.setFillColor(toSFColor(m_background_color));
-  background.setPosition(pixel_pos.getX() - width / 10,
-                         pixel_pos.getY() + height / 5);
-  m_p_window->draw(background);
+  if (bg != UNDEFINED_COLOR) {
+    static sf::RectangleShape background;
+    background.setSize(sf::Vector2f(width, height));
+    background.setFillColor(toSFColor(m_background_color));
+    background.setPosition(pixel_pos.getX() - width / 10,
+                           pixel_pos.getY() + height / 5);
+    m_p_window->draw(background);
+  }
 
   static sf::Text text("", m_font);
   text.setString(ch);
@@ -78,12 +81,16 @@ int DisplayManager::drawCh(Vector world_pos, char ch, Color color) const {
     text.setCharacterSize(height * 2);
   }
 
-  text.setFillColor(toSFColor(color));
+  text.setFillColor(toSFColor(fg));
   text.setPosition(pixel_pos.getX(), pixel_pos.getY());
 
   m_p_window->draw(text);
 
   return 0;
+}
+
+int DisplayManager::drawCh(Vector world_pos, char ch, Color fg) const {
+  return DisplayManager::drawCh(world_pos, ch, fg, m_background_color);
 }
 
 int DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,

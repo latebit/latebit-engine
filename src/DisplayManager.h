@@ -52,7 +52,9 @@ class DisplayManager : public Manager {
 
   void shutDown() override;
 
-  int drawCh(Vector world_pos, char ch, Color color) const;
+  int drawCh(Vector world_pos, char ch, Color fg) const;
+  int drawCh(Vector world_pos, char ch, Color fg, Color bg) const;
+
   int drawString(Vector world_pos, std::string s, Alignment a,
                  Color color) const;
 

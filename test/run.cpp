@@ -7,6 +7,7 @@
 #include "EventOut_test.h"
 #include "EventStep_test.h"
 #include "Event_test.h"
+#include "Frame_test.h"
 #include "ObjectListIterator_test.h"
 #include "ObjectList_test.h"
 #include "Object_test.h"
@@ -67,6 +68,10 @@ int main() {
 
   suite("EventOut_test");
   result += EventOut_test();
+  timing(c.delta());
+
+  suite("Frame_test");
+  result += Frame_test();
   timing(c.delta());
 
   auto final = c.getNow();

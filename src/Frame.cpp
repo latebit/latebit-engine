@@ -1,0 +1,49 @@
+#include "Frame.h"
+
+#include "Colors.h"
+#include "DisplayManager.h"
+#include "Vector.h"
+
+namespace df {
+Frame::Frame() {
+  m_width = 0;
+  m_height = 0;
+  m_frame_str = "";
+}
+
+Frame::Frame(int w, int h, std::string frame_str) {
+  m_width = w;
+  m_height = h;
+  m_frame_str = frame_str;
+}
+
+void Frame::setWidth(int w) { m_width = w; }
+int Frame::getWidth() const { return m_width; }
+
+void Frame::setHeight(int w) { m_height = w; }
+int Frame::getHeight() const { return m_height; }
+
+void Frame::setFrameString(std::string frame_str) { m_frame_str = frame_str; }
+std::string Frame::getFrameString() const { return m_frame_str; }
+
+int Frame::draw(Vector position, Color color) const {
+  if (m_width <= 0 || m_height <= 0 || m_frame_str.empty()) {
+    return -1;
+  }
+
+  float offsetX = m_width / 2;
+  float offsetY = m_height / 2;
+  float startX = position.getX() - offsetX;
+  float startY = position.getX() - offsetY;
+
+  for (int i = 0; i < m_height; i++) {
+    for (int j = 0; j < m_width; j++) {
+      Vector temp(startX + j, startY + i);
+      DM.drawCh(temp, m_frame_str[i * m_width + j], color);
+    }
+  }
+
+  return 0;
+}
+
+}  // namespace df

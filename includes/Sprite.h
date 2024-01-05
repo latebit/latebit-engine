@@ -21,7 +21,7 @@ class Sprite {
   int m_frame_count;
   int m_slowdown;
   Color m_color;
-  Frame* m_frame;
+  Frame* m_frames;
   std::string m_label;
   char m_transparency_char;
   Sprite();
@@ -29,6 +29,7 @@ class Sprite {
  public:
   ~Sprite();
   Sprite(int max_frames);
+  Sprite(const Sprite& other);
 
   void setWidth(int width);
   int getWidth() const;

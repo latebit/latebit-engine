@@ -14,13 +14,12 @@ Sprite::Sprite(int max_frames) {
   m_frame_count = 0;
   m_slowdown = NO_SLOWDOWN;
   m_color = COLOR_DEFAULT;
-  m_frame = new Frame[m_max_frame_count];
+  m_frames = new Frame[m_max_frame_count];
   m_label = "";
+  m_transparency_char = 0;
 }
 
-Sprite::~Sprite() {
-  if (m_frame != nullptr) delete[] m_frame;
-}
+Sprite::~Sprite() { delete[] m_frames; }
 
 int Sprite::addFrame(Frame frame) {
   if (m_frame_count >= m_max_frame_count) {
@@ -29,7 +28,7 @@ int Sprite::addFrame(Frame frame) {
     return -1;
   }
 
-  m_frame[m_frame_count] = frame;
+  m_frames[m_frame_count] = frame;
   m_frame_count++;
 
   return 0;
@@ -42,7 +41,7 @@ Frame Sprite::getFrame(int frame_number) const {
     return Frame();
   }
 
-  return m_frame[frame_number];
+  return m_frames[frame_number];
 }
 
 int Sprite::getFrameCount() const { return m_frame_count; }
@@ -72,7 +71,7 @@ int Sprite::draw(int frame_number, Vector position) const {
     return -1;
   }
 
-  return m_frame[frame_number].draw(position, m_color, m_transparency_char);
+  return m_frames[frame_number].draw(position, m_color, m_transparency_char);
 }
 
 }  // namespace df

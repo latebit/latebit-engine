@@ -12,6 +12,8 @@
 #include "ObjectListIterator_test.h"
 #include "ObjectList_test.h"
 #include "Object_test.h"
+#include "ResourceManager_test.h"
+#include "SpriteParser_test.h"
 #include "Sprite_test.h"
 #include "Vector_test.h"
 #include "WorldManager_test.h"
@@ -82,6 +84,14 @@ int main() {
 
   suite("Colors_test");
   result += Colors_test();
+  timing(c.delta());
+
+  suite("SpriteParser_test");
+  result += SpriteParser_test();
+  timing(c.delta());
+
+  suite("ResourceManager_test");
+  result += ResourceManager_test();
   timing(c.delta());
 
   auto final = c.getNow();

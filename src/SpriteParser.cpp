@@ -9,12 +9,20 @@
 #include "Sprite.h"
 
 namespace df {
+std::string SpriteParser::getLine(std::ifstream* p_file_stream) {
+  std::string line;
+  getline(*p_file_stream, line);
+  line.erase(std::remove_if(line.begin(), line.end(),
+                            [](char c) { return c == '\r'; }),
+             line.end());
+  return line;
+}
+
 int SpriteParser::parseHeader(std::ifstream* p_file_stream, int* p_frames,
                               int* p_width, int* p_height, int* p_slowdown,
                               Color* p_color) {
   for (int i = 0; i < 5; i++) {
-    std::string line;
-    getline(*p_file_stream, line);
+    auto line = getLine(p_file_stream);
     switch (i) {
       case 0:
         *p_frames = std::stoi(line);
@@ -77,9 +85,7 @@ Sprite* SpriteParser::parseSprite(std::string filename, std::string label) {
     std::string frameString;
 
     for (int j = 0; j < height; j++) {
-      std::string line;
-      getline(file, line);
-
+      auto line = getLine(&file);
       if (line.size() != width) {
         LM.writeLog(
             "SpriteParser::parseSpriteBody(): Invalid line length (%d) "

@@ -1,0 +1,1 @@
+int ResourceManager_test();

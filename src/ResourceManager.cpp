@@ -26,6 +26,14 @@ int ResourceManager::loadSprite(std::string filename, std::string label) {
     return -1;
   }
 
+  if (getSprite(label) != nullptr) {
+    LM.writeLog(
+        "ResourceManager::loadSprite(): Cannot load sprite, label '%s' "
+        "already in use.",
+        label.c_str());
+    return -1;
+  }
+
   Sprite* p_sprite = SpriteParser::parseSprite(filename, label);
 
   if (p_sprite == nullptr) {
@@ -49,7 +57,11 @@ int ResourceManager::unloadSprite(std::string label) {
   for (int i = 0; i < m_sprite_count; i++) {
     if (m_p_sprite[i] != nullptr && m_p_sprite[i]->getLabel() == label) {
       delete m_p_sprite[i];
+
+      // We need not scooting here, sprites are not ordered
       m_p_sprite[i] = m_p_sprite[m_sprite_count];
+      m_p_sprite[m_sprite_count] = nullptr;
+
       m_sprite_count--;
       return 0;
     }
@@ -60,7 +72,9 @@ int ResourceManager::unloadSprite(std::string label) {
 
 Sprite* ResourceManager::getSprite(std::string label) const {
   for (int i = 0; i < m_sprite_count; i++) {
-    if (m_p_sprite[i] != nullptr && m_p_sprite[i]->getLabel() == label) {
+    if (m_p_sprite[i] == nullptr) continue;
+
+    if (m_p_sprite[i]->getLabel() == label) {
       return m_p_sprite[i];
     }
   }

@@ -1,4 +1,4 @@
-#include "../src/Frame.h"
+#include "../includes/Frame.h"
 
 #include "test.h"
 
@@ -28,12 +28,12 @@ int Frame_test() {
 
   printf("Frame_draw_test\n");
   df::Frame frame4(3, 2, "###");
-  result +=
-      assert_ok("draws the frame", frame4.draw(df::Vector(), df::Color::RED));
+  result += assert_ok("draws the frame",
+                      frame4.draw(df::Vector(), df::Color::RED, 0));
 
   df::Frame frame5;
   result += assert_fail("fails on empty frame",
-                        frame5.draw(df::Vector(), df::Color::RED));
+                        frame5.draw(df::Vector(), df::Color::RED, 0));
 
   return result;
 }

@@ -1,16 +1,16 @@
 #include <thread>
 
-#include "../src/Colors.h"
-#include "../src/DisplayManager.h"
-#include "../src/EventKeyboard.h"
-#include "../src/EventOut.h"
-#include "../src/EventStep.h"
-#include "../src/GameManager.h"
-#include "../src/LogManager.h"
-#include "../src/Object.h"
-#include "../src/Vector.h"
-#include "../src/WorldManager.h"
-#include "../src/utils.h"
+#include "../includes/Colors.h"
+#include "../includes/DisplayManager.h"
+#include "../includes/EventKeyboard.h"
+#include "../includes/EventOut.h"
+#include "../includes/EventStep.h"
+#include "../includes/GameManager.h"
+#include "../includes/LogManager.h"
+#include "../includes/Object.h"
+#include "../includes/Vector.h"
+#include "../includes/WorldManager.h"
+#include "../includes/utils.h"
 
 class CustomEvent : public df::Event {
  public:

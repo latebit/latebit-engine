@@ -1,8 +1,8 @@
-#include "../src/Object.h"
+#include "../includes/Object.h"
 
 #include <iostream>
 
-#include "../src/WorldManager.h"
+#include "../includes/WorldManager.h"
 #include "Object_test.h"
 #include "test.h"
 

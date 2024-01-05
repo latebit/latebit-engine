@@ -1,11 +1,11 @@
-#include "../src/WorldManager.h"
+#include "../includes/WorldManager.h"
 
 #include <iostream>
 
-#include "../src/DisplayManager.h"
-#include "../src/EventOut.h"
-#include "../src/Vector.h"
-#include "../src/utils.h"
+#include "../includes/DisplayManager.h"
+#include "../includes/EventOut.h"
+#include "../includes/Vector.h"
+#include "../includes/utils.h"
 #include "test.h"
 
 int WorldManager_getCollisions_test() {

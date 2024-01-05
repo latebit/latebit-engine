@@ -1,4 +1,4 @@
-#include "../src/EventKeyboard.h"
+#include "../includes/EventKeyboard.h"
 
 #include "test.h"
 int EventKeyboard_test() {

@@ -1,7 +1,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "../src/Clock.h"
+#include "../includes/Clock.h"
 #include "EventCollision_test.h"
 #include "EventKeyboard_test.h"
 #include "EventOut_test.h"

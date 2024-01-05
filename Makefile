@@ -5,6 +5,7 @@ SMLFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 
 # Directories
 SRC_DIR = src
+INC_DIR = includes
 TEST_DIR = test
 EXAMPLES_DIR = examples
 
@@ -26,15 +27,15 @@ all: $(TEST_EXECUTABLE) $(GAME_EXECUTABLE)
 
 # Compile source files and test files into object files
 %.o: %.cpp
-	$(CXX) $(CFLAGS) -c -o $@ $<
+	$(CXX) $(CFLAGS) -I$(INC_DIR) -c -o $@ $<
 
 # Link object files to create the test executable
 $(TEST_EXECUTABLE): $(OBJ_FILES)
-	$(CXX) $(CFLAGS) $(SMLFLAGS) -o $@ $(OBJ_FILES)
+	$(CXX) $(CXXFLAGS) -I$(INC_DIR) $(SMLFLAGS) -o $@ $(OBJ_FILES)
 
 # Link object files to create the game executable
 $(GAME_EXECUTABLE): $(SRC_FILES:.cpp=.o) $(EXAMPLES_DIR)/game.cpp
-	$(CXX) $(CXXFLAGS) -g $(SMLFLAGS) -o $@ $(SRC_FILES:.cpp=.o) $(EXAMPLES_DIR)/game.cpp
+	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -g $(SMLFLAGS) -o $@ $(SRC_FILES:.cpp=.o) $(EXAMPLES_DIR)/game.cpp
 
 # Run the examples
 game: $(GAME_EXECUTABLE)

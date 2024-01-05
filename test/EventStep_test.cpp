@@ -1,4 +1,4 @@
-#include "../src/EventStep.h"
+#include "../includes/EventStep.h"
 
 #include "test.h"
 

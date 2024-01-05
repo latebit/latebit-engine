@@ -1,4 +1,4 @@
-#include "../src/Vector.h"
+#include "../includes/Vector.h"
 
 #include <cmath>
 #include <iostream>

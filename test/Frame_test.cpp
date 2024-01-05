@@ -28,11 +28,12 @@ int Frame_test() {
 
   printf("Frame_draw_test\n");
   df::Frame frame4(3, 2, "###");
-  result += assert_int("draws the frame",
-                       frame4.draw(df::Vector(0, 0), df::Color::RED), 0);
+  result +=
+      assert_ok("draws the frame", frame4.draw(df::Vector(), df::Color::RED));
+
   df::Frame frame5;
-  result += assert_int("does not draw empty frame",
-                       frame5.draw(df::Vector(0, 0), df::Color::RED), -1);
+  result += assert_fail("fails on empty frame",
+                        frame5.draw(df::Vector(), df::Color::RED));
 
   return result;
 }

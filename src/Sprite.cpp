@@ -62,6 +62,9 @@ std::string Sprite::getLabel() const { return m_label; }
 void Sprite::setSlowdown(int slowdown) { m_slowdown = slowdown; }
 int Sprite::getSlowdown() const { return m_slowdown; }
 
+void Sprite::setTransparencyChar(char c) { m_transparency_char = c; }
+char Sprite::getTransparencyChar() const { return m_transparency_char; }
+
 int Sprite::draw(int frame_number, Vector position) const {
   if (frame_number < 0 || frame_number >= m_frame_count) {
     LM.writeLog("Sprite::draw(): Invalid frame number (%d) with %d frames.",
@@ -69,7 +72,7 @@ int Sprite::draw(int frame_number, Vector position) const {
     return -1;
   }
 
-  return m_frame[frame_number].draw(position, m_color);
+  return m_frame[frame_number].draw(position, m_color, m_transparency_char);
 }
 
 }  // namespace df

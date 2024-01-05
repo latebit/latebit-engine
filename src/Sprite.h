@@ -23,6 +23,7 @@ class Sprite {
   Color m_color;
   Frame* m_frame;
   std::string m_label;
+  char m_transparency_char;
   Sprite();
 
  public:
@@ -43,6 +44,9 @@ class Sprite {
 
   void setSlowdown(int slowdown);
   int getSlowdown() const;
+
+  void setTransparencyChar(char transparency_char);
+  char getTransparencyChar() const;
 
   int getFrameCount() const;
   int addFrame(Frame frame);

@@ -28,7 +28,7 @@ class Frame {
   std::string getFrameString() const;
 
   // Draw the frame centered at the given position with the given color
-  int draw(Vector position, Color color) const;
+  int draw(Vector position, Color color, char transparencyChar) const;
 };
 }  // namespace df
 

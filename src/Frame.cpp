@@ -27,7 +27,7 @@ int Frame::getHeight() const { return m_height; }
 void Frame::setFrameString(std::string frame_str) { m_frame_str = frame_str; }
 std::string Frame::getFrameString() const { return m_frame_str; }
 
-int Frame::draw(Vector position, Color color) const {
+int Frame::draw(Vector position, Color color, char transparencyChar) const {
   if (m_width <= 0 || m_height <= 0 || m_frame_str.empty()) {
     LM.writeLog("Frame::draw(): Cannot draw empty frame");
     return -1;
@@ -41,7 +41,11 @@ int Frame::draw(Vector position, Color color) const {
   for (int i = 0; i < m_height; i++) {
     for (int j = 0; j < m_width; j++) {
       Vector temp(startX + j, startY + i);
-      DM.drawCh(temp, m_frame_str[i * m_width + j], color);
+      char ch = m_frame_str[i * m_width + j];
+
+      if (ch == transparencyChar) continue;
+
+      DM.drawCh(temp, ch, color);
     }
   }
 

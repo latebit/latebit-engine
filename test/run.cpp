@@ -11,6 +11,7 @@
 #include "ObjectListIterator_test.h"
 #include "ObjectList_test.h"
 #include "Object_test.h"
+#include "Sprite_test.h"
 #include "Vector_test.h"
 #include "WorldManager_test.h"
 #include "colors.h"
@@ -72,6 +73,10 @@ int main() {
 
   suite("Frame_test");
   result += Frame_test();
+  timing(c.delta());
+
+  suite("Sprite_test");
+  result += Sprite_test();
   timing(c.delta());
 
   auto final = c.getNow();

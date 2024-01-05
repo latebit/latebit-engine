@@ -2,6 +2,7 @@
 
 #include "Colors.h"
 #include "DisplayManager.h"
+#include "LogManager.h"
 #include "Vector.h"
 
 namespace df {
@@ -28,6 +29,7 @@ std::string Frame::getFrameString() const { return m_frame_str; }
 
 int Frame::draw(Vector position, Color color) const {
   if (m_width <= 0 || m_height <= 0 || m_frame_str.empty()) {
+    LM.writeLog("Frame::draw(): Cannot draw empty frame");
     return -1;
   }
 

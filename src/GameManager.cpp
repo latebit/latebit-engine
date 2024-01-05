@@ -69,7 +69,7 @@ void GameManager::run() {
     p_clock->delta();
 
     // Send a step event to all Objects
-    onEvent(new EventStep(steps++));
+    onEvent(new EventStep(++steps));
 
     IM.getInput();
     WM.update();

@@ -9,7 +9,7 @@ EventStep::EventStep() {
 EventStep::EventStep(int count) {
   m_step_count = 0;
   setType(STEP_EVENT);
-  setStepCount(count);
+  m_step_count = count;
 }
 
 void EventStep::setStepCount(int count) { m_step_count = count; }

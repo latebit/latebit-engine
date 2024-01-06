@@ -83,9 +83,7 @@ Sprite* ResourceManager::getSprite(std::string label) const {
 }
 void ResourceManager::shutDown() {
   for (int i = 0; i < m_sprite_count; i++) {
-    if (m_p_sprite[i] != nullptr) {
-      delete m_p_sprite[i];
-    }
+    delete m_p_sprite[i];
   }
 
   m_sprite_count = 0;

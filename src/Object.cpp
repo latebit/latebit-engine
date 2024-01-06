@@ -1,5 +1,6 @@
 #include "Object.h"
 
+#include "ResourceManager.h"
 #include "WorldManager.h"
 
 namespace df {
@@ -12,6 +13,7 @@ Object::Object() {
   m_altitude = MAX_ALTITUDE / 2;
   m_solidness = HARD;
   m_direction = Vector();
+  m_animation = Animation();
   WM.insertObject(this);
 }
 
@@ -55,7 +57,22 @@ bool Object::isSolid() const { return m_solidness != SPECTRAL; }
 void Object::setSolidness(Solidness s) { m_solidness = s; }
 Solidness Object::getSolidness() const { return m_solidness; }
 
+void Object::setAnimation(Animation a) { m_animation = a; }
+Animation Object::getAnimation() const { return m_animation; }
+
+int Object::setSprite(std::string label) {
+  auto p_s = RM.getSprite(label);
+  if (p_s == nullptr) return -1;
+
+  m_animation.setSprite(p_s);
+
+  return 0;
+}
+
 int Object::eventHandler(const Event* p_e) { return 0; }
 
-int Object::draw() { return 0; }
+int Object::draw() {
+  Vector p = getPosition();
+  return m_animation.draw(p);
+}
 }  // namespace df

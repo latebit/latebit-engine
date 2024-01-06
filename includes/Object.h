@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "Animation.h"
 #include "Event.h"
 #include "Vector.h"
 
@@ -22,6 +23,7 @@ class Object {
   Vector m_direction;
   float m_speed;
   Solidness m_solidness;
+  Animation m_animation;
 
  public:
   Object();
@@ -54,6 +56,11 @@ class Object {
   bool isSolid() const;
   void setSolidness(Solidness s);
   Solidness getSolidness() const;
+
+  void setAnimation(Animation a);
+  Animation getAnimation() const;
+
+  int setSprite(std::string label);
 
   virtual int eventHandler(const Event *p_e);
   virtual int draw();

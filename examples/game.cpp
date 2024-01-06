@@ -75,28 +75,7 @@ class Ship : public df::Object {
     setSolidness(df::SPECTRAL);
     setAltitude(df::MAX_ALTITUDE - 1);
     setPosition(df::Vector(7, 7));
-    m_current_frame = 0;
-    m_sprite = RM.getSprite("sprite");
-  }
-
-  int eventHandler(const df::Event *p_e) {
-    if (p_e->getType() == df::STEP_EVENT && m_sprite != nullptr &&
-        m_sprite->getFrameCount() > 0) {
-      auto p_event_step = dynamic_cast<const df::EventStep *>(p_e);
-      if (p_event_step->getStepCount() % m_sprite->getSlowdown() == 0) {
-        m_current_frame =
-            p_event_step->getStepCount() % m_sprite->getFrameCount();
-        return 1;
-      }
-    }
-
-    return 0;
-  }
-
-  int draw() {
-    if (m_sprite == nullptr) return -1;
-
-    return m_sprite->draw(m_current_frame, getPosition());
+    setSprite("sprite");
   }
 };
 

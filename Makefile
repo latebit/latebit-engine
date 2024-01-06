@@ -41,8 +41,8 @@ $(GAME_EXECUTABLE): $(SRC_FILES:.cpp=.o) $(EXAMPLES_DIR)/game.cpp
 game: $(GAME_EXECUTABLE)
 	./$(GAME_EXECUTABLE)
 
-debug: $(GAME_EXECUTABLE)
-	gdb $(GAME_EXECUTABLE)
+debug: $(TEST_EXECUTABLE)
+	gdb $(TEST_EXECUTABLE)
 
 # Run the tests
 test: $(TEST_EXECUTABLE)

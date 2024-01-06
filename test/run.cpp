@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "../includes/Clock.h"
+#include "Animation_test.h"
 #include "Colors_test.h"
 #include "EventCollision_test.h"
 #include "EventKeyboard_test.h"
@@ -92,6 +93,10 @@ int main() {
 
   suite("ResourceManager_test");
   result += ResourceManager_test();
+  timing(c.delta());
+
+  suite("Animation_test");
+  result += Animation_test();
   timing(c.delta());
 
   auto final = c.getNow();

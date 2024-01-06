@@ -2,8 +2,11 @@
 
 #include <iostream>
 
+#include "../includes/Animation.h"
+#include "../includes/ResourceManager.h"
 #include "../includes/WorldManager.h"
 #include "Object_test.h"
+#include "SpriteParser_test.h"
 #include "test.h"
 
 int altitude_test() {
@@ -78,8 +81,10 @@ int Object_test() {
                        df::MAX_ALTITUDE / 2);
   result +=
       assert_vector("sets a direction", subject.getDirection(), df::Vector());
-  result += assert_float("sets a speed", subject.getSpeed(), 0);
+  result += assert_float("sets a speed", subject.getSpeed(), 0.0);
   result += assert_int("sets a solidness", subject.getSolidness(), df::HARD);
+  result +=
+      assert("sets an animation", subject.getAnimation() == df::Animation());
 
   subject = df::Object();
   result += assert_int("increments id", subject.getId(), 1);
@@ -88,6 +93,21 @@ int Object_test() {
 
   subject.setType("type");
   result += assert_string("updates type", subject.getType(), "type");
+
+  subject.setAltitude(1);
+  result += assert_int("updates altitude", subject.getAltitude(), 1);
+
+  auto animation = df::Animation();
+  animation.setName("sprite");
+  subject.setAnimation(animation);
+  result += assert("updates animation", subject.getAnimation() == animation);
+
+  makeFile("sprite.txt", "1\n3\n4\n2\nblue\n***\n***\n***\n***");
+  RM.loadSprite("sprite.txt", "sprite");
+  result += assert_ok("sets valid sprite", subject.setSprite("sprite"));
+  result +=
+      assert_fail("does not set invalid sprite", subject.setSprite("invalid"));
+  remove("sprite.txt");
 
   auto position = df::Vector(1, 2);
   subject.setPosition(position);

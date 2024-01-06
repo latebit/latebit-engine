@@ -46,7 +46,7 @@ int assert_float(std::string name, float got, float want) {
   std::string message =
       "wanted '" + std::to_string(want) + "' got '" + std::to_string(got) + "'";
 
-  return assert(name, got == want, message);
+  return assert(name, std::abs(got - want) < 0.00001, message);
 }
 
 int assert_int(std::string name, int got, int want) {

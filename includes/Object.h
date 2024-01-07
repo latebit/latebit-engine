@@ -66,6 +66,11 @@ class Object {
 
   void setBox(Box box);
   Box getBox() const;
+  // Returns bounding box in world coordinates relative to this object's
+  // position.
+  Box getWorldBox() const;
+  // Returns bounding box in world coordinates relative to center.
+  Box getWorldBox(Vector center) const;
 
   virtual int eventHandler(const Event *p_e);
   virtual int draw();

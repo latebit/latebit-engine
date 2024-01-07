@@ -1,6 +1,8 @@
 #ifndef __BOX_H__
 #define __BOX_H__
 
+#include <string>
+
 #include "Vector.h"
 
 namespace df {
@@ -24,6 +26,7 @@ class Box {
   float getHeight() const;
 
   bool operator==(const Box &other) const;
+  std::string toString() const;
 };
 }  // namespace df
 

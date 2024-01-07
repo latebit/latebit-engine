@@ -47,7 +47,7 @@ int assert_float(std::string name, float got, float want) {
   std::string message =
       "wanted '" + std::to_string(want) + "' got '" + std::to_string(got) + "'";
 
-  return assert(name, floatEquals(got, want), message);
+  return assert(name, equals(got, want), message);
 }
 
 int assert_int(std::string name, int got, int want) {

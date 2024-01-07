@@ -52,11 +52,11 @@ Vector Vector::operator-(const Vector& other) const {
 }
 
 bool Vector::operator==(const Vector& other) const {
-  return floatEquals(m_x, other.m_x) && floatEquals(m_y, other.m_y);
+  return equals(m_x, other.m_x) && equals(m_y, other.m_y);
 }
 
 bool Vector::operator!=(const Vector& other) const {
-  return !floatEquals(m_x, other.m_x) || !floatEquals(m_y, other.m_y);
+  return !equals(m_x, other.m_x) || !equals(m_y, other.m_y);
 }
 
 bool Vector::operator!() const { return m_x == 0 && m_y == 0; }

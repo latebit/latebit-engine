@@ -67,13 +67,15 @@ ObjectList WorldManager::objectsOfType(std::string type) const {
 ObjectList WorldManager::getCollisions(Object* p_o, Vector where) const {
   ObjectList collisions;
   auto i_updates = ObjectListIterator(&m_updates);
+  auto box = p_o->getWorldBox(where);
 
   for (i_updates.first(); !i_updates.isDone(); i_updates.next()) {
     auto p_current = i_updates.currentObject();
     if (p_current == p_o) continue;
 
-    if (p_current->isSolid() &&
-        positionsMatch(p_current->getPosition(), where)) {
+    auto currentBox = p_current->getWorldBox();
+
+    if (p_current->isSolid() && intersects(box, currentBox)) {
       collisions.insert(p_current);
     }
   }
@@ -141,6 +143,8 @@ bool WorldManager::isOutOfBounds(Vector where) const {
 }
 
 void WorldManager::update() {
+  if (!isStarted()) return;
+
   auto i_deletions = ObjectListIterator(&m_deletions);
   for (i_deletions.first(); !i_deletions.isDone(); i_deletions.next()) {
     removeObject(i_deletions.currentObject());
@@ -169,6 +173,7 @@ int WorldManager::markForDelete(Object* p_o) {
 
   return m_deletions.insert(p_o);
 }
+
 void WorldManager::draw() {
   auto iterator = new ObjectListIterator(&m_updates);
 

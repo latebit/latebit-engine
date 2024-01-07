@@ -9,7 +9,7 @@
 #include "SpriteParser_test.h"
 #include "test.h"
 
-int altitude_test() {
+int Object_altitude_test() {
   std::cout << "Object_altitude_test\n";
   int result = 0;
   df::Object subject;
@@ -27,7 +27,7 @@ int altitude_test() {
   return result;
 }
 
-int kinematics_test() {
+int Object_kinematics_test() {
   std::cout << "Object_kinematics_test\n";
   df::Object subject;
   int result = 0;
@@ -51,7 +51,7 @@ int kinematics_test() {
   return result;
 }
 
-int solidness_test() {
+int Object_solidness_test() {
   std::cout << "Object_solidness_test\n";
   df::Object subject;
   int result = 0;
@@ -64,6 +64,32 @@ int solidness_test() {
   result += assert("HARD is solid", subject.isSolid());
   subject.setSolidness(df::SPECTRAL);
   result += assert("SPECTRAL is not solid", !subject.isSolid());
+
+  return result;
+}
+
+int Object_boundingBox_test() {
+  int result = 0;
+  printf("Object_boundingBox_test\n");
+
+  df::Object subject;
+  subject.setPosition(df::Vector(1, 1));
+  makeFile("sprite.txt", "1\n3\n4\n2\nblue\n***\n***\n***\n***");
+  RM.loadSprite("sprite.txt", "sprite");
+  remove("sprite.txt");
+
+  subject.setSprite("sprite");
+
+  result += assert("sets bounding box",
+                   subject.getBox() == df::Box(df::Vector(-1.5, -2.0), 3, 4));
+
+  result +=
+      assert("gets bounding box in world coordinates",
+             subject.getWorldBox() == df::Box(df::Vector(-0.5, -1.0), 3, 4));
+
+  result += assert("gets bounding box in world coordinates relative to (2, 2)",
+                   subject.getWorldBox(df::Vector(2, 2)) ==
+                       df::Box(df::Vector(0.5, 0), 3, 4));
 
   return result;
 }
@@ -106,10 +132,11 @@ int Object_test() {
 
   makeFile("sprite.txt", "1\n3\n4\n2\nblue\n***\n***\n***\n***");
   RM.loadSprite("sprite.txt", "sprite");
+  remove("sprite.txt");
+
   result += assert_ok("sets valid sprite", subject.setSprite("sprite"));
   result +=
       assert_fail("does not set invalid sprite", subject.setSprite("invalid"));
-  remove("sprite.txt");
 
   auto position = df::Vector(1, 2);
   subject.setPosition(position);
@@ -120,9 +147,10 @@ int Object_test() {
   subject.setBox(box);
   result += assert("updates the box", subject.getBox() == box);
 
-  result += altitude_test();
-  result += kinematics_test();
-  result += solidness_test();
+  result += Object_altitude_test();
+  result += Object_kinematics_test();
+  result += Object_solidness_test();
+  result += Object_boundingBox_test();
 
   return result;
 }

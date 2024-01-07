@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "../includes/Box.h"
 #include "../includes/DisplayManager.h"
 #include "../includes/EventOut.h"
 #include "../includes/Vector.h"
@@ -10,6 +11,7 @@
 
 int WorldManager_getCollisions_test() {
   std::cout << "WorldManager_getCollisions_test" << std::endl;
+  WM.startUp();
 
   int result = 0;
 
@@ -46,11 +48,13 @@ int WorldManager_getCollisions_test() {
   WM.markForDelete(obj4);
   WM.update();
 
+  WM.shutDown();
   return result;
 }
 
 int WorldManager_moveObject_test() {
   std::cout << "WorldManager_moveObject_test" << std::endl;
+  WM.startUp();
 
   int result = 0;
 
@@ -59,6 +63,11 @@ int WorldManager_moveObject_test() {
   auto softObject = new df::Object;
   auto hardObject = new df::Object;
   auto spectralObject = new df::Object;
+
+  // For debugging
+  softObject->setType("soft");
+  hardObject->setType("hard");
+  spectralObject->setType("spectral");
 
   // Set positions of test objects
   subject->setPosition(df::Vector(0, 0));
@@ -73,27 +82,27 @@ int WorldManager_moveObject_test() {
   spectralObject->setSolidness(df::SPECTRAL);
 
   df::Vector destination = softObject->getPosition();
-  int moveResult = WM.moveObject(subject, destination);
-  result += assert_int("moves HARD over SOFT", moveResult, 0);
+  result +=
+      assert_ok("moves HARD over SOFT", WM.moveObject(subject, destination));
   result +=
       assert_vector("updates position", subject->getPosition(), destination);
 
   destination = spectralObject->getPosition();
-  moveResult = WM.moveObject(subject, destination);
-  result += assert_int("moves HARD over SPECTRAL", moveResult, 0);
+  result += assert_ok("moves HARD over SPECTRAL",
+                      WM.moveObject(subject, destination));
   result +=
       assert_vector("updates position", subject->getPosition(), destination);
 
   auto previousPosition = subject->getPosition();
   destination = hardObject->getPosition();
-  moveResult = WM.moveObject(subject, destination);
-  result += assert_int("does not move HARD over HARD", moveResult, -1);
+  result += assert_fail("does not move HARD over HARD",
+                        WM.moveObject(subject, destination));
   result += assert_vector("does not update position", subject->getPosition(),
                           previousPosition);
 
   destination = df::Vector(0, 0);
-  moveResult = WM.moveObject(subject, destination);
-  result += assert_int("moves HARD on empty spot", moveResult, 0);
+  result += assert_ok("moves HARD on empty spot",
+                      WM.moveObject(subject, destination));
   result +=
       assert_vector("updates position", subject->getPosition(), destination);
 
@@ -101,26 +110,26 @@ int WorldManager_moveObject_test() {
   subject->setPosition(df::Vector(0, 0));
 
   destination = softObject->getPosition();
-  moveResult = WM.moveObject(subject, destination);
-  result += assert_int("moves SPECTRAL over SOFT", moveResult, 0);
+  result += assert_ok("moves SPECTRAL over SOFT",
+                      WM.moveObject(subject, destination));
   result +=
       assert_vector("updates position", subject->getPosition(), destination);
 
   destination = spectralObject->getPosition();
-  moveResult = WM.moveObject(subject, destination);
-  result += assert_int("moves SPECTRAL over SPECTRAL", moveResult, 0);
+  result += assert_ok("moves SPECTRAL over SPECTRAL",
+                      WM.moveObject(subject, destination));
   result +=
       assert_vector("updates position", subject->getPosition(), destination);
 
   destination = hardObject->getPosition();
-  moveResult = WM.moveObject(subject, destination);
-  result += assert_int("moves SPECTRAL over HARD", moveResult, 0);
+  result += assert_ok("moves SPECTRAL over HARD",
+                      WM.moveObject(subject, destination));
   result +=
       assert_vector("updates position", subject->getPosition(), destination);
 
   destination = df::Vector(0, 0);
-  moveResult = WM.moveObject(subject, destination);
-  result += assert_int("moves SPECTRAL on empty spot", moveResult, 0);
+  result += assert_ok("moves SPECTRAL on empty spot",
+                      WM.moveObject(subject, destination));
   result +=
       assert_vector("updates position", subject->getPosition(), destination);
 
@@ -128,28 +137,35 @@ int WorldManager_moveObject_test() {
   subject->setPosition(df::Vector(0, 0));
 
   destination = softObject->getPosition();
-  moveResult = WM.moveObject(subject, destination);
-  result += assert_int("moves SOFT over SOFT", moveResult, 0);
+  result +=
+      assert_ok("moves SOFT over SOFT", WM.moveObject(subject, destination));
   result +=
       assert_vector("updates position", subject->getPosition(), destination);
 
   destination = spectralObject->getPosition();
-  moveResult = WM.moveObject(subject, destination);
-  result += assert_int("moves SOFT over SPECTRAL", moveResult, 0);
+  result += assert_ok("moves SOFT over SPECTRAL",
+                      WM.moveObject(subject, destination));
   result +=
       assert_vector("updates position", subject->getPosition(), destination);
 
   destination = hardObject->getPosition();
-  moveResult = WM.moveObject(subject, destination);
-  result += assert_int("moves SOFT over HARD", moveResult, 0);
+  result +=
+      assert_ok("moves SOFT over HARD", WM.moveObject(subject, destination));
   result +=
       assert_vector("updates position", subject->getPosition(), destination);
 
   destination = df::Vector(0, 0);
-  moveResult = WM.moveObject(subject, destination);
-  result += assert_int("moves SOFT on empty spot", moveResult, 0);
+  result += assert_ok("moves SOFT on empty spot",
+                      WM.moveObject(subject, destination));
   result +=
       assert_vector("updates position", subject->getPosition(), destination);
+
+  subject->setSolidness(df::HARD);
+  subject->setBox(df::Box(df::Vector(), 1.5, 1.5));
+  // Almost on hard, but with part of the bounding box colliding
+  destination = hardObject->getPosition() - df::Vector(1, 1);
+  result += assert_fail("does not move HARD over HARD (larger bounding boxes)",
+                        WM.moveObject(subject, destination));
 
   // Clean up test objects
   WM.markForDelete(subject);
@@ -157,11 +173,13 @@ int WorldManager_moveObject_test() {
   WM.markForDelete(hardObject);
   WM.update();
 
+  WM.shutDown();
   return result;
 }
 
 bool WorldManager_outOfBounds_test_emitted = false;
 int WorldManager_outOfBounds_test() {
+  WM.startUp();
   int result = 0;
 
   class TestObject : public df::Object {
@@ -188,6 +206,7 @@ int WorldManager_outOfBounds_test() {
   result += assert("does not emit out of bounds if already out",
                    !WorldManager_outOfBounds_test_emitted);
 
+  WM.shutDown();
   return result;
 }
 
@@ -224,11 +243,6 @@ int WorldManager_test() {
 
   WM.shutDown();
   result += assert_int("removes everything", WM.getAllObjects().getCount(), 0);
-
-  WM.markForDelete(obj1);
-  WM.markForDelete(obj2);
-  WM.markForDelete(obj3);
-  WM.markForDelete(obj4);
 
   result += WorldManager_getCollisions_test();
   result += WorldManager_moveObject_test();

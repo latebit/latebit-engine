@@ -1,5 +1,7 @@
 #include "Box.h"
 
+#include <string>
+
 #include "Vector.h"
 #include "utils.h"
 
@@ -27,7 +29,11 @@ float Box::getHeight() const { return m_height; }
 
 bool Box::operator==(const Box& other) const {
   return m_top_left_corner == other.m_top_left_corner &&
-         floatEquals(m_width, other.m_width) &&
-         floatEquals(m_height, other.m_height);
+         equals(m_width, other.m_width) && equals(m_height, other.m_height);
+}
+
+std::string Box::toString() const {
+  return "Box(" + m_top_left_corner.toString() + ", " +
+         std::to_string(m_width) + ", " + std::to_string(m_height) + ")";
 }
 }  // namespace df

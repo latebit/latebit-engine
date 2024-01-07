@@ -75,6 +75,13 @@ int Object::setSprite(std::string label) {
 void Object::setBox(Box box) { m_bounding_box = box; }
 Box Object::getBox() const { return m_bounding_box; }
 
+Box Object::getWorldBox() const { return getWorldBox(m_position); }
+
+Box Object::getWorldBox(Vector center) const {
+  auto corner = m_bounding_box.getCorner() + center;
+  return Box(corner, m_bounding_box.getWidth(), m_bounding_box.getHeight());
+}
+
 int Object::eventHandler(const Event* p_e) { return 0; }
 
 int Object::draw() {

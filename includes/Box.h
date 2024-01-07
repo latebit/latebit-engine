@@ -22,6 +22,8 @@ class Box {
 
   void setHeight(float height);
   float getHeight() const;
+
+  bool operator==(const Box &other) const;
 };
 }  // namespace df
 

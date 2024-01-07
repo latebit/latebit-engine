@@ -42,6 +42,17 @@ int Animation::draw(Vector position) {
   return 0;
 }
 
+Box Animation::getBox() const {
+  if (m_p_sprite == nullptr) return Box(Vector(-0.5, -0.5), 1, 1);
+
+  auto width = m_p_sprite->getWidth();
+  auto height = m_p_sprite->getHeight();
+
+  auto corner = Vector(-width / 2.0, -height / 2.0);
+
+  return Box(corner, width, height);
+}
+
 bool Animation::operator==(const Animation& other) const {
   return m_p_sprite == other.m_p_sprite && m_name == other.m_name &&
          m_index == other.m_index && m_slowdown_count == other.m_slowdown_count;

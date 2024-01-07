@@ -1,7 +1,10 @@
 #include "../includes/Animation.h"
 
+#include "../includes/Box.h"
 #include "../includes/ResourceManager.h"
 #include "../includes/Sprite.h"
+#include "../includes/Vector.h"
+#include "../includes/utils.h"
 #include "Animation_test.h"
 #include "SpriteParser_test.h"
 #include "test.h"
@@ -84,6 +87,31 @@ int draw_test() {
   return result;
 }
 
+int getBox_test() {
+  int result = 0;
+  printf("getBox_test\n");
+
+  auto animation = df::Animation();
+
+  result += assert("returns unit box",
+                   animation.getBox() == df::Box(df::Vector(-0.5, -0.5), 1, 1));
+
+  auto filename = "sprite";
+  auto label = "label";
+  makeFile(filename,
+           "2\n3\n4\n2\nblue\n***\n***\n***\n***\n@@@\n@@@\n@@@\n@@@");
+  RM.loadSprite(filename, label);
+  df::Sprite *sprite = RM.getSprite(label);
+  animation.setSprite(sprite);
+
+  auto want = df::Box(df::Vector(-1.5, -2.0), 3.0, 4.0);
+  auto animBox = animation.getBox();
+  result += assert("returns correct box", animBox == want);
+
+  remove(filename);
+  return result;
+}
+
 int Animation_test() {
   int result = 0;
   result += setSprite_test();
@@ -91,5 +119,6 @@ int Animation_test() {
   result += setIndex_test();
   result += setSlowdownCount_test();
   result += draw_test();
+  result += getBox_test();
   return result;
 }

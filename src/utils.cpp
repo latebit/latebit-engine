@@ -26,3 +26,7 @@ bool positionsMatch(df::Vector p1, df::Vector p2) {
   return std::abs(p1.getX() - p2.getX()) <= 1 &&
          std::abs(p1.getY() - p2.getY()) <= 1;
 }
+
+bool floatEquals(float a, float b, float tolerance) {
+  return std::abs(b - a) < tolerance;
+}

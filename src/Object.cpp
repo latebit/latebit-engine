@@ -14,6 +14,8 @@ Object::Object() {
   m_solidness = HARD;
   m_direction = Vector();
   m_animation = Animation();
+  m_bounding_box = Box(m_position, 1, 1);
+  m_speed = 0;
   WM.insertObject(this);
 }
 
@@ -65,9 +67,13 @@ int Object::setSprite(std::string label) {
   if (p_s == nullptr) return -1;
 
   m_animation.setSprite(p_s);
+  setBox(m_animation.getBox());
 
   return 0;
 }
+
+void Object::setBox(Box box) { m_bounding_box = box; }
+Box Object::getBox() const { return m_bounding_box; }
 
 int Object::eventHandler(const Event* p_e) { return 0; }
 

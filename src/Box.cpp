@@ -1,6 +1,7 @@
 #include "Box.h"
 
 #include "Vector.h"
+#include "utils.h"
 
 namespace df {
 Box::Box() {
@@ -23,4 +24,10 @@ float Box::getWidth() const { return m_width; }
 
 void Box::setHeight(float height) { m_height = height; }
 float Box::getHeight() const { return m_height; }
+
+bool Box::operator==(const Box& other) const {
+  return m_top_left_corner == other.m_top_left_corner &&
+         floatEquals(m_width, other.m_width) &&
+         floatEquals(m_height, other.m_height);
+}
 }  // namespace df

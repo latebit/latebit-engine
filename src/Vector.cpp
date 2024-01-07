@@ -5,6 +5,8 @@
 #include <cmath>
 #include <string>
 
+#include "utils.h"
+
 namespace df {
 Vector::Vector(float x, float y) {
   m_x = x;
@@ -50,11 +52,11 @@ Vector Vector::operator-(const Vector& other) const {
 }
 
 bool Vector::operator==(const Vector& other) const {
-  return m_x == other.m_x && m_y == other.m_y;
+  return floatEquals(m_x, other.m_x) && floatEquals(m_y, other.m_y);
 }
 
 bool Vector::operator!=(const Vector& other) const {
-  return m_x != other.m_x || m_y != other.m_y;
+  return !floatEquals(m_x, other.m_x) || !floatEquals(m_y, other.m_y);
 }
 
 bool Vector::operator!() const { return m_x == 0 && m_y == 0; }

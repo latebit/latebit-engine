@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Animation.h"
+#include "Box.h"
 #include "Event.h"
 #include "Vector.h"
 
@@ -24,6 +25,7 @@ class Object {
   float m_speed;
   Solidness m_solidness;
   Animation m_animation;
+  Box m_bounding_box;
 
  public:
   Object();
@@ -61,6 +63,9 @@ class Object {
   Animation getAnimation() const;
 
   int setSprite(std::string label);
+
+  void setBox(Box box);
+  Box getBox() const;
 
   virtual int eventHandler(const Event *p_e);
   virtual int draw();

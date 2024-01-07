@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "../includes/Vector.h"
+#include "../includes/utils.h"
 #include "colors.h"
 #include "test.h"
 
@@ -46,7 +47,7 @@ int assert_float(std::string name, float got, float want) {
   std::string message =
       "wanted '" + std::to_string(want) + "' got '" + std::to_string(got) + "'";
 
-  return assert(name, std::abs(got - want) < 0.00001, message);
+  return assert(name, floatEquals(got, want), message);
 }
 
 int assert_int(std::string name, int got, int want) {

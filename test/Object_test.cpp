@@ -83,6 +83,8 @@ int Object_test() {
       assert_vector("sets a direction", subject.getDirection(), df::Vector());
   result += assert_float("sets a speed", subject.getSpeed(), 0.0);
   result += assert_int("sets a solidness", subject.getSolidness(), df::HARD);
+  result += assert("sets a bounding box",
+                   subject.getBox() == df::Box(df::Vector(), 1, 1));
   result +=
       assert("sets an animation", subject.getAnimation() == df::Animation());
 
@@ -113,6 +115,10 @@ int Object_test() {
   subject.setPosition(position);
   auto got = subject.getPosition();
   result += assert_vector("updates position", got, position);
+
+  auto box = df::Box(df::Vector(), 1, 1);
+  subject.setBox(box);
+  result += assert("updates the box", subject.getBox() == box);
 
   result += altitude_test();
   result += kinematics_test();

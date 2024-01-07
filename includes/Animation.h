@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "Box.h"
 #include "Sprite.h"
 #include "Vector.h"
 
@@ -32,6 +33,8 @@ class Animation {
   int getSlowdownCount() const;
 
   int draw(Vector position);
+
+  Box getBox() const;
 
   bool operator==(const Animation &other) const;
 };

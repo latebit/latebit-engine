@@ -26,6 +26,7 @@ class Object {
   Solidness m_solidness;
   Animation m_animation;
   Box m_bounding_box;
+  bool m_debug;
 
  public:
   Object();
@@ -62,10 +63,15 @@ class Object {
   void setAnimation(Animation a);
   Animation getAnimation() const;
 
+  void setDebug(bool debug);
+  bool getDebug() const;
+
   int setSprite(std::string label);
 
   void setBox(Box box);
   Box getBox() const;
+  int drawBoundingBox() const;
+
   // Returns bounding box in world coordinates relative to this object's
   // position.
   Box getWorldBox() const;

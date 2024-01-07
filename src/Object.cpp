@@ -1,5 +1,6 @@
 #include "Object.h"
 
+#include "DisplayManager.h"
 #include "ResourceManager.h"
 #include "WorldManager.h"
 
@@ -16,10 +17,14 @@ Object::Object() {
   m_animation = Animation();
   m_bounding_box = Box(m_position, 1, 1);
   m_speed = 0;
+  m_debug = false;
   WM.insertObject(this);
 }
 
-Object::~Object() { WM.removeObject(this); }
+Object::~Object() {
+  // Resources for this object are freed in WorldManager::shutDown
+  WM.removeObject(this);
+}
 
 void Object::setId(int id) { m_id = id; }
 int Object::getId() const { return m_id; }
@@ -76,7 +81,6 @@ void Object::setBox(Box box) { m_bounding_box = box; }
 Box Object::getBox() const { return m_bounding_box; }
 
 Box Object::getWorldBox() const { return getWorldBox(m_position); }
-
 Box Object::getWorldBox(Vector center) const {
   auto corner = m_bounding_box.getCorner() + center;
   return Box(corner, m_bounding_box.getWidth(), m_bounding_box.getHeight());
@@ -86,6 +90,29 @@ int Object::eventHandler(const Event* p_e) { return 0; }
 
 int Object::draw() {
   Vector p = getPosition();
-  return m_animation.draw(p);
+
+  int result = m_animation.draw(p);
+  if (m_debug) {
+    result += drawBoundingBox();
+  }
+
+  return result;
+}
+
+void Object::setDebug(bool debug) { m_debug = debug; }
+bool Object::getDebug() const { return m_debug; }
+
+int Object::drawBoundingBox() const {
+  Box box = getWorldBox();
+  Vector corner = box.getCorner();
+  float width = box.getWidth();
+  float height = box.getHeight();
+
+  int result = 0;
+  result += DM.drawCh(corner, '+', CYAN);
+  result += DM.drawCh(corner + df::Vector(width, 0), '+', CYAN);
+  result += DM.drawCh(corner + df::Vector(width, height), '+', CYAN);
+  result += DM.drawCh(corner + df::Vector(0, height), '+', CYAN);
+  return result;
 }
 }  // namespace df

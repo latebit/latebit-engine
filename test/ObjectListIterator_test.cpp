@@ -1,8 +1,8 @@
-#include "../includes/ObjectListIterator.h"
+#include "../include/ObjectListIterator.h"
 
 #include <iostream>
 
-#include "../includes/Object.h"
+#include "../include/Object.h"
 #include "ObjectListIterator_test.h"
 #include "ObjectList_test.h"
 #include "test.h"

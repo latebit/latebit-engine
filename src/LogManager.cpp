@@ -2,6 +2,8 @@
 
 #include <unistd.h>
 
+#include <cstdarg>
+
 #include "utils.h"
 
 namespace df {

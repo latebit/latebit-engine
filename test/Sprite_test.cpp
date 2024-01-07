@@ -1,4 +1,4 @@
-#include "../includes/Sprite.h"
+#include "../include/Sprite.h"
 
 #include "test.h"
 

@@ -1,6 +1,6 @@
-#include "../includes/Box.h"
+#include "../include/Box.h"
 
-#include "../includes/Vector.h"
+#include "../include/Vector.h"
 #include "Box_test.h"
 #include "test.h"
 

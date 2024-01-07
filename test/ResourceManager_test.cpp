@@ -1,4 +1,4 @@
-#include "../includes/ResourceManager.h"
+#include "../include/ResourceManager.h"
 
 #include "SpriteParser_test.h"
 #include "test.h"

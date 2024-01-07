@@ -1,10 +1,10 @@
-#include "../includes/Object.h"
+#include "../include/Object.h"
 
 #include <iostream>
 
-#include "../includes/Animation.h"
-#include "../includes/ResourceManager.h"
-#include "../includes/WorldManager.h"
+#include "../include/Animation.h"
+#include "../include/ResourceManager.h"
+#include "../include/WorldManager.h"
 #include "Object_test.h"
 #include "SpriteParser_test.h"
 #include "test.h"

@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "../includes/Vector.h"
+#include "../include/Vector.h"
 
 // Number of assertions in this run
 std::string getAssertions();

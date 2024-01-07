@@ -1,6 +1,6 @@
-#include "../includes/SpriteParser.h"
+#include "../include/SpriteParser.h"
 
-#include "../includes/Colors.h"
+#include "../include/Colors.h"
 #include "test.h"
 
 void makeFile(std::string filename, std::string content) {

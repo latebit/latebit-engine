@@ -4,8 +4,8 @@
 #include <regex>
 #include <sstream>
 
-#include "../includes/Vector.h"
-#include "../includes/utils.h"
+#include "../include/Vector.h"
+#include "../include/utils.h"
 #include "colors.h"
 #include "test.h"
 

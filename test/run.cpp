@@ -1,7 +1,7 @@
 #include <iomanip>
 #include <iostream>
 
-#include "../includes/Clock.h"
+#include "../include/Clock.h"
 #include "Animation_test.h"
 #include "Box_test.h"
 #include "Colors_test.h"

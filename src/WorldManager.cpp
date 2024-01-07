@@ -32,11 +32,11 @@ int WorldManager::startUp() {
 
 void WorldManager::shutDown() {
   auto updates = m_updates;  // create a copy
-  auto iterator = ObjectListIterator(&updates);
-  for (iterator.first(); !iterator.isDone(); iterator.next()) {
+  auto i_updates = ObjectListIterator(&updates);
+  for (i_updates.first(); !i_updates.isDone(); i_updates.next()) {
     // This is not leaving a danglig null reference!
     // In the destructor of Object, we also remove it from the world
-    delete iterator.currentObject();
+    delete i_updates.currentObject();
   }
 
   m_updates.clear();
@@ -155,11 +155,11 @@ void WorldManager::update() {
   auto i_updates = ObjectListIterator(&m_updates);
   for (i_updates.first(); !i_updates.isDone(); i_updates.next()) {
     auto object = i_updates.currentObject();
-    auto old_position = object->getPosition();
-    auto new_position = object->predictPosition();
+    auto oldPosition = object->getPosition();
+    auto newPosition = object->predictPosition();
 
-    if (old_position != new_position) {
-      moveObject(object, new_position);
+    if (oldPosition != newPosition) {
+      moveObject(object, newPosition);
     }
   }
 }
@@ -175,11 +175,11 @@ int WorldManager::markForDelete(Object* p_o) {
 }
 
 void WorldManager::draw() {
-  auto iterator = new ObjectListIterator(&m_updates);
+  auto i_updates = new ObjectListIterator(&m_updates);
 
   for (int i = 0; i < MAX_ALTITUDE; i++) {
-    for (iterator->first(); !iterator->isDone(); iterator->next()) {
-      auto object = iterator->currentObject();
+    for (i_updates->first(); !i_updates->isDone(); i_updates->next()) {
+      auto object = i_updates->currentObject();
 
       if (object != nullptr && object->getAltitude() == i) object->draw();
     }

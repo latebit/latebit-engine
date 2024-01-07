@@ -33,10 +33,10 @@ int Frame::draw(Vector position, Color color, char transparencyChar) const {
     return -1;
   }
 
-  float offsetX = m_width / 2;
-  float offsetY = m_height / 2;
+  float offsetX = m_width / 2.0;
+  float offsetY = m_height / 2.0;
   float startX = position.getX() - offsetX;
-  float startY = position.getX() - offsetY;
+  float startY = position.getY() - offsetY;
 
   for (int i = 0; i < m_height; i++) {
     for (int j = 0; j < m_width; j++) {

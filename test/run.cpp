@@ -3,6 +3,7 @@
 
 #include "../includes/Clock.h"
 #include "Animation_test.h"
+#include "Box_test.h"
 #include "Colors_test.h"
 #include "EventCollision_test.h"
 #include "EventKeyboard_test.h"
@@ -97,6 +98,10 @@ int main() {
 
   suite("Animation_test");
   result += Animation_test();
+  timing(c.delta());
+
+  suite("Box_test");
+  result += Box_test();
   timing(c.delta());
 
   auto final = c.getNow();

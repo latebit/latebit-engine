@@ -65,7 +65,7 @@ int DisplayManager::drawCh(Vector world_pos, char ch, Color fg,
   if (bg != UNDEFINED_COLOR) {
     static sf::RectangleShape background;
     background.setSize(sf::Vector2f(width, height));
-    background.setFillColor(toSFColor(m_background_color));
+    background.setFillColor(toSFColor(bg));
     background.setPosition(pixel_pos.getX() - width / 10,
                            pixel_pos.getY() + height / 5);
     m_p_window->draw(background);

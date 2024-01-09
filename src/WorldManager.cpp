@@ -128,6 +128,7 @@ void WorldManager::moveAndCheckBounds(Object* p_o, Vector where) const {
   auto old_position = p_o->getPosition();
   p_o->setPosition(where);
 
+  // Should this take in account the bounding box?
   if (isOutOfBounds(where) && !isOutOfBounds(old_position)) {
     auto event = EventOut();
     p_o->eventHandler(&event);

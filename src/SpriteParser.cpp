@@ -88,9 +88,9 @@ Sprite* SpriteParser::parseSprite(std::string filename, std::string label) {
       auto line = getLine(&file);
       if (line.size() != width) {
         LM.writeLog(
-            "SpriteParser::parseSpriteBody(): Invalid line length (%d) "
-            "for frame %d, expected %d.",
-            line.size(), i, width);
+            "SpriteParser::parseSpriteBody(): Invalid line length "
+            "for frame %d, line %d, expected %d got %d.",
+            i, j, width, line.length());
         delete sprite;
         return nullptr;
       }

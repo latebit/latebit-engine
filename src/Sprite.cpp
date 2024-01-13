@@ -16,7 +16,7 @@ Sprite::Sprite(int max_frames) {
   m_color = COLOR_DEFAULT;
   m_frames = new Frame[m_max_frame_count];
   m_label = "";
-  m_transparency_char = 0;
+  m_transparency_char = ' ';
 }
 
 Sprite::~Sprite() { delete[] m_frames; }

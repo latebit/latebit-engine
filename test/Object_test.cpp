@@ -14,15 +14,19 @@ int Object_altitude_test() {
   int result = 0;
   df::Object subject;
 
-  subject.setAltitude(1);
-  result += assert_int("updates altitude", subject.getAltitude(), 1);
+  for (int i = 0; i <= df::MAX_ALTITUDE; i++) {
+    subject.setAltitude(i);
+    result += assert_int("updates altitude", subject.getAltitude(), i);
+  }
+
+  auto initialAltitude = subject.getAltitude();
 
   subject.setAltitude(10);
-  result +=
-      assert_int("prevents out of bounds (max)", subject.getAltitude(), 1);
+  result += assert_int("prevents out of bounds (max)", subject.getAltitude(),
+                       initialAltitude);
   subject.setAltitude(-1);
-  result +=
-      assert_int("prevents out of bounds (min)", subject.getAltitude(), 1);
+  result += assert_int("prevents out of bounds (min)", subject.getAltitude(),
+                       initialAltitude);
 
   return result;
 }

@@ -36,7 +36,7 @@ void Object::setPosition(Vector p) { m_position = p; }
 Vector Object::getPosition() const { return m_position; }
 
 void Object::setAltitude(int a) {
-  if (a < MAX_ALTITUDE && a >= 0) m_altitude = a;
+  if (a <= MAX_ALTITUDE && a >= 0) m_altitude = a;
 }
 int Object::getAltitude() const { return m_altitude; }
 

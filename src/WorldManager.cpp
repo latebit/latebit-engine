@@ -178,7 +178,7 @@ int WorldManager::markForDelete(Object* p_o) {
 void WorldManager::draw() {
   auto i_updates = new ObjectListIterator(&m_updates);
 
-  for (int i = 0; i < MAX_ALTITUDE; i++) {
+  for (int i = 0; i <= MAX_ALTITUDE; i++) {
     for (i_updates->first(); !i_updates->isDone(); i_updates->next()) {
       auto object = i_updates->currentObject();
 

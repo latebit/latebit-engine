@@ -9,8 +9,39 @@
 #include "../include/utils.h"
 #include "test.h"
 
+int WorldManager_draw_test_drawCount[5];
+int WorldManager_draw_test() {
+  printf("WorldManager_draw_test\n");
+  int result = 0;
+  WM.startUp();
+
+  class TestObject : public df::Object {
+   public:
+    TestObject(int altitude) { setAltitude(altitude); }
+    int draw() {
+      // Count the number of drawings per altitude
+      WorldManager_draw_test_drawCount[getAltitude()]++;
+      return df::Object::draw();
+    }
+  };
+
+  // Initialize objects and results array
+  for (int i = 0; i < 5; i++) {
+    WorldManager_draw_test_drawCount[i] = 0;
+    new TestObject(i);
+  };
+
+  WM.draw();
+  for (int i = 0; i < 5; i++) {
+    result +=
+        assert_int("draws all objects", WorldManager_draw_test_drawCount[i], 1);
+  }
+
+  return result;
+}
+
 int WorldManager_getCollisions_test() {
-  std::cout << "WorldManager_getCollisions_test" << std::endl;
+  printf("WorldManager_getCollisions_test\n");
   WM.startUp();
 
   int result = 0;
@@ -53,7 +84,7 @@ int WorldManager_getCollisions_test() {
 }
 
 int WorldManager_moveObject_test() {
-  std::cout << "WorldManager_moveObject_test" << std::endl;
+  printf("WorldManager_moveObject_test\n");
   WM.startUp();
 
   int result = 0;
@@ -179,6 +210,7 @@ int WorldManager_moveObject_test() {
 
 bool WorldManager_outOfBounds_test_emitted = false;
 int WorldManager_outOfBounds_test() {
+  printf("WorldManager_outOfBounds_test\n");
   WM.startUp();
   int result = 0;
 
@@ -247,6 +279,7 @@ int WorldManager_test() {
   result += WorldManager_getCollisions_test();
   result += WorldManager_moveObject_test();
   result += WorldManager_outOfBounds_test();
+  result += WorldManager_draw_test();
 
   return result;
 }

@@ -94,7 +94,7 @@ int DisplayManager::drawCh(Vector world_pos, char ch, Color fg) const {
 }
 
 int DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
-                               Color color) const {
+                               Color fg, Color bg) const {
   Vector start = world_pos;
   switch (a) {
     case ALIGN_CENTER:
@@ -108,12 +108,17 @@ int DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
 
   for (int i = 0; i < s.size(); i++) {
     Vector pos(start.getX() + i, start.getY());
-    if (drawCh(pos, s[i], color) != 0) {
+    if (drawCh(pos, s[i], fg, bg) != 0) {
       return -1;
     }
   }
 
   return 0;
+}
+
+int DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
+                               Color fg) const {
+  return DisplayManager::drawString(world_pos, s, a, fg, m_background_color);
 }
 
 void DisplayManager::setBackground(Color color) { m_background_color = color; }

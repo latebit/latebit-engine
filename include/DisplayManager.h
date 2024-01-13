@@ -1,5 +1,4 @@
-#ifndef __DISPLAY_MANAGER_H__
-#define __DISPLAY_MANAGER_H__
+#pragma once
 
 #include <SFML/Graphics.hpp>
 
@@ -19,7 +18,7 @@ enum Alignment {
 
 const int WINDOW_HORIZONTAL_PIXELS_DEFAULT = 1024;
 const int WINDOW_VERTICAL_PIXELS_DEFAULT = 768;
-const int WINDOW_HORIZONTAL_CHARS_DEFAULT = 64;
+const int WINDOW_HORIZONTAL_CHARS_DEFAULT = 80;
 const int WINDOW_VERTICAL_CHARS_DEFAULT = 24;
 const int WINDOW_STYLE_DEFAULT = sf::Style::Titlebar | sf::Style::Close;
 const Color WINDOW_BACKGROUND_COLOR_DEFAULT = BLACK;
@@ -74,5 +73,3 @@ class DisplayManager : public Manager {
   sf::RenderWindow *getWindow() const;
 };
 }  // namespace df
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __EVENT_MOUSE_H__
-#define __EVENT_MOUSE_H__
+#pragma once
 
 #include "Event.h"
 #include "Vector.h"
@@ -48,4 +47,3 @@ class EventMouse : public Event {
 };
 
 }  // namespace df
-#endif

@@ -1,5 +1,4 @@
-#ifndef __EVENTOUT_H__
-#define __EVENTOUT_H__
+#pragma once
 
 #include "Event.h"
 namespace df {
@@ -12,4 +11,3 @@ class EventOut : public Event {
 
 }  // namespace df
 
-#endif

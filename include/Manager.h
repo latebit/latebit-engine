@@ -1,5 +1,4 @@
-#ifndef __MANAGER_H__
-#define __MANAGER_H__
+#pragma once
 
 #include <string>
 
@@ -29,4 +28,3 @@ class Manager {
 };
 };  // namespace df
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef __RESOURCE_MANAGER_H__
-#define __RESOURCE_MANAGER_H__
+#pragma once
 
 #include "Manager.h"
 #include "Sprite.h"
@@ -30,4 +29,3 @@ class ResourceManager : public Manager {
 };
 }  // namespace df
 
-#endif

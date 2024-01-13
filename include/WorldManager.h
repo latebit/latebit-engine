@@ -1,5 +1,4 @@
-#ifndef __WORLD_MANAGER_H__
-#define __WORLD_MANAGER_H__
+#pragma once
 
 #include "Manager.h"
 #include "ObjectList.h"
@@ -41,4 +40,3 @@ class WorldManager : public Manager {
 };
 }  // namespace df
 
-#endif

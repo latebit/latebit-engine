@@ -1,5 +1,4 @@
-#ifndef __BOX_H__
-#define __BOX_H__
+#pragma once
 
 #include <string>
 
@@ -30,4 +29,3 @@ class Box {
 };
 }  // namespace df
 
-#endif

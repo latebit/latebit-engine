@@ -1,5 +1,4 @@
-#ifndef __CLOCK_H__
-#define __CLOCK_H__
+#pragma once
 
 namespace df {
 
@@ -23,4 +22,3 @@ class Clock {
 
 }  // namespace df
 
-#endif

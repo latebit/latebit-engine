@@ -1,5 +1,4 @@
-#ifndef __SPRITEPARSER_H__
-#define __SPRITEPARSER_H__
+#pragma once
 
 #include <fstream>
 #include <string>
@@ -20,4 +19,3 @@ class SpriteParser {
 };
 }  // namespace df
 
-#endif

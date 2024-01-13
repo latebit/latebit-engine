@@ -1,5 +1,4 @@
-#ifndef __EVENT_STEP_H__
-#define __EVENT_STEP_H__
+#pragma once
 
 #include "Event.h"
 
@@ -19,4 +18,3 @@ class EventStep : public Event {
 };
 }  // namespace df
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef __EVENTCOLLISION_H__
-#define __EVENTCOLLISION_H__
+#pragma once
 #include <string>
 
 #include "Event.h"
@@ -31,4 +30,3 @@ class EventCollision : public Event {
 };
 
 }  // namespace df
-#endif

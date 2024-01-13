@@ -1,5 +1,4 @@
-#ifndef __OBJECT_LIST_H__
-#define __OBJECT_LIST_H__
+#pragma once
 
 #include "Object.h"
 
@@ -32,5 +31,3 @@ class ObjectList {
 };
 
 }  // namespace df
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __INPUT_MANAGER_H__
-#define __INPUT_MANAGER_H__
+#pragma once
 
 #include <unordered_map>
 
@@ -29,4 +28,3 @@ class InputManager : public Manager {
 };
 }  // namespace df
 
-#endif

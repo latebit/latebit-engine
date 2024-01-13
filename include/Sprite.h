@@ -1,5 +1,4 @@
-#ifndef __SPRITE_H__
-#define __SPRITE_H__
+#pragma once
 
 #include <string>
 
@@ -57,4 +56,3 @@ class Sprite {
 };
 
 }  // namespace df
-#endif

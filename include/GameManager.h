@@ -1,5 +1,4 @@
-#ifndef __GAME_MANAGER_H__
-#define __GAME_MANAGER_H__
+#pragma once
 
 #include "Clock.h"
 #include "Manager.h"
@@ -37,4 +36,3 @@ class GameManager : public Manager {
 
 #define GM df::GameManager::getInstance()
 
-#endif

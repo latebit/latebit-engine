@@ -1,5 +1,4 @@
-#ifndef __VECTOR_H__
-#define __VECTOR_H__
+#pragma once
 
 #include <string>
 
@@ -38,4 +37,3 @@ class Vector {
 };
 
 }  // namespace df
-#endif

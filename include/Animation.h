@@ -1,5 +1,4 @@
-#ifndef __ANIMATION_H__
-#define __ANIMATION_H__
+#pragma once
 
 #include <string>
 
@@ -39,4 +38,3 @@ class Animation {
   bool operator==(const Animation &other) const;
 };
 }  // namespace df
-#endif

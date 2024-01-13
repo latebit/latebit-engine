@@ -1,5 +1,4 @@
-#ifndef __OBJECT_H__
-#define __OBJECT_H__
+#pragma once
 
 #include <string>
 
@@ -83,4 +82,3 @@ class Object {
 };
 }  // namespace df
 
-#endif

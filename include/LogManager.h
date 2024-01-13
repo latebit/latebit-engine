@@ -1,5 +1,4 @@
-#ifndef __LOG_MANAGER_H__
-#define __LOG_MANAGER_H__
+#pragma once
 
 #include "Manager.h"
 
@@ -30,4 +29,3 @@ class LogManager : public Manager {
 
 }  // namespace df
 
-#endif

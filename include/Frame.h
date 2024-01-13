@@ -1,5 +1,4 @@
-#ifndef __FRAME_H__
-#define __FRAME_H__
+#pragma once
 
 #include <string>
 
@@ -32,4 +31,3 @@ class Frame {
 };
 }  // namespace df
 
-#endif

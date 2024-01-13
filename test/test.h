@@ -1,5 +1,4 @@
-#ifndef __TEST_H__
-#define __TEST_H__
+#pragma once
 
 #include <string>
 
@@ -17,5 +16,3 @@ int assert_int(std::string name, int got, int want);
 int assert_vector(std::string name, df::Vector p_got, df::Vector p_want);
 int assert_ok(std::string name, int got);
 int assert_fail(std::string name, int got);
-
-#endif

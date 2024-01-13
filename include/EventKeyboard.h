@@ -1,5 +1,4 @@
-#ifndef __EVENT_KEYBOARD_H__
-#define __EVENT_KEYBOARD_H__
+#pragma once
 
 #include "Event.h"
 
@@ -111,4 +110,3 @@ class EventKeyboard : public Event {
 };
 
 }  // namespace df
-#endif

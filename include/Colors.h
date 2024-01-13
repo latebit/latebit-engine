@@ -1,5 +1,4 @@
-#ifndef __COLORS_H__
-#define __COLORS_H__
+#pragma once
 
 #include <SFML/Graphics.hpp>
 
@@ -23,4 +22,3 @@ Color fromColorString(std::string color_string);
 sf::Color toSFColor(Color c);
 }  // namespace df
 
-#endif

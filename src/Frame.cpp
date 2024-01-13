@@ -33,10 +33,12 @@ int Frame::draw(Vector position, Color color, char transparencyChar) const {
     return -1;
   }
 
-  float offsetX = m_width / 2.0;
-  float offsetY = m_height / 2.0;
-  float startX = position.getX() - offsetX;
-  float startY = position.getY() - offsetY;
+  // Using ints to force the sprite to stay in the grid
+  // Using floats would allow positions like 1.5, 2.5, etc. to be drawn
+  int offsetX = m_width / 2;
+  int offsetY = m_height / 2;
+  int startX = position.getX() - offsetX;
+  int startY = position.getY() - offsetY;
 
   for (int i = 0; i < m_height; i++) {
     for (int j = 0; j < m_width; j++) {

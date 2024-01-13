@@ -51,23 +51,20 @@ void DisplayManager::shutDown() {
   LM.writeLog("DisplayManager::shutDown(): Shut down successfully");
 }
 
-int DisplayManager::drawCh(Vector world_pos, char ch, Color fg,
+int DisplayManager::drawCh(Vector worldPosition, char ch, Color fg,
                            Color bg) const {
-  if (m_p_window == nullptr) {
-    return -1;
-  }
+  if (m_p_window == nullptr) return -1;
 
-  Vector pixel_pos = spacesToPixels(world_pos);
+  auto pixelPosition = spacesToPixels(worldPosition);
 
-  auto width = charWidth();
-  auto height = charHeight();
+  static auto width = charWidth();
+  static auto height = charHeight();
 
   if (bg != UNDEFINED_COLOR) {
     static sf::RectangleShape background;
     background.setSize(sf::Vector2f(width, height));
     background.setFillColor(toSFColor(bg));
-    background.setPosition(pixel_pos.getX() - width / 10,
-                           pixel_pos.getY() + height / 5);
+    background.setPosition(pixelPosition.getX(), pixelPosition.getY());
     m_p_window->draw(background);
   }
 
@@ -82,7 +79,7 @@ int DisplayManager::drawCh(Vector world_pos, char ch, Color fg,
   }
 
   text.setFillColor(toSFColor(fg));
-  text.setPosition(pixel_pos.getX(), pixel_pos.getY());
+  text.setPosition(pixelPosition.getX(), pixelPosition.getY());
 
   m_p_window->draw(text);
 
@@ -99,8 +96,10 @@ int DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
   switch (a) {
     case ALIGN_CENTER:
       start.setX(world_pos.getX() - s.size() / 2);
+      break;
     case ALIGN_RIGHT:
       start.setX(world_pos.getX() - s.size());
+      break;
     case ALIGN_LEFT:
     default:
       break;
@@ -154,9 +153,13 @@ int DisplayManager::swapBuffers() {
 
 sf::RenderWindow* DisplayManager::getWindow() const { return m_p_window; }
 
-float charHeight() { return DM.getVerticalPixels() / DM.getVerticalCells(); }
+float charHeight() {
+  return DM.getVerticalPixels() / (float)DM.getVerticalCells();
+}
 
-float charWidth() { return DM.getHorizontalPixels() / DM.getHorizontalCells(); }
+float charWidth() {
+  return DM.getHorizontalPixels() / (float)DM.getHorizontalCells();
+}
 
 Vector spacesToPixels(Vector spaces) {
   return Vector(spaces.getX() * charWidth(), spaces.getY() * charHeight());

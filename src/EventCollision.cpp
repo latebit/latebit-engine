@@ -3,14 +3,14 @@
 namespace df {
 
 EventCollision::EventCollision() {
-  setType(EVENT_COLLISION);
+  setType(COLLISION_EVENT);
   m_p_obj1 = nullptr;
   m_p_obj2 = nullptr;
   m_pos = Vector();
 }
 
 EventCollision::EventCollision(Object *p_o1, Object *p_o2, Vector pos) {
-  setType(EVENT_COLLISION);
+  setType(COLLISION_EVENT);
   m_p_obj1 = p_o1;
   m_p_obj2 = p_o2;
   m_pos = pos;

@@ -1,3 +1,5 @@
+#ifndef __EVENTCOLLISION_H__
+#define __EVENTCOLLISION_H__
 #include <string>
 
 #include "Event.h"
@@ -6,7 +8,7 @@
 
 namespace df {
 
-const std::string EVENT_COLLISION = "df::collision";
+const std::string COLLISION_EVENT = "df::collision";
 
 class EventCollision : public Event {
  private:
@@ -29,3 +31,4 @@ class EventCollision : public Event {
 };
 
 }  // namespace df
+#endif

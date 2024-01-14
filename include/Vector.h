@@ -5,8 +5,8 @@
 namespace df {
 class Vector {
  private:
-  float m_x;
-  float m_y;
+  float x;
+  float y;
 
  public:
   Vector(float x = 0.0f, float y = 0.0f);

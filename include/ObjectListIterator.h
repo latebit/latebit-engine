@@ -10,8 +10,8 @@ class ObjectList;
 class ObjectListIterator {
  private:
   ObjectListIterator();
-  int m_current_index;
-  const ObjectList *m_p_list;
+  int currentIndex;
+  const ObjectList *p_list;
 
  public:
   ObjectListIterator(const ObjectList *p_l);

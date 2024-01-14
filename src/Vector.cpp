@@ -9,26 +9,28 @@
 
 namespace df {
 Vector::Vector(float x, float y) {
-  m_x = x;
-  m_y = y;
+  this->x = x;
+  this->y = y;
 }
 
-void Vector::setX(float x) { m_x = x; }
-float Vector::getX() const { return m_x; }
+void Vector::setX(float x) { this->x = x; }
+float Vector::getX() const { return this->x; }
 
-void Vector::setY(float y) { m_y = y; }
-float Vector::getY() const { return m_y; }
+void Vector::setY(float y) { this->y = y; }
+float Vector::getY() const { return this->y; }
 
 void Vector::setXY(float x, float y) {
-  m_x = x;
-  m_y = y;
+  this->x = x;
+  this->y = y;
 }
 
-float Vector::getMagnitude() const { return std::sqrt(m_x * m_x + m_y * m_y); }
+float Vector::getMagnitude() const {
+  return std::sqrt(this->x * this->x + this->y * this->y);
+}
 
 void Vector::scale(float a) {
-  m_x *= a;
-  m_y *= a;
+  this->x *= a;
+  this->y *= a;
 }
 
 float Vector::distance(const Vector* other) {
@@ -38,31 +40,31 @@ float Vector::distance(const Vector* other) {
 void Vector::normalize() {
   float length = getMagnitude();
   if (length > 0) {
-    m_x = m_x / length;
-    m_y = m_y / length;
+    this->x = this->x / length;
+    this->y = this->y / length;
   }
 }
 
 Vector Vector::operator+(const Vector& other) const {
-  return Vector(m_x + other.m_x, m_y + other.m_y);
+  return Vector(this->x + other.x, this->y + other.y);
 }
 
 Vector Vector::operator-(const Vector& other) const {
-  return Vector(m_x - other.m_x, m_y - other.m_y);
+  return Vector(this->x - other.x, this->y - other.y);
 }
 
 bool Vector::operator==(const Vector& other) const {
-  return equals(m_x, other.m_x) && equals(m_y, other.m_y);
+  return equals(this->x, other.x) && equals(this->y, other.y);
 }
 
 bool Vector::operator!=(const Vector& other) const {
-  return !equals(m_x, other.m_x) || !equals(m_y, other.m_y);
+  return !equals(this->x, other.x) || !equals(this->y, other.y);
 }
 
-bool Vector::operator!() const { return m_x == 0 && m_y == 0; }
+bool Vector::operator!() const { return this->x == 0 && this->y == 0; }
 
 std::string Vector::toString() const {
-  return "(" + std::to_string(m_x) + ", " + std::to_string(m_y) + ")";
+  return "(" + std::to_string(this->x) + ", " + std::to_string(this->y) + ")";
 }
 
 }  // namespace df

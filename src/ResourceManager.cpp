@@ -6,19 +6,19 @@
 namespace df {
 
 ResourceManager::ResourceManager() {
-  m_sprite_count = 0;
+  this->sprite_count = 0;
   setType("ResourceManager");
   LM.writeLog("ResourceManager::ResourceManager(): Created ResourceManager");
 }
 
 int ResourceManager::startUp() {
-  m_sprite_count = 0;
+  this->sprite_count = 0;
   LM.writeLog("ResourceManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
 int ResourceManager::loadSprite(std::string filename, std::string label) {
-  if (m_sprite_count >= MAX_SPRITES) {
+  if (this->sprite_count >= MAX_SPRITES) {
     LM.writeLog(
         "ResourceManager::loadSprite(): Cannot load sprite, maximum (%d) "
         "reached.",
@@ -42,8 +42,8 @@ int ResourceManager::loadSprite(std::string filename, std::string label) {
     return -1;
   }
 
-  m_p_sprite[m_sprite_count] = p_sprite;
-  m_sprite_count++;
+  this->p_sprite[this->sprite_count] = p_sprite;
+  this->sprite_count++;
 
   return 0;
 }
@@ -54,15 +54,16 @@ ResourceManager& ResourceManager::getInstance() {
 }
 
 int ResourceManager::unloadSprite(std::string label) {
-  for (int i = 0; i < m_sprite_count; i++) {
-    if (m_p_sprite[i] != nullptr && m_p_sprite[i]->getLabel() == label) {
-      delete m_p_sprite[i];
+  for (int i = 0; i < this->sprite_count; i++) {
+    if (this->p_sprite[i] != nullptr &&
+        this->p_sprite[i]->getLabel() == label) {
+      delete this->p_sprite[i];
 
       // We need not scooting here, sprites are not ordered
-      m_p_sprite[i] = m_p_sprite[m_sprite_count];
-      m_p_sprite[m_sprite_count] = nullptr;
+      this->p_sprite[i] = this->p_sprite[this->sprite_count];
+      this->p_sprite[this->sprite_count] = nullptr;
 
-      m_sprite_count--;
+      this->sprite_count--;
       return 0;
     }
   }
@@ -71,22 +72,22 @@ int ResourceManager::unloadSprite(std::string label) {
 }
 
 Sprite* ResourceManager::getSprite(std::string label) const {
-  for (int i = 0; i < m_sprite_count; i++) {
-    if (m_p_sprite[i] == nullptr) continue;
+  for (int i = 0; i < this->sprite_count; i++) {
+    if (this->p_sprite[i] == nullptr) continue;
 
-    if (m_p_sprite[i]->getLabel() == label) {
-      return m_p_sprite[i];
+    if (this->p_sprite[i]->getLabel() == label) {
+      return this->p_sprite[i];
     }
   }
 
   return nullptr;
 }
 void ResourceManager::shutDown() {
-  for (int i = 0; i < m_sprite_count; i++) {
-    delete m_p_sprite[i];
+  for (int i = 0; i < this->sprite_count; i++) {
+    delete this->p_sprite[i];
   }
 
-  m_sprite_count = 0;
+  this->sprite_count = 0;
 
   Manager::shutDown();
 }

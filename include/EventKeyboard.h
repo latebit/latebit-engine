@@ -93,8 +93,8 @@ enum Key {
 
 class EventKeyboard : public Event {
  private:
-  Keyboard::Key m_key_val;                ///< Key value.
-  EventKeyboardAction m_keyboard_action;  ///< Key action.
+  Keyboard::Key key_val;                ///< Key value.
+  EventKeyboardAction keyboard_action;  ///< Key action.
 
  public:
   EventKeyboard();

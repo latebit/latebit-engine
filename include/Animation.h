@@ -11,10 +11,10 @@ int const STOP_ANIMATION_SLOWDOWN = -1;
 
 class Animation {
  private:
-  Sprite *m_p_sprite;
-  std::string m_name;
-  int m_index;
-  int m_slowdown_count;
+  Sprite *p_sprite;
+  std::string name;
+  int index;
+  int slowdownCount;
 
  public:
   Animation();

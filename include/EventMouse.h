@@ -25,9 +25,9 @@ enum Button {
 
 class EventMouse : public Event {
  private:
-  EventMouseAction m_mouse_action;
-  Mouse::Button m_mouse_button;
-  Vector m_mouse_position;
+  EventMouseAction mouse_action;
+  Mouse::Button mouse_button;
+  Vector mouse_position;
 
  public:
   EventMouse();

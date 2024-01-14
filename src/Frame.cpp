@@ -7,28 +7,28 @@
 
 namespace df {
 Frame::Frame() {
-  m_width = 0;
-  m_height = 0;
-  m_frame_str = "";
+  this->width = 0;
+  this->height = 0;
+  this->frame_str = "";
 }
 
 Frame::Frame(int w, int h, std::string frame_str) {
-  m_width = w;
-  m_height = h;
-  m_frame_str = frame_str;
+  this->width = w;
+  this->height = h;
+  this->frame_str = frame_str;
 }
 
-void Frame::setWidth(int w) { m_width = w; }
-int Frame::getWidth() const { return m_width; }
+void Frame::setWidth(int w) { this->width = w; }
+int Frame::getWidth() const { return this->width; }
 
-void Frame::setHeight(int w) { m_height = w; }
-int Frame::getHeight() const { return m_height; }
+void Frame::setHeight(int w) { this->height = w; }
+int Frame::getHeight() const { return this->height; }
 
-void Frame::setFrameString(std::string frame_str) { m_frame_str = frame_str; }
-std::string Frame::getFrameString() const { return m_frame_str; }
+void Frame::setFrameString(std::string frame_str) { this->frame_str = frame_str; }
+std::string Frame::getFrameString() const { return this->frame_str; }
 
 int Frame::draw(Vector position, Color color, char transparencyChar) const {
-  if (m_width <= 0 || m_height <= 0 || m_frame_str.empty()) {
+  if (this->width <= 0 || this->height <= 0 || this->frame_str.empty()) {
     LM.writeLog("Frame::draw(): Cannot draw empty frame");
     return -1;
   }
@@ -36,10 +36,10 @@ int Frame::draw(Vector position, Color color, char transparencyChar) const {
   float startX = position.getX();
   float startY = position.getY();
 
-  for (int i = 0; i < m_height; i++) {
-    for (int j = 0; j < m_width; j++) {
+  for (int i = 0; i < this->height; i++) {
+    for (int j = 0; j < this->width; j++) {
       Vector temp(startX + j, startY + i);
-      char ch = m_frame_str[i * m_width + j];
+      char ch = this->frame_str[i * this->width + j];
 
       if (ch == transparencyChar) continue;
 

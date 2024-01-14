@@ -13,8 +13,8 @@ namespace df {
 
 WorldManager::WorldManager() {
   setType("WorldManager");
-  m_deletions = ObjectList();
-  m_updates = ObjectList();
+  this->deletions = ObjectList();
+  this->updates = ObjectList();
   LM.writeLog("WorldManager::WorldManager(): Created WorldManager");
 }
 
@@ -24,14 +24,14 @@ WorldManager& WorldManager::getInstance() {
 }
 
 int WorldManager::startUp() {
-  m_deletions = ObjectList();
-  m_updates = ObjectList();
+  this->deletions = ObjectList();
+  this->updates = ObjectList();
   LM.writeLog("WorldManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
 void WorldManager::shutDown() {
-  auto updates = m_updates;  // create a copy
+  auto updates = this->updates;  // create a copy
   auto i_updates = ObjectListIterator(&updates);
   for (i_updates.first(); !i_updates.isDone(); i_updates.next()) {
     // This is not leaving a danglig null reference!
@@ -39,21 +39,25 @@ void WorldManager::shutDown() {
     delete i_updates.currentObject();
   }
 
-  m_updates.clear();
+  this->updates.clear();
 
   Manager::shutDown();
   LM.writeLog("WorldManager::shutDown(): Shut down successfully");
 }
 
-int WorldManager::insertObject(Object* p_o) { return m_updates.insert(p_o); }
+int WorldManager::insertObject(Object* p_o) {
+  return this->updates.insert(p_o);
+}
 
-int WorldManager::removeObject(Object* p_o) { return m_updates.remove(p_o); }
+int WorldManager::removeObject(Object* p_o) {
+  return this->updates.remove(p_o);
+}
 
-ObjectList WorldManager::getAllObjects() const { return m_updates; }
+ObjectList WorldManager::getAllObjects() const { return this->updates; }
 
 ObjectList WorldManager::objectsOfType(std::string type) const {
   ObjectList result;
-  auto i_updates = ObjectListIterator(&m_updates);
+  auto i_updates = ObjectListIterator(&this->updates);
 
   for (i_updates.first(); !i_updates.isDone(); i_updates.next()) {
     if (i_updates.currentObject()->getType() == type) {
@@ -66,7 +70,7 @@ ObjectList WorldManager::objectsOfType(std::string type) const {
 
 ObjectList WorldManager::getCollisions(Object* p_o, Vector where) const {
   ObjectList collisions;
-  auto i_updates = ObjectListIterator(&m_updates);
+  auto i_updates = ObjectListIterator(&this->updates);
   auto box = p_o->getWorldBox(where);
 
   for (i_updates.first(); !i_updates.isDone(); i_updates.next()) {
@@ -146,14 +150,14 @@ bool WorldManager::isOutOfBounds(Vector where) const {
 void WorldManager::update() {
   if (!isStarted()) return;
 
-  auto i_deletions = ObjectListIterator(&m_deletions);
+  auto i_deletions = ObjectListIterator(&this->deletions);
   for (i_deletions.first(); !i_deletions.isDone(); i_deletions.next()) {
     removeObject(i_deletions.currentObject());
     delete i_deletions.currentObject();
   }
-  m_deletions.clear();
+  this->deletions.clear();
 
-  auto i_updates = ObjectListIterator(&m_updates);
+  auto i_updates = ObjectListIterator(&this->updates);
   for (i_updates.first(); !i_updates.isDone(); i_updates.next()) {
     auto object = i_updates.currentObject();
     auto oldPosition = object->getPosition();
@@ -167,16 +171,16 @@ void WorldManager::update() {
 
 int WorldManager::markForDelete(Object* p_o) {
   // Prevents marking the same object for deletion twice
-  auto i_deletions = ObjectListIterator(&m_deletions);
+  auto i_deletions = ObjectListIterator(&this->deletions);
   for (i_deletions.first(); !i_deletions.isDone(); i_deletions.next()) {
     if (i_deletions.currentObject() == p_o) return 0;
   }
 
-  return m_deletions.insert(p_o);
+  return this->deletions.insert(p_o);
 }
 
 void WorldManager::draw() {
-  auto i_updates = new ObjectListIterator(&m_updates);
+  auto i_updates = new ObjectListIterator(&this->updates);
 
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
     for (i_updates->first(); !i_updates->isDone(); i_updates->next()) {

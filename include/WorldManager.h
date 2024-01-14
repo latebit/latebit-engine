@@ -15,8 +15,8 @@ class WorldManager : public Manager {
   WorldManager(WorldManager const &);
   void operator=(WorldManager const &);
 
-  ObjectList m_updates;
-  ObjectList m_deletions;
+  ObjectList updates;
+  ObjectList deletions;
 
   bool isOutOfBounds(Vector p) const;
   void moveAndCheckBounds(Object *p_o, Vector where) const;
@@ -39,4 +39,3 @@ class WorldManager : public Manager {
   void draw();
 };
 }  // namespace df
-

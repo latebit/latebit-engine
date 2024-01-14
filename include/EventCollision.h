@@ -11,9 +11,9 @@ const std::string COLLISION_EVENT = "df::collision";
 
 class EventCollision : public Event {
  private:
-  Vector m_pos;
-  Object *m_p_obj1;
-  Object *m_p_obj2;
+  Vector pos;
+  Object *p_obj1;
+  Object *p_obj2;
 
  public:
   EventCollision();

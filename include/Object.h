@@ -16,16 +16,16 @@ enum Solidness {
 
 class Object {
  private:
-  int m_id;
-  std::string m_type;
-  Vector m_position;
-  int m_altitude;
-  Vector m_direction;
-  float m_speed;
-  Solidness m_solidness;
-  Animation m_animation;
-  Box m_bounding_box;
-  bool m_debug;
+  int id;
+  std::string type;
+  Vector position;
+  int altitude;
+  Vector direction;
+  float speed;
+  Solidness solidness;
+  Animation animation;
+  Box bounding_box;
+  bool debug;
 
  public:
   Object();

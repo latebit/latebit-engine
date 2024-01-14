@@ -12,8 +12,8 @@ const char* LOGFILE_NAME = "dragonfly.log";
 
 LogManager::LogManager() {
   setType("LogManager");
-  m_p_f = nullptr;
-  m_do_flush = false;
+  this->p_f = nullptr;
+  this->do_flush = false;
   startUp();
   stdoutLog("LogManager::LogManager(): Created LogManager");
 }
@@ -25,9 +25,9 @@ LogManager::~LogManager() {
 }
 
 int LogManager::startUp() {
-  m_p_f = std::fopen(LOGFILE_NAME, "w");
+  this->p_f = std::fopen(LOGFILE_NAME, "w");
 
-  if (m_p_f == nullptr) {
+  if (this->p_f == nullptr) {
     return -1;
   }
 
@@ -42,29 +42,29 @@ LogManager& LogManager::getInstance() {
 
 void LogManager::shutDown() {
   LM.writeLog("LogManager::shutDown(): Shutting down");
-  if (m_p_f != nullptr) std::fclose(m_p_f);
-  m_p_f = nullptr;
+  if (this->p_f != nullptr) std::fclose(this->p_f);
+  this->p_f = nullptr;
   stdoutLog("LogManager::shutDown(): Shut down successfully");
   Manager::shutDown();
 }
 
-void LogManager::setFlush(bool do_flush) { m_do_flush = do_flush; }
+void LogManager::setFlush(bool do_flush) { this->do_flush = do_flush; }
 
 int LogManager::writeLog(const char* fmt, ...) const {
-  if (m_p_f == nullptr) {
+  if (this->p_f == nullptr) {
     stdoutLog("LogManager::writeLog(): Warning! Log file not open");
     return -1;
   }
 
-  fprintf(m_p_f, "[%s] ", getTimeString());
+  fprintf(this->p_f, "[%s] ", getTimeString());
   va_list args;
   va_start(args, fmt);
-  vfprintf(m_p_f, fmt, args);
+  vfprintf(this->p_f, fmt, args);
   va_end(args);
-  fprintf(m_p_f, "\n");
+  fprintf(this->p_f, "\n");
 
-  if (m_do_flush) {
-    fflush(m_p_f);
+  if (this->do_flush) {
+    fflush(this->p_f);
   }
 
   return 0;

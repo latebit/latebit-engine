@@ -13,8 +13,8 @@ class ResourceManager : public Manager {
   ResourceManager();
   ResourceManager(ResourceManager const &);
   void operator=(ResourceManager const &);
-  Sprite *m_p_sprite[MAX_SPRITES];
-  int m_sprite_count;
+  Sprite *p_sprite[MAX_SPRITES];
+  int sprite_count;
 
  public:
   static ResourceManager &getInstance();

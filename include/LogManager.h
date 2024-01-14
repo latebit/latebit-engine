@@ -13,8 +13,8 @@ class LogManager : public Manager {
   LogManager();
   LogManager(LogManager const &);
   void operator=(LogManager const &);
-  bool m_do_flush;
-  FILE *m_p_f;
+  bool do_flush;
+  FILE *p_f;
 
  public:
   ~LogManager();

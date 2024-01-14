@@ -15,8 +15,8 @@ class InputManager : public Manager {
   InputManager();
   InputManager(InputManager const &);
   void operator=(InputManager const &);
-  std::unordered_map<sf::Keyboard::Key, Keyboard::Key> m_keyboardEvent;
-  std::unordered_map<sf::Mouse::Button, Mouse::Button> m_mouseEvent;
+  std::unordered_map<sf::Keyboard::Key, Keyboard::Key> keyboardEvent;
+  std::unordered_map<sf::Mouse::Button, Mouse::Button> mouseEvent;
   Keyboard::Key fromSFMLKeyCode(sf::Keyboard::Key key) const;
   Mouse::Button fromSFMLMouseButton(sf::Mouse::Button btn) const;
 

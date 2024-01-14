@@ -2,23 +2,23 @@
 
 namespace df {
 ObjectListIterator::ObjectListIterator(const ObjectList* p_l) {
-  m_current_index = 0;
-  m_p_list = p_l;
+  this->currentIndex = 0;
+  this->p_list = p_l;
 }
 
-void ObjectListIterator::first() { m_current_index = 0; }
+void ObjectListIterator::first() { this->currentIndex = 0; }
 
 void ObjectListIterator::next() {
-  m_current_index = std::min(m_current_index + 1, m_p_list->m_count);
+  this->currentIndex = std::min(this->currentIndex + 1, this->p_list->count);
 }
 
 bool ObjectListIterator::isDone() const {
-  return m_current_index >= m_p_list->m_count;
+  return this->currentIndex >= this->p_list->count;
 }
 
 Object* ObjectListIterator::currentObject() const {
-  if (m_current_index < m_p_list->m_count) {
-    return m_p_list->m_p_obj[m_current_index];
+  if (this->currentIndex < this->p_list->count) {
+    return this->p_list->p_obj[this->currentIndex];
   }
   return nullptr;
 }

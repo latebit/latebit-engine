@@ -7,7 +7,7 @@ const std::string STEP_EVENT = "df::step";
 
 class EventStep : public Event {
  private:
-  int m_step_count;
+  int step_count;
 
  public:
   EventStep();

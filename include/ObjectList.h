@@ -10,8 +10,8 @@ class ObjectListIterator;
 
 class ObjectList {
  private:
-  int m_count;
-  Object *m_p_obj[MAX_SIZE];
+  int count;
+  Object *p_obj[MAX_SIZE];
 
  public:
   friend class ObjectListIterator;

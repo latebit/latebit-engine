@@ -7,9 +7,9 @@
 namespace df {
 class Box {
  private:
-  Vector m_top_left_corner;
-  float m_width;
-  float m_height;
+  Vector top_left_corner;
+  float width;
+  float height;
 
  public:
   Box();

@@ -5,7 +5,7 @@ const std::string UNDEFINED_EVENT = "df::undefined";
 
 class Event {
  private:
-  std::string m_event_type;
+  std::string event_type;
 
  public:
   Event();

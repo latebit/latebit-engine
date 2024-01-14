@@ -8,8 +8,8 @@
 namespace df {
 class Manager {
  private:
-  std::string m_type;
-  bool m_is_started;
+  std::string type;
+  bool is_started;
 
  protected:
   void setType(std::string type);

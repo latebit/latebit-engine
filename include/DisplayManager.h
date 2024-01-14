@@ -36,13 +36,13 @@ class DisplayManager : public Manager {
   DisplayManager();
   DisplayManager(DisplayManager const &);
   void operator=(DisplayManager const &);
-  sf::Font m_font;
-  sf::RenderWindow *m_p_window;
-  int m_window_horizontal_pixels;
-  int m_window_vertical_pixels;
-  int m_window_horizontal_cells;
-  int m_window_vertical_cells;
-  Color m_background_color;
+  sf::Font font;
+  sf::RenderWindow *p_window;
+  int window_horizontal_pixels;
+  int window_vertical_pixels;
+  int window_horizontal_cells;
+  int window_vertical_cells;
+  Color background_color;
 
  public:
   static DisplayManager &getInstance();

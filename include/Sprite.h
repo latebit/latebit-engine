@@ -14,15 +14,15 @@ enum Slowdown {
 
 class Sprite {
  private:
-  int m_width;
-  int m_height;
-  int m_max_frame_count;
-  int m_frame_count;
-  int m_slowdown;
-  Color m_color;
-  Frame* m_frames;
-  std::string m_label;
-  char m_transparency_char;
+  int width;
+  int height;
+  int max_frame_count;
+  int frame_count;
+  int slowdown;
+  Color color;
+  Frame* frames;
+  std::string label;
+  char transparency_char;
   Sprite();
 
  public:

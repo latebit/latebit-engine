@@ -9,9 +9,9 @@ namespace df {
 
 class Frame {
  private:
-  int m_width;
-  int m_height;
-  std::string m_frame_str;
+  int width;
+  int height;
+  std::string frame_str;
 
  public:
   Frame();

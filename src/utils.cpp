@@ -3,18 +3,21 @@
 #include <cmath>
 #include <cstdio>
 #include <ctime>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
 #include <thread>
 
-auto getTimeString() -> char * {
-  static char time_str[30];
+auto getTimeString() -> std::string {
+  std::time_t now = std::time(nullptr);
+  std::tm* lt = std::localtime(&now);
 
-  time_t now;
-  time(&now);
-  struct tm *lt = localtime(&now);
+  std::ostringstream stream;
+  stream << std::setfill('0') << std::setw(2) << lt->tm_hour << ":"
+         << std::setfill('0') << std::setw(2) << lt->tm_min << ":"
+         << std::setfill('0') << std::setw(2) << lt->tm_sec;
 
-  sprintf(time_str, "%02d:%02d:%02d", lt->tm_hour, lt->tm_min, lt->tm_sec);
-
-  return time_str;
+  return stream.str();
 }
 
 void sleep(long int microseconds) {

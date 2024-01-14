@@ -56,7 +56,7 @@ auto LogManager::writeLog(const char* fmt, ...) const -> int {
     return -1;
   }
 
-  fprintf(this->f, "[%s] ", getTimeString());
+  fprintf(this->f, "[%s] ", getTimeString().c_str());
   va_list args;
   va_start(args, fmt);
   vfprintf(this->f, fmt, args);
@@ -71,7 +71,7 @@ auto LogManager::writeLog(const char* fmt, ...) const -> int {
 }
 
 void LogManager::stdoutLog(const char* fmt, ...) const {
-  printf("[%s] ", getTimeString());
+  printf("[%s] ", getTimeString().c_str());
   va_list args;
   va_start(args, fmt);
   vprintf(fmt, args);

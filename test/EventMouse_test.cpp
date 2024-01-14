@@ -8,11 +8,11 @@ auto EventMouse_test() -> int {
   // test default constructor
   df::EventMouse df_event_mouse;
   result +=
-      assert_int("sets default mouse button", df_event_mouse.getMouseButton(),
-                 df::Mouse::UNDEFINED_MOUSE_BUTTON);
+    assert_int("sets default mouse button", df_event_mouse.getMouseButton(),
+               df::Mouse::UNDEFINED_MOUSE_BUTTON);
   result +=
-      assert_int("sets default mouse action", df_event_mouse.getMouseAction(),
-                 df::UNDEFINED_MOUSE_ACTION);
+    assert_int("sets default mouse action", df_event_mouse.getMouseAction(),
+               df::UNDEFINED_MOUSE_ACTION);
   result += assert_vector("sets default mouse position",
                           df_event_mouse.getMousePosition(), df::Vector());
 

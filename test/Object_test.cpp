@@ -44,13 +44,13 @@ auto Object_kinematics_test() -> int {
                           df::Vector(1, 1));
 
   subject.setVelocity(df::Vector(1, 2));
-  result += assert_vector("updates velocity", subject.getVelocity(),
-                          df::Vector(1, 2));
+  result +=
+    assert_vector("updates velocity", subject.getVelocity(), df::Vector(1, 2));
 
   subject.setSpeed(2);
   subject.setDirection(df::Vector(1, 0));
-  result += assert_vector("updates velocity", subject.getVelocity(),
-                          df::Vector(2, 0));
+  result +=
+    assert_vector("updates velocity", subject.getVelocity(), df::Vector(2, 0));
 
   return result;
 }
@@ -91,8 +91,8 @@ auto Object_boundingBox_test() -> int {
                    subject.getWorldBox() == df::Box(df::Vector(1, 1), 3, 4));
 
   result += assert(
-      "gets bounding box in world coordinates relative to (2, 2)",
-      subject.getWorldBox(df::Vector(2, 2)) == df::Box(df::Vector(2, 2), 3, 4));
+    "gets bounding box in world coordinates relative to (2, 2)",
+    subject.getWorldBox(df::Vector(2, 2)) == df::Box(df::Vector(2, 2), 3, 4));
 
   return result;
 }
@@ -105,17 +105,17 @@ auto Object_test() -> int {
   result += assert_int("sets an id", subject.getId(), 0);
   result += assert_string("sets a type", subject.getType(), "Object");
   result +=
-      assert_vector("sets a position", subject.getPosition(), df::Vector());
-  result += assert_int("sets an altitude", subject.getAltitude(),
-                       df::MAX_ALTITUDE / 2);
+    assert_vector("sets a position", subject.getPosition(), df::Vector());
   result +=
-      assert_vector("sets a direction", subject.getDirection(), df::Vector());
+    assert_int("sets an altitude", subject.getAltitude(), df::MAX_ALTITUDE / 2);
+  result +=
+    assert_vector("sets a direction", subject.getDirection(), df::Vector());
   result += assert_float("sets a speed", subject.getSpeed(), 0.0);
   result += assert_int("sets a solidness", subject.getSolidness(), df::HARD);
   result += assert("sets a bounding box",
                    subject.getBox() == df::Box(df::Vector(), 1, 1));
   result +=
-      assert("sets an animation", subject.getAnimation() == df::Animation());
+    assert("sets an animation", subject.getAnimation() == df::Animation());
 
   subject = df::Object();
   result += assert_int("increments id", subject.getId(), 1);
@@ -139,7 +139,7 @@ auto Object_test() -> int {
 
   result += assert_ok("sets valid sprite", subject.setSprite("sprite"));
   result +=
-      assert_fail("does not set invalid sprite", subject.setSprite("invalid"));
+    assert_fail("does not set invalid sprite", subject.setSprite("invalid"));
 
   auto position = df::Vector(1, 2);
   subject.setPosition(position);

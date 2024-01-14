@@ -9,67 +9,70 @@
 #include "colors.h"
 #include "test.h"
 
+using namespace std;
+using namespace df;
+
 int ASSERTIONS = 0;
-auto getAssertions() -> std::string { return std::to_string(ASSERTIONS); }
+auto getAssertions() -> string { return to_string(ASSERTIONS); }
 
-bool FAILED_ONLY =
-    std::getenv("FAILED_ONLY") && std::stoi(std::getenv("FAILED_ONLY")) == 1;
+bool FAILED_ONLY = getenv("FAILED_ONLY") && stoi(getenv("FAILED_ONLY")) == 1;
 
-auto assert(const std::string name, bool assertion, const std::string message)
-    -> int {
+auto assert(const string name, bool assertion, const string message) -> int {
   ASSERTIONS++;
 
   if (!assertion) {
-    std::cout << red("FAIL: " + name) << std::endl;
-    std::cout << "      " << message << std::endl;
+    cout << red("FAIL: " + name) << endl;
+    cout << "      " << message << endl;
     return 1;
   }
 
-  if (!FAILED_ONLY) std::cout << green("PASS: " + name) << std::endl;
+  if (!FAILED_ONLY) cout << green("PASS: " + name) << endl;
   return 0;
 }
 
-auto assert_string(std::string name, std::string got, std::string want) -> int {
+auto assert_string(string name, string got, string want) -> int {
   const bool assertion = got.compare(want) == 0;
 
-  std::string message = "wanted '" + want + "' got '" + got + "'";
+  string message = "wanted '" + want + "' got '" + got + "'";
 
   return assert(name, assertion, message);
 }
 
-auto assert_regex(std::string name, std::string want, std::string pattern)
-    -> int {
-  std::regex expression(pattern);
-  const bool assertion = std::regex_match(want, expression);
+auto assert_regex(string name, string want, string pattern) -> int {
+  regex expression(pattern);
+  const bool assertion = regex_match(want, expression);
 
-  std::string message =
-      "string '" + want + "' doesn't match pattern  '" + pattern + "'";
+  string message =
+    "string '" + want + "' doesn't match pattern  '" + pattern + "'";
 
   return assert(name, assertion, message);
 }
 
-auto assert_float(std::string name, float got, float want) -> int {
-  std::string message =
-      "wanted '" + std::to_string(want) + "' got '" + std::to_string(got) + "'";
+auto assert_float(string name, float got, float want) -> int {
+  string message =
+    "wanted '" + to_string(want) + "' got '" + to_string(got) + "'";
 
   return assert(name, equals(got, want), message);
 }
 
-auto assert_int(std::string name, int got, int want) -> int {
-  std::string message =
-      "wanted '" + std::to_string(want) + "' got '" + std::to_string(got) + "'";
+auto assert_int(string name, int got, int want) -> int {
+  string message =
+    "wanted '" + to_string(want) + "' got '" + to_string(got) + "'";
 
   return assert(name, got == want, message);
 }
 
-auto assert_ok(std::string name, int got) -> int {
-  return assert_int(name, got, 0);
-}
-auto assert_fail(std::string name, int got) -> int {
+auto assert_ok(string name, int got) -> int { return assert_int(name, got, 0); }
+auto assert_fail(string name, int got) -> int {
   return assert_int(name, got, -1);
 }
 
-auto assert_vector(std::string name, df::Vector got, df::Vector want) -> int {
+auto assert_vector(string name, Vector got, Vector want) -> int {
+  return assert(name, got == want,
+                "wanted " + want.toString() + " got " + got.toString());
+}
+
+auto assert_box(string name, Box got, Box want) -> int {
   return assert(name, got == want,
                 "wanted " + want.toString() + " got " + got.toString());
 }

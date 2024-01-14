@@ -15,10 +15,10 @@ auto Sprite_constructor_test() -> int {
   df::Sprite sprite(5);
 
   // Test default values
-  result += assert("width is initialized to 0", sprite.getWidth() == 0);
-  result += assert("height is initialized to 0", sprite.getHeight() == 0);
+  result += assert_int("width is initialized to 0", sprite.getWidth(), 0);
+  result += assert_int("height is initialized to 0", sprite.getHeight(), 0);
   result +=
-      assert("frame count is initialized to 0", sprite.getFrameCount() == 0);
+    assert_int("frame count is initialized to 0", sprite.getFrameCount(), 0);
   result += assert("slowdown is initialized to NO_SLOWDOWN",
                    sprite.getSlowdown() == df::NO_SLOWDOWN);
   result += assert("color is initialized to COLOR_DEFAULT",

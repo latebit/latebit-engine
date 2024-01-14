@@ -18,12 +18,12 @@ WorldManager::WorldManager() {
   LM.writeLog("WorldManager::WorldManager(): Created WorldManager");
 }
 
-WorldManager& WorldManager::getInstance() {
+auto WorldManager::getInstance() -> WorldManager& {
   static WorldManager instance;
   return instance;
 }
 
-int WorldManager::startUp() {
+auto WorldManager::startUp() -> int {
   this->deletions = ObjectList();
   this->updates = ObjectList();
   LM.writeLog("WorldManager::startUp(): Started successfully");
@@ -45,13 +45,17 @@ void WorldManager::shutDown() {
   LM.writeLog("WorldManager::shutDown(): Shut down successfully");
 }
 
-int WorldManager::insertObject(Object* o) { return this->updates.insert(o); }
+auto WorldManager::insertObject(Object* o) -> int {
+  return this->updates.insert(o);
+}
 
-int WorldManager::removeObject(Object* o) { return this->updates.remove(o); }
+auto WorldManager::removeObject(Object* o) -> int {
+  return this->updates.remove(o);
+}
 
-ObjectList WorldManager::getAllObjects() const { return this->updates; }
+auto WorldManager::getAllObjects() const -> ObjectList { return this->updates; }
 
-ObjectList WorldManager::objectsOfType(std::string type) const {
+auto WorldManager::objectsOfType(std::string type) const -> ObjectList {
   ObjectList result;
   auto iterator = ObjectListIterator(&this->updates);
 
@@ -64,7 +68,7 @@ ObjectList WorldManager::objectsOfType(std::string type) const {
   return result;
 }
 
-ObjectList WorldManager::getCollisions(Object* o, Vector where) const {
+auto WorldManager::getCollisions(Object* o, Vector where) const -> ObjectList {
   ObjectList collisions;
   auto iterator = ObjectListIterator(&this->updates);
   auto box = o->getWorldBox(where);
@@ -83,7 +87,7 @@ ObjectList WorldManager::getCollisions(Object* o, Vector where) const {
   return collisions;
 }
 
-int WorldManager::moveObject(Object* o, Vector where) {
+auto WorldManager::moveObject(Object* o, Vector where) -> int {
   // Spectral objects can just move
   if (!o->isSolid()) {
     moveAndCheckBounds(o, where);
@@ -135,7 +139,7 @@ void WorldManager::moveAndCheckBounds(Object* o, Vector where) const {
   }
 }
 
-bool WorldManager::isOutOfBounds(Vector where) const {
+auto WorldManager::isOutOfBounds(Vector where) const -> bool {
   auto x = where.getX();
   auto y = where.getY();
 
@@ -165,7 +169,7 @@ void WorldManager::update() {
   }
 }
 
-int WorldManager::markForDelete(Object* o) {
+auto WorldManager::markForDelete(Object* o) -> int {
   // Prevents marking the same object for deletion twice
   auto iterator = ObjectListIterator(&this->deletions);
   for (iterator.first(); !iterator.isDone(); iterator.next()) {
@@ -186,4 +190,11 @@ void WorldManager::draw() {
     }
   }
 }
+
+void WorldManager::setBoundary(Box b) { this->boundary = b; }
+auto WorldManager::getBoundary() const -> Box { return this->boundary; }
+
+void WorldManager::setView(Box v) { this->view = v; }
+auto WorldManager::getView() const -> Box { return this->view; }
+
 }  // namespace df

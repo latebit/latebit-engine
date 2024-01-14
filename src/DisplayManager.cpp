@@ -25,10 +25,10 @@ int DisplayManager::startUp() {
     return 0;
   }
 
-  auto mode = sf::VideoMode(this->window_horizontal_pixels,
-                            this->window_vertical_pixels);
+  auto mode =
+    sf::VideoMode(this->window_horizontal_pixels, this->window_vertical_pixels);
   this->window =
-      new sf::RenderWindow(mode, WINDOW_TITLE_DEFAULT, WINDOW_STYLE_DEFAULT);
+    new sf::RenderWindow(mode, WINDOW_TITLE_DEFAULT, WINDOW_STYLE_DEFAULT);
 
   this->window->setMouseCursorVisible(false);
   this->window->setVerticalSyncEnabled(true);

@@ -10,7 +10,7 @@ auto EventCollision_test() -> int {
   result += assert("sets default object1", subject.getObject1() == nullptr);
   result += assert("sets default object2", subject.getObject2() == nullptr);
   result +=
-      assert_vector("sets default position", subject.getPos(), df::Vector());
+    assert_vector("sets default position", subject.getPos(), df::Vector());
 
   // Test constructor with parameters
   df::Object obj1, obj2;

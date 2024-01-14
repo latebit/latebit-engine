@@ -8,12 +8,12 @@ auto defaultConstructor_test() -> int {
   printf("defaultConstructor_test\n");
   df::Box box;
   int result =
-      assert_vector("default constructor sets top left corner to (0, 0)",
-                    box.getCorner(), df::Vector());
+    assert_vector("default constructor sets top left corner to (0, 0)",
+                  box.getCorner(), df::Vector());
   result +=
-      assert_float("default constructor sets width to 0", box.getWidth(), 0);
+    assert_float("default constructor sets width to 0", box.getWidth(), 0);
   result +=
-      assert_float("default constructor sets height to 0", box.getHeight(), 0);
+    assert_float("default constructor sets height to 0", box.getHeight(), 0);
   return result;
 }
 
@@ -25,8 +25,8 @@ auto parameterizedConstructor_test() -> int {
   df::Box box(toleft, width, height);
 
   int result =
-      assert_vector("parameterized constructor sets top left corner correctly",
-                    box.getCorner(), toleft);
+    assert_vector("parameterized constructor sets top left corner correctly",
+                  box.getCorner(), toleft);
   result += assert_float("parameterized constructor sets width correctly",
                          box.getWidth(), width);
   result += assert_float("parameterized constructor sets height correctly",

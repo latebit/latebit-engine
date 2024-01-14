@@ -16,10 +16,10 @@ auto ObjectList_fullList_test() -> int {
 
   result += assert("is full", subject->isFull());
   result +=
-      assert_int("has MAX_SIZE elements", subject->getCount(), df::MAX_SIZE);
+    assert_int("has MAX_SIZE elements", subject->getCount(), df::MAX_SIZE);
 
   result +=
-      assert_int("errors upon adding", subject->insert(new df::Object), -1);
+    assert_int("errors upon adding", subject->insert(new df::Object), -1);
 
   return result;
 }
@@ -63,7 +63,7 @@ auto ObjectList_emptyList_test() -> int {
   result += assert("is empty", subject->isEmpty());
   result += assert("is not full", !subject->isFull());
   result +=
-      assert_int("errors upon removing", subject->remove(new df::Object), -1);
+    assert_int("errors upon removing", subject->remove(new df::Object), -1);
   return result;
 }
 

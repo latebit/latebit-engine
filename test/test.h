@@ -2,17 +2,24 @@
 
 #include <string>
 
+#include "../include/Box.h"
 #include "../include/Vector.h"
 
-// Number of assertions in this run
-std::string getAssertions();
+using namespace df;
+using namespace std;
 
-int assert(const std::string name, bool assertion,
-           const std::string message = "wanted true got false");
-int assert_string(std::string name, std::string want, std::string got);
-int assert_regex(std::string name, std::string want, std::string pattern);
-int assert_float(std::string name, float got, float want);
-int assert_int(std::string name, int got, int want);
-int assert_vector(std::string name, df::Vector got, df::Vector want);
-int assert_ok(std::string name, int got);
-int assert_fail(std::string name, int got);
+// Number of assertions in this run
+string getAssertions();
+
+int assert(const string name, bool assertion,
+           const string message = "wanted true got false");
+int assert_string(string name, string want, string got);
+int assert_regex(string name, string want, string pattern);
+int assert_float(string name, float got, float want);
+int assert_int(string name, int got, int want);
+int assert_ok(string name, int got);
+int assert_fail(string name, int got);
+
+// Project-specific assertions
+int assert_vector(string name, Vector got, Vector want);
+int assert_box(string name, Box got, Box want);

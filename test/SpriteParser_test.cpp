@@ -20,7 +20,7 @@ auto SpriteParser_test() -> int {
   result += assert("parseSprite returns non-null", sprite != nullptr);
   if (sprite != nullptr) {
     result +=
-        assert_string("label is correct", sprite->getLabel(), "test_sprite");
+      assert_string("label is correct", sprite->getLabel(), "test_sprite");
     result += assert_int("frame count is correct", sprite->getFrameCount(), 2);
     result += assert_int("width is correct", sprite->getWidth(), 3);
     result += assert_int("height is correct", sprite->getHeight(), 4);

@@ -11,7 +11,7 @@ auto EventStep_test() -> int {
 
   subject = new df::EventStep(10);
   result +=
-      assert_int("is initialised with count", subject->getStepCount(), 10);
+    assert_int("is initialised with count", subject->getStepCount(), 10);
 
   subject->setStepCount(2);
   result += assert_int("has correct count", subject->getStepCount(), 2);

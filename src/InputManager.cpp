@@ -137,12 +137,12 @@ void InputManager::getInput() const {
       case sf::Event::KeyPressed:
         key = fromSFMLKeyCode(event.key.code);
         onEvent(
-            new df::EventKeyboard(key, df::EventKeyboardAction::KEY_PRESSED));
+          new df::EventKeyboard(key, df::EventKeyboardAction::KEY_PRESSED));
         break;
       case sf::Event::KeyReleased:
         key = fromSFMLKeyCode(event.key.code);
         onEvent(
-            new df::EventKeyboard(key, df::EventKeyboardAction::KEY_RELEASED));
+          new df::EventKeyboard(key, df::EventKeyboardAction::KEY_RELEASED));
         break;
       case sf::Event::MouseMoved:
         pos = Vector(event.mouseMove.x, event.mouseMove.y);

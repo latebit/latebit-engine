@@ -12,9 +12,9 @@ namespace df {
 std::string SpriteParser::getLine(std::ifstream* file_stream) {
   std::string line;
   getline(*file_stream, line);
-  line.erase(std::remove_if(line.begin(), line.end(),
-                            [](char c) { return c == '\r'; }),
-             line.end());
+  line.erase(
+    std::remove_if(line.begin(), line.end(), [](char c) { return c == '\r'; }),
+    line.end());
   return line;
 }
 
@@ -75,9 +75,9 @@ Sprite* SpriteParser::parseSprite(std::string filename, std::string label) {
   for (int i = 0; i < frameCount; i++) {
     if (!file.good()) {
       LM.writeLog(
-          "SpriteParser::parseSprite(): Unexpected end of file at frame "
-          "%d.",
-          i);
+        "SpriteParser::parseSprite(): Unexpected end of file at frame "
+        "%d.",
+        i);
       delete sprite;
       return nullptr;
     }
@@ -88,9 +88,9 @@ Sprite* SpriteParser::parseSprite(std::string filename, std::string label) {
       auto line = getLine(&file);
       if (line.size() != width) {
         LM.writeLog(
-            "SpriteParser::parseSpriteBody(): Invalid line length "
-            "for frame %d, line %d, expected %d got %d.",
-            i, j, width, line.length());
+          "SpriteParser::parseSpriteBody(): Invalid line length "
+          "for frame %d, line %d, expected %d got %d.",
+          i, j, width, line.length());
         delete sprite;
         return nullptr;
       }

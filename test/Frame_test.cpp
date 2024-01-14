@@ -24,12 +24,12 @@ auto Frame_test() -> int {
   result += assert_int("updates height", frame3.getHeight(), 4);
   frame3.setFrameString("########");
   result +=
-      assert_string("updates string", frame3.getFrameString(), "########");
+    assert_string("updates string", frame3.getFrameString(), "########");
 
   printf("Frame_draw_test\n");
   df::Frame frame4(3, 2, "###");
-  result += assert_ok("draws the frame",
-                      frame4.draw(df::Vector(), df::Color::RED, 0));
+  result +=
+    assert_ok("draws the frame", frame4.draw(df::Vector(), df::Color::RED, 0));
 
   df::Frame frame5;
   result += assert_fail("fails on empty frame",

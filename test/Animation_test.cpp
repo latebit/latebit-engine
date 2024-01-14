@@ -65,10 +65,10 @@ auto draw_test() -> int {
   animation.setSlowdownCount(0);
 
   int result = assert_ok("draws the frame", animation.draw(df::Vector()));
-  result += assert_int("does't update index before slowdown",
-                       animation.getIndex(), 0);
   result +=
-      assert_int("slowdown count is updated", animation.getSlowdownCount(), 1);
+    assert_int("does't update index before slowdown", animation.getIndex(), 0);
+  result +=
+    assert_int("slowdown count is updated", animation.getSlowdownCount(), 1);
 
   result += assert_ok("draws the frame", animation.draw(df::Vector()));
   result += assert_int("index is updated", animation.getIndex(), 1);

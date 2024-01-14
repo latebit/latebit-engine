@@ -13,21 +13,21 @@ auto ResourceManager_test() -> int {
 
   makeFile(filename, "1\n3\n4\n2\nblue\n***\n***\n***\n***");
   result +=
-      assert_ok("loads sprite successfully", RM.loadSprite(filename, label));
+    assert_ok("loads sprite successfully", RM.loadSprite(filename, label));
 
   result +=
-      assert_fail("does not load same label", RM.loadSprite(filename, label));
+    assert_fail("does not load same label", RM.loadSprite(filename, label));
 
   for (int i = 1; i < df::MAX_SPRITES; i++)
     RM.loadSprite(filename, label + std::to_string(i));
 
   result += assert_fail(
-      "does not load more than max",
-      RM.loadSprite(filename, label + std::to_string(df::MAX_SPRITES)));
+    "does not load more than max",
+    RM.loadSprite(filename, label + std::to_string(df::MAX_SPRITES)));
   remove(filename.c_str());
 
   result +=
-      assert_fail("does not load missing file", RM.loadSprite(filename, label));
+    assert_fail("does not load missing file", RM.loadSprite(filename, label));
 
   std::string anotherFile = "another_sprite.txt";
   makeFile(anotherFile, "2\n3\n4\n2\nblue\n***\n***\n***\n***");
@@ -50,7 +50,7 @@ auto ResourceManager_test() -> int {
   result += assert("does not retrieve unloaded sprite", sprite == nullptr);
 
   result +=
-      assert_fail("doesn't unload missing sprite", RM.unloadSprite(label));
+    assert_fail("doesn't unload missing sprite", RM.unloadSprite(label));
 
   RM.shutDown();
   sprite = RM.getSprite(label);

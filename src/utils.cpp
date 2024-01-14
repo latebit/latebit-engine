@@ -41,10 +41,10 @@ auto intersects(df::Box a, df::Box b) -> bool {
   float bTop = b.getCorner().getY();
   float bBottom = bTop + b.getHeight();
 
-  bool xOverlap = (bLeft <= aLeft && aLeft <= bRight) ||
-                  (aLeft <= bLeft && bLeft <= aRight);
+  bool xOverlap =
+    (bLeft <= aLeft && aLeft <= bRight) || (aLeft <= bLeft && bLeft <= aRight);
   bool yOverlap =
-      (bTop <= aTop && aTop <= bBottom) || (aTop <= bTop && bTop <= aBottom);
+    (bTop <= aTop && aTop <= bBottom) || (aTop <= bTop && bTop <= aBottom);
 
   return xOverlap && yOverlap;
 }

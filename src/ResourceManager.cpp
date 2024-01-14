@@ -20,17 +20,17 @@ int ResourceManager::startUp() {
 int ResourceManager::loadSprite(std::string filename, std::string label) {
   if (this->sprite_count >= MAX_SPRITES) {
     LM.writeLog(
-        "ResourceManager::loadSprite(): Cannot load sprite, maximum (%d) "
-        "reached.",
-        MAX_SPRITES);
+      "ResourceManager::loadSprite(): Cannot load sprite, maximum (%d) "
+      "reached.",
+      MAX_SPRITES);
     return -1;
   }
 
   if (getSprite(label) != nullptr) {
     LM.writeLog(
-        "ResourceManager::loadSprite(): Cannot load sprite, label '%s' "
-        "already in use.",
-        label.c_str());
+      "ResourceManager::loadSprite(): Cannot load sprite, label '%s' "
+      "already in use.",
+      label.c_str());
     return -1;
   }
 

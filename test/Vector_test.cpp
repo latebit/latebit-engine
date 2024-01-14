@@ -31,7 +31,7 @@ auto Vector_scale_test() -> int {
   subject = new df::Vector(1, 1);
   subject->scale(2);
   result +=
-      assert_float("scales correctly", subject->getMagnitude(), std::sqrt(8));
+    assert_float("scales correctly", subject->getMagnitude(), std::sqrt(8));
 
   return result;
 }
@@ -60,7 +60,7 @@ auto Vector_normalise_test() -> int {
   subject = new df::Vector();
   subject->normalize();
   result +=
-      assert_float("does nothing with null length", subject->getMagnitude(), 0);
+    assert_float("does nothing with null length", subject->getMagnitude(), 0);
 
   subject = new df::Vector(123, 345);
   subject->normalize();
@@ -78,8 +78,8 @@ auto Vector_eq_test() -> int {
   b = new df::Vector;
   result += assert("compares same vector", *a == *b, "wanted true got false");
   b = new df::Vector(1, 2);
-  result += assert("compares different vectors", !(*a == *b),
-                   "wanted true got false");
+  result +=
+    assert("compares different vectors", !(*a == *b), "wanted true got false");
 
   return result;
 }

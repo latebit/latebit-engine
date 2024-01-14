@@ -25,7 +25,7 @@ long int Clock::split() const {
 long int Clock::getNow() {
   auto now = chrono::high_resolution_clock::now();
   return chrono::duration_cast<chrono::microseconds>(now.time_since_epoch())
-      .count();
+    .count();
 }
 
 }  // namespace df

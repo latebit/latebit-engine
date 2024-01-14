@@ -18,19 +18,19 @@ class GameManager : public Manager {
   Clock *clock;
 
  public:
-  static GameManager &getInstance();
+  static auto getInstance() -> GameManager &;
 
-  int startUp(int frame_time = FRAME_TIME_DEFAULT);
+  auto startUp(int frame_time = FRAME_TIME_DEFAULT) -> int;
 
-  void shutDown();
+  void shutDown() override;
 
   void run();
 
   void setGameOver(bool new_game_over = true);
 
-  bool getGameOver() const;
+  auto getGameOver() const -> bool;
 
-  int getFrameTime() const;
+  auto getFrameTime() const -> int;
 };
 }  // namespace df
 

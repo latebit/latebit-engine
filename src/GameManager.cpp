@@ -18,7 +18,7 @@ GameManager::GameManager() {
   LM.writeLog("GameManager::GameManager(): Created GameManager");
 }
 
-int GameManager::startUp(int ft) {
+auto GameManager::startUp(int ft) -> int {
   if (LM.startUp() != 0) {
     printf("GameManager::startUp(): Error starting LogManager\n");
     return -1;
@@ -45,7 +45,7 @@ int GameManager::startUp(int ft) {
   return Manager::startUp();
 }
 
-GameManager& GameManager::getInstance() {
+auto GameManager::getInstance() -> GameManager& {
   static GameManager instance;
   return instance;
 }
@@ -83,8 +83,8 @@ void GameManager::run() {
 
 void GameManager::setGameOver(bool new_game_over) { game_over = new_game_over; }
 
-bool GameManager::getGameOver() const { return game_over; }
+auto GameManager::getGameOver() const -> bool { return game_over; }
 
-int GameManager::getFrameTime() const { return frame_time; }
+auto GameManager::getFrameTime() const -> int { return frame_time; }
 
 }  // namespace df

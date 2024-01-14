@@ -19,11 +19,11 @@ class Manager {
   virtual ~Manager();
 
   std::string getType() const;
-  bool isStarted() const;
+  auto isStarted() const -> bool;
 
-  virtual int startUp();
+  virtual auto startUp() -> int;
   virtual void shutDown();
 
-  int onEvent(const Event *event) const;
+  auto onEvent(const Event *event) const -> int;
 };
 };  // namespace df

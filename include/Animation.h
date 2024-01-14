@@ -20,21 +20,21 @@ class Animation {
   Animation();
 
   void setSprite(Sprite *new_sprite);
-  Sprite *getSprite() const;
+  auto getSprite() const -> Sprite *;
 
   void setName(std::string new_name);
   std::string getName() const;
 
   void setIndex(int new_index);
-  int getIndex() const;
+  auto getIndex() const -> int;
 
   void setSlowdownCount(int new_slowdown_count);
-  int getSlowdownCount() const;
+  auto getSlowdownCount() const -> int;
 
-  int draw(Vector position);
+  auto draw(Vector position) -> int;
 
-  Box getBox() const;
+  auto getBox() const -> Box;
 
-  bool operator==(const Animation &other) const;
+  auto operator==(const Animation &other) const -> bool;
 };
 }  // namespace df

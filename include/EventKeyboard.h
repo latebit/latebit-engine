@@ -102,11 +102,11 @@ class EventKeyboard : public Event {
 
   void setKey(Keyboard::Key new_key);
 
-  Keyboard::Key getKey() const;
+  auto getKey() const -> Keyboard::Key;
 
   void setKeyboardAction(EventKeyboardAction new_action);
 
-  EventKeyboardAction getKeyboardAction() const;
+  auto getKeyboardAction() const -> EventKeyboardAction;
 };
 
 }  // namespace df

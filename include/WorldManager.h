@@ -26,36 +26,36 @@ class WorldManager : public Manager {
   Box view;
 
   // Return true if a position is out side of the current view
-  bool isOutOfBounds(Vector p) const;
+  auto isOutOfBounds(Vector p) const -> bool;
 
   // Move object and check if it is out of bounds
   void moveAndCheckBounds(Object *o, Vector where) const;
 
  public:
-  static WorldManager &getInstance();
+  static auto getInstance() -> WorldManager &;
 
-  int startUp();
-  void shutDown();
-  int insertObject(Object *o);
-  int removeObject(Object *o);
-  ObjectList getAllObjects() const;
-  ObjectList objectsOfType(std::string type) const;
+  auto startUp() override -> int;
+  void shutDown() override;
+  auto insertObject(Object *o) -> int;
+  auto removeObject(Object *o) -> int;
+  auto getAllObjects() const -> ObjectList;
+  auto objectsOfType(std::string type) const -> ObjectList;
 
-  ObjectList getCollisions(Object *o, Vector where) const;
-  int moveObject(Object *o, Vector where);
+  auto getCollisions(Object *o, Vector where) const -> ObjectList;
+  auto moveObject(Object *o, Vector where) -> int;
 
   void update();
-  int markForDelete(Object *o);
+  auto markForDelete(Object *o) -> int;
   void draw();
 
   // Set the boundary for the world
   void setBoundary(Box b);
   // Get the boundary for the world
-  Box getBoundary() const;
+  auto getBoundary() const -> Box;
 
   // Set the current view (i.e., visible portion of the world)
   void setView(Box v);
   // Get the current view
-  Box getView() const;
+  auto getView() const -> Box;
 };
 }  // namespace df

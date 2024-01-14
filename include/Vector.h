@@ -12,26 +12,26 @@ class Vector {
   Vector(float x = 0.0f, float y = 0.0f);
 
   void setX(float x);
-  float getX() const;
+  auto getX() const -> float;
 
   void setY(float y);
-  float getY() const;
+  auto getY() const -> float;
 
   void setXY(float x = 0.0f, float y = 0.0f);
 
-  float getMagnitude() const;
+  auto getMagnitude() const -> float;
 
   void normalize();
 
   void scale(float a);
 
-  float distance(const Vector *other);
+  auto distance(const Vector *other) -> float;
 
-  Vector operator+(const Vector &other) const;
-  Vector operator-(const Vector &other) const;
-  bool operator==(const Vector &other) const;
-  bool operator!=(const Vector &other) const;
-  bool operator!(void) const;
+  auto operator+(const Vector &other) const -> Vector;
+  auto operator-(const Vector &other) const -> Vector;
+  auto operator==(const Vector &other) const -> bool;
+  auto operator!=(const Vector &other) const -> bool;
+  auto operator!() const -> bool;
 
   std::string toString() const;
 };

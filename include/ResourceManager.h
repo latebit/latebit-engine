@@ -17,14 +17,14 @@ class ResourceManager : public Manager {
   int sprite_count;
 
  public:
-  static ResourceManager &getInstance();
+  static auto getInstance() -> ResourceManager &;
 
-  int startUp() override;
+  auto startUp() -> int override;
   void shutDown() override;
 
-  int loadSprite(std::string filename, std::string label);
-  int unloadSprite(std::string label);
+  auto loadSprite(std::string filename, std::string label) -> int;
+  auto unloadSprite(std::string label) -> int;
 
-  Sprite *getSprite(std::string label) const;
+  auto getSprite(std::string label) const -> Sprite *;
 };
 }  // namespace df

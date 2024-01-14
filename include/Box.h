@@ -16,15 +16,15 @@ class Box {
   Box(Vector toleft, float width, float height);
 
   void setCorner(Vector corner);
-  Vector getCorner() const;
+  auto getCorner() const -> Vector;
 
   void setWidth(float width);
-  float getWidth() const;
+  auto getWidth() const -> float;
 
   void setHeight(float height);
-  float getHeight() const;
+  auto getHeight() const -> float;
 
-  bool operator==(const Box &other) const;
+  auto operator==(const Box &other) const -> bool;
   std::string toString() const;
 };
 }  // namespace df

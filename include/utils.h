@@ -6,8 +6,8 @@
 #include "Box.h"
 #include "Vector.h"
 
-char *getTimeString();
+auto getTimeString() -> char *;
 void sleep(long int microseconds);
-bool match(df::Vector p1, df::Vector p2);
-bool equals(float a, float b, float tolerance = 0.0001f);
-bool intersects(df::Box box1, df::Box box2);
+auto match(df::Vector p1, df::Vector p2) -> bool;
+auto equals(float a, float b, float tolerance = 0.0001f) -> bool;
+auto intersects(df::Box box1, df::Box box2) -> bool;

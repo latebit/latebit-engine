@@ -17,12 +17,12 @@ class LogManager : public Manager {
   FILE *f;
 
  public:
-  ~LogManager();
-  static LogManager &getInstance();
-  int startUp() override;
+  ~LogManager() override;
+  static auto getInstance() -> LogManager &;
+  auto startUp() -> int override;
   void shutDown() override;
   void setFlush(bool do_flush = true);
-  int writeLog(const char *fmt, ...) const;
+  auto writeLog(const char *fmt, ...) const -> int;
   // To be used when the logger is not yet initialized
   void stdoutLog(const char *fmt, ...) const;
 };

@@ -18,8 +18,8 @@ class ObjectListIterator {
 
   void first();
   void next();
-  bool isDone() const;
+  auto isDone() const -> bool;
 
-  Object *currentObject() const;
+  auto currentObject() const -> Object *;
 };
 }  // namespace df

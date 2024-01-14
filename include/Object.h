@@ -33,51 +33,51 @@ class Object {
   virtual ~Object();
 
   void setId(int id);
-  int getId() const;
+  auto getId() const -> int;
 
   void setType(std::string t);
   std::string getType() const;
 
   void setPosition(Vector p);
-  Vector getPosition() const;
+  auto getPosition() const -> Vector;
 
   void setAltitude(int a);
-  int getAltitude() const;
+  auto getAltitude() const -> int;
 
   void setDirection(Vector d);
-  Vector getDirection() const;
+  auto getDirection() const -> Vector;
 
   void setSpeed(float s);
-  float getSpeed() const;
+  auto getSpeed() const -> float;
 
   void setVelocity(Vector v);
-  Vector getVelocity() const;
+  auto getVelocity() const -> Vector;
 
-  Vector predictPosition();
+  auto predictPosition() -> Vector;
 
-  bool isSolid() const;
+  auto isSolid() const -> bool;
   void setSolidness(Solidness s);
-  Solidness getSolidness() const;
+  auto getSolidness() const -> Solidness;
 
   void setAnimation(Animation a);
-  Animation getAnimation() const;
+  auto getAnimation() const -> Animation;
 
   void setDebug(bool debug);
-  bool getDebug() const;
+  auto getDebug() const -> bool;
 
-  int setSprite(std::string label);
+  auto setSprite(std::string label) -> int;
 
   void setBox(Box box);
-  Box getBox() const;
-  int drawBoundingBox() const;
+  auto getBox() const -> Box;
+  auto drawBoundingBox() const -> int;
 
   // Returns bounding box in world coordinates relative to this object's
   // position.
-  Box getWorldBox() const;
+  auto getWorldBox() const -> Box;
   // Returns bounding box in world coordinates relative to center.
-  Box getWorldBox(Vector center) const;
+  auto getWorldBox(Vector center) const -> Box;
 
-  virtual int eventHandler(const Event *e);
-  virtual int draw();
+  virtual auto eventHandler(const Event *e) -> int;
+  virtual auto draw() -> int;
 };
 }  // namespace df

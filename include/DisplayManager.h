@@ -25,11 +25,11 @@ const Color WINDOW_BACKGROUND_COLOR_DEFAULT = BLACK;
 const std::string WINDOW_TITLE_DEFAULT = "Dragonfly";
 const std::string FONT_FILE_DEFAULT = "df-font.ttf";
 
-float charHeight();
-float charWidth();
+auto charHeight() -> float;
+auto charWidth() -> float;
 
-Vector spacesToPixels(Vector spaces);
-Vector pixelsToSpaces(Vector pixels);
+auto spacesToPixels(Vector spaces) -> Vector;
+auto pixelsToSpaces(Vector pixels) -> Vector;
 
 class DisplayManager : public Manager {
  private:
@@ -45,31 +45,31 @@ class DisplayManager : public Manager {
   Color background_color;
 
  public:
-  static DisplayManager &getInstance();
+  static auto getInstance() -> DisplayManager &;
 
-  int startUp() override;
+  auto startUp() -> int override;
 
   void shutDown() override;
 
-  int drawCh(Vector world_pos, char ch, Color fg) const;
-  int drawCh(Vector world_pos, char ch, Color fg, Color bg) const;
+  auto drawCh(Vector world_pos, char ch, Color fg) const -> int;
+  auto drawCh(Vector world_pos, char ch, Color fg, Color bg) const -> int;
 
-  int drawString(Vector world_pos, std::string s, Alignment a, Color fg) const;
-  int drawString(Vector world_pos, std::string s, Alignment a, Color fg,
-                 Color bg) const;
+  auto drawString(Vector world_pos, std::string s, Alignment a, Color fg) const -> int;
+  auto drawString(Vector world_pos, std::string s, Alignment a, Color fg,
+                 Color bg) const -> int;
 
   void setBackground(Color color);
 
-  int getHorizontalCells() const;
+  auto getHorizontalCells() const -> int;
 
-  int getVerticalCells() const;
+  auto getVerticalCells() const -> int;
 
-  int getHorizontalPixels() const;
+  auto getHorizontalPixels() const -> int;
 
-  int getVerticalPixels() const;
+  auto getVerticalPixels() const -> int;
 
-  int swapBuffers();
+  auto swapBuffers() -> int;
 
-  sf::RenderWindow *getWindow() const;
+  auto getWindow() const -> sf::RenderWindow *;
 };
 }  // namespace df

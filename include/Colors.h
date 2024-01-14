@@ -17,7 +17,7 @@ enum Color {
 
 const Color COLOR_DEFAULT = WHITE;
 
-Color fromColorString(std::string color_string);
+auto fromColorString(std::string color_string) -> Color;
 
-sf::Color toSFColor(Color c);
+auto toSFColor(Color c) -> sf::Color;
 }  // namespace df

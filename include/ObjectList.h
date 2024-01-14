@@ -18,16 +18,16 @@ class ObjectList {
 
   ObjectList();
 
-  int insert(Object *o);
+  auto insert(Object *o) -> int;
 
-  int remove(Object *o);
+  auto remove(Object *o) -> int;
 
   void clear();
 
-  int getCount() const;
-  bool isEmpty() const;
-  bool isFull() const;
-  int find(Object *o) const;
+  auto getCount() const -> int;
+  auto isEmpty() const -> bool;
+  auto isFull() const -> bool;
+  auto find(Object *o) const -> int;
 };
 
 }  // namespace df

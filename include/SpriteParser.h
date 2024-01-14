@@ -11,10 +11,10 @@ namespace df {
 class SpriteParser {
  private:
   static std::string getLine(std::ifstream *file_stream);
-  static int parseHeader(std::ifstream *file_stream, int *frames, int *width,
-                         int *height, int *slowdown, Color *color);
+  static auto parseHeader(std::ifstream *file_stream, int *frames, int *width,
+                         int *height, int *slowdown, Color *color) -> int;
 
  public:
-  static Sprite *parseSprite(std::string filename, std::string label);
+  static auto parseSprite(std::string filename, std::string label) -> Sprite *;
 };
 }  // namespace df

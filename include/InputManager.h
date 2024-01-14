@@ -17,12 +17,12 @@ class InputManager : public Manager {
   void operator=(InputManager const &);
   std::unordered_map<sf::Keyboard::Key, Keyboard::Key> keyboardEvent;
   std::unordered_map<sf::Mouse::Button, Mouse::Button> mouseEvent;
-  Keyboard::Key fromSFMLKeyCode(sf::Keyboard::Key key) const;
-  Mouse::Button fromSFMLMouseButton(sf::Mouse::Button btn) const;
+  auto fromSFMLKeyCode(sf::Keyboard::Key key) const -> Keyboard::Key;
+  auto fromSFMLMouseButton(sf::Mouse::Button btn) const -> Mouse::Button;
 
  public:
-  static InputManager &getInstance();
-  int startUp() override;
+  static auto getInstance() -> InputManager &;
+  auto startUp() -> int override;
   void shutDown() override;
   void getInput() const;
 };

@@ -44,4 +44,4 @@ format:
 	clang-format -i $(SRC_FILES) $(TEST_FILES) $(INC_DIR)/*.h
 
 tidy:
-	clang-tidy -fix-errors $(SRC_FILES) $(TEST_FILES) -- $(CFLAGS)
+	clang-tidy --fix --fix-errors --fix-notes $(SRC_FILES) $(TEST_FILES) $(INC_DIR)/*.h -- $(CFLAGS)

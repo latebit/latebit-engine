@@ -12,7 +12,7 @@ auto GameManager_test() -> int {
 
   Box wanted(Vector(0, 0), DM.getHorizontalCells(), DM.getVerticalCells());
   result += assert_box("boundary is set up", WM.getBoundary(), wanted);
-  result += assert_box("boundary is set up", WM.getView(), wanted);
+  result += assert_box("view is set up", WM.getView(), wanted);
 
   GM.shutDown();
 

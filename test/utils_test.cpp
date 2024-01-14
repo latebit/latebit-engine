@@ -1,5 +1,6 @@
 #include "../include/utils.h"
 
+#include "../include/WorldManager.h"
 #include "test.h"
 
 auto utils_match_test() -> int {
@@ -82,6 +83,20 @@ auto utils_intersects_test() -> int {
   return result;
 }
 
+auto utils_worldToView_test() -> int {
+  int result = 0;
+
+  auto initialView = WM.getView();
+  WM.setView(df::Box(df::Vector(5, 5), 10, 10));
+
+  result += assert_vector("converts world position to view position",
+                          worldToView(df::Vector(5, 5)), df::Vector(0, 0));
+  result += assert_vector("converts world position to view position (origin)",
+                          worldToView(df::Vector(0, 0)), df::Vector(-5, -5));
+  WM.setView(initialView);
+  return result;
+}
+
 auto utils_test() -> int {
   int result = 0;
 
@@ -90,6 +105,7 @@ auto utils_test() -> int {
 
   result += utils_match_test();
   result += utils_intersects_test();
+  result += utils_worldToView_test();
 
   return result;
 }

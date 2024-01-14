@@ -21,7 +21,10 @@ auto WorldManager_draw_test() -> int {
 
   class TestObject : public Object {
    public:
-    TestObject(int altitude) { setAltitude(altitude); }
+    TestObject(int altitude, Vector position = Vector()) {
+      setAltitude(altitude);
+      setPosition(position);
+    }
     auto draw() -> int override {
       // Count the number of drawings per altitude
       WorldManager_draw_test_drawCount[getAltitude()]++;
@@ -39,6 +42,16 @@ auto WorldManager_draw_test() -> int {
   for (int i : WorldManager_draw_test_drawCount) {
     result += assert_int("draws all objects", i, 1);
   }
+
+  WM.shutDown();
+  WM.startUp();
+
+  auto obj1 = new TestObject(0, Vector(-2, -2));
+  WM.draw();
+  result += assert_int("does not draw out of bounds",
+                       WorldManager_draw_test_drawCount[0], 1);
+
+  WM.shutDown();
 
   return result;
 }

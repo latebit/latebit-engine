@@ -15,6 +15,8 @@ WorldManager::WorldManager() {
   setType("WorldManager");
   this->deletions = ObjectList();
   this->updates = ObjectList();
+  this->boundary = Box();
+  this->view = Box();
   LM.writeLog("WorldManager::WorldManager(): Created WorldManager");
 }
 
@@ -179,8 +181,10 @@ void WorldManager::draw() {
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
     for (iterator->first(); !iterator->isDone(); iterator->next()) {
       auto object = iterator->currentObject();
-
-      if (object != nullptr && object->getAltitude() == i) object->draw();
+      if (object != nullptr && object->getAltitude() == i &&
+          intersects(object->getWorldBox(), this->view)) {
+        object->draw();
+      };
     }
   }
 }

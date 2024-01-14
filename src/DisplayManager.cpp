@@ -1,6 +1,7 @@
 #include "DisplayManager.h"
 
 #include "LogManager.h"
+#include "utils.h"
 
 namespace df {
 
@@ -52,10 +53,11 @@ void DisplayManager::shutDown() {
 }
 
 auto DisplayManager::drawCh(Vector worldPosition, char ch, Color fg,
-                           Color bg) const -> int {
+                            Color bg) const -> int {
   if (this->window == nullptr) return -1;
 
-  auto pixelPosition = spacesToPixels(worldPosition);
+  auto viewPosition = worldToView(worldPosition);
+  auto pixelPosition = spacesToPixels(viewPosition);
 
   static auto width = charWidth();
   static auto height = charHeight();
@@ -86,19 +88,20 @@ auto DisplayManager::drawCh(Vector worldPosition, char ch, Color fg,
   return 0;
 }
 
-auto DisplayManager::drawCh(Vector world_pos, char ch, Color fg) const -> int {
-  return DisplayManager::drawCh(world_pos, ch, fg, this->background_color);
+auto DisplayManager::drawCh(Vector worldPosition, char ch, Color fg) const
+  -> int {
+  return DisplayManager::drawCh(worldPosition, ch, fg, this->background_color);
 }
 
-auto DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
-                               Color fg, Color bg) const -> int {
-  Vector start = world_pos;
+auto DisplayManager::drawString(Vector worldPosition, std::string s,
+                                Alignment a, Color fg, Color bg) const -> int {
+  Vector start = worldPosition;
   switch (a) {
     case ALIGN_CENTER:
-      start.setX(world_pos.getX() - s.size() / 2);
+      start.setX(worldPosition.getX() - s.size() / 2);
       break;
     case ALIGN_RIGHT:
-      start.setX(world_pos.getX() - s.size());
+      start.setX(worldPosition.getX() - s.size());
       break;
     case ALIGN_LEFT:
     default:
@@ -115,9 +118,9 @@ auto DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
   return 0;
 }
 
-auto DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
-                               Color fg) const -> int {
-  return DisplayManager::drawString(world_pos, s, a, fg,
+auto DisplayManager::drawString(Vector worldPosition, std::string s,
+                                Alignment a, Color fg) const -> int {
+  return DisplayManager::drawString(worldPosition, s, a, fg,
                                     this->background_color);
 }
 
@@ -156,7 +159,9 @@ auto DisplayManager::swapBuffers() -> int {
   return 0;
 }
 
-auto DisplayManager::getWindow() const -> sf::RenderWindow* { return this->window; }
+auto DisplayManager::getWindow() const -> sf::RenderWindow* {
+  return this->window;
+}
 
 auto charHeight() -> float {
   return DM.getVerticalPixels() / (float)DM.getVerticalCells();

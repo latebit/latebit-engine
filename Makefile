@@ -1,5 +1,5 @@
 CXX = clang++
-CFLAGS:= $(CFLAGS) -std=c++11 -fPIC
+CFLAGS:= $(CFLAGS) -std=c++20 -fPIC
 SMLFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 
 SRC_DIR = src

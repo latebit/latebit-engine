@@ -32,11 +32,11 @@ int WorldManager::startUp() {
 
 void WorldManager::shutDown() {
   auto updates = this->updates;  // create a copy
-  auto i_updates = ObjectListIterator(&updates);
-  for (i_updates.first(); !i_updates.isDone(); i_updates.next()) {
+  auto iterator = ObjectListIterator(&updates);
+  for (iterator.first(); !iterator.isDone(); iterator.next()) {
     // This is not leaving a danglig null reference!
     // In the destructor of Object, we also remove it from the world
-    delete i_updates.currentObject();
+    delete iterator.currentObject();
   }
 
   this->updates.clear();
@@ -53,11 +53,11 @@ ObjectList WorldManager::getAllObjects() const { return this->updates; }
 
 ObjectList WorldManager::objectsOfType(std::string type) const {
   ObjectList result;
-  auto i_updates = ObjectListIterator(&this->updates);
+  auto iterator = ObjectListIterator(&this->updates);
 
-  for (i_updates.first(); !i_updates.isDone(); i_updates.next()) {
-    if (i_updates.currentObject()->getType() == type) {
-      result.insert(i_updates.currentObject());
+  for (iterator.first(); !iterator.isDone(); iterator.next()) {
+    if (iterator.currentObject()->getType() == type) {
+      result.insert(iterator.currentObject());
     }
   }
 
@@ -66,11 +66,11 @@ ObjectList WorldManager::objectsOfType(std::string type) const {
 
 ObjectList WorldManager::getCollisions(Object* o, Vector where) const {
   ObjectList collisions;
-  auto i_updates = ObjectListIterator(&this->updates);
+  auto iterator = ObjectListIterator(&this->updates);
   auto box = o->getWorldBox(where);
 
-  for (i_updates.first(); !i_updates.isDone(); i_updates.next()) {
-    auto current = i_updates.currentObject();
+  for (iterator.first(); !iterator.isDone(); iterator.next()) {
+    auto current = iterator.currentObject();
     if (current == o) continue;
 
     auto currentBox = current->getWorldBox();
@@ -99,10 +99,10 @@ int WorldManager::moveObject(Object* o, Vector where) {
   }
 
   bool shouldMove = true;
-  auto i_collisions = ObjectListIterator(&collisions);
+  auto iterator = ObjectListIterator(&collisions);
 
-  for (i_collisions.first(); !i_collisions.isDone(); i_collisions.next()) {
-    auto current = i_collisions.currentObject();
+  for (iterator.first(); !iterator.isDone(); iterator.next()) {
+    auto current = iterator.currentObject();
     auto event = EventCollision(o, current, where);
     o->eventHandler(&event);
     current->eventHandler(&event);
@@ -146,16 +146,16 @@ bool WorldManager::isOutOfBounds(Vector where) const {
 void WorldManager::update() {
   if (!isStarted()) return;
 
-  auto i_deletions = ObjectListIterator(&this->deletions);
-  for (i_deletions.first(); !i_deletions.isDone(); i_deletions.next()) {
-    removeObject(i_deletions.currentObject());
-    delete i_deletions.currentObject();
+  auto deletions = ObjectListIterator(&this->deletions);
+  for (deletions.first(); !deletions.isDone(); deletions.next()) {
+    removeObject(deletions.currentObject());
+    delete deletions.currentObject();
   }
   this->deletions.clear();
 
-  auto i_updates = ObjectListIterator(&this->updates);
-  for (i_updates.first(); !i_updates.isDone(); i_updates.next()) {
-    auto object = i_updates.currentObject();
+  auto updates = ObjectListIterator(&this->updates);
+  for (updates.first(); !updates.isDone(); updates.next()) {
+    auto object = updates.currentObject();
     auto oldPosition = object->getPosition();
     auto newPosition = object->predictPosition();
 
@@ -167,20 +167,20 @@ void WorldManager::update() {
 
 int WorldManager::markForDelete(Object* o) {
   // Prevents marking the same object for deletion twice
-  auto i_deletions = ObjectListIterator(&this->deletions);
-  for (i_deletions.first(); !i_deletions.isDone(); i_deletions.next()) {
-    if (i_deletions.currentObject() == o) return 0;
+  auto iterator = ObjectListIterator(&this->deletions);
+  for (iterator.first(); !iterator.isDone(); iterator.next()) {
+    if (iterator.currentObject() == o) return 0;
   }
 
   return this->deletions.insert(o);
 }
 
 void WorldManager::draw() {
-  auto i_updates = new ObjectListIterator(&this->updates);
+  auto iterator = new ObjectListIterator(&this->updates);
 
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
-    for (i_updates->first(); !i_updates->isDone(); i_updates->next()) {
-      auto object = i_updates->currentObject();
+    for (iterator->first(); !iterator->isDone(); iterator->next()) {
+      auto object = iterator->currentObject();
 
       if (object != nullptr && object->getAltitude() == i) object->draw();
     }

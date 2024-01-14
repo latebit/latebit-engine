@@ -230,14 +230,15 @@ auto WorldManager_outOfBounds_test() -> int {
 
   auto obj1 = new TestObject;
 
-  obj1->setPosition(Vector(0, 0));
+  obj1->setPosition(Vector());
+  obj1->setBox(Box(1, 1));
 
-  WM.moveObject(obj1, Vector(-1, 0));
+  WM.moveObject(obj1, Vector(-2, 0));
   result +=
     assert("emits out of bounds event", WorldManager_outOfBounds_test_emitted);
 
   WorldManager_outOfBounds_test_emitted = false;
-  WM.moveObject(obj1, Vector(-2, 0));
+  WM.moveObject(obj1, Vector(-3, 0));
   result += assert("does not emit out of bounds if already out",
                    !WorldManager_outOfBounds_test_emitted);
 

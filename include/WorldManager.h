@@ -25,9 +25,6 @@ class WorldManager : public Manager {
   // The boundaries of the visible portion of the world
   Box view;
 
-  // Return true if a position is out side of the current view
-  auto isOutOfBounds(Vector p) const -> bool;
-
   // Move object and check if it is out of bounds
   void moveAndCheckBounds(Object *o, Vector where) const;
 

@@ -129,22 +129,16 @@ auto WorldManager::moveObject(Object* o, Vector where) -> int {
 }
 
 void WorldManager::moveAndCheckBounds(Object* o, Vector where) const {
-  auto old_position = o->getPosition();
+  auto initial = o->getWorldBox();
   o->setPosition(where);
+  auto final = o->getWorldBox();
+  auto boundary = WM.getBoundary();
 
   // Should this take in account the bounding box?
-  if (isOutOfBounds(where) && !isOutOfBounds(old_position)) {
+  if (intersects(initial, boundary) && !intersects(final, boundary)) {
     auto event = EventOut();
     o->eventHandler(&event);
   }
-}
-
-auto WorldManager::isOutOfBounds(Vector where) const -> bool {
-  auto x = where.getX();
-  auto y = where.getY();
-
-  return (x < 0 || y < 0 || x >= DM.getHorizontalCells() ||
-          y >= DM.getVerticalCells());
 }
 
 void WorldManager::update() {

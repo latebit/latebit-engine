@@ -39,6 +39,11 @@ auto GameManager::startUp(int ft) -> int {
     return -1;
   }
 
+  // By default boundary equates view and it's the whole window
+  Box boundary(Vector(0, 0), DM.getHorizontalCells(), DM.getVerticalCells());
+  WM.setBoundary(boundary);
+  WM.setView(boundary);
+
   frame_time = ft;
 
   LM.writeLog("GameManager::startUp(): Started successfully");

@@ -11,6 +11,7 @@
 #include "EventStep_test.h"
 #include "Event_test.h"
 #include "Frame_test.h"
+#include "GameManager_test.h"
 #include "ObjectListIterator_test.h"
 #include "ObjectList_test.h"
 #include "Object_test.h"
@@ -102,6 +103,10 @@ auto main() -> int {
 
   suite("Box_test");
   result += Box_test();
+  timing(c.delta());
+
+  suite("GameManager_test");
+  result += GameManager_test();
   timing(c.delta());
 
   auto final = c.getNow();

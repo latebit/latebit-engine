@@ -7,19 +7,25 @@
 
 namespace df {
 Box::Box() {
-  this->toleft_corner = Vector();
+  this->corner = Vector();
   this->width = 0;
   this->height = 0;
 }
 
-Box::Box(Vector toleft, float horizontal, float vertical) {
-  this->toleft_corner = toleft;
+Box::Box(Vector topLeft, float horizontal, float vertical) {
+  this->corner = topLeft;
   this->width = horizontal;
   this->height = vertical;
 }
 
-void Box::setCorner(Vector corner) { this->toleft_corner = corner; }
-auto Box::getCorner() const -> Vector { return this->toleft_corner; }
+Box::Box(float horizontal, float vertical) {
+  this->corner = Vector();
+  this->width = horizontal;
+  this->height = vertical;
+}
+
+void Box::setCorner(Vector corner) { this->corner = corner; }
+auto Box::getCorner() const -> Vector { return this->corner; }
 
 void Box::setWidth(float width) { this->width = width; }
 auto Box::getWidth() const -> float { return this->width; }
@@ -28,13 +34,12 @@ void Box::setHeight(float height) { this->height = height; }
 auto Box::getHeight() const -> float { return this->height; }
 
 auto Box::operator==(const Box& other) const -> bool {
-  return this->toleft_corner == other.toleft_corner &&
-         equals(this->width, other.width) && equals(this->height, other.height);
+  return this->corner == other.corner && equals(this->width, other.width) &&
+         equals(this->height, other.height);
 }
 
 auto Box::toString() const -> std::string {
-  return "Box(" + this->toleft_corner.toString() + ", " +
-         std::to_string(this->width) + ", " + std::to_string(this->height) +
-         ")";
+  return "Box(" + this->corner.toString() + ", " + std::to_string(this->width) +
+         ", " + std::to_string(this->height) + ")";
 }
 }  // namespace df

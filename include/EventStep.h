@@ -7,7 +7,7 @@ const std::string STEP_EVENT = "df::step";
 
 class EventStep : public Event {
  private:
-  int step_count;
+  int stepCount = 0;
 
  public:
   EventStep();
@@ -17,4 +17,3 @@ class EventStep : public Event {
   int getStepCount() const;
 };
 }  // namespace df
-

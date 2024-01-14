@@ -11,10 +11,10 @@ class ObjectListIterator {
  private:
   ObjectListIterator();
   int currentIndex;
-  const ObjectList *p_list;
+  const ObjectList *list;
 
  public:
-  ObjectListIterator(const ObjectList *p_l);
+  ObjectListIterator(const ObjectList *l);
 
   void first();
   void next();

@@ -9,35 +9,35 @@
 #include "Sprite.h"
 
 namespace df {
-std::string SpriteParser::getLine(std::ifstream* p_file_stream) {
+std::string SpriteParser::getLine(std::ifstream* file_stream) {
   std::string line;
-  getline(*p_file_stream, line);
+  getline(*file_stream, line);
   line.erase(std::remove_if(line.begin(), line.end(),
                             [](char c) { return c == '\r'; }),
              line.end());
   return line;
 }
 
-int SpriteParser::parseHeader(std::ifstream* p_file_stream, int* p_frames,
-                              int* p_width, int* p_height, int* p_slowdown,
-                              Color* p_color) {
+int SpriteParser::parseHeader(std::ifstream* file_stream, int* frames,
+                              int* width, int* height, int* slowdown,
+                              Color* color) {
   for (int i = 0; i < 5; i++) {
-    auto line = getLine(p_file_stream);
+    auto line = getLine(file_stream);
     switch (i) {
       case 0:
-        *p_frames = std::stoi(line);
+        *frames = std::stoi(line);
         break;
       case 1:
-        *p_width = std::stoi(line);
+        *width = std::stoi(line);
         break;
       case 2:
-        *p_height = std::stoi(line);
+        *height = std::stoi(line);
         break;
       case 3:
-        *p_slowdown = std::stoi(line);
+        *slowdown = std::stoi(line);
         break;
       case 4:
-        *p_color = fromColorString(line);
+        *color = fromColorString(line);
         break;
       default:
         break;

@@ -14,7 +14,7 @@ class LogManager : public Manager {
   LogManager(LogManager const &);
   void operator=(LogManager const &);
   bool do_flush;
-  FILE *p_f;
+  FILE *f;
 
  public:
   ~LogManager();

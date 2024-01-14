@@ -108,8 +108,8 @@ int InputManager::startUp() {
     return -1;
   }
 
-  sf::RenderWindow* p_win = DM.getWindow();
-  p_win->setKeyRepeatEnabled(false);
+  sf::RenderWindow* win = DM.getWindow();
+  win->setKeyRepeatEnabled(false);
   LM.writeLog("InputManager::startUp(): Started successfully");
   return Manager::startUp();
 }

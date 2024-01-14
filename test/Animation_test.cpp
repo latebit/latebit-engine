@@ -75,11 +75,11 @@ int draw_test() {
   result += assert_int("slowdown is updated", animation.getSlowdownCount(), 0);
 
   // Test animation slowdown
-  animation.setSlowdownCount(df::STOP_ANIMATION_SLOWDOWN);
+  animation.setSlowdownCount(df::STOANIMATION_SLOWDOWN);
   result += assert_ok("draws the frame", animation.draw(df::Vector()));
   result += assert_int("index is not updated", animation.getIndex(), 1);
   result += assert_int("slowdown is not updated", animation.getSlowdownCount(),
-                       df::STOP_ANIMATION_SLOWDOWN);
+                       df::STOANIMATION_SLOWDOWN);
 
   remove(filename);
   RM.shutDown();

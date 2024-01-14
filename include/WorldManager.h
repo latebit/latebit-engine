@@ -19,23 +19,23 @@ class WorldManager : public Manager {
   ObjectList deletions;
 
   bool isOutOfBounds(Vector p) const;
-  void moveAndCheckBounds(Object *p_o, Vector where) const;
+  void moveAndCheckBounds(Object *o, Vector where) const;
 
  public:
   static WorldManager &getInstance();
 
   int startUp();
   void shutDown();
-  int insertObject(Object *p_o);
-  int removeObject(Object *p_o);
+  int insertObject(Object *o);
+  int removeObject(Object *o);
   ObjectList getAllObjects() const;
   ObjectList objectsOfType(std::string type) const;
 
-  ObjectList getCollisions(Object *p_o, Vector where) const;
-  int moveObject(Object *p_o, Vector where);
+  ObjectList getCollisions(Object *o, Vector where) const;
+  int moveObject(Object *o, Vector where);
 
   void update();
-  int markForDelete(Object *p_o);
+  int markForDelete(Object *o);
   void draw();
 };
 }  // namespace df

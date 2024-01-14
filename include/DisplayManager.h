@@ -37,7 +37,7 @@ class DisplayManager : public Manager {
   DisplayManager(DisplayManager const &);
   void operator=(DisplayManager const &);
   sf::Font font;
-  sf::RenderWindow *p_window;
+  sf::RenderWindow *window;
   int window_horizontal_pixels;
   int window_vertical_pixels;
   int window_horizontal_cells;

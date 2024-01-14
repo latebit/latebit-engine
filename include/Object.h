@@ -77,7 +77,7 @@ class Object {
   // Returns bounding box in world coordinates relative to center.
   Box getWorldBox(Vector center) const;
 
-  virtual int eventHandler(const Event *p_e);
+  virtual int eventHandler(const Event *e);
   virtual int draw();
 };
 }  // namespace df

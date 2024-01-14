@@ -34,15 +34,15 @@ int ResourceManager::loadSprite(std::string filename, std::string label) {
     return -1;
   }
 
-  Sprite* p_sprite = SpriteParser::parseSprite(filename, label);
+  Sprite* sprite = SpriteParser::parseSprite(filename, label);
 
-  if (p_sprite == nullptr) {
+  if (sprite == nullptr) {
     LM.writeLog("ResourceManager::loadSprite(): could not parse sprite '%s'.",
                 label.c_str());
     return -1;
   }
 
-  this->p_sprite[this->sprite_count] = p_sprite;
+  this->sprite[this->sprite_count] = sprite;
   this->sprite_count++;
 
   return 0;
@@ -55,13 +55,12 @@ ResourceManager& ResourceManager::getInstance() {
 
 int ResourceManager::unloadSprite(std::string label) {
   for (int i = 0; i < this->sprite_count; i++) {
-    if (this->p_sprite[i] != nullptr &&
-        this->p_sprite[i]->getLabel() == label) {
-      delete this->p_sprite[i];
+    if (this->sprite[i] != nullptr && this->sprite[i]->getLabel() == label) {
+      delete this->sprite[i];
 
       // We need not scooting here, sprites are not ordered
-      this->p_sprite[i] = this->p_sprite[this->sprite_count];
-      this->p_sprite[this->sprite_count] = nullptr;
+      this->sprite[i] = this->sprite[this->sprite_count];
+      this->sprite[this->sprite_count] = nullptr;
 
       this->sprite_count--;
       return 0;
@@ -73,10 +72,10 @@ int ResourceManager::unloadSprite(std::string label) {
 
 Sprite* ResourceManager::getSprite(std::string label) const {
   for (int i = 0; i < this->sprite_count; i++) {
-    if (this->p_sprite[i] == nullptr) continue;
+    if (this->sprite[i] == nullptr) continue;
 
-    if (this->p_sprite[i]->getLabel() == label) {
-      return this->p_sprite[i];
+    if (this->sprite[i]->getLabel() == label) {
+      return this->sprite[i];
     }
   }
 
@@ -84,7 +83,7 @@ Sprite* ResourceManager::getSprite(std::string label) const {
 }
 void ResourceManager::shutDown() {
   for (int i = 0; i < this->sprite_count; i++) {
-    delete this->p_sprite[i];
+    delete this->sprite[i];
   }
 
   this->sprite_count = 0;

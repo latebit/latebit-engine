@@ -7,13 +7,13 @@
 namespace df {
 class Box {
  private:
-  Vector top_left_corner;
+  Vector toleft_corner;
   float width;
   float height;
 
  public:
   Box();
-  Box(Vector top_left, float width, float height);
+  Box(Vector toleft, float width, float height);
 
   void setCorner(Vector corner);
   Vector getCorner() const;

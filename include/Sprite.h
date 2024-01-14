@@ -8,7 +8,7 @@
 
 namespace df {
 enum Slowdown {
-  STOP_ANIMATION = 0,
+  STOANIMATION = 0,
   NO_SLOWDOWN = 1,
 };
 

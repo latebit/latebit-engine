@@ -26,13 +26,13 @@ int Manager::startUp() {
 
 void Manager::shutDown() { this->is_started = false; }
 
-int Manager::onEvent(const Event* p_event) const {
+int Manager::onEvent(const Event* event) const {
   int count = 0;
 
   auto objects = WM.getAllObjects();
   auto iterator = ObjectListIterator(&objects);
   for (iterator.first(); !iterator.isDone(); iterator.next()) {
-    iterator.currentObject()->eventHandler(p_event);
+    iterator.currentObject()->eventHandler(event);
     count++;
   }
 

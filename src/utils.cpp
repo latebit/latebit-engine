@@ -10,10 +10,9 @@ char *getTimeString() {
 
   time_t now;
   time(&now);
-  struct tm *p_localtime = localtime(&now);
+  struct tm *lt = localtime(&now);
 
-  sprintf(time_str, "%02d:%02d:%02d", p_localtime->tm_hour, p_localtime->tm_min,
-          p_localtime->tm_sec);
+  sprintf(time_str, "%02d:%02d:%02d", lt->tm_hour, lt->tm_min, lt->tm_sec);
 
   return time_str;
 }

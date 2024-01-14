@@ -14,7 +14,7 @@ GameManager::GameManager() {
   setType("GameManager");
   frame_time = FRAME_TIME_DEFAULT;
   game_over = false;
-  p_clock = new Clock;
+  clock = new Clock;
   LM.writeLog("GameManager::GameManager(): Created GameManager");
 }
 
@@ -62,11 +62,11 @@ void GameManager::shutDown() {
 
 void GameManager::run() {
   long int adjust_time = 0;
-  long int loop_time = 0;
+  long int lootime = 0;
   long int steps = 0;
 
   while (!game_over) {
-    p_clock->delta();
+    clock->delta();
 
     // Send a step event to all Objects
     onEvent(new EventStep(++steps));
@@ -76,8 +76,8 @@ void GameManager::run() {
     WM.draw();
     DM.swapBuffers();
 
-    loop_time = p_clock->delta();
-    sleep(frame_time - loop_time);
+    lootime = clock->delta();
+    sleep(frame_time - lootime);
   }
 }
 

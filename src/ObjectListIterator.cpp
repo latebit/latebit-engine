@@ -1,24 +1,24 @@
 #include "ObjectListIterator.h"
 
 namespace df {
-ObjectListIterator::ObjectListIterator(const ObjectList* p_l) {
+ObjectListIterator::ObjectListIterator(const ObjectList* l) {
   this->currentIndex = 0;
-  this->p_list = p_l;
+  this->list = l;
 }
 
 void ObjectListIterator::first() { this->currentIndex = 0; }
 
 void ObjectListIterator::next() {
-  this->currentIndex = std::min(this->currentIndex + 1, this->p_list->count);
+  this->currentIndex = std::min(this->currentIndex + 1, this->list->count);
 }
 
 bool ObjectListIterator::isDone() const {
-  return this->currentIndex >= this->p_list->count;
+  return this->currentIndex >= this->list->count;
 }
 
 Object* ObjectListIterator::currentObject() const {
-  if (this->currentIndex < this->p_list->count) {
-    return this->p_list->p_obj[this->currentIndex];
+  if (this->currentIndex < this->list->count) {
+    return this->list->obj[this->currentIndex];
   }
   return nullptr;
 }

@@ -19,14 +19,14 @@ int defaultConstructor_test() {
 
 int parameterizedConstructor_test() {
   printf("parameterizedConstructor_test\n");
-  df::Vector top_left(1, 2);
+  df::Vector toleft(1, 2);
   float width = 3.5;
   float height = 4.5;
-  df::Box box(top_left, width, height);
+  df::Box box(toleft, width, height);
 
   int result =
       assert_vector("parameterized constructor sets top left corner correctly",
-                    box.getCorner(), top_left);
+                    box.getCorner(), toleft);
   result += assert_float("parameterized constructor sets width correctly",
                          box.getWidth(), width);
   result += assert_float("parameterized constructor sets height correctly",

@@ -11,7 +11,7 @@ DisplayManager::DisplayManager() {
   this->window_vertical_cells = WINDOW_VERTICAL_CHARS_DEFAULT;
   this->window_vertical_pixels = WINDOW_VERTICAL_PIXELS_DEFAULT;
   this->background_color = WINDOW_BACKGROUND_COLOR_DEFAULT;
-  this->p_window = NULL;
+  this->window = NULL;
   LM.writeLog("DisplayManager::DisplayManager(): Created DisplayManager");
 }
 
@@ -21,17 +21,17 @@ DisplayManager& DisplayManager::getInstance() {
 }
 
 int DisplayManager::startUp() {
-  if (this->p_window != nullptr) {
+  if (this->window != nullptr) {
     return 0;
   }
 
   auto mode =
       sf::VideoMode(this->window_horizontal_pixels, this->window_vertical_pixels);
-  this->p_window =
+  this->window =
       new sf::RenderWindow(mode, WINDOW_TITLE_DEFAULT, WINDOW_STYLE_DEFAULT);
 
-  this->p_window->setMouseCursorVisible(false);
-  this->p_window->setVerticalSyncEnabled(true);
+  this->window->setMouseCursorVisible(false);
+  this->window->setVerticalSyncEnabled(true);
 
   sf::Font font;
   if (font.loadFromFile(FONT_FILE_DEFAULT) == false) {
@@ -45,15 +45,15 @@ int DisplayManager::startUp() {
 }
 
 void DisplayManager::shutDown() {
-  this->p_window->close();
-  delete this->p_window;
+  this->window->close();
+  delete this->window;
   Manager::shutDown();
   LM.writeLog("DisplayManager::shutDown(): Shut down successfully");
 }
 
 int DisplayManager::drawCh(Vector worldPosition, char ch, Color fg,
                            Color bg) const {
-  if (this->p_window == nullptr) return -1;
+  if (this->window == nullptr) return -1;
 
   auto pixelPosition = spacesToPixels(worldPosition);
 
@@ -65,7 +65,7 @@ int DisplayManager::drawCh(Vector worldPosition, char ch, Color fg,
     background.setSize(sf::Vector2f(width, height));
     background.setFillColor(toSFColor(bg));
     background.setPosition(pixelPosition.getX(), pixelPosition.getY());
-    this->p_window->draw(background);
+    this->window->draw(background);
   }
 
   static sf::Text text("", this->font);
@@ -81,7 +81,7 @@ int DisplayManager::drawCh(Vector worldPosition, char ch, Color fg,
   text.setFillColor(toSFColor(fg));
   text.setPosition(pixelPosition.getX(), pixelPosition.getY());
 
-  this->p_window->draw(text);
+  this->window->draw(text);
 
   return 0;
 }
@@ -137,21 +137,21 @@ int DisplayManager::getVerticalPixels() const {
 }
 
 int DisplayManager::swapBuffers() {
-  if (this->p_window == nullptr) {
+  if (this->window == nullptr) {
     LM.writeLog("DisplayManager::swapBuffers(): Window is null");
     return -1;
   }
 
   // displays current buffer
-  this->p_window->display();
+  this->window->display();
 
   // clears second buffer
-  this->p_window->clear(toSFColor(this->background_color));
+  this->window->clear(toSFColor(this->background_color));
 
   return 0;
 }
 
-sf::RenderWindow* DisplayManager::getWindow() const { return this->p_window; }
+sf::RenderWindow* DisplayManager::getWindow() const { return this->window; }
 
 float charHeight() {
   return DM.getVerticalPixels() / (float)DM.getVerticalCells();

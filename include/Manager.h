@@ -24,7 +24,7 @@ class Manager {
   virtual int startUp();
   virtual void shutDown();
 
-  int onEvent(const Event *p_event) const;
+  int onEvent(const Event *event) const;
 };
 };  // namespace df
 

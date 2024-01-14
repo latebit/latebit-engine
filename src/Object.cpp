@@ -68,10 +68,10 @@ void Object::setAnimation(Animation a) { this->animation = a; }
 Animation Object::getAnimation() const { return this->animation; }
 
 int Object::setSprite(std::string label) {
-  auto p_s = RM.getSprite(label);
-  if (p_s == nullptr) return -1;
+  auto s = RM.getSprite(label);
+  if (s == nullptr) return -1;
 
-  this->animation.setSprite(p_s);
+  this->animation.setSprite(s);
   setBox(this->animation.getBox());
 
   return 0;
@@ -86,7 +86,7 @@ Box Object::getWorldBox(Vector center) const {
   return Box(corner, this->bounding_box.getWidth(), this->bounding_box.getHeight());
 }
 
-int Object::eventHandler(const Event* p_e) { return 0; }
+int Object::eventHandler(const Event* e) { return 0; }
 
 int Object::draw() {
   Vector p = getPosition();

@@ -2,17 +2,15 @@
 
 namespace df {
 EventStep::EventStep() {
-  this->step_count = 0;
   setType(STEP_EVENT);
+  this->stepCount = 0;
 }
 
 EventStep::EventStep(int count) {
-  this->step_count = 0;
   setType(STEP_EVENT);
-  this->step_count = count;
+  this->stepCount = count;
 }
 
-void EventStep::setStepCount(int count) { this->step_count = count; }
-
-int EventStep::getStepCount() const { return this->step_count; }
+void EventStep::setStepCount(int c) { this->stepCount = c; }
+int EventStep::getStepCount() const { return this->stepCount; }
 }  // namespace df

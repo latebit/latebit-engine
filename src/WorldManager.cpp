@@ -45,13 +45,9 @@ void WorldManager::shutDown() {
   LM.writeLog("WorldManager::shutDown(): Shut down successfully");
 }
 
-int WorldManager::insertObject(Object* p_o) {
-  return this->updates.insert(p_o);
-}
+int WorldManager::insertObject(Object* o) { return this->updates.insert(o); }
 
-int WorldManager::removeObject(Object* p_o) {
-  return this->updates.remove(p_o);
-}
+int WorldManager::removeObject(Object* o) { return this->updates.remove(o); }
 
 ObjectList WorldManager::getAllObjects() const { return this->updates; }
 
@@ -68,37 +64,37 @@ ObjectList WorldManager::objectsOfType(std::string type) const {
   return result;
 }
 
-ObjectList WorldManager::getCollisions(Object* p_o, Vector where) const {
+ObjectList WorldManager::getCollisions(Object* o, Vector where) const {
   ObjectList collisions;
   auto i_updates = ObjectListIterator(&this->updates);
-  auto box = p_o->getWorldBox(where);
+  auto box = o->getWorldBox(where);
 
   for (i_updates.first(); !i_updates.isDone(); i_updates.next()) {
-    auto p_current = i_updates.currentObject();
-    if (p_current == p_o) continue;
+    auto current = i_updates.currentObject();
+    if (current == o) continue;
 
-    auto currentBox = p_current->getWorldBox();
+    auto currentBox = current->getWorldBox();
 
-    if (p_current->isSolid() && intersects(box, currentBox)) {
-      collisions.insert(p_current);
+    if (current->isSolid() && intersects(box, currentBox)) {
+      collisions.insert(current);
     }
   }
 
   return collisions;
 }
 
-int WorldManager::moveObject(Object* p_o, Vector where) {
+int WorldManager::moveObject(Object* o, Vector where) {
   // Spectral objects can just move
-  if (!p_o->isSolid()) {
-    moveAndCheckBounds(p_o, where);
+  if (!o->isSolid()) {
+    moveAndCheckBounds(o, where);
     return 0;
   }
 
-  ObjectList collisions = getCollisions(p_o, where);
+  ObjectList collisions = getCollisions(o, where);
 
   // In absence of collisions, just move
   if (collisions.isEmpty()) {
-    moveAndCheckBounds(p_o, where);
+    moveAndCheckBounds(o, where);
     return 0;
   }
 
@@ -106,20 +102,20 @@ int WorldManager::moveObject(Object* p_o, Vector where) {
   auto i_collisions = ObjectListIterator(&collisions);
 
   for (i_collisions.first(); !i_collisions.isDone(); i_collisions.next()) {
-    auto p_current = i_collisions.currentObject();
-    auto event = EventCollision(p_o, p_current, where);
-    p_o->eventHandler(&event);
-    p_current->eventHandler(&event);
+    auto current = i_collisions.currentObject();
+    auto event = EventCollision(o, current, where);
+    o->eventHandler(&event);
+    current->eventHandler(&event);
 
     // If hitting a hard object, don't move
-    if (p_o->getSolidness() == HARD && p_current->getSolidness() == HARD) {
+    if (o->getSolidness() == HARD && current->getSolidness() == HARD) {
       shouldMove = false;
       break;
     }
   }
 
   if (shouldMove) {
-    moveAndCheckBounds(p_o, where);
+    moveAndCheckBounds(o, where);
     return 0;
   } else {
     return -1;
@@ -128,14 +124,14 @@ int WorldManager::moveObject(Object* p_o, Vector where) {
   return 0;
 }
 
-void WorldManager::moveAndCheckBounds(Object* p_o, Vector where) const {
-  auto old_position = p_o->getPosition();
-  p_o->setPosition(where);
+void WorldManager::moveAndCheckBounds(Object* o, Vector where) const {
+  auto old_position = o->getPosition();
+  o->setPosition(where);
 
   // Should this take in account the bounding box?
   if (isOutOfBounds(where) && !isOutOfBounds(old_position)) {
     auto event = EventOut();
-    p_o->eventHandler(&event);
+    o->eventHandler(&event);
   }
 }
 
@@ -169,14 +165,14 @@ void WorldManager::update() {
   }
 }
 
-int WorldManager::markForDelete(Object* p_o) {
+int WorldManager::markForDelete(Object* o) {
   // Prevents marking the same object for deletion twice
   auto i_deletions = ObjectListIterator(&this->deletions);
   for (i_deletions.first(); !i_deletions.isDone(); i_deletions.next()) {
-    if (i_deletions.currentObject() == p_o) return 0;
+    if (i_deletions.currentObject() == o) return 0;
   }
 
-  return this->deletions.insert(p_o);
+  return this->deletions.insert(o);
 }
 
 void WorldManager::draw() {

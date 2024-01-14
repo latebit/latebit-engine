@@ -6,14 +6,14 @@
 #include "test.h"
 
 int Vector_getMagnitude_test() {
-  df::Vector *p_null = new df::Vector();
-  df::Vector *p_unary = new df::Vector(1);
-  df::Vector *p_another = new df::Vector(1, 1);
+  df::Vector *null = new df::Vector();
+  df::Vector *unary = new df::Vector(1);
+  df::Vector *another = new df::Vector(1, 1);
 
   int result = 0;
-  result += assert_float("has null magnitude", p_null->getMagnitude(), 0);
-  result += assert_float("has unary magnitude", p_unary->getMagnitude(), 1);
-  result += assert_float("has correct magnitude", p_another->getMagnitude(),
+  result += assert_float("has null magnitude", null->getMagnitude(), 0);
+  result += assert_float("has unary magnitude", unary->getMagnitude(), 1);
+  result += assert_float("has correct magnitude", another->getMagnitude(),
                          std::sqrt(2));
 
   return result;

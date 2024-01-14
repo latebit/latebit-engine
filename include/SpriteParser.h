@@ -10,8 +10,8 @@
 namespace df {
 class SpriteParser {
  private:
-  static std::string getLine(std::ifstream *p_file_stream);
-  static int parseHeader(std::ifstream *p_file_stream, int *frames, int *width,
+  static std::string getLine(std::ifstream *file_stream);
+  static int parseHeader(std::ifstream *file_stream, int *frames, int *width,
                          int *height, int *slowdown, Color *color);
 
  public:

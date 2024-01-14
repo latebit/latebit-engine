@@ -216,8 +216,8 @@ int WorldManager_outOfBounds_test() {
 
   class TestObject : public df::Object {
    public:
-    int eventHandler(const df::Event* p_e) {
-      if (p_e->getType() == df::OUT_EVENT) {
+    int eventHandler(const df::Event* e) {
+      if (e->getType() == df::OUT_EVENT) {
         WorldManager_outOfBounds_test_emitted = true;
         return 1;
       }

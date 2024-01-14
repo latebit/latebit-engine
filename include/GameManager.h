@@ -15,7 +15,7 @@ class GameManager : public Manager {
   void operator=(GameManager const &);
   bool game_over;
   int frame_time;
-  Clock *p_clock;
+  Clock *clock;
 
  public:
   static GameManager &getInstance();

@@ -92,9 +92,9 @@ int getBox_test() {
   printf("getBox_test\n");
 
   auto animation = df::Animation();
-
-  result += assert("returns unit box",
-                   animation.getBox() == df::Box(df::Vector(-0.5, -0.5), 1, 1));
+  auto unitBox = df::Box(df::Vector(), 1.0, 1.0);
+  result += assert("returns unit box", animation.getBox() == unitBox,
+                   animation.getBox().toString() + " != " + unitBox.toString());
 
   auto filename = "sprite";
   auto label = "label";
@@ -104,9 +104,10 @@ int getBox_test() {
   df::Sprite *sprite = RM.getSprite(label);
   animation.setSprite(sprite);
 
-  auto want = df::Box(df::Vector(-1.5, -2.0), 3.0, 4.0);
+  auto want = df::Box(df::Vector(), 3.0, 4.0);
   auto animBox = animation.getBox();
-  result += assert("returns correct box", animBox == want);
+  result += assert("returns correct box", animBox == want,
+                   animBox.toString() + " != " + want.toString());
 
   remove(filename);
   return result;

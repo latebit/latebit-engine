@@ -12,6 +12,9 @@
 int ASSERTIONS = 0;
 std::string getAssertions() { return std::to_string(ASSERTIONS); }
 
+bool FAILED_ONLY =
+    std::getenv("FAILED_ONLY") && std::stoi(std::getenv("FAILED_ONLY")) == 1;
+
 int assert(const std::string name, bool assertion, const std::string message) {
   ASSERTIONS++;
 
@@ -21,7 +24,7 @@ int assert(const std::string name, bool assertion, const std::string message) {
     return 1;
   }
 
-  std::cout << green("PASS: " + name) << std::endl;
+  if (!FAILED_ONLY) std::cout << green("PASS: " + name) << std::endl;
   return 0;
 }
 

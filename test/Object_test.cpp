@@ -85,15 +85,14 @@ int Object_boundingBox_test() {
   subject.setSprite("sprite");
 
   result += assert("sets bounding box",
-                   subject.getBox() == df::Box(df::Vector(-1.5, -2.0), 3, 4));
+                   subject.getBox() == df::Box(df::Vector(), 3, 4));
 
-  result +=
-      assert("gets bounding box in world coordinates",
-             subject.getWorldBox() == df::Box(df::Vector(-0.5, -1.0), 3, 4));
+  result += assert("gets bounding box in world coordinates",
+                   subject.getWorldBox() == df::Box(df::Vector(1, 1), 3, 4));
 
-  result += assert("gets bounding box in world coordinates relative to (2, 2)",
-                   subject.getWorldBox(df::Vector(2, 2)) ==
-                       df::Box(df::Vector(0.5, 0), 3, 4));
+  result += assert(
+      "gets bounding box in world coordinates relative to (2, 2)",
+      subject.getWorldBox(df::Vector(2, 2)) == df::Box(df::Vector(2, 2), 3, 4));
 
   return result;
 }

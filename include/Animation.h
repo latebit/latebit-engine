@@ -7,7 +7,7 @@
 #include "Vector.h"
 
 namespace df {
-int const STOANIMATION_SLOWDOWN = -1;
+int const STOP_ANIMATION_SLOWDOWN = -1;
 
 class Animation {
  private:
@@ -19,16 +19,16 @@ class Animation {
  public:
   Animation();
 
-  void setSprite(Sprite *new_sprite);
+  void setSprite(Sprite *s);
   auto getSprite() const -> Sprite *;
 
-  void setName(std::string new_name);
+  void setName(std::string n);
   std::string getName() const;
 
-  void setIndex(int new_index);
+  void setIndex(int i);
   auto getIndex() const -> int;
 
-  void setSlowdownCount(int new_slowdown_count);
+  void setSlowdownCount(int c);
   auto getSlowdownCount() const -> int;
 
   auto draw(Vector position) -> int;

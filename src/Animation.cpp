@@ -27,7 +27,7 @@ auto Animation::draw(Vector position) -> int {
   this->sprite->draw(index, position);
 
   int slowdown = getSlowdownCount();
-  if (slowdown == STOANIMATION_SLOWDOWN) return 0;
+  if (slowdown == STOP_ANIMATION_SLOWDOWN) return 0;
 
   slowdown++;
 

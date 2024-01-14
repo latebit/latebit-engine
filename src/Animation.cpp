@@ -9,18 +9,18 @@ Animation::Animation() {
 }
 
 void Animation::setSprite(Sprite* s) { this->sprite = s; }
-Sprite* Animation::getSprite() const { return this->sprite; }
+auto Animation::getSprite() const -> Sprite* { return this->sprite; }
 
 void Animation::setName(std::string n) { this->name = n; }
-std::string Animation::getName() const { return this->name; }
+auto Animation::getName() const -> std::string { return this->name; }
 
 void Animation::setIndex(int i) { this->index = i; }
-int Animation::getIndex() const { return this->index; }
+auto Animation::getIndex() const -> int { return this->index; }
 
 void Animation::setSlowdownCount(int c) { this->slowdownCount = c; }
-int Animation::getSlowdownCount() const { return this->slowdownCount; }
+auto Animation::getSlowdownCount() const -> int { return this->slowdownCount; }
 
-int Animation::draw(Vector position) {
+auto Animation::draw(Vector position) -> int {
   if (this->sprite == nullptr) return -1;
 
   int index = getIndex();
@@ -42,16 +42,16 @@ int Animation::draw(Vector position) {
   return 0;
 }
 
-Box Animation::getBox() const {
-  if (this->sprite == nullptr) return Box(Vector(), 1, 1);
+auto Animation::getBox() const -> Box {
+  if (this->sprite == nullptr) return {Vector(), 1, 1};
 
-  auto width = this->sprite->getWidth();
-  auto height = this->sprite->getHeight();
+  float width = this->sprite->getWidth();
+  float height = this->sprite->getHeight();
 
-  return Box(Vector(), width, height);
+  return {Vector(), width, height};
 }
 
-bool Animation::operator==(const Animation& other) const {
+auto Animation::operator==(const Animation& other) const -> bool {
   return this->sprite == other.sprite && this->name == other.name &&
          this->index == other.index &&
          this->slowdownCount == other.slowdownCount;

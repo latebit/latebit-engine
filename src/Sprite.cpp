@@ -21,7 +21,7 @@ Sprite::Sprite(int max_frames) {
 
 Sprite::~Sprite() { delete[] this->frames; }
 
-int Sprite::addFrame(Frame frame) {
+auto Sprite::addFrame(Frame frame) -> int {
   if (this->frame_count >= this->max_frame_count) {
     LM.writeLog("Sprite::addFrame(): Cannot add frame, maximum (%d) reached.",
                 this->max_frame_count);
@@ -34,37 +34,37 @@ int Sprite::addFrame(Frame frame) {
   return 0;
 }
 
-Frame Sprite::getFrame(int frame_number) const {
+auto Sprite::getFrame(int frame_number) const -> Frame {
   if (frame_number < 0 || frame_number >= this->frame_count) {
     LM.writeLog("Sprite::getFrame(): Invalid frame number (%d) with %d frames.",
                 frame_number, this->frame_count);
-    return Frame();
+    return {};
   }
 
   return this->frames[frame_number];
 }
 
-int Sprite::getFrameCount() const { return this->frame_count; }
+auto Sprite::getFrameCount() const -> int { return this->frame_count; }
 
 void Sprite::setWidth(int width) { this->width = width; }
-int Sprite::getWidth() const { return this->width; }
+auto Sprite::getWidth() const -> int { return this->width; }
 
 void Sprite::setHeight(int height) { this->height = height; }
-int Sprite::getHeight() const { return this->height; }
+auto Sprite::getHeight() const -> int { return this->height; }
 
 void Sprite::setColor(Color color) { this->color = color; }
-Color Sprite::getColor() const { return this->color; }
+auto Sprite::getColor() const -> Color { return this->color; }
 
 void Sprite::setLabel(std::string label) { this->label = label; }
-std::string Sprite::getLabel() const { return this->label; }
+auto Sprite::getLabel() const -> std::string { return this->label; }
 
 void Sprite::setSlowdown(int slowdown) { this->slowdown = slowdown; }
-int Sprite::getSlowdown() const { return this->slowdown; }
+auto Sprite::getSlowdown() const -> int { return this->slowdown; }
 
 void Sprite::setTransparencyChar(char c) { this->transparency_char = c; }
-char Sprite::getTransparencyChar() const { return this->transparency_char; }
+auto Sprite::getTransparencyChar() const -> char { return this->transparency_char; }
 
-int Sprite::draw(int frame_number, Vector position) const {
+auto Sprite::draw(int frame_number, Vector position) const -> int {
   if (frame_number < 0 || frame_number >= this->frame_count) {
     LM.writeLog("Sprite::draw(): Invalid frame number (%d) with %d frames.",
                 frame_number, this->frame_count);

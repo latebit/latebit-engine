@@ -3,9 +3,9 @@
 namespace df {
 Event::Event() { this->event_type = UNDEFINED_EVENT; }
 
-Event::~Event() {}
+Event::~Event() = default;
 
 void Event::setType(std::string t) { this->event_type = t; }
 
-std::string Event::getType() const { return this->event_type; }
+auto Event::getType() const -> std::string { return this->event_type; }
 }  // namespace df

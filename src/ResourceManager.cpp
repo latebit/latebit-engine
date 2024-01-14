@@ -11,13 +11,13 @@ ResourceManager::ResourceManager() {
   LM.writeLog("ResourceManager::ResourceManager(): Created ResourceManager");
 }
 
-int ResourceManager::startUp() {
+auto ResourceManager::startUp() -> int {
   this->sprite_count = 0;
   LM.writeLog("ResourceManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
-int ResourceManager::loadSprite(std::string filename, std::string label) {
+auto ResourceManager::loadSprite(std::string filename, std::string label) -> int {
   if (this->sprite_count >= MAX_SPRITES) {
     LM.writeLog(
       "ResourceManager::loadSprite(): Cannot load sprite, maximum (%d) "
@@ -48,12 +48,12 @@ int ResourceManager::loadSprite(std::string filename, std::string label) {
   return 0;
 }
 
-ResourceManager& ResourceManager::getInstance() {
+auto ResourceManager::getInstance() -> ResourceManager& {
   static ResourceManager instance;
   return instance;
 }
 
-int ResourceManager::unloadSprite(std::string label) {
+auto ResourceManager::unloadSprite(std::string label) -> int {
   for (int i = 0; i < this->sprite_count; i++) {
     if (this->sprite[i] != nullptr && this->sprite[i]->getLabel() == label) {
       delete this->sprite[i];
@@ -70,7 +70,7 @@ int ResourceManager::unloadSprite(std::string label) {
   return -1;
 }
 
-Sprite* ResourceManager::getSprite(std::string label) const {
+auto ResourceManager::getSprite(std::string label) const -> Sprite* {
   for (int i = 0; i < this->sprite_count; i++) {
     if (this->sprite[i] == nullptr) continue;
 

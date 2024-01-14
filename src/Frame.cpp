@@ -19,17 +19,17 @@ Frame::Frame(int w, int h, std::string frame_str) {
 }
 
 void Frame::setWidth(int w) { this->width = w; }
-int Frame::getWidth() const { return this->width; }
+auto Frame::getWidth() const -> int { return this->width; }
 
 void Frame::setHeight(int w) { this->height = w; }
-int Frame::getHeight() const { return this->height; }
+auto Frame::getHeight() const -> int { return this->height; }
 
 void Frame::setFrameString(std::string frame_str) {
   this->frame_str = frame_str;
 }
-std::string Frame::getFrameString() const { return this->frame_str; }
+auto Frame::getFrameString() const -> std::string { return this->frame_str; }
 
-int Frame::draw(Vector position, Color color, char transparencyChar) const {
+auto Frame::draw(Vector position, Color color, char transparencyChar) const -> int {
   if (this->width <= 0 || this->height <= 0 || this->frame_str.empty()) {
     LM.writeLog("Frame::draw(): Cannot draw empty frame");
     return -1;

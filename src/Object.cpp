@@ -27,47 +27,47 @@ Object::~Object() {
 }
 
 void Object::setId(int id) { this->id = id; }
-int Object::getId() const { return this->id; }
+auto Object::getId() const -> int { return this->id; }
 
 void Object::setType(std::string t) { this->type = t; }
-std::string Object::getType() const { return this->type; }
+auto Object::getType() const -> std::string { return this->type; }
 
 void Object::setPosition(Vector p) { this->position = p; }
-Vector Object::getPosition() const { return this->position; }
+auto Object::getPosition() const -> Vector { return this->position; }
 
 void Object::setAltitude(int a) {
   if (a <= MAX_ALTITUDE && a >= 0) this->altitude = a;
 }
-int Object::getAltitude() const { return this->altitude; }
+auto Object::getAltitude() const -> int { return this->altitude; }
 
 void Object::setDirection(Vector d) { this->direction = d; }
-Vector Object::getDirection() const { return this->direction; }
+auto Object::getDirection() const -> Vector { return this->direction; }
 
 void Object::setSpeed(float s) { this->speed = s; }
-float Object::getSpeed() const { return this->speed; }
+auto Object::getSpeed() const -> float { return this->speed; }
 
 void Object::setVelocity(Vector v) {
   this->speed = v.getMagnitude();
   v.normalize();
   this->direction = v;
 }
-Vector Object::getVelocity() const {
+auto Object::getVelocity() const -> Vector {
   auto v = this->direction;
   v.scale(this->speed);
   return v;
 }
 
-Vector Object::predictPosition() { return this->position + getVelocity(); }
+auto Object::predictPosition() -> Vector { return this->position + getVelocity(); }
 
-bool Object::isSolid() const { return this->solidness != SPECTRAL; }
+auto Object::isSolid() const -> bool { return this->solidness != SPECTRAL; }
 
 void Object::setSolidness(Solidness s) { this->solidness = s; }
-Solidness Object::getSolidness() const { return this->solidness; }
+auto Object::getSolidness() const -> Solidness { return this->solidness; }
 
 void Object::setAnimation(Animation a) { this->animation = a; }
-Animation Object::getAnimation() const { return this->animation; }
+auto Object::getAnimation() const -> Animation { return this->animation; }
 
-int Object::setSprite(std::string label) {
+auto Object::setSprite(std::string label) -> int {
   auto s = RM.getSprite(label);
   if (s == nullptr) return -1;
 
@@ -78,18 +78,18 @@ int Object::setSprite(std::string label) {
 }
 
 void Object::setBox(Box box) { this->bounding_box = box; }
-Box Object::getBox() const { return this->bounding_box; }
+auto Object::getBox() const -> Box { return this->bounding_box; }
 
-Box Object::getWorldBox() const { return getWorldBox(this->position); }
-Box Object::getWorldBox(Vector center) const {
+auto Object::getWorldBox() const -> Box { return getWorldBox(this->position); }
+auto Object::getWorldBox(Vector center) const -> Box {
   auto corner = this->bounding_box.getCorner() + center;
-  return Box(corner, this->bounding_box.getWidth(),
-             this->bounding_box.getHeight());
+  return {corner, this->bounding_box.getWidth(),
+             this->bounding_box.getHeight()};
 }
 
-int Object::eventHandler(const Event* e) { return 0; }
+auto Object::eventHandler(const Event* e) -> int { return 0; }
 
-int Object::draw() {
+auto Object::draw() -> int {
   Vector p = getPosition();
 
   int result = this->animation.draw(p);
@@ -101,9 +101,9 @@ int Object::draw() {
 }
 
 void Object::setDebug(bool debug) { this->debug = debug; }
-bool Object::getDebug() const { return this->debug; }
+auto Object::getDebug() const -> bool { return this->debug; }
 
-int Object::drawBoundingBox() const {
+auto Object::drawBoundingBox() const -> int {
   Box box = getWorldBox();
   Vector corner = box.getCorner();
   float width = box.getWidth();

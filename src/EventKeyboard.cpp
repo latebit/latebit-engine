@@ -15,13 +15,13 @@ EventKeyboard::EventKeyboard(Keyboard::Key k, EventKeyboardAction a) {
 
 void EventKeyboard::setKey(Keyboard::Key new_key) { this->key_val = new_key; }
 
-Keyboard::Key EventKeyboard::getKey() const { return this->key_val; }
+auto EventKeyboard::getKey() const -> Keyboard::Key { return this->key_val; }
 
 void EventKeyboard::setKeyboardAction(EventKeyboardAction new_action) {
   this->keyboard_action = new_action;
 }
 
-EventKeyboardAction EventKeyboard::getKeyboardAction() const {
+auto EventKeyboard::getKeyboardAction() const -> EventKeyboardAction {
   return this->keyboard_action;
 }
 

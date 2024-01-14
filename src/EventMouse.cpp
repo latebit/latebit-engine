@@ -18,7 +18,7 @@ void EventMouse::setMouseAction(EventMouseAction new_mouse_action) {
   this->mouse_action = new_mouse_action;
 }
 
-EventMouseAction EventMouse::getMouseAction() const {
+auto EventMouse::getMouseAction() const -> EventMouseAction {
   return this->mouse_action;
 }
 
@@ -26,12 +26,12 @@ void EventMouse::setMouseButton(Mouse::Button new_mouse_button) {
   this->mouse_button = new_mouse_button;
 }
 
-Mouse::Button EventMouse::getMouseButton() const { return this->mouse_button; }
+auto EventMouse::getMouseButton() const -> Mouse::Button { return this->mouse_button; }
 
 void EventMouse::setMousePosition(Vector new_mouse_xy) {
   this->mouse_position = new_mouse_xy;
 }
 
-Vector EventMouse::getMousePosition() const { return this->mouse_position; }
+auto EventMouse::getMousePosition() const -> Vector { return this->mouse_position; }
 
 }  // namespace df

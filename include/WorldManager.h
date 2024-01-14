@@ -34,7 +34,7 @@ class WorldManager : public Manager {
  public:
   static auto getInstance() -> WorldManager &;
 
-  auto startUp() override -> int;
+  auto startUp() -> int override;
   void shutDown() override;
   auto insertObject(Object *o) -> int;
   auto removeObject(Object *o) -> int;

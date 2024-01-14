@@ -12,11 +12,11 @@ void ObjectListIterator::next() {
   this->currentIndex = std::min(this->currentIndex + 1, this->list->count);
 }
 
-bool ObjectListIterator::isDone() const {
+auto ObjectListIterator::isDone() const -> bool {
   return this->currentIndex >= this->list->count;
 }
 
-Object* ObjectListIterator::currentObject() const {
+auto ObjectListIterator::currentObject() const -> Object* {
   if (this->currentIndex < this->list->count) {
     return this->list->obj[this->currentIndex];
   }

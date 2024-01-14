@@ -13,17 +13,17 @@ Vector::Vector(float x, float y) {
 }
 
 void Vector::setX(float x) { this->x = x; }
-float Vector::getX() const { return this->x; }
+auto Vector::getX() const -> float { return this->x; }
 
 void Vector::setY(float y) { this->y = y; }
-float Vector::getY() const { return this->y; }
+auto Vector::getY() const -> float { return this->y; }
 
 void Vector::setXY(float x, float y) {
   this->x = x;
   this->y = y;
 }
 
-float Vector::getMagnitude() const {
+auto Vector::getMagnitude() const -> float {
   return std::sqrt(this->x * this->x + this->y * this->y);
 }
 
@@ -32,7 +32,7 @@ void Vector::scale(float a) {
   this->y *= a;
 }
 
-float Vector::distance(const Vector* other) {
+auto Vector::distance(const Vector* other) -> float {
   return (*this - *other).getMagnitude();
 }
 
@@ -44,25 +44,25 @@ void Vector::normalize() {
   }
 }
 
-Vector Vector::operator+(const Vector& other) const {
-  return Vector(this->x + other.x, this->y + other.y);
+auto Vector::operator+(const Vector& other) const -> Vector {
+  return {this->x + other.x, this->y + other.y};
 }
 
-Vector Vector::operator-(const Vector& other) const {
-  return Vector(this->x - other.x, this->y - other.y);
+auto Vector::operator-(const Vector& other) const -> Vector {
+  return {this->x - other.x, this->y - other.y};
 }
 
-bool Vector::operator==(const Vector& other) const {
+auto Vector::operator==(const Vector& other) const -> bool {
   return equals(this->x, other.x) && equals(this->y, other.y);
 }
 
-bool Vector::operator!=(const Vector& other) const {
+auto Vector::operator!=(const Vector& other) const -> bool {
   return !equals(this->x, other.x) || !equals(this->y, other.y);
 }
 
-bool Vector::operator!() const { return this->x == 0 && this->y == 0; }
+auto Vector::operator!() const -> bool { return this->x == 0 && this->y == 0; }
 
-std::string Vector::toString() const {
+auto Vector::toString() const -> std::string {
   return "(" + std::to_string(this->x) + ", " + std::to_string(this->y) + ")";
 }
 

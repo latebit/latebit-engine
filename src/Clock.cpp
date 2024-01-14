@@ -8,7 +8,7 @@ namespace df {
 
 Clock::Clock() { this->previous_time = getNow(); }
 
-long int Clock::delta() {
+auto Clock::delta() -> long int {
   if (!this->previous_time) return -1;
   long int now = getNow();
   long int result = now - this->previous_time;
@@ -17,12 +17,12 @@ long int Clock::delta() {
   return result;
 }
 
-long int Clock::split() const {
+auto Clock::split() const -> long int {
   long int now = getNow();
   return now - this->previous_time;
 }
 
-long int Clock::getNow() {
+auto Clock::getNow() -> long int {
   auto now = chrono::high_resolution_clock::now();
   return chrono::duration_cast<chrono::microseconds>(now.time_since_epoch())
     .count();

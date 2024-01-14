@@ -12,5 +12,5 @@ EventStep::EventStep(int count) {
 }
 
 void EventStep::setStepCount(int c) { this->stepCount = c; }
-int EventStep::getStepCount() const { return this->stepCount; }
+auto EventStep::getStepCount() const -> int { return this->stepCount; }
 }  // namespace df

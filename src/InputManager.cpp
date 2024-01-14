@@ -11,7 +11,7 @@
 
 namespace df {
 
-InputManager& InputManager::getInstance() {
+auto InputManager::getInstance() -> InputManager& {
   static InputManager instance;
   return instance;
 }
@@ -102,7 +102,7 @@ InputManager::InputManager() {
   LM.writeLog("InputManager::InputManager(): Populated mouse event map");
 }
 
-int InputManager::startUp() {
+auto InputManager::startUp() -> int {
   if (!DM.isStarted()) {
     LM.writeLog("InputManager::startUp(): DisplayManager is not started");
     return -1;
@@ -164,7 +164,7 @@ void InputManager::getInput() const {
   }
 }
 
-Keyboard::Key InputManager::fromSFMLKeyCode(sf::Keyboard::Key key) const {
+auto InputManager::fromSFMLKeyCode(sf::Keyboard::Key key) const -> Keyboard::Key {
   auto item = this->keyboardEvent.find(key);
   if (item != this->keyboardEvent.end()) {
     return item->second;
@@ -172,7 +172,7 @@ Keyboard::Key InputManager::fromSFMLKeyCode(sf::Keyboard::Key key) const {
   return Keyboard::UNDEFINED_KEY;
 }
 
-Mouse::Button InputManager::fromSFMLMouseButton(sf::Mouse::Button btn) const {
+auto InputManager::fromSFMLMouseButton(sf::Mouse::Button btn) const -> Mouse::Button {
   auto item = this->mouseEvent.find(btn);
   if (item != this->mouseEvent.end()) {
     return item->second;

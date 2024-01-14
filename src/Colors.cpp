@@ -28,7 +28,7 @@ auto toSFColor(Color c) -> sf::Color {
   }
 }
 
-Color fromColorString(std::string s) {
+auto fromColorString(std::string s) -> Color {
   if (s == "black")
     return BLACK;
   else if (s == "blue")

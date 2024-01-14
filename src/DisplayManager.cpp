@@ -11,16 +11,16 @@ DisplayManager::DisplayManager() {
   this->window_vertical_cells = WINDOW_VERTICAL_CHARS_DEFAULT;
   this->window_vertical_pixels = WINDOW_VERTICAL_PIXELS_DEFAULT;
   this->background_color = WINDOW_BACKGROUND_COLOR_DEFAULT;
-  this->window = NULL;
+  this->window = nullptr;
   LM.writeLog("DisplayManager::DisplayManager(): Created DisplayManager");
 }
 
-DisplayManager& DisplayManager::getInstance() {
+auto DisplayManager::getInstance() -> DisplayManager& {
   static DisplayManager instance;
   return instance;
 }
 
-int DisplayManager::startUp() {
+auto DisplayManager::startUp() -> int {
   if (this->window != nullptr) {
     return 0;
   }
@@ -51,8 +51,8 @@ void DisplayManager::shutDown() {
   LM.writeLog("DisplayManager::shutDown(): Shut down successfully");
 }
 
-int DisplayManager::drawCh(Vector worldPosition, char ch, Color fg,
-                           Color bg) const {
+auto DisplayManager::drawCh(Vector worldPosition, char ch, Color fg,
+                           Color bg) const -> int {
   if (this->window == nullptr) return -1;
 
   auto pixelPosition = spacesToPixels(worldPosition);
@@ -86,12 +86,12 @@ int DisplayManager::drawCh(Vector worldPosition, char ch, Color fg,
   return 0;
 }
 
-int DisplayManager::drawCh(Vector world_pos, char ch, Color fg) const {
+auto DisplayManager::drawCh(Vector world_pos, char ch, Color fg) const -> int {
   return DisplayManager::drawCh(world_pos, ch, fg, this->background_color);
 }
 
-int DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
-                               Color fg, Color bg) const {
+auto DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
+                               Color fg, Color bg) const -> int {
   Vector start = world_pos;
   switch (a) {
     case ALIGN_CENTER:
@@ -115,8 +115,8 @@ int DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
   return 0;
 }
 
-int DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
-                               Color fg) const {
+auto DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
+                               Color fg) const -> int {
   return DisplayManager::drawString(world_pos, s, a, fg,
                                     this->background_color);
 }
@@ -125,23 +125,23 @@ void DisplayManager::setBackground(Color color) {
   this->background_color = color;
 }
 
-int DisplayManager::getHorizontalCells() const {
+auto DisplayManager::getHorizontalCells() const -> int {
   return this->window_horizontal_cells;
 }
 
-int DisplayManager::getVerticalCells() const {
+auto DisplayManager::getVerticalCells() const -> int {
   return this->window_vertical_cells;
 }
 
-int DisplayManager::getHorizontalPixels() const {
+auto DisplayManager::getHorizontalPixels() const -> int {
   return this->window_horizontal_pixels;
 }
 
-int DisplayManager::getVerticalPixels() const {
+auto DisplayManager::getVerticalPixels() const -> int {
   return this->window_vertical_pixels;
 }
 
-int DisplayManager::swapBuffers() {
+auto DisplayManager::swapBuffers() -> int {
   if (this->window == nullptr) {
     LM.writeLog("DisplayManager::swapBuffers(): Window is null");
     return -1;
@@ -156,7 +156,7 @@ int DisplayManager::swapBuffers() {
   return 0;
 }
 
-sf::RenderWindow* DisplayManager::getWindow() const { return this->window; }
+auto DisplayManager::getWindow() const -> sf::RenderWindow* { return this->window; }
 
 auto charHeight() -> float {
   return DM.getVerticalPixels() / (float)DM.getVerticalCells();
@@ -166,12 +166,12 @@ auto charWidth() -> float {
   return DM.getHorizontalPixels() / (float)DM.getHorizontalCells();
 }
 
-Vector spacesToPixels(Vector spaces) {
-  return Vector(spaces.getX() * charWidth(), spaces.getY() * charHeight());
+auto spacesToPixels(Vector spaces) -> Vector {
+  return {spaces.getX() * charWidth(), spaces.getY() * charHeight()};
 }
 
-Vector pixelsToSpaces(Vector pixels) {
-  return Vector(pixels.getX() / charWidth(), pixels.getY() / charHeight());
+auto pixelsToSpaces(Vector pixels) -> Vector {
+  return {pixels.getX() / charWidth(), pixels.getY() / charHeight()};
 }
 
 }  // namespace df

@@ -9,7 +9,7 @@
 #include "Sprite.h"
 
 namespace df {
-std::string SpriteParser::getLine(std::ifstream* file_stream) {
+auto SpriteParser::getLine(std::ifstream* file_stream) -> std::string {
   std::string line;
   getline(*file_stream, line);
   line.erase(
@@ -18,9 +18,9 @@ std::string SpriteParser::getLine(std::ifstream* file_stream) {
   return line;
 }
 
-int SpriteParser::parseHeader(std::ifstream* file_stream, int* frames,
+auto SpriteParser::parseHeader(std::ifstream* file_stream, int* frames,
                               int* width, int* height, int* slowdown,
-                              Color* color) {
+                              Color* color) -> int {
   for (int i = 0; i < 5; i++) {
     auto line = getLine(file_stream);
     switch (i) {
@@ -47,7 +47,7 @@ int SpriteParser::parseHeader(std::ifstream* file_stream, int* frames,
   return 0;
 }
 
-Sprite* SpriteParser::parseSprite(std::string filename, std::string label) {
+auto SpriteParser::parseSprite(std::string filename, std::string label) -> Sprite* {
   std::ifstream file(filename);
 
   if (!file.is_open()) {
@@ -65,7 +65,7 @@ Sprite* SpriteParser::parseSprite(std::string filename, std::string label) {
     return nullptr;
   }
 
-  Sprite* sprite = new Sprite(frameCount);
+  auto* sprite = new Sprite(frameCount);
   sprite->setLabel(label);
   sprite->setWidth(width);
   sprite->setHeight(height);

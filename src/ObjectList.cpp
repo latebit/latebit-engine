@@ -4,7 +4,7 @@ namespace df {
 
 ObjectList::ObjectList() { this->count = 0; }
 
-int ObjectList::insert(Object* o) {
+auto ObjectList::insert(Object* o) -> int {
   if (isFull()) return -1;
 
   this->obj[this->count] = o;
@@ -12,7 +12,7 @@ int ObjectList::insert(Object* o) {
   return 0;
 }
 
-int ObjectList::remove(Object* o) {
+auto ObjectList::remove(Object* o) -> int {
   for (int i = 0; i < this->count; i++) {
     if (this->obj[i] == o) {
       for (int j = i; j < this->count - 1; j++) {
@@ -26,12 +26,12 @@ int ObjectList::remove(Object* o) {
   return -1;
 }
 void ObjectList::clear() { this->count = 0; }
-int ObjectList::getCount() const { return this->count; }
-bool ObjectList::isEmpty() const { return this->count == 0; }
-bool ObjectList::isFull() const {
+auto ObjectList::getCount() const -> int { return this->count; }
+auto ObjectList::isEmpty() const -> bool { return this->count == 0; }
+auto ObjectList::isFull() const -> bool {
   return this->count != 0 && this->count >= MAX_SIZE;
 }
-int ObjectList::find(Object* o) const {
+auto ObjectList::find(Object* o) const -> int {
   for (int i = 0; i < this->count; i++) {
     if (this->obj[i] == o) {
       return i;

@@ -24,7 +24,7 @@ LogManager::~LogManager() {
   }
 }
 
-int LogManager::startUp() {
+auto LogManager::startUp() -> int {
   this->f = std::fopen(LOGFILE_NAME, "w");
 
   if (this->f == nullptr) {
@@ -35,7 +35,7 @@ int LogManager::startUp() {
   return Manager::startUp();
 }
 
-LogManager& LogManager::getInstance() {
+auto LogManager::getInstance() -> LogManager& {
   static LogManager instance;
   return instance;
 }
@@ -50,7 +50,7 @@ void LogManager::shutDown() {
 
 void LogManager::setFlush(bool do_flush) { this->do_flush = do_flush; }
 
-int LogManager::writeLog(const char* fmt, ...) const {
+auto LogManager::writeLog(const char* fmt, ...) const -> int {
   if (this->f == nullptr) {
     stdoutLog("LogManager::writeLog(): Warning! Log file not open");
     return -1;

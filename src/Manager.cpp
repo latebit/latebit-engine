@@ -13,20 +13,20 @@ Manager::Manager() {
   this->type = "";
 }
 
-Manager::~Manager() {}
+Manager::~Manager() = default;
 
-std::string Manager::getType() const { return this->type; }
+auto Manager::getType() const -> std::string { return this->type; }
 
-bool Manager::isStarted() const { return this->is_started; }
+auto Manager::isStarted() const -> bool { return this->is_started; }
 
-int Manager::startUp() {
+auto Manager::startUp() -> int {
   this->is_started = true;
   return 0;
 }
 
 void Manager::shutDown() { this->is_started = false; }
 
-int Manager::onEvent(const Event* event) const {
+auto Manager::onEvent(const Event* event) const -> int {
   int count = 0;
 
   auto objects = WM.getAllObjects();

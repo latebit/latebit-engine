@@ -7,7 +7,7 @@
 #include "ObjectList_test.h"
 #include "test.h"
 
-int ObjectListIterator_iteration_test() {
+auto ObjectListIterator_iteration_test() -> int {
   int result = 0;
   std::cout << "ObjectListIterator_iteration_test\n";
 
@@ -42,7 +42,7 @@ int ObjectListIterator_iteration_test() {
   return result;
 }
 
-int ObjectListIterator_emptyList_test() {
+auto ObjectListIterator_emptyList_test() -> int {
   int result = 0;
   std::cout << "ObjectListIterator_emptyList_test\n";
   auto list = new df::ObjectList;
@@ -56,7 +56,7 @@ int ObjectListIterator_emptyList_test() {
   return result;
 }
 
-int ObjectListIterator_test() {
+auto ObjectListIterator_test() -> int {
   int result = 0;
 
   result += ObjectListIterator_iteration_test();

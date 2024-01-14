@@ -2,7 +2,7 @@
 
 #include "test.h"
 
-int EventOut_test() {
+auto EventOut_test() -> int {
   int result = 0;
 
   // test constructor

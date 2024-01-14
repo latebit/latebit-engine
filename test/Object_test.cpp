@@ -9,7 +9,7 @@
 #include "SpriteParser_test.h"
 #include "test.h"
 
-int Object_altitude_test() {
+auto Object_altitude_test() -> int {
   std::cout << "Object_altitude_test\n";
   int result = 0;
   df::Object subject;
@@ -31,7 +31,7 @@ int Object_altitude_test() {
   return result;
 }
 
-int Object_kinematics_test() {
+auto Object_kinematics_test() -> int {
   std::cout << "Object_kinematics_test\n";
   df::Object subject;
   int result = 0;
@@ -55,7 +55,7 @@ int Object_kinematics_test() {
   return result;
 }
 
-int Object_solidness_test() {
+auto Object_solidness_test() -> int {
   std::cout << "Object_solidness_test\n";
   df::Object subject;
   int result = 0;
@@ -72,7 +72,7 @@ int Object_solidness_test() {
   return result;
 }
 
-int Object_boundingBox_test() {
+auto Object_boundingBox_test() -> int {
   int result = 0;
   printf("Object_boundingBox_test\n");
 
@@ -97,7 +97,7 @@ int Object_boundingBox_test() {
   return result;
 }
 
-int Object_test() {
+auto Object_test() -> int {
   df::Object subject;
   int result = 0;
 

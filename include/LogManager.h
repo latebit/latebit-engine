@@ -28,4 +28,3 @@ class LogManager : public Manager {
 };
 
 }  // namespace df
-

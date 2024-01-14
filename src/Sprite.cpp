@@ -71,7 +71,8 @@ int Sprite::draw(int frame_number, Vector position) const {
     return -1;
   }
 
-  return this->frames[frame_number].draw(position, this->color, this->transparency_char);
+  return this->frames[frame_number].draw(position, this->color,
+                                         this->transparency_char);
 }
 
 }  // namespace df

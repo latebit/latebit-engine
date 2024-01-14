@@ -1,0 +1,3 @@
+Checks: '-*,modernize-*'
+CheckOptions:
+  - { key: modernize-use-override, value: 1 }

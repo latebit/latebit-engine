@@ -4,7 +4,7 @@
 #include "Box_test.h"
 #include "test.h"
 
-int defaultConstructor_test() {
+auto defaultConstructor_test() -> int {
   printf("defaultConstructor_test\n");
   df::Box box;
   int result =
@@ -17,7 +17,7 @@ int defaultConstructor_test() {
   return result;
 }
 
-int parameterizedConstructor_test() {
+auto parameterizedConstructor_test() -> int {
   printf("parameterizedConstructor_test\n");
   df::Vector toleft(1, 2);
   float width = 3.5;
@@ -34,7 +34,7 @@ int parameterizedConstructor_test() {
   return result;
 }
 
-int setCorner_test() {
+auto setCorner_test() -> int {
   printf("setCorner_test\n");
   df::Box box;
   df::Vector corner(5, 6);
@@ -43,7 +43,7 @@ int setCorner_test() {
                        corner);
 }
 
-int setWidth_test() {
+auto setWidth_test() -> int {
   printf("setWidth_test\n");
   df::Box box;
   float width = 10.5;
@@ -51,7 +51,7 @@ int setWidth_test() {
   return assert_float("sets width correctly", box.getWidth(), width);
 }
 
-int setHeight_test() {
+auto setHeight_test() -> int {
   printf("setHeight_test\n");
   df::Box box;
   float height = 15.5;
@@ -59,7 +59,7 @@ int setHeight_test() {
   return assert_float("sets height correctly", box.getHeight(), height);
 }
 
-int Box_test() {
+auto Box_test() -> int {
   int result = 0;
   result += defaultConstructor_test();
   result += parameterizedConstructor_test();

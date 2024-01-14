@@ -2,7 +2,7 @@
 
 #include "test.h"
 
-int EventCollision_test() {
+auto EventCollision_test() -> int {
   int result = 0;
 
   // Test default constructor

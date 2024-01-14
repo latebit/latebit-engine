@@ -5,10 +5,10 @@
 
 #include "test.h"
 
-int Vector_getMagnitude_test() {
-  df::Vector *null = new df::Vector();
-  df::Vector *unary = new df::Vector(1);
-  df::Vector *another = new df::Vector(1, 1);
+auto Vector_getMagnitude_test() -> int {
+  auto *null = new df::Vector();
+  auto *unary = new df::Vector(1);
+  auto *another = new df::Vector(1, 1);
 
   int result = 0;
   result += assert_float("has null magnitude", null->getMagnitude(), 0);
@@ -19,7 +19,7 @@ int Vector_getMagnitude_test() {
   return result;
 };
 
-int Vector_scale_test() {
+auto Vector_scale_test() -> int {
   df::Vector *subject;
 
   int result = 0;
@@ -36,7 +36,7 @@ int Vector_scale_test() {
   return result;
 }
 
-int Vector_distance_test() {
+auto Vector_distance_test() -> int {
   df::Vector *a, *b;
 
   int result = 0;
@@ -52,7 +52,7 @@ int Vector_distance_test() {
   return result;
 }
 
-int Vector_normalise_test() {
+auto Vector_normalise_test() -> int {
   df::Vector *subject;
 
   int result = 0;
@@ -69,7 +69,7 @@ int Vector_normalise_test() {
   return result;
 }
 
-int Vector_eq_test() {
+auto Vector_eq_test() -> int {
   df::Vector *a, *b;
 
   int result = 0;
@@ -84,7 +84,7 @@ int Vector_eq_test() {
   return result;
 }
 
-int Vector_plus_test() {
+auto Vector_plus_test() -> int {
   df::Vector *a, *b, got, want;
 
   int result = 0;
@@ -108,7 +108,7 @@ int Vector_plus_test() {
   return result;
 }
 
-int Vector_not_test() {
+auto Vector_not_test() -> int {
   df::Vector *subject;
 
   int result = 0;
@@ -121,7 +121,7 @@ int Vector_not_test() {
   return result;
 }
 
-int Vector_test() {
+auto Vector_test() -> int {
   int result = 0;
   std::cout << "Vector_getMagnitude_test" << std::endl;
   result += Vector_getMagnitude_test();

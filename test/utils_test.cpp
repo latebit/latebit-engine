@@ -2,7 +2,7 @@
 
 #include "test.h"
 
-int utils_match_test() {
+auto utils_match_test() -> int {
   int result = 0;
 
   df::Vector v1(1, 2);
@@ -17,7 +17,7 @@ int utils_match_test() {
   return result;
 }
 
-int utils_intersects_test() {
+auto utils_intersects_test() -> int {
   int result = 0;
 
   df::Box subject(df::Vector(0, 0), 2, 2);
@@ -82,7 +82,7 @@ int utils_intersects_test() {
   return result;
 }
 
-int utils_test() {
+auto utils_test() -> int {
   int result = 0;
 
   result += assert_regex("returns date in correct format", getTimeString(),

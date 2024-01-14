@@ -39,3 +39,9 @@ test: $(TEST_EXECUTABLE)
 
 clean:
 	rm -f $(OBJ_FILES) $(TEST_EXECUTABLE) $(LIB_FILE)
+
+format:
+	clang-format -i $(SRC_FILES) $(TEST_FILES) $(INC_DIR)/*.h
+
+tidy:
+	clang-tidy -fix-errors $(SRC_FILES) $(TEST_FILES) -- $(CFLAGS)

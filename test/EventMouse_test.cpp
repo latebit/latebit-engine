@@ -2,7 +2,7 @@
 
 #include "test.h"
 
-int EventMouse_test() {
+auto EventMouse_test() -> int {
   int result = 0;
 
   // test default constructor

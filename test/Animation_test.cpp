@@ -9,7 +9,7 @@
 #include "SpriteParser_test.h"
 #include "test.h"
 
-int setSprite_test() {
+auto setSprite_test() -> int {
   printf("setSprite_test\n");
 
   df::Animation animation;
@@ -27,28 +27,28 @@ int setSprite_test() {
   return result;
 }
 
-int setName_test() {
+auto setName_test() -> int {
   printf("setName_test\n");
   df::Animation animation;
   animation.setName("animation");
   return assert_string("sets name", animation.getName(), "animation");
 }
 
-int setIndex_test() {
+auto setIndex_test() -> int {
   printf("setIndex_test\n");
   df::Animation animation;
   animation.setIndex(5);
   return assert_int("sets index", animation.getIndex(), 5);
 }
 
-int setSlowdownCount_test() {
+auto setSlowdownCount_test() -> int {
   printf("setSlowdownCount_test\n");
   df::Animation animation;
   animation.setSlowdownCount(3);
   return assert_int("sets slowdown count", animation.getSlowdownCount(), 3);
 }
 
-int draw_test() {
+auto draw_test() -> int {
   printf("draw_test\n");
 
   auto filename = "sprite";
@@ -87,7 +87,7 @@ int draw_test() {
   return result;
 }
 
-int getBox_test() {
+auto getBox_test() -> int {
   int result = 0;
   printf("getBox_test\n");
 
@@ -113,7 +113,7 @@ int getBox_test() {
   return result;
 }
 
-int Animation_test() {
+auto Animation_test() -> int {
   int result = 0;
   result += setSprite_test();
   result += setName_test();

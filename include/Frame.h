@@ -30,4 +30,3 @@ class Frame {
   int draw(Vector position, Color color, char transparencyChar) const;
 };
 }  // namespace df
-

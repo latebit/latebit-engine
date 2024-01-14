@@ -10,7 +10,7 @@
 #include "test.h"
 
 int WorldManager_draw_test_drawCount[5];
-int WorldManager_draw_test() {
+auto WorldManager_draw_test() -> int {
   printf("WorldManager_draw_test\n");
   int result = 0;
   WM.startUp();
@@ -18,7 +18,7 @@ int WorldManager_draw_test() {
   class TestObject : public df::Object {
    public:
     TestObject(int altitude) { setAltitude(altitude); }
-    int draw() {
+    auto draw() override->int {
       // Count the number of drawings per altitude
       WorldManager_draw_test_drawCount[getAltitude()]++;
       return df::Object::draw();
@@ -32,15 +32,14 @@ int WorldManager_draw_test() {
   };
 
   WM.draw();
-  for (int i = 0; i < 5; i++) {
-    result +=
-        assert_int("draws all objects", WorldManager_draw_test_drawCount[i], 1);
+  for (int i : WorldManager_draw_test_drawCount) {
+    result += assert_int("draws all objects", i, 1);
   }
 
   return result;
 }
 
-int WorldManager_getCollisions_test() {
+auto WorldManager_getCollisions_test() -> int {
   printf("WorldManager_getCollisions_test\n");
   WM.startUp();
 
@@ -83,7 +82,7 @@ int WorldManager_getCollisions_test() {
   return result;
 }
 
-int WorldManager_moveObject_test() {
+auto WorldManager_moveObject_test() -> int {
   printf("WorldManager_moveObject_test\n");
   WM.startUp();
 
@@ -209,14 +208,14 @@ int WorldManager_moveObject_test() {
 }
 
 bool WorldManager_outOfBounds_test_emitted = false;
-int WorldManager_outOfBounds_test() {
+auto WorldManager_outOfBounds_test() -> int {
   printf("WorldManager_outOfBounds_test\n");
   WM.startUp();
   int result = 0;
 
   class TestObject : public df::Object {
    public:
-    int eventHandler(const df::Event* e) {
+    auto eventHandler(const df::Event* e) override->int {
       if (e->getType() == df::OUT_EVENT) {
         WorldManager_outOfBounds_test_emitted = true;
         return 1;
@@ -242,7 +241,7 @@ int WorldManager_outOfBounds_test() {
   return result;
 }
 
-int WorldManager_test() {
+auto WorldManager_test() -> int {
   int result = 0;
 
   auto obj1 = new df::Object;

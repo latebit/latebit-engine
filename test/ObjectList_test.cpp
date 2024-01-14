@@ -5,7 +5,7 @@
 #include "ObjectList_test.h"
 #include "test.h"
 
-int ObjectList_fullList_test() {
+auto ObjectList_fullList_test() -> int {
   std::cout << "ObjectList_fullList_test\n";
   int result = 0;
   auto subject = new df::ObjectList;
@@ -24,7 +24,7 @@ int ObjectList_fullList_test() {
   return result;
 }
 
-int ObjectList_manyItems_test() {
+auto ObjectList_manyItems_test() -> int {
   std::cout << "ObjectList_manyItems_test\n";
   int result = 0;
   auto subject = new df::ObjectList;
@@ -44,7 +44,7 @@ int ObjectList_manyItems_test() {
   return result;
 }
 
-int ObjectList_oneItem_test() {
+auto ObjectList_oneItem_test() -> int {
   std::cout << "ObjectList_oneItem_test\n";
   int result = 0;
   auto subject = new df::ObjectList;
@@ -55,7 +55,7 @@ int ObjectList_oneItem_test() {
   return result;
 }
 
-int ObjectList_emptyList_test() {
+auto ObjectList_emptyList_test() -> int {
   std::cout << "ObjectList_emptyList_test\n";
   int result = 0;
   auto subject = new df::ObjectList;
@@ -67,7 +67,7 @@ int ObjectList_emptyList_test() {
   return result;
 }
 
-int ObjectList_find_test() {
+auto ObjectList_find_test() -> int {
   std::cout << "ObjectList_find_test\n";
   int result = 0;
   auto subject = new df::ObjectList;
@@ -78,7 +78,7 @@ int ObjectList_find_test() {
   return result;
 }
 
-int ObjectList_test() {
+auto ObjectList_test() -> int {
   int result = 0;
 
   result += ObjectList_emptyList_test();

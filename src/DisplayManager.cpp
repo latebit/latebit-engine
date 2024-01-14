@@ -25,8 +25,8 @@ int DisplayManager::startUp() {
     return 0;
   }
 
-  auto mode =
-      sf::VideoMode(this->window_horizontal_pixels, this->window_vertical_pixels);
+  auto mode = sf::VideoMode(this->window_horizontal_pixels,
+                            this->window_vertical_pixels);
   this->window =
       new sf::RenderWindow(mode, WINDOW_TITLE_DEFAULT, WINDOW_STYLE_DEFAULT);
 
@@ -117,16 +117,21 @@ int DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
 
 int DisplayManager::drawString(Vector world_pos, std::string s, Alignment a,
                                Color fg) const {
-  return DisplayManager::drawString(world_pos, s, a, fg, this->background_color);
+  return DisplayManager::drawString(world_pos, s, a, fg,
+                                    this->background_color);
 }
 
-void DisplayManager::setBackground(Color color) { this->background_color = color; }
+void DisplayManager::setBackground(Color color) {
+  this->background_color = color;
+}
 
 int DisplayManager::getHorizontalCells() const {
   return this->window_horizontal_cells;
 }
 
-int DisplayManager::getVerticalCells() const { return this->window_vertical_cells; }
+int DisplayManager::getVerticalCells() const {
+  return this->window_vertical_cells;
+}
 
 int DisplayManager::getHorizontalPixels() const {
   return this->window_horizontal_pixels;
@@ -153,11 +158,11 @@ int DisplayManager::swapBuffers() {
 
 sf::RenderWindow* DisplayManager::getWindow() const { return this->window; }
 
-float charHeight() {
+auto charHeight() -> float {
   return DM.getVerticalPixels() / (float)DM.getVerticalCells();
 }
 
-float charWidth() {
+auto charWidth() -> float {
   return DM.getHorizontalPixels() / (float)DM.getHorizontalCells();
 }
 

@@ -2,7 +2,7 @@
 
 #include "test.h"
 
-int Frame_test() {
+auto Frame_test() -> int {
   int result = 0;
 
   printf("Frame_emptyConstructor_test\n");

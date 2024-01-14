@@ -1,7 +1,7 @@
 #include "../include/EventKeyboard.h"
 
 #include "test.h"
-int EventKeyboard_test() {
+auto EventKeyboard_test() -> int {
   int result = 0;
 
   // Test default constructor

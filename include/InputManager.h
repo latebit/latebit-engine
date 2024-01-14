@@ -27,4 +27,3 @@ class InputManager : public Manager {
   void getInput() const;
 };
 }  // namespace df
-

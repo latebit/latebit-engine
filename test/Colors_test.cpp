@@ -2,7 +2,7 @@
 
 #include "test.h"
 
-int Colors_fromColorString_test() {
+auto Colors_fromColorString_test() -> int {
   int result = 0;
 
   printf("fromColorString_test\n");
@@ -21,8 +21,8 @@ int Colors_fromColorString_test() {
   // Test invalid color strings
   std::string invalidColors[] = {"invalid", "123", "orange", "purple"};
   df::Color undefinedColor = df::UNDEFINED_COLOR;
-  for (int i = 0; i < 4; i++) {
-    df::Color actualColor = df::fromColorString(invalidColors[i]);
+  for (auto& invalidColor : invalidColors) {
+    df::Color actualColor = df::fromColorString(invalidColor);
     result += assert_int("returns UNDEFINED_COLOR for invalid string",
                          actualColor, undefinedColor);
   }
@@ -30,7 +30,7 @@ int Colors_fromColorString_test() {
   return result;
 }
 
-int Colors_test() {
+auto Colors_test() -> int {
   int result = 0;
 
   result += Colors_fromColorString_test();

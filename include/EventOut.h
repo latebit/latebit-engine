@@ -10,4 +10,3 @@ class EventOut : public Event {
 };
 
 }  // namespace df
-

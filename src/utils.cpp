@@ -5,7 +5,7 @@
 #include <ctime>
 #include <thread>
 
-char *getTimeString() {
+auto getTimeString() -> char * {
   static char time_str[30];
 
   time_t now;
@@ -21,16 +21,16 @@ void sleep(long int microseconds) {
   std::this_thread::sleep_for(std::chrono::microseconds(microseconds));
 }
 
-bool match(df::Vector p1, df::Vector p2) {
+auto match(df::Vector p1, df::Vector p2) -> bool {
   return std::abs(p1.getX() - p2.getX()) <= 1 &&
          std::abs(p1.getY() - p2.getY()) <= 1;
 }
 
-bool equals(float a, float b, float tolerance) {
+auto equals(float a, float b, float tolerance) -> bool {
   return std::abs(b - a) < tolerance;
 }
 
-bool intersects(df::Box a, df::Box b) {
+auto intersects(df::Box a, df::Box b) -> bool {
   float aLeft = a.getCorner().getX();
   float aRight = aLeft + a.getWidth();
   float aTop = a.getCorner().getY();

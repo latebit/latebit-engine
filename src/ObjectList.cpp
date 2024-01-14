@@ -28,7 +28,9 @@ int ObjectList::remove(Object* o) {
 void ObjectList::clear() { this->count = 0; }
 int ObjectList::getCount() const { return this->count; }
 bool ObjectList::isEmpty() const { return this->count == 0; }
-bool ObjectList::isFull() const { return this->count != 0 && this->count >= MAX_SIZE; }
+bool ObjectList::isFull() const {
+  return this->count != 0 && this->count >= MAX_SIZE;
+}
 int ObjectList::find(Object* o) const {
   for (int i = 0; i < this->count; i++) {
     if (this->obj[i] == o) {

@@ -2,7 +2,7 @@
 
 #include "test.h"
 
-int Event_test() {
+auto Event_test() -> int {
   auto *subject = new df::Event;
   int result = 0;
 

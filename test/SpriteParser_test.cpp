@@ -9,7 +9,7 @@ void makeFile(std::string filename, std::string content) {
   file.close();
 }
 
-int SpriteParser_test() {
+auto SpriteParser_test() -> int {
   int result = 0;
 
   std::string filename = "sprite.txt";

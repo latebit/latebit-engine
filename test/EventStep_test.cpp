@@ -2,7 +2,7 @@
 
 #include "test.h"
 
-int EventStep_test() {
+auto EventStep_test() -> int {
   int result = 0;
 
   auto *subject = new df::EventStep;

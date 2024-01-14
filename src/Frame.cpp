@@ -24,7 +24,9 @@ int Frame::getWidth() const { return this->width; }
 void Frame::setHeight(int w) { this->height = w; }
 int Frame::getHeight() const { return this->height; }
 
-void Frame::setFrameString(std::string frame_str) { this->frame_str = frame_str; }
+void Frame::setFrameString(std::string frame_str) {
+  this->frame_str = frame_str;
+}
 std::string Frame::getFrameString() const { return this->frame_str; }
 
 int Frame::draw(Vector position, Color color, char transparencyChar) const {

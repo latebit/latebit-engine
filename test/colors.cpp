@@ -5,7 +5,7 @@
 bool supportsEscapeSequences =
     (std::cout << "\033[31m\033[0m", std::cout.flush(), true);
 
-std::string color(std::string color, std::string s) {
+auto color(std::string color, std::string s) -> std::string {
   if (supportsEscapeSequences) {
     return "\033[" + color + "m" + s + "\033[0m";
   }
@@ -13,6 +13,6 @@ std::string color(std::string color, std::string s) {
   return s;
 }
 
-std::string red(std::string s) { return color("31", s); }
-std::string green(std::string s) { return color("32", s); }
-std::string yellow(std::string s) { return color("33", s); }
+auto red(std::string s) -> std::string { return color("31", s); }
+auto green(std::string s) -> std::string { return color("32", s); }
+auto yellow(std::string s) -> std::string { return color("33", s); }

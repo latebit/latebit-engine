@@ -81,4 +81,3 @@ class Object {
   virtual int draw();
 };
 }  // namespace df
-

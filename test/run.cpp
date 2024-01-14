@@ -26,7 +26,7 @@
 void suite(std::string name) { std::cout << yellow("\n" + name + "\n"); }
 void timing(float delta) { printf("    Duration: %.2fμs\n", delta); }
 
-int main() {
+auto main() -> int {
   int result = 0;
   df::Clock c;
   c.delta();

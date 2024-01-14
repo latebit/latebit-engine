@@ -18,7 +18,9 @@ void EventMouse::setMouseAction(EventMouseAction new_mouse_action) {
   this->mouse_action = new_mouse_action;
 }
 
-EventMouseAction EventMouse::getMouseAction() const { return this->mouse_action; }
+EventMouseAction EventMouse::getMouseAction() const {
+  return this->mouse_action;
+}
 
 void EventMouse::setMouseButton(Mouse::Button new_mouse_button) {
   this->mouse_button = new_mouse_button;

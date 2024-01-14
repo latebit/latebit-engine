@@ -35,4 +35,3 @@ class GameManager : public Manager {
 }  // namespace df
 
 #define GM df::GameManager::getInstance()
-

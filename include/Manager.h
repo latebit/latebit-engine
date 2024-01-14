@@ -27,4 +27,3 @@ class Manager {
   int onEvent(const Event *event) const;
 };
 };  // namespace df
-

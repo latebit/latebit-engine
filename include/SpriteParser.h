@@ -18,4 +18,3 @@ class SpriteParser {
   static Sprite *parseSprite(std::string filename, std::string label);
 };
 }  // namespace df
-

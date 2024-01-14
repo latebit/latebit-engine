@@ -28,4 +28,3 @@ class ResourceManager : public Manager {
   Sprite *getSprite(std::string label) const;
 };
 }  // namespace df
-

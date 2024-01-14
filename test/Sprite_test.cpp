@@ -2,13 +2,13 @@
 
 #include "test.h"
 
-bool isSameFrame(df::Frame frame1, df::Frame frame2) {
+auto isSameFrame(df::Frame frame1, df::Frame frame2) -> bool {
   return frame1.getWidth() == frame2.getWidth() &&
          frame1.getHeight() == frame2.getHeight() &&
          frame1.getFrameString() == frame2.getFrameString();
 }
 
-int Sprite_constructor_test() {
+auto Sprite_constructor_test() -> int {
   printf("Sprite_constructor_test\n");
   int result = 0;
 
@@ -29,7 +29,7 @@ int Sprite_constructor_test() {
   return result;
 }
 
-int Sprite_frame_test() {
+auto Sprite_frame_test() -> int {
   printf("Sprite_frame_test\n");
   int result = 0;
 
@@ -55,7 +55,7 @@ int Sprite_frame_test() {
   return result;
 }
 
-int Sprite_draw_test() {
+auto Sprite_draw_test() -> int {
   printf("Sprite_draw_test\n");
   int result = 0;
 
@@ -75,7 +75,7 @@ int Sprite_draw_test() {
   return result;
 }
 
-int Sprite_test() {
+auto Sprite_test() -> int {
   int result = 0;
 
   df::Sprite sprite(1);

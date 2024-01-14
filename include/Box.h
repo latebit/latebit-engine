@@ -28,4 +28,3 @@ class Box {
   std::string toString() const;
 };
 }  // namespace df
-

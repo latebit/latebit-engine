@@ -3,7 +3,7 @@
 #include "SpriteParser_test.h"
 #include "test.h"
 
-int ResourceManager_test() {
+auto ResourceManager_test() -> int {
   int result = 0;
 
   result += assert_string("sets type", RM.getType(), "ResourceManager");

@@ -4,7 +4,7 @@
 #include <string>
 
 namespace df {
-sf::Color toSFColor(Color c) {
+auto toSFColor(Color c) -> sf::Color {
   switch (c) {
     case BLACK:
       return sf::Color::Black;

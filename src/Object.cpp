@@ -83,7 +83,8 @@ Box Object::getBox() const { return this->bounding_box; }
 Box Object::getWorldBox() const { return getWorldBox(this->position); }
 Box Object::getWorldBox(Vector center) const {
   auto corner = this->bounding_box.getCorner() + center;
-  return Box(corner, this->bounding_box.getWidth(), this->bounding_box.getHeight());
+  return Box(corner, this->bounding_box.getWidth(),
+             this->bounding_box.getHeight());
 }
 
 int Object::eventHandler(const Event* e) { return 0; }

@@ -27,3 +27,6 @@ auto intersects(Box box1, Box box2) -> bool;
 
 // Convert world coordinates to view coordinates
 auto worldToView(Vector worldPosition) -> Vector;
+
+// Clamp value between min and max
+auto clamp(float value, float min, float max) -> float;

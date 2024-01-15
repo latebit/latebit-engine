@@ -62,3 +62,9 @@ auto worldToView(Vector worldPosition) -> Vector {
   auto viewOrigin = WM.getView().getCorner();
   return worldPosition - viewOrigin;
 }
+
+auto clamp(float value, float min, float max) -> float {
+  if (value < min) return min;
+  if (value > max) return max;
+  return value;
+}

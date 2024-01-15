@@ -130,16 +130,19 @@ auto WorldManager::moveObject(Object* o, Vector where) -> int {
   return 0;
 }
 
-void WorldManager::moveAndCheckBounds(Object* o, Vector where) const {
+void WorldManager::moveAndCheckBounds(Object* o, Vector where) {
   auto initial = o->getWorldBox();
   o->setPosition(where);
   auto final = o->getWorldBox();
   auto boundary = WM.getBoundary();
 
-  // Should this take in account the bounding box?
   if (intersects(initial, boundary) && !intersects(final, boundary)) {
     auto event = EventOut();
     o->eventHandler(&event);
+  }
+
+  if (this->viewFollowing == o) {
+    setViewPosition(where);
   }
 }
 
@@ -194,5 +197,47 @@ auto WorldManager::getBoundary() const -> Box { return this->boundary; }
 
 void WorldManager::setView(Box v) { this->view = v; }
 auto WorldManager::getView() const -> Box { return this->view; }
+
+auto WorldManager::setViewPosition(Vector where) -> void {
+  auto viewHeight = this->view.getHeight();
+  auto viewWidth = this->view.getWidth();
+  auto worldHeight = this->boundary.getHeight();
+  auto worldWidth = this->boundary.getWidth();
+  auto worldOrigin = this->boundary.getCorner();
+  auto worldOriginX = worldOrigin.getX();
+  auto worldOriginY = worldOrigin.getY();
+
+  // easier to understand as the following translations
+  // viewCenter = corner + Vector(width / 2, height / 2)
+  // translate = where - viewCenter (note, `where` is the center of the view)
+  // newCorner = viewCorner + translate
+  auto newCorner = where - Vector(viewWidth / 2, viewHeight / 2);
+
+  newCorner.setX(clamp(newCorner.getX(), worldOriginX,
+                       worldOriginX + worldWidth - viewWidth));
+  newCorner.setY(clamp(newCorner.getY(), worldOriginY,
+                       worldOriginY + worldHeight - viewHeight));
+
+  this->view = Box(newCorner, viewWidth, viewHeight);
+}
+
+auto WorldManager::setViewFollowing(Object* o) -> int {
+  if (o == nullptr) {
+    this->viewFollowing = nullptr;
+    return 0;
+  }
+
+  ObjectListIterator iterator = ObjectListIterator(&this->updates);
+  for (iterator.first(); !iterator.isDone(); iterator.next()) {
+    if (iterator.currentObject() == o) {
+      this->viewFollowing = o;
+      return 0;
+    }
+  }
+
+  LM.writeLog(
+    "WorldManager::setViewFollowing(): Object to be followed not found.");
+  return -1;
+}
 
 }  // namespace df

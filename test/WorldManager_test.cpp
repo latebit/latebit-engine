@@ -224,6 +224,45 @@ auto WorldManager_moveObject_test() -> int {
   return result;
 }
 
+auto WorldManager_viewFollowing_test() -> int {
+  printf("WorldManager_viewFollowing_test\n");
+  int result = 0;
+  WM.startUp();
+
+  auto subject = new Object;
+  subject->setPosition(Vector());
+
+  auto initialView = Box(Vector(5, 5), 10, 10);
+  WM.setView(initialView);
+  WM.setBoundary(Box(20, 20));
+
+  WM.setViewFollowing(subject);
+  WM.moveObject(subject, Vector(10, 10));
+  result += assert_box("does not update view", WM.getView(), initialView);
+  WM.moveObject(subject, Vector(11, 11));
+  result +=
+    assert_box("updates the view", WM.getView(), Box(Vector(6, 6), 10, 10));
+
+  WM.moveObject(subject, Vector(11, 5));
+  result += assert_box("updates the view (vertical lower bound)", WM.getView(),
+                       Box(Vector(6, 0), 10, 10));
+
+  WM.moveObject(subject, Vector(11, 15));
+  result += assert_box("updates the view (vertical upper bound)", WM.getView(),
+                       Box(Vector(6, 10), 10, 10));
+
+  WM.moveObject(subject, Vector(5, 11));
+  result += assert_box("updates the view (horizontal lower bound)",
+                       WM.getView(), Box(Vector(0, 6), 10, 10));
+
+  WM.moveObject(subject, Vector(15, 11));
+  result += assert_box("updates the view (horizontal upper bound)",
+                       WM.getView(), Box(Vector(10, 6), 10, 10));
+
+  WM.shutDown();
+  return result;
+}
+
 bool WorldManager_outOfBounds_test_emitted = false;
 auto WorldManager_outOfBounds_test() -> int {
   printf("WorldManager_outOfBounds_test\n");
@@ -305,6 +344,7 @@ auto WorldManager_test() -> int {
   result += WorldManager_moveObject_test();
   result += WorldManager_outOfBounds_test();
   result += WorldManager_draw_test();
+  result += WorldManager_viewFollowing_test();
 
   return result;
 }

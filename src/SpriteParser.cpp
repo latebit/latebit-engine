@@ -19,8 +19,8 @@ auto SpriteParser::getLine(std::ifstream* file_stream) -> std::string {
 }
 
 auto SpriteParser::parseHeader(std::ifstream* file_stream, int* frames,
-                              int* width, int* height, int* slowdown,
-                              Color* color) -> int {
+                               int* width, int* height, int* slowdown,
+                               Color* color) -> int {
   for (int i = 0; i < 5; i++) {
     auto line = getLine(file_stream);
     switch (i) {
@@ -47,7 +47,8 @@ auto SpriteParser::parseHeader(std::ifstream* file_stream, int* frames,
   return 0;
 }
 
-auto SpriteParser::parseSprite(std::string filename, std::string label) -> Sprite* {
+auto SpriteParser::parseSprite(std::string filename, std::string label)
+  -> Sprite* {
   std::ifstream file(filename);
 
   if (!file.is_open()) {

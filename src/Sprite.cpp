@@ -62,7 +62,9 @@ void Sprite::setSlowdown(int slowdown) { this->slowdown = slowdown; }
 auto Sprite::getSlowdown() const -> int { return this->slowdown; }
 
 void Sprite::setTransparencyChar(char c) { this->transparency_char = c; }
-auto Sprite::getTransparencyChar() const -> char { return this->transparency_char; }
+auto Sprite::getTransparencyChar() const -> char {
+  return this->transparency_char;
+}
 
 auto Sprite::draw(int frame_number, Vector position) const -> int {
   if (frame_number < 0 || frame_number >= this->frame_count) {

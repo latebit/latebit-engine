@@ -164,7 +164,8 @@ void InputManager::getInput() const {
   }
 }
 
-auto InputManager::fromSFMLKeyCode(sf::Keyboard::Key key) const -> Keyboard::Key {
+auto InputManager::fromSFMLKeyCode(sf::Keyboard::Key key) const
+  -> Keyboard::Key {
   auto item = this->keyboardEvent.find(key);
   if (item != this->keyboardEvent.end()) {
     return item->second;
@@ -172,7 +173,8 @@ auto InputManager::fromSFMLKeyCode(sf::Keyboard::Key key) const -> Keyboard::Key
   return Keyboard::UNDEFINED_KEY;
 }
 
-auto InputManager::fromSFMLMouseButton(sf::Mouse::Button btn) const -> Mouse::Button {
+auto InputManager::fromSFMLMouseButton(sf::Mouse::Button btn) const
+  -> Mouse::Button {
   auto item = this->mouseEvent.find(btn);
   if (item != this->mouseEvent.end()) {
     return item->second;

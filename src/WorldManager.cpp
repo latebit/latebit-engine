@@ -234,7 +234,7 @@ auto WorldManager::setViewFollowing(Object* o) -> int {
     return 0;
   }
 
-  ObjectListIterator iterator = ObjectListIterator(&this->updates);
+  auto iterator = ObjectListIterator(&this->updates);
   for (iterator.first(); !iterator.isDone(); iterator.next()) {
     if (iterator.currentObject() == o) {
       this->viewFollowing = o;

@@ -54,9 +54,10 @@ class DisplayManager : public Manager {
   auto drawCh(Vector world_pos, char ch, Color fg) const -> int;
   auto drawCh(Vector world_pos, char ch, Color fg, Color bg) const -> int;
 
-  auto drawString(Vector world_pos, std::string s, Alignment a, Color fg) const -> int;
+  auto drawString(Vector world_pos, std::string s, Alignment a, Color fg) const
+    -> int;
   auto drawString(Vector world_pos, std::string s, Alignment a, Color fg,
-                 Color bg) const -> int;
+                  Color bg) const -> int;
 
   void setBackground(Color color);
 

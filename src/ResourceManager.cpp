@@ -17,7 +17,8 @@ auto ResourceManager::startUp() -> int {
   return Manager::startUp();
 }
 
-auto ResourceManager::loadSprite(std::string filename, std::string label) -> int {
+auto ResourceManager::loadSprite(std::string filename, std::string label)
+  -> int {
   if (this->sprite_count >= MAX_SPRITES) {
     LM.writeLog(
       "ResourceManager::loadSprite(): Cannot load sprite, maximum (%d) "

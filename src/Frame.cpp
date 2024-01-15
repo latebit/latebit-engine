@@ -29,7 +29,8 @@ void Frame::setFrameString(std::string frame_str) {
 }
 auto Frame::getFrameString() const -> std::string { return this->frame_str; }
 
-auto Frame::draw(Vector position, Color color, char transparencyChar) const -> int {
+auto Frame::draw(Vector position, Color color, char transparencyChar) const
+  -> int {
   if (this->width <= 0 || this->height <= 0 || this->frame_str.empty()) {
     LM.writeLog("Frame::draw(): Cannot draw empty frame");
     return -1;

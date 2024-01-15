@@ -57,7 +57,9 @@ auto Object::getVelocity() const -> Vector {
   return v;
 }
 
-auto Object::predictPosition() -> Vector { return this->position + getVelocity(); }
+auto Object::predictPosition() -> Vector {
+  return this->position + getVelocity();
+}
 
 auto Object::isSolid() const -> bool { return this->solidness != SPECTRAL; }
 
@@ -84,7 +86,7 @@ auto Object::getWorldBox() const -> Box { return getWorldBox(this->position); }
 auto Object::getWorldBox(Vector center) const -> Box {
   auto corner = this->bounding_box.getCorner() + center;
   return {corner, this->bounding_box.getWidth(),
-             this->bounding_box.getHeight()};
+          this->bounding_box.getHeight()};
 }
 
 auto Object::eventHandler(const Event* e) -> int { return 0; }

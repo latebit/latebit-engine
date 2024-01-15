@@ -17,6 +17,8 @@ WorldManager::WorldManager() {
   this->updates = ObjectList();
   this->boundary = Box();
   this->view = Box();
+  this->viewFollowing = nullptr;
+  this->viewDeadZone = Box();
   LM.writeLog("WorldManager::WorldManager(): Created WorldManager");
 }
 
@@ -142,7 +144,12 @@ void WorldManager::moveAndCheckBounds(Object* o, Vector where) {
   }
 
   if (this->viewFollowing == o) {
-    setViewPosition(where);
+    auto viewDeadZone = getViewDeadZone();
+
+    // Move the view if the object is outside of the dead zone
+    if (!contains(viewDeadZone, final)) {
+      setViewPosition(where);
+    }
   }
 }
 
@@ -239,5 +246,16 @@ auto WorldManager::setViewFollowing(Object* o) -> int {
     "WorldManager::setViewFollowing(): Object to be followed not found.");
   return -1;
 }
+
+void WorldManager::setViewDeadZone(Box d) {
+  if (!contains(this->view, d)) {
+    LM.writeLog("WorldManager::setViewDeadZone(): Dead zone larger than view.");
+    return;
+  }
+
+  this->viewDeadZone = d;
+}
+
+auto WorldManager::getViewDeadZone() const -> Box { return this->viewDeadZone; }
 
 }  // namespace df

@@ -30,3 +30,6 @@ auto worldToView(Vector worldPosition) -> Vector;
 
 // Clamp value between min and max
 auto clamp(float value, float min, float max) -> float;
+
+// Return true if container contains content
+auto contains(Box container, Box content) -> bool;

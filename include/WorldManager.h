@@ -27,6 +27,8 @@ class WorldManager : public Manager {
   Box view;
   // The object the view is following, if any
   Object *viewFollowing;
+  // Part of the view where viewFollowing can move without moving the camera
+  Box viewDeadZone;
 
   // Move object and check if it is out of bounds
   void moveAndCheckBounds(Object *o, Vector where);
@@ -83,5 +85,10 @@ class WorldManager : public Manager {
   // Set to NULL to stop following.
   // Returns 0 for success, -1 for failure
   auto setViewFollowing(Object *o) -> int;
+
+  // Set the dead zone for the view following
+  void setViewDeadZone(Box d);
+  // Get the dead zone for the view following
+  auto getViewDeadZone() const -> Box;
 };
 }  // namespace df

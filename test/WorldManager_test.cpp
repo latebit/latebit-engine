@@ -259,6 +259,11 @@ auto WorldManager_viewFollowing_test() -> int {
   result += assert_box("updates the view (horizontal upper bound)",
                        WM.getView(), Box(Vector(10, 6), 10, 10));
 
+  WM.setViewDeadZone(Box(WM.getView().getCorner(), 5, 5));
+  WM.moveObject(subject, Vector(12, 10));
+  result += assert_box("does not update the view within dead zone",
+                       WM.getView(), Box(Vector(10, 6), 10, 10));
+
   WM.shutDown();
   return result;
 }
@@ -308,6 +313,13 @@ auto WorldManager_test() -> int {
   WM.setBoundary(Box(Vector(0, 0), 10, 10));
   result +=
     assert_box("sets boundary", WM.getBoundary(), Box(Vector(0, 0), 10, 10));
+
+  WM.setViewDeadZone(Box(Vector(0, 0), 10, 10));
+  result += assert_box("sets view dead zone", WM.getViewDeadZone(),
+                       Box(Vector(0, 0), 10, 10));
+
+  WM.setView(Box(Vector(0, 0), 10, 10));
+  result += assert_box("sets view", WM.getView(), Box(Vector(0, 0), 10, 10));
 
   auto obj1 = new Object;
   auto obj2 = new Object;

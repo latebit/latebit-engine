@@ -1,4 +1,3 @@
-#include <iomanip>
 #include <iostream>
 
 #include "../include/Clock.h"
@@ -12,10 +11,12 @@
 #include "Event_test.h"
 #include "Frame_test.h"
 #include "GameManager_test.h"
+#include "Music_test.h"
 #include "ObjectListIterator_test.h"
 #include "ObjectList_test.h"
 #include "Object_test.h"
 #include "ResourceManager_test.h"
+#include "Sound_test.h"
 #include "SpriteParser_test.h"
 #include "Sprite_test.h"
 #include "Vector_test.h"
@@ -107,6 +108,14 @@ auto main() -> int {
 
   suite("GameManager_test");
   result += GameManager_test();
+  timing(c.delta());
+
+  suite("Sound_test");
+  result += Sound_test();
+  timing(c.delta());
+
+  suite("Music_test");
+  result += Music_test();
   timing(c.delta());
 
   auto final = c.getNow();

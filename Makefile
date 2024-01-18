@@ -1,6 +1,6 @@
 CXX = clang++
 CFLAGS:= $(CFLAGS) -std=c++20 -fPIC
-SMLFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
+SMLFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 SRC_DIR = src
 INC_DIR = include

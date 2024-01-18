@@ -31,28 +31,28 @@ class Sprite {
   Sprite(const Sprite& other);
 
   void setWidth(int width);
-  auto getWidth() const -> int;
+  [[nodiscard]] auto getWidth() const -> int;
 
   void setHeight(int height);
-  auto getHeight() const -> int;
+  [[nodiscard]] auto getHeight() const -> int;
 
   void setColor(Color color);
-  auto getColor() const -> Color;
+  [[nodiscard]] auto getColor() const -> Color;
 
   void setLabel(std::string label);
-  std::string getLabel() const;
+  auto getLabel() const -> std::string;
 
   void setSlowdown(int slowdown);
-  auto getSlowdown() const -> int;
+  [[nodiscard]] auto getSlowdown() const -> int;
 
   void setTransparencyChar(char transparency_char);
-  auto getTransparencyChar() const -> char;
+  [[nodiscard]] auto getTransparencyChar() const -> char;
 
-  auto getFrameCount() const -> int;
+  [[nodiscard]] auto getFrameCount() const -> int;
   auto addFrame(Frame frame) -> int;
-  auto getFrame(int frame_number) const -> Frame;
+  [[nodiscard]] auto getFrame(int frame_number) const -> Frame;
 
-  auto draw(int frame_number, Vector position) const -> int;
+  [[nodiscard]] auto draw(int frame_number, Vector position) const -> int;
 };
 
 }  // namespace df

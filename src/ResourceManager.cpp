@@ -6,20 +6,39 @@
 namespace df {
 
 ResourceManager::ResourceManager() {
-  this->sprite_count = 0;
   setType("ResourceManager");
   LM.writeLog("ResourceManager::ResourceManager(): Created ResourceManager");
 }
 
 auto ResourceManager::startUp() -> int {
-  this->sprite_count = 0;
+  this->spriteCount = 0;
   LM.writeLog("ResourceManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
+void ResourceManager::shutDown() {
+  for (int i = 0; i < this->spriteCount; i++) {
+    delete this->sprite[i];
+  }
+
+  for (int i = 0; i < this->soundCount; i++) {
+    delete this->sound[i];
+  }
+
+  for (int i = 0; i < this->musicCount; i++) {
+    delete this->music[i];
+  }
+
+  this->spriteCount = 0;
+  this->soundCount = 0;
+  this->musicCount = 0;
+
+  Manager::shutDown();
+}
+
 auto ResourceManager::loadSprite(std::string filename, std::string label)
   -> int {
-  if (this->sprite_count >= MAX_SPRITES) {
+  if (this->spriteCount >= MAX_SPRITES) {
     LM.writeLog(
       "ResourceManager::loadSprite(): Cannot load sprite, maximum (%d) "
       "reached.",
@@ -43,8 +62,8 @@ auto ResourceManager::loadSprite(std::string filename, std::string label)
     return -1;
   }
 
-  this->sprite[this->sprite_count] = sprite;
-  this->sprite_count++;
+  this->sprite[this->spriteCount] = sprite;
+  this->spriteCount++;
 
   return 0;
 }
@@ -55,15 +74,15 @@ auto ResourceManager::getInstance() -> ResourceManager& {
 }
 
 auto ResourceManager::unloadSprite(std::string label) -> int {
-  for (int i = 0; i < this->sprite_count; i++) {
+  for (int i = 0; i < this->spriteCount; i++) {
     if (this->sprite[i] != nullptr && this->sprite[i]->getLabel() == label) {
       delete this->sprite[i];
 
       // We need not scooting here, sprites are not ordered
-      this->sprite[i] = this->sprite[this->sprite_count];
-      this->sprite[this->sprite_count] = nullptr;
+      this->sprite[i] = this->sprite[this->spriteCount];
+      this->sprite[this->spriteCount] = nullptr;
 
-      this->sprite_count--;
+      this->spriteCount--;
       return 0;
     }
   }
@@ -72,7 +91,7 @@ auto ResourceManager::unloadSprite(std::string label) -> int {
 }
 
 auto ResourceManager::getSprite(std::string label) const -> Sprite* {
-  for (int i = 0; i < this->sprite_count; i++) {
+  for (int i = 0; i < this->spriteCount; i++) {
     if (this->sprite[i] == nullptr) continue;
 
     if (this->sprite[i]->getLabel() == label) {
@@ -80,16 +99,140 @@ auto ResourceManager::getSprite(std::string label) const -> Sprite* {
     }
   }
 
+  LM.writeLog(
+    "ResourceManager::getSprite(): unable to find sprite with label %s",
+    label.c_str());
   return nullptr;
 }
-void ResourceManager::shutDown() {
-  for (int i = 0; i < this->sprite_count; i++) {
-    delete this->sprite[i];
+
+auto ResourceManager::loadSound(std::string filename, std::string label)
+  -> int {
+  if (this->soundCount >= MAX_SOUNDS) {
+    LM.writeLog(
+      "ResourceManager::loadSound(): Cannot load sound, maximum (%d) "
+      "reached.",
+      MAX_SOUNDS);
+    return -1;
   }
 
-  this->sprite_count = 0;
+  if (getSound(label) != nullptr) {
+    LM.writeLog(
+      "ResourceManager::loadSound(): Cannot load sound, label '%s' "
+      "already in use.",
+      label.c_str());
+    return -1;
+  }
 
-  Manager::shutDown();
+  this->sound[this->soundCount] = new Sound();
+
+  if (this->sound[this->soundCount]->loadSound(filename) != 0) {
+    LM.writeLog("ResourceManager::loadSound(): could not load sound '%s'.",
+                label.c_str());
+    return -1;
+  };
+
+  this->sound[this->soundCount]->setLabel(label);
+  this->soundCount++;
+
+  return 0;
+}
+
+auto ResourceManager::unloadSound(std::string label) -> int {
+  for (int i = 0; i < this->soundCount; i++) {
+    auto sound = this->sound[i];
+    if (sound != nullptr && sound->getLabel() == label) {
+      delete sound;
+
+      // We need not scooting here, sounds are not ordered
+      this->sound[i] = this->sound[this->soundCount];
+      this->sound[this->soundCount] = nullptr;
+      this->soundCount--;
+
+      return 0;
+    }
+  }
+
+  LM.writeLog(
+    "ResourceManager::unloadSound(): unable to find sound with label %s",
+    label.c_str());
+  return -1;
+}
+
+auto ResourceManager::getSound(std::string label) const -> Sound* {
+  for (int i = 0; i < this->soundCount; i++) {
+    if (this->sound[i] != nullptr && this->sound[i]->getLabel() == label) {
+      return this->sound[i];
+    }
+  }
+
+  LM.writeLog("ResourceManager::getSound(): unable to find sound with label %s",
+              label.c_str());
+  return nullptr;
+}
+
+auto ResourceManager::loadMusic(std::string filename, std::string label)
+  -> int {
+  if (this->musicCount >= MAX_MUSICS) {
+    LM.writeLog(
+      "ResourceManager::loadmusic(): Cannot load music, maximum (%d) "
+      "reached.",
+      MAX_MUSICS);
+    return -1;
+  }
+
+  if (getMusic(label) != nullptr) {
+    LM.writeLog(
+      "ResourceManager::loadmusic(): Cannot load music, label '%s' "
+      "already in use.",
+      label.c_str());
+    return -1;
+  }
+
+  this->music[this->musicCount] = new Music();
+
+  if (this->music[this->musicCount]->loadMusic(filename) != 0) {
+    LM.writeLog("ResourceManager::loadmusic(): could not load music '%s'.",
+                label.c_str());
+    return -1;
+  };
+
+  this->music[this->musicCount]->setLabel(label);
+  this->musicCount++;
+
+  return 0;
+}
+
+auto ResourceManager::unloadMusic(std::string label) -> int {
+  for (int i = 0; i < this->musicCount; i++) {
+    auto music = this->music[i];
+    if (music != nullptr && music->getLabel() == label) {
+      delete music;
+
+      // We need not scooting here, musics are not ordered
+      this->music[i] = this->music[this->musicCount];
+      this->music[this->musicCount] = nullptr;
+      this->musicCount--;
+
+      return 0;
+    }
+  }
+
+  LM.writeLog(
+    "ResourceManager::unloadMusic(): unable to find music with label %s",
+    label.c_str());
+  return -1;
+}
+
+auto ResourceManager::getMusic(std::string label) const -> Music* {
+  for (int i = 0; i < this->musicCount; i++) {
+    if (this->music[i] != nullptr && this->music[i]->getLabel() == label) {
+      return this->music[i];
+    }
+  }
+
+  LM.writeLog("ResourceManager::getMusic(): unable to find music with label %s",
+              label.c_str());
+  return nullptr;
 }
 
 }  // namespace df

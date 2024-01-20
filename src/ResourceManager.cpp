@@ -12,6 +12,8 @@ ResourceManager::ResourceManager() {
 
 auto ResourceManager::startUp() -> int {
   this->spriteCount = 0;
+  this->soundCount = 0;
+  this->musicCount = 0;
   LM.writeLog("ResourceManager::startUp(): Started successfully");
   return Manager::startUp();
 }

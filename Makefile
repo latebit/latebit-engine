@@ -18,15 +18,15 @@ LIB_FILE = $(LIB_DIR)/lib$(LIB_NAME).a
 
 TEST_EXECUTABLE = test.out
 
-.PHONY: all clean test game
+.PHONY: debug test clean format tidy
 
 all: $(TEST_EXECUTABLE) $(LIB_FILE)
 
 %.o: %.cpp
-	$(CXX) $(CFLAGS) -I$(INC_DIR) -c -o $@ $<
+	$(CXX) $(CFLAGS) -g -I$(INC_DIR) -c -o $@ $<
 
 $(TEST_EXECUTABLE): $(OBJ_FILES)
-	$(CXX) $(CFLAGS) -I$(INC_DIR) $(SMLFLAGS) -o $@ $(OBJ_FILES)
+	$(CXX) $(CFLAGS) -g -I$(INC_DIR) $(SMLFLAGS) -o $@ $(OBJ_FILES)
 
 $(LIB_FILE): $(SRC_OBJ_FILES)
 	ar rcs $@ $(SRC_OBJ_FILES)

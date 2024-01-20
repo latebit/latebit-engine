@@ -1,13 +1,11 @@
 #include "../include/WorldManager.h"
 
 #include <array>
-#include <iostream>
+#include <cstdio>
 
 #include "../include/Box.h"
-#include "../include/DisplayManager.h"
 #include "../include/EventOut.h"
 #include "../include/Vector.h"
-#include "../include/utils.h"
 #include "test.h"
 
 using namespace std;

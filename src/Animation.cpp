@@ -24,7 +24,7 @@ auto Animation::draw(Vector position) -> int {
   if (this->sprite == nullptr) return -1;
 
   int index = getIndex();
-  this->sprite->draw(index, position);
+  int result = this->sprite->draw(index, position);
 
   int slowdown = getSlowdownCount();
   if (slowdown == STOP_ANIMATION_SLOWDOWN) return 0;
@@ -39,7 +39,7 @@ auto Animation::draw(Vector position) -> int {
   }
 
   setSlowdownCount(slowdown);
-  return 0;
+  return result;
 }
 
 auto Animation::getBox() const -> Box {

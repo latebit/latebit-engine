@@ -8,9 +8,7 @@ namespace df {
 
 Music::Music() { this->label = ""; }
 
-Music::~Music() {
-  this->music.stop();
-}
+Music::~Music() { this->music.stop(); }
 
 auto Music::play(bool loop) -> void {
   this->music.setLoop(loop);

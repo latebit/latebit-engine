@@ -1,8 +1,8 @@
 #include "../include/GameManager.h"
 
 #include "../include/DisplayManager.h"
-#include "../include/WorldManager.h"
 #include "../include/LogManager.h"
+#include "../include/WorldManager.h"
 #include "test.h"
 
 auto GameManager_test() -> int {

@@ -17,3 +17,21 @@ In order to build and run this project, you would need to install SFML.
 * [Windows Instructions (not tested)](https://www.sfml-dev.org/tutorials/2.6/start-vc.php)
 
 More general instructions for v2.6 (the one used in this project) can be found [here](https://www.sfml-dev.org/tutorials/2.6/)
+
+## Running tests
+
+```
+make test
+```
+
+## Debugging (by running the tests)
+
+```
+make debug
+```
+
+## Format code to abide to current standards
+
+```
+make format tidy
+```

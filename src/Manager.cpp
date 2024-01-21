@@ -22,9 +22,9 @@ auto Manager::startUp() -> int {
 void Manager::shutDown() { this->started = false; }
 
 auto Manager::subscribe(Object* o, string eventType) -> int {
-  // if (!isValid(eventType)) {
-  //   return -1;
-  // }
+  if (!isValid(eventType)) {
+    return -1;
+  }
 
   for (int i = 0; i < eventCount; i++) {
     if (events[i] == eventType) {

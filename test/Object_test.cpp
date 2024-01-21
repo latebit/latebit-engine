@@ -1,10 +1,18 @@
 #include "../include/Object.h"
 
 #include <iostream>
+#include <unordered_map>
 
 #include "../include/Animation.h"
 #include "../include/ResourceManager.h"
 #include "../include/WorldManager.h"
+#include "EventCollision.h"
+#include "EventKeyboard.h"
+#include "EventMouse.h"
+#include "EventOut.h"
+#include "EventStep.h"
+#include "GameManager.h"
+#include "InputManager.h"
 #include "Object_test.h"
 #include "SpriteParser_test.h"
 #include "test.h"
@@ -97,6 +105,60 @@ auto Object_boundingBox_test() -> int {
   return result;
 }
 
+unordered_map<string, int> Object_eventSubscription_test_emittedCount = {};
+auto Object_eventSubscription_test() -> int {
+  int result = 0;
+  printf("Object_eventSubscription_test\n");
+
+  df::Object subject;
+
+  class TestObject : public df::Object {
+   public:
+    TestObject() { this->setType("TestObject"); };
+    auto eventHandler(const df::Event* e) -> int override {
+      Object_eventSubscription_test_emittedCount[e->getType()]++;
+      return 0;
+    };
+  };
+
+  TestObject obj;
+
+  result +=
+    assert_ok("subscribes to Collision", WM.subscribe(&obj, COLLISION_EVENT));
+  result += assert_ok("subscribes to Out", WM.subscribe(&obj, OUT_EVENT));
+  result += assert_ok("subscribes to Step", GM.subscribe(&obj, STEP_EVENT));
+  result +=
+    assert_ok("subscribes to Keyboard", IM.subscribe(&obj, KEYBOARD_EVENT));
+  result += assert_ok("subscribes to Mouse", IM.subscribe(&obj, MSE_EVENT));
+
+  WM.onEvent(new EventCollision());
+  result +=
+    assert_int("responds to Collision",
+               Object_eventSubscription_test_emittedCount[COLLISION_EVENT], 1);
+
+  WM.onEvent(new EventOut());
+  result +=
+    assert_int("responds to Out",
+               Object_eventSubscription_test_emittedCount[OUT_EVENT], 1);
+
+  GM.onEvent(new EventStep());
+  result +=
+    assert_int("responds to Step",
+               Object_eventSubscription_test_emittedCount[STEP_EVENT], 1);
+
+  IM.onEvent(new EventKeyboard());
+  result +=
+    assert_int("responds to Keyboard",
+               Object_eventSubscription_test_emittedCount[KEYBOARD_EVENT], 1);
+
+  IM.onEvent(new EventMouse());
+  result +=
+    assert_int("responds to Mouse",
+               Object_eventSubscription_test_emittedCount[MSE_EVENT], 1);
+
+  return result;
+}
+
 auto Object_test() -> int {
   df::Object subject;
   int result = 0;
@@ -151,6 +213,7 @@ auto Object_test() -> int {
   result += Object_kinematics_test();
   result += Object_solidness_test();
   result += Object_boundingBox_test();
+  result += Object_eventSubscription_test();
 
   return result;
 }

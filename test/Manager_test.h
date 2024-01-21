@@ -1,0 +1,1 @@
+auto Manager_test() -> int;

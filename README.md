@@ -3,6 +3,10 @@ Dragonfly
 
 An C++ implementation of the Dragonfly game engine.
 
+## :warning: Warning
+
+This is very much in progress and far from stable. Use it a your own risk.
+
 ## Dependencies
 
 This engine relieas heavily on [SFML](https://www.sfml-dev.org/index.php) for multimedia and input handling. 

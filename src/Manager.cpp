@@ -82,4 +82,6 @@ auto Manager::onEvent(const Event* event) const -> int {
   return count;
 }
 
+auto Manager::isValid(string eventType) const -> bool { return true; }
+
 }  // namespace df

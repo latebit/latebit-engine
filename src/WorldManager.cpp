@@ -1,6 +1,5 @@
 #include "WorldManager.h"
 
-#include "DisplayManager.h"
 #include "EventCollision.h"
 #include "EventOut.h"
 #include "LogManager.h"
@@ -13,12 +12,6 @@ namespace df {
 
 WorldManager::WorldManager() {
   setType("WorldManager");
-  this->deletions = ObjectList();
-  this->updates = ObjectList();
-  this->boundary = Box();
-  this->view = Box();
-  this->viewFollowing = nullptr;
-  this->viewDeadZone = Box();
   LM.writeLog("WorldManager::WorldManager(): Created WorldManager");
 }
 
@@ -47,6 +40,10 @@ void WorldManager::shutDown() {
 
   Manager::shutDown();
   LM.writeLog("WorldManager::shutDown(): Shut down successfully");
+}
+
+auto WorldManager::isValid(string eventType) const -> bool {
+  return eventType == OUT_EVENT || eventType == COLLISION_EVENT;
 }
 
 auto WorldManager::insertObject(Object* o) -> int {

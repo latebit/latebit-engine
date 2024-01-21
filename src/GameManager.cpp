@@ -61,6 +61,10 @@ void GameManager::shutDown() {
   LM.shutDown();
 }
 
+auto GameManager::isValid(string eventType) const -> bool {
+  return eventType == STEP_EVENT;
+}
+
 void GameManager::run() {
   long int adjustTime = 0;
   long int loopTime = 0;

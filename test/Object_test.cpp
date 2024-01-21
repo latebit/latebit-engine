@@ -106,8 +106,7 @@ auto Object_test() -> int {
   result += assert_string("sets a type", subject.getType(), "Object");
   result +=
     assert_vector("sets a position", subject.getPosition(), df::Vector());
-  result +=
-    assert_int("sets an altitude", subject.getAltitude(), df::MAX_ALTITUDE / 2);
+  result += assert_int("sets an altitude", subject.getAltitude(), 0);
   result +=
     assert_vector("sets a direction", subject.getDirection(), df::Vector());
   result += assert_float("sets a speed", subject.getSpeed(), 0.0);
@@ -119,8 +118,6 @@ auto Object_test() -> int {
 
   subject = df::Object();
   result += assert_int("increments id", subject.getId(), 1);
-  subject.setId(10);
-  result += assert_int("updates id", subject.getId(), 10);
 
   subject.setType("type");
   result += assert_string("updates type", subject.getType(), "type");

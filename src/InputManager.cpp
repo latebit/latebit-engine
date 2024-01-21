@@ -7,7 +7,6 @@
 #include "EventMouse.h"
 #include "GameManager.h"
 #include "LogManager.h"
-#include "SFML/Window.hpp"
 
 namespace df {
 
@@ -120,6 +119,10 @@ void InputManager::shutDown() {
 
   Manager::shutDown();
   LM.writeLog("InputManager::shutDown(): Shut down successfully");
+}
+
+auto InputManager::isValid(string eventType) const -> bool {
+  return eventType == df::KEYBOARD_EVENT || eventType == df::MSE_EVENT;
 }
 
 void InputManager::getInput() const {

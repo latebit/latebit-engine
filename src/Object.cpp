@@ -1,6 +1,8 @@
 #include "Object.h"
 
 #include "DisplayManager.h"
+#include "GameManager.h"
+#include "InputManager.h"
 #include "ResourceManager.h"
 #include "WorldManager.h"
 
@@ -8,16 +10,7 @@ namespace df {
 
 Object::Object() {
   static int id = 0;
-  setId(id++);
-  this->type = "Object";
-  this->position = Vector();
-  this->altitude = MAX_ALTITUDE / 2;
-  this->solidness = HARD;
-  this->direction = Vector();
-  this->animation = Animation();
-  this->bounding_box = Box(this->position, 1, 1);
-  this->speed = 0;
-  this->debug = false;
+  this->id = id++;
   WM.insertObject(this);
 }
 
@@ -26,7 +19,6 @@ Object::~Object() {
   WM.removeObject(this);
 }
 
-void Object::setId(int id) { this->id = id; }
 auto Object::getId() const -> int { return this->id; }
 
 void Object::setType(std::string t) { this->type = t; }
@@ -79,14 +71,14 @@ auto Object::setSprite(std::string label) -> int {
   return 0;
 }
 
-void Object::setBox(Box box) { this->bounding_box = box; }
-auto Object::getBox() const -> Box { return this->bounding_box; }
+void Object::setBox(Box box) { this->boundingBox = box; }
+auto Object::getBox() const -> Box { return this->boundingBox; }
 
 auto Object::getWorldBox() const -> Box { return getWorldBox(this->position); }
 auto Object::getWorldBox(Vector center) const -> Box {
-  auto corner = this->bounding_box.getCorner() + center;
-  return {corner, this->bounding_box.getWidth(),
-          this->bounding_box.getHeight()};
+  auto boundingBox = this->boundingBox;
+  auto corner = boundingBox.getCorner() + center;
+  return {corner, boundingBox.getWidth(), boundingBox.getHeight()};
 }
 
 auto Object::eventHandler(const Event* e) -> int { return 0; }
@@ -117,5 +109,16 @@ auto Object::drawBoundingBox() const -> int {
   result += DM.drawCh(corner + df::Vector(width, height), '+', CYAN);
   result += DM.drawCh(corner + df::Vector(0, height), '+', CYAN);
   return result;
+}
+
+auto Object::subscribe(std::string eventType) -> int {
+  if (WM.isValid(eventType)) {
+    return WM.subscribe(this, eventType);
+  } else if (IM.isValid(eventType)) {
+    return IM.subscribe(this, eventType);
+  } else if (GM.isValid(eventType)) {
+    return GM.subscribe(this, eventType);
+  }
+  return -1;
 }
 }  // namespace df

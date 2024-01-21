@@ -29,6 +29,7 @@ class GameManager : public Manager {
 
   auto startUp(int frame_time = FRAME_TIME_DEFAULT) -> int;
   void shutDown() override;
+  [[nodiscard]] auto isValid(string eventType) const -> bool override;
 
   // Run game loop
   void run();

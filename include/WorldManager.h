@@ -18,17 +18,17 @@ class WorldManager : public Manager {
   void operator=(WorldManager const &);
 
   // Objects that receive the update callback
-  ObjectList updates;
+  ObjectList updates = ObjectList();
   // Objects that are marked for deletion
-  ObjectList deletions;
+  ObjectList deletions = ObjectList();
   // The boundaries of the world, regardless of where the camera points
-  Box boundary;
+  Box boundary = Box();
   // The boundaries of the visible portion of the world
-  Box view;
+  Box view = Box();
   // The object the view is following, if any
-  Object *viewFollowing;
+  Object *viewFollowing = nullptr;
   // Part of the view where viewFollowing can move without moving the camera
-  Box viewDeadZone;
+  Box viewDeadZone = Box();
 
   // Move object and check if it is out of bounds
   void moveAndCheckBounds(Object *o, Vector where);
@@ -38,6 +38,7 @@ class WorldManager : public Manager {
 
   auto startUp() -> int override;
   void shutDown() override;
+  [[nodiscard]] auto isValid(string eventType) const -> bool override;
 
   // Adds an objects to the list of active objects
   auto insertObject(Object *o) -> int;
@@ -46,10 +47,10 @@ class WorldManager : public Manager {
   auto removeObject(Object *o) -> int;
 
   // Returns all active objects
-  auto getAllObjects() const -> ObjectList;
+  [[nodiscard]] auto getAllObjects() const -> ObjectList;
 
   // Returns a list of all active objects of a given type
-  auto objectsOfType(std::string type) const -> ObjectList;
+  [[nodiscard]] auto objectsOfType(std::string type) const -> ObjectList;
 
   // Returns a list of object colliding with the object at a given position
   auto getCollisions(Object *o, Vector where) const -> ObjectList;
@@ -70,12 +71,12 @@ class WorldManager : public Manager {
   // Set the boundary for the world
   void setBoundary(Box b);
   // Get the boundary for the world
-  auto getBoundary() const -> Box;
+  [[nodiscard]] auto getBoundary() const -> Box;
 
   // Set the current view (i.e., visible portion of the world)
   void setView(Box v);
   // Get the current view
-  auto getView() const -> Box;
+  [[nodiscard]] auto getView() const -> Box;
 
   // Centers the view on a given position.
   // View edge will not go beyond world boundary.
@@ -89,6 +90,6 @@ class WorldManager : public Manager {
   // Set the dead zone for the view following
   void setViewDeadZone(Box d);
   // Get the dead zone for the view following
-  auto getViewDeadZone() const -> Box;
+  [[nodiscard]] auto getViewDeadZone() const -> Box;
 };
 }  // namespace df

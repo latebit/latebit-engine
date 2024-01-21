@@ -9,7 +9,7 @@
 using namespace std;
 
 namespace df {
-const int MAX_EVENTS = 10;
+const int MAX_EVENTS = 100;
 
 class Manager {
  private:
@@ -28,9 +28,6 @@ class Manager {
   // List of subscribers. Every element matches an event in `events`
   array<ObjectList, MAX_EVENTS> subscribers = {};
 
-  // Validates whether a given event can be handled by this Manager
-  // [[nodiscard]] virtual auto isValid(string eventType) const -> bool;
-
  protected:
   // Sets the current manager type
   void setType(string type);
@@ -44,8 +41,13 @@ class Manager {
   // Returns true when the manager has started up
   [[nodiscard]] auto isStarted() const -> bool;
 
+  // Defers initialization of the manager, used to allow singleton behaviour
   virtual auto startUp() -> int;
+  // Defers destruction of the manager, used to allow ingleton behaviour
   virtual void shutDown();
+
+  // Validates whether a given event can be handled by this Manager
+  [[nodiscard]] virtual auto isValid(string eventType) const -> bool;
 
   // Broadcasts the event to all the interested subscribers.
   // Returns count of events sent.

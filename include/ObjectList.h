@@ -2,6 +2,8 @@
 
 #include "Object.h"
 
+using namespace std;
+
 namespace df {
 
 const int MAX_SIZE = 2000;
@@ -11,7 +13,7 @@ class ObjectListIterator;
 class ObjectList {
  private:
   int count = 0;
-  Object *obj[MAX_SIZE];
+  array<Object *, MAX_SIZE> obj;
 
  public:
   friend class ObjectListIterator;
@@ -24,9 +26,9 @@ class ObjectList {
 
   void clear();
 
-  auto getCount() const -> int;
-  auto isEmpty() const -> bool;
-  auto isFull() const -> bool;
+  [[nodiscard]] auto getCount() const -> int;
+  [[nodiscard]] auto isEmpty() const -> bool;
+  [[nodiscard]] auto isFull() const -> bool;
   auto find(Object *o) const -> int;
 };
 

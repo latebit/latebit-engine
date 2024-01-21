@@ -15,7 +15,7 @@ LogManager::LogManager() {
   this->f = nullptr;
   this->do_flush = false;
   startUp();
-  stdoutLog("LogManager::LogManager(): Created LogManager");
+  writeLog("LogManager::LogManager(): Created LogManager");
 }
 
 LogManager::~LogManager() = default;
@@ -40,7 +40,6 @@ void LogManager::shutDown() {
   LM.writeLog("LogManager::shutDown(): Shutting down");
   if (this->f != nullptr) std::fclose(this->f);
   this->f = nullptr;
-  stdoutLog("LogManager::shutDown(): Shut down successfully");
   Manager::shutDown();
 }
 

@@ -164,7 +164,6 @@ auto Object_test() -> int {
   int result = 0;
 
   // test constructor
-  result += assert_int("sets an id", subject.getId(), 0);
   result += assert_string("sets a type", subject.getType(), "Object");
   result +=
     assert_vector("sets a position", subject.getPosition(), df::Vector());
@@ -178,8 +177,9 @@ auto Object_test() -> int {
   result +=
     assert("sets an animation", subject.getAnimation() == df::Animation());
 
+  int lastId = subject.getId();
   subject = df::Object();
-  result += assert_int("increments id", subject.getId(), 1);
+  result += assert_int("increments id", subject.getId(), lastId + 1);
 
   subject.setType("type");
   result += assert_string("updates type", subject.getType(), "type");

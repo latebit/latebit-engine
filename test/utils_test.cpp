@@ -100,12 +100,13 @@ auto utils_worldToView_test() -> int {
 auto utils_test() -> int {
   int result = 0;
 
-  result += assert_regex("returns date in correct format", getTimeString(),
-                         "[0-9]{2}:[0-9]{2}:[0-9]{2}");
-
-  result += utils_match_test();
-  result += utils_intersects_test();
-  result += utils_worldToView_test();
+  result += test("getTimeString", []() -> int {
+    return assert_regex("returns date in correct format", getTimeString(),
+                        "[0-9]{2}:[0-9]{2}:[0-9]{2}");
+  });
+  result += test("match", utils_match_test);
+  result += test("intersects", utils_intersects_test);
+  result += test("worldToView", utils_worldToView_test);
 
   return result;
 }

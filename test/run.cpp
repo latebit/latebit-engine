@@ -26,108 +26,39 @@
 #include "test.h"
 #include "utils_test.h"
 
-void suite(std::string name) { std::cout << yellow("\n" + name + "\n"); }
-void timing(float delta) { printf("    Duration: %.2fμs\n", delta); }
-
 auto main() -> int {
-  int result = 0;
-  df::Clock c;
-  c.delta();
+  auto c = getClock();
   auto initial = c.getNow();
 
-  suite("utils_test");
-  result += utils_test();
-  timing(c.delta());
-
-  suite("Vector_test");
-  result += Vector_test();
-  timing(c.delta());
-
-  suite("Object_test");
-  result += Object_test();
-  timing(c.delta());
-
-  suite("ObjectList_test");
-  result += ObjectList_test();
-  timing(c.delta());
-
-  suite("ObjectListIterator_test");
-  result += ObjectListIterator_test();
-  timing(c.delta());
-
-  suite("Event_test");
-  result += Event_test();
-  timing(c.delta());
-
-  suite("EventStep_test");
-  result += EventStep_test();
-  timing(c.delta());
-
-  suite("EventKeyboard_test");
-  result += EventKeyboard_test();
-  timing(c.delta());
-
-  suite("WorldManager_test");
-  result += WorldManager_test();
-  timing(c.delta());
-
-  suite("EventCollision_test");
-  result += EventCollision_test();
-  timing(c.delta());
-
-  suite("EventOut_test");
-  result += EventOut_test();
-  timing(c.delta());
-
-  suite("Frame_test");
-  result += Frame_test();
-  timing(c.delta());
-
-  suite("Sprite_test");
-  result += Sprite_test();
-  timing(c.delta());
-
-  suite("Colors_test");
-  result += Colors_test();
-  timing(c.delta());
-
-  suite("SpriteParser_test");
-  result += SpriteParser_test();
-  timing(c.delta());
-
-  suite("ResourceManager_test");
-  result += ResourceManager_test();
-  timing(c.delta());
-
-  suite("Animation_test");
-  result += Animation_test();
-  timing(c.delta());
-
-  suite("Box_test");
-  result += Box_test();
-  timing(c.delta());
-
-  suite("GameManager_test");
-  result += GameManager_test();
-  timing(c.delta());
-
-  suite("Sound_test");
-  result += Sound_test();
-  timing(c.delta());
-
-  suite("Music_test");
-  result += Music_test();
-  timing(c.delta());
-
-  suite("Manager_test");
-  result += Manager_test();
-  timing(c.delta());
+  suite("Animation", Animation_test);
+  suite("Box", Box_test);
+  suite("Colors", Colors_test);
+  suite("Event", Event_test);
+  suite("EventCollision", EventCollision_test);
+  suite("EventKeyboard", EventKeyboard_test);
+  suite("EventOut", EventOut_test);
+  suite("EventStep", EventStep_test);
+  suite("Frame", Frame_test);
+  suite("GameManager", GameManager_test);
+  suite("Manager", Manager_test);
+  suite("Music", Music_test);
+  suite("Object", Object_test);
+  suite("ObjectList", ObjectList_test);
+  suite("ObjectListIterator", ObjectListIterator_test);
+  suite("ResourceManager", ResourceManager_test);
+  suite("Sound", Sound_test);
+  suite("Sprite", Sprite_test);
+  suite("SpriteParser", SpriteParser_test);
+  suite("utils", utils_test);
+  suite("Vector", Vector_test);
+  int result = suite("WorldManager", WorldManager_test);
 
   auto final = c.getNow();
 
   if (result == 0) {
     std::cout << std::endl
-              << green("Success! All " + getAssertions() + " tests passed. ");
+              << green("Success! All " + getAssertions() +
+                       " assertions passed. ");
     printf("Total Duration: %.2fms\n",
            static_cast<double>(final - initial) / 1000.0);
   } else {

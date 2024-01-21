@@ -2,7 +2,7 @@
 
 namespace df {
 
-ObjectList::ObjectList() { this->count = 0; }
+ObjectList::ObjectList() = default;
 
 auto ObjectList::insert(Object* o) -> int {
   if (isFull()) return -1;

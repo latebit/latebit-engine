@@ -4,7 +4,6 @@
 #include "EventStep.h"
 #include "InputManager.h"
 #include "LogManager.h"
-#include "ObjectListIterator.h"
 #include "WorldManager.h"
 #include "utils.h"
 
@@ -12,9 +11,6 @@ namespace df {
 
 GameManager::GameManager() {
   setType("GameManager");
-  frame_time = FRAME_TIME_DEFAULT;
-  game_over = false;
-  clock = new Clock;
   LM.writeLog("GameManager::GameManager(): Created GameManager");
 }
 
@@ -44,7 +40,7 @@ auto GameManager::startUp(int ft) -> int {
   WM.setBoundary(boundary);
   WM.setView(boundary);
 
-  frame_time = ft;
+  frameTime = ft;
 
   LM.writeLog("GameManager::startUp(): Started successfully");
   return Manager::startUp();
@@ -66,11 +62,11 @@ void GameManager::shutDown() {
 }
 
 void GameManager::run() {
-  long int adjust_time = 0;
-  long int lootime = 0;
+  long int adjustTime = 0;
+  long int loopTime = 0;
   long int steps = 0;
 
-  while (!game_over) {
+  while (!gameOver) {
     clock->delta();
 
     // Send a step event to all Objects
@@ -81,15 +77,15 @@ void GameManager::run() {
     WM.draw();
     DM.swapBuffers();
 
-    lootime = clock->delta();
-    sleep(frame_time - lootime);
+    loopTime = clock->delta();
+    sleep(frameTime - loopTime);
   }
 }
 
-void GameManager::setGameOver(bool new_game_over) { game_over = new_game_over; }
+void GameManager::setGameOver(bool gameOver) { this->gameOver = gameOver; }
 
-auto GameManager::getGameOver() const -> bool { return game_over; }
+auto GameManager::getGameOver() const -> bool { return this->gameOver; }
 
-auto GameManager::getFrameTime() const -> int { return frame_time; }
+auto GameManager::getFrameTime() const -> int { return this->frameTime; }
 
 }  // namespace df

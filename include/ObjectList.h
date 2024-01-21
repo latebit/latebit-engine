@@ -10,7 +10,7 @@ class ObjectListIterator;
 
 class ObjectList {
  private:
-  int count;
+  int count = 0;
   Object *obj[MAX_SIZE];
 
  public:

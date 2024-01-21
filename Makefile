@@ -8,10 +8,12 @@ TEST_DIR = test
 LIB_DIR = lib
 
 SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
-TEST_FILES = $(wildcard $(TEST_DIR)/*.cpp)
+TEST_LIB_FILES = $(wildcard $(TEST_DIR)/lib/*.cpp)
+SUITES_FILES = $(wildcard $(TEST_DIR)/suites/*.cpp)
 
 SRC_OBJ_FILES = $(SRC_FILES:.cpp=.o)
-OBJ_FILES = $(SRC_FILES:.cpp=.o) $(TEST_FILES:.cpp=.o)
+TEST_LIB_OBJ_FILES = $(TEST_LIB_FILES:.cpp=.o)
+SUITES_OBJ_FILES = $(SUITES_FILES:.cpp=.o)
 
 LIB_NAME = dragonfly
 LIB_FILE = $(LIB_DIR)/lib$(LIB_NAME).a
@@ -23,10 +25,10 @@ TEST_EXECUTABLE = test.out
 all: $(TEST_EXECUTABLE) $(LIB_FILE)
 
 %.o: %.cpp
-	$(CXX) $(CFLAGS) -g -I$(INC_DIR) -c -o $@ $<
+	$(CXX) $(CFLAGS) -I$(INC_DIR) -c -o $@ $<
 
-$(TEST_EXECUTABLE): $(OBJ_FILES)
-	$(CXX) $(CFLAGS) -g -I$(INC_DIR) $(SMLFLAGS) -o $@ $(OBJ_FILES)
+$(TEST_EXECUTABLE): $(SRC_OBJ_FILES) $(TEST_LIB_OBJ_FILES) $(SUITES_OBJ_FILES) test/main.cpp
+	$(CXX) -o $@ test/main.cpp $(CFLAGS) -I$(INC_DIR) $(SMLFLAGS) $(SRC_OBJ_FILES) $(TEST_LIB_OBJ_FILES)
 
 $(LIB_FILE): $(SRC_OBJ_FILES)
 	ar rcs $@ $(SRC_OBJ_FILES)

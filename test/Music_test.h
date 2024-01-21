@@ -1,1 +1,0 @@
-auto Music_test() -> int;

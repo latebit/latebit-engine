@@ -1,1 +1,0 @@
-int Colors_test();

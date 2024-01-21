@@ -1,1 +1,0 @@
-int EventOut_test();

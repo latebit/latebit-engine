@@ -18,11 +18,7 @@ LogManager::LogManager() {
   stdoutLog("LogManager::LogManager(): Created LogManager");
 }
 
-LogManager::~LogManager() {
-  if (isStarted()) {
-    shutDown();
-  }
-}
+LogManager::~LogManager() = default;
 
 auto LogManager::startUp() -> int {
   this->f = std::fopen(LOGFILE_NAME, "w");

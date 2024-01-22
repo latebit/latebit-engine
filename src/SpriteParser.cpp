@@ -1,7 +1,6 @@
 #include "SpriteParser.h"
 
 #include <fstream>
-#include <iostream>
 #include <string>
 
 #include "Colors.h"

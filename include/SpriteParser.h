@@ -7,14 +7,16 @@
 #include "Frame.h"
 #include "Sprite.h"
 
+using namespace std;
+
 namespace df {
 class SpriteParser {
  private:
-  static std::string getLine(std::ifstream *file_stream);
-  static auto parseHeader(std::ifstream *file_stream, int *frames, int *width,
+  static auto getLine(ifstream *file_stream) -> string;
+  static auto parseHeader(ifstream *file_stream, int *frames, int *width,
                           int *height, int *slowdown, Color *color) -> int;
 
  public:
-  static auto parseSprite(std::string filename, std::string label) -> Sprite *;
+  static auto parseSprite(string filename, string label) -> Sprite *;
 };
 }  // namespace df

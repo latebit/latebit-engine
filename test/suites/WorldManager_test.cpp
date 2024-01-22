@@ -283,30 +283,30 @@ void WorldManager_outOfBounds_test() {
 }
 
 void WorldManager_objectManagement_test() {
-  auto obj1 = new Object;
-  auto obj2 = new Object;
-  auto obj3 = new Object;
-  auto obj4 = new Object;
+  Object obj1;
+  Object obj2;
+  Object obj3;
+  Object obj4;
 
-  obj3->setType("type");
-  obj4->setType("type");
+  obj3.setType("type");
+  obj4.setType("type");
 
   WM.startUp();
 
-  WM.insertObject(obj1);
-  WM.insertObject(obj2);
-  WM.insertObject(obj3);
-  WM.insertObject(obj4);
+  WM.insertObject(&obj1);
+  WM.insertObject(&obj2);
+  WM.insertObject(&obj3);
+  WM.insertObject(&obj4);
   WM.update();
 
   assert_int("has all the objects", WM.getAllObjects().getCount(), 4);
   assert_int("filters objects by type", WM.objectsOfType("type").getCount(), 2);
 
-  WM.markForDelete(obj1);
+  WM.markForDelete(&obj1);
   WM.update();
   assert_int("has one less object", WM.getAllObjects().getCount(), 3);
 
-  WM.removeObject(obj2);
+  WM.removeObject(&obj2);
   WM.update();
   assert_int("removes an object", WM.getAllObjects().getCount(), 2);
 

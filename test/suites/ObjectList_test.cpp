@@ -9,20 +9,21 @@ void ObjectList_fullList_test() {
   Object item;
 
   for (int i = 0; i < MAX_SIZE; i++) {
-    subject.insert(new Object);
+    Object obj;
+    subject.insert(&obj);
   }
 
   assert("is full", subject.isFull());
   assert_int("has MAX_SIZE elements", subject.getCount(), MAX_SIZE);
-  assert_fail("errors upon adding", subject.insert(new Object));
+  assert_fail("errors upon adding", subject.insert(&item));
 }
 
 void ObjectList_manyItems_test() {
   ObjectList subject;
-  Object item;
+  Object item, item2, item3;
   subject.insert(&item);
-  subject.insert(new Object);
-  subject.insert(new Object);
+  subject.insert(&item2);
+  subject.insert(&item3);
   assert_int("has 3 elements", subject.getCount(), 3);
   assert("is not empty", !subject.isEmpty());
   assert("is not full", !subject.isFull());
@@ -35,7 +36,9 @@ void ObjectList_manyItems_test() {
 
 void ObjectList_oneItem_test() {
   ObjectList subject;
-  subject.insert(new Object);
+  Object o;
+
+  subject.insert(&o);
   assert_int("has one element", subject.getCount(), 1);
   assert("is not empty", !subject.isEmpty());
   assert("is not full", !subject.isFull());
@@ -43,19 +46,20 @@ void ObjectList_oneItem_test() {
 
 void ObjectList_emptyList_test() {
   ObjectList subject;
+  Object o;
+
   assert_int("has no elements", subject.getCount(), 0);
   assert("is empty", subject.isEmpty());
   assert("is not full", !subject.isFull());
-
-  assert_fail("errors upon removing", subject.remove(new Object));
+  assert_fail("errors upon removing", subject.remove(&o));
 }
 
 void ObjectList_find_test() {
   ObjectList subject;
-  Object item;
+  Object item, item2;
   subject.insert(&item);
   assert_int("finds item", subject.find(&item), 0);
-  assert_int("does not find item", subject.find(new Object), -1);
+  assert_int("does not find item", subject.find(&item2), -1);
 }
 
 void ObjectList_test() {

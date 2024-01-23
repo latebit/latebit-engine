@@ -11,8 +11,8 @@ extern const char *LOGFILE_NAME;
 class LogManager : public Manager {
  private:
   LogManager();
-  LogManager(LogManager const &);
-  void operator=(LogManager const &);
+  LogManager(LogManager const &) = delete;
+  void operator=(LogManager const &) = delete;
   bool do_flush;
   FILE *f;
 

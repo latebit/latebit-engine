@@ -20,13 +20,13 @@ class EventCollision : public Event {
   EventCollision(Object *o1, Object *o2, Vector pos);
 
   void setObject1(Object *new_o1);
-  auto getObject1() const -> Object *;
+  [[nodiscard]] auto getObject1() const -> Object *;
 
   void setObject2(Object *new_o2);
-  auto getObject2() const -> Object *;
+  [[nodiscard]] auto getObject2() const -> Object *;
 
   void setPos(Vector pos);
-  auto getPos() const -> Vector;
+  [[nodiscard]] auto getPos() const -> Vector;
 };
 
 }  // namespace df

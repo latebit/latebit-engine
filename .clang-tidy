@@ -1,3 +1,4 @@
 Checks: '-*,modernize-*'
+HeaderFilterRegex: '.*'
 CheckOptions:
   - { key: modernize-use-override, value: 1 }

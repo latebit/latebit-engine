@@ -11,6 +11,6 @@ class Event {
   Event();
   virtual ~Event();
   void setType(std::string t);
-  std::string getType() const;
+  [[nodiscard]] auto getType() const -> std::string;
 };
 }  // namespace df

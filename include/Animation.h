@@ -20,20 +20,20 @@ class Animation {
   Animation();
 
   void setSprite(Sprite *s);
-  auto getSprite() const -> Sprite *;
+  [[nodiscard]] auto getSprite() const -> Sprite *;
 
   void setName(std::string n);
-  std::string getName() const;
+  [[nodiscard]] auto getName() const -> std::string;
 
   void setIndex(int i);
-  auto getIndex() const -> int;
+  [[nodiscard]] auto getIndex() const -> int;
 
   void setSlowdownCount(int c);
-  auto getSlowdownCount() const -> int;
+  [[nodiscard]] auto getSlowdownCount() const -> int;
 
   auto draw(Vector position) -> int;
 
-  auto getBox() const -> Box;
+  [[nodiscard]] auto getBox() const -> Box;
 
   auto operator==(const Animation &other) const -> bool;
 };

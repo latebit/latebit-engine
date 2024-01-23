@@ -2,6 +2,6 @@
 
 #include <string>
 
-std::string red(std::string s);
-std::string green(std::string s);
-std::string yellow(std::string s);
+auto red(std::string s) -> std::string;
+auto green(std::string s) -> std::string;
+auto yellow(std::string s) -> std::string;

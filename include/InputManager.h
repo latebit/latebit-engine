@@ -14,8 +14,8 @@ class InputManager : public Manager {
  private:
   // Singleton
   InputManager();
-  InputManager(InputManager const &);
-  void operator=(InputManager const &);
+  InputManager(InputManager const &) = delete;
+  void operator=(InputManager const &) = delete;
 
   // Map for quick lookup of keyboard events.
   std::unordered_map<sf::Keyboard::Key, Keyboard::Key> keyboardEvent;

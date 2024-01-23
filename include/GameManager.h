@@ -13,8 +13,8 @@ const int FRAME_TIME_DEFAULT = 33333;  // ~30fps
 class GameManager : public Manager {
  private:
   GameManager();
-  GameManager(GameManager const &);
-  void operator=(GameManager const &);
+  GameManager(GameManager const &) = delete;
+  void operator=(GameManager const &) = delete;
 
   // True when game loop is done
   bool gameOver = false;

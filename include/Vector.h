@@ -12,14 +12,14 @@ class Vector {
   Vector(float x = 0.0f, float y = 0.0f);
 
   void setX(float x);
-  auto getX() const -> float;
+  [[nodiscard]] auto getX() const -> float;
 
   void setY(float y);
-  auto getY() const -> float;
+  [[nodiscard]] auto getY() const -> float;
 
   void setXY(float x = 0.0f, float y = 0.0f);
 
-  auto getMagnitude() const -> float;
+  [[nodiscard]] auto getMagnitude() const -> float;
 
   void normalize();
 
@@ -33,7 +33,7 @@ class Vector {
   auto operator!=(const Vector &other) const -> bool;
   auto operator!() const -> bool;
 
-  std::string toString() const;
+  [[nodiscard]] auto toString() const -> std::string;
 };
 
 }  // namespace df

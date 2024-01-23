@@ -34,8 +34,8 @@ auto pixelsToSpaces(Vector pixels) -> Vector;
 class DisplayManager : public Manager {
  private:
   DisplayManager();
-  DisplayManager(DisplayManager const &);
-  void operator=(DisplayManager const &);
+  DisplayManager(DisplayManager const &) = delete;
+  void operator=(DisplayManager const &) = delete;
   sf::Font font;
   sf::RenderWindow *window;
   int window_horizontal_pixels;

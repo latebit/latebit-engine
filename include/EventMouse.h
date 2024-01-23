@@ -35,15 +35,15 @@ class EventMouse : public Event {
 
   void setMouseAction(EventMouseAction a);
 
-  auto getMouseAction() const -> EventMouseAction;
+  [[nodiscard]] auto getMouseAction() const -> EventMouseAction;
 
   void setMouseButton(Mouse::Button b);
 
-  auto getMouseButton() const -> Mouse::Button;
+  [[nodiscard]] auto getMouseButton() const -> Mouse::Button;
 
   void setMousePosition(Vector p);
 
-  auto getMousePosition() const -> Vector;
+  [[nodiscard]] auto getMousePosition() const -> Vector;
 };
 
 }  // namespace df

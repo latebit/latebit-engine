@@ -15,8 +15,8 @@ const int MAX_MUSICS = 50;
 class ResourceManager : public Manager {
  private:
   ResourceManager();
-  ResourceManager(ResourceManager const &);
-  void operator=(ResourceManager const &);
+  ResourceManager(ResourceManager const &) = delete;
+  void operator=(ResourceManager const &) = delete;
 
   // Loaded sound buffers
   std::array<Sound *, MAX_SOUNDS> sound = {};

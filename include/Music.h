@@ -7,9 +7,9 @@ namespace df {
 class Music {
  private:
   // Music is immutable
-  Music(Music const &);
+  Music(Music const &) = delete;
   // Music is immutable
-  void operator=(Music const &);
+  void operator=(Music const &) = delete;
 
   sf::Music music = sf::Music();
   std::string label = "";

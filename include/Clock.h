@@ -14,7 +14,7 @@ class Clock {
   auto delta() -> long int;
 
   // Like delta, but does not override last time
-  auto split() const -> long int;
+  [[nodiscard]] auto split() const -> long int;
 
   // Returns current time in milliseconds
   static auto getNow() -> long int;

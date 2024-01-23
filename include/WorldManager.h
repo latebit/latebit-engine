@@ -14,8 +14,8 @@ class WorldManager : public Manager {
  private:
   // Make WorldManager a singleton
   WorldManager();
-  WorldManager(WorldManager const &);
-  void operator=(WorldManager const &);
+  WorldManager(WorldManager const &) = delete;
+  void operator=(WorldManager const &) = delete;
 
   // Objects that receive the update callback
   ObjectList updates = ObjectList();

@@ -9,7 +9,7 @@ class ObjectList;
 
 class ObjectListIterator {
  private:
-  ObjectListIterator();
+  ObjectListIterator() = delete;
   int currentIndex;
   const ObjectList *list;
 
@@ -18,8 +18,8 @@ class ObjectListIterator {
 
   void first();
   void next();
-  auto isDone() const -> bool;
+  [[nodiscard]] auto isDone() const -> bool;
 
-  auto currentObject() const -> Object *;
+  [[nodiscard]] auto currentObject() const -> Object *;
 };
 }  // namespace df

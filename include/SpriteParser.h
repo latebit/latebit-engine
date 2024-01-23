@@ -17,6 +17,6 @@ class SpriteParser {
                           int *height, int *slowdown, Color *color) -> int;
 
  public:
-  static auto parseSprite(string filename, string label) -> Sprite *;
+  static auto parseSprite(string filename, string label) -> Sprite;
 };
 }  // namespace df

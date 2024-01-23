@@ -5,28 +5,31 @@
 #include "Colors.h"
 #include "Vector.h"
 
+using namespace std;
+
 namespace df {
 
 class Frame {
  private:
-  int width;
-  int height;
-  std::string frame_str;
+  int width = 0;
+  int height = 0;
+  string content = "";
 
  public:
   Frame();
-  Frame(int w, int h, std::string frame_str);
+  Frame(int w, int h, string content);
 
   void setWidth(int w);
-  auto getWidth() const -> int;
+  [[nodiscard]] auto getWidth() const -> int;
 
   void setHeight(int h);
-  auto getHeight() const -> int;
+  [[nodiscard]] auto getHeight() const -> int;
 
-  void setFrameString(std::string frame_str);
-  std::string getFrameString() const;
+  void setFrameString(string content);
+  [[nodiscard]] auto getFrameString() const -> string;
 
   // Draw the frame centered at the given position with the given color
-  auto draw(Vector position, Color color, char transparencyChar) const -> int;
+  [[nodiscard]] auto draw(Vector position, Color color,
+                          char transparencyChar) const -> int;
 };
 }  // namespace df

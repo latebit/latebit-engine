@@ -42,11 +42,11 @@ test: $(TEST_EXECUTABLE)
 	rm $(TEST_EXECUTABLE)
 
 memory: $(TEST_EXECUTABLE)
-	valgrind --leak-check=yes ./$(TEST_EXECUTABLE)
+	valgrind --track-origins=yes --leak-check=full ./$(TEST_EXECUTABLE)
 	rm $(TEST_EXECUTABLE)
 
 clean:
-	rm -f $(SRC_OBJ_FILES) $(TEST_EXECUTABLE) $(LIB_FILE)
+	rm -f $(SRC_OBJ_FILES) $(SUITES_OBJ_FILES) $(TEST_LIB_OBJ_FILES) $(TEST_EXECUTABLE) $(LIB_FILE)
 
 format:
 	clang-format -i $(SRC_FILES) $(TEST_LIB_FILES) $(SUITES_FILES) $(INC_DIR)/*.h

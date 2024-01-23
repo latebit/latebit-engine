@@ -9,7 +9,7 @@
 void setSprite_test() {
   Animation animation;
   RM.loadSprite("test/fixtures/correct.txt", "sprite");
-  Sprite *sprite = RM.getSprite(" sprite ");
+  Sprite *sprite = RM.getSprite("sprite");
   animation.setSprite(sprite);
 
   int result = assert("sets sprite", animation.getSprite() == sprite);

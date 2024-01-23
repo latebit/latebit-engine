@@ -131,31 +131,36 @@ void InputManager::getInput() const {
 
   if (win == nullptr) return;
 
-  while (win->pollEvent(event)) {
-    Keyboard::Key key;
-    Mouse::Button btn;
-    Vector pos;
+  EventKeyboard keyEvent;
+  EventMouse mouseEvent;
 
+  while (win->pollEvent(event)) {
     switch (event.type) {
       case sf::Event::KeyPressed:
-        key = fromSFMLKeyCode(event.key.code);
-        onEvent(
-          new df::EventKeyboard(key, df::EventKeyboardAction::KEY_PRESSED));
+        keyEvent.setKey(fromSFMLKeyCode(event.key.code));
+        keyEvent.setKeyboardAction(df::EventKeyboardAction::KEY_PRESSED);
+        onEvent(&keyEvent);
         break;
       case sf::Event::KeyReleased:
-        key = fromSFMLKeyCode(event.key.code);
-        onEvent(
-          new df::EventKeyboard(key, df::EventKeyboardAction::KEY_RELEASED));
+        keyEvent.setKey(fromSFMLKeyCode(event.key.code));
+        keyEvent.setKeyboardAction(df::EventKeyboardAction::KEY_RELEASED);
+        onEvent(&keyEvent);
         break;
       case sf::Event::MouseMoved:
-        pos = Vector(event.mouseMove.x, event.mouseMove.y);
-        btn = fromSFMLMouseButton(event.mouseButton.button);
-        onEvent(new df::EventMouse(df::EventMouseAction::MOVED, btn, pos));
+        mouseEvent.setMouseAction(df::EventMouseAction::MOVED);
+        mouseEvent.setMouseButton(
+          fromSFMLMouseButton(event.mouseButton.button));
+        mouseEvent.setMousePosition(
+          Vector(event.mouseMove.x, event.mouseMove.y));
+        onEvent(&mouseEvent);
         break;
       case sf::Event::MouseButtonPressed:
-        pos = Vector(event.mouseMove.x, event.mouseMove.y);
-        btn = fromSFMLMouseButton(event.mouseButton.button);
-        onEvent(new df::EventMouse(df::EventMouseAction::CLICKED, btn, pos));
+        mouseEvent.setMouseAction(df::EventMouseAction::CLICKED);
+        mouseEvent.setMouseButton(
+          fromSFMLMouseButton(event.mouseButton.button));
+        mouseEvent.setMousePosition(
+          Vector(event.mouseMove.x, event.mouseMove.y));
+        onEvent(&mouseEvent);
         break;
       case sf::Event::Closed:
         GM.shutDown();

@@ -1,5 +1,5 @@
 CXX = clang++
-CFLAGS:= $(CFLAGS) -std=c++20 -fPIC
+CFLAGS:= $(CFLAGS) -std=c++20 -fPIC -gdwarf-4
 SMLFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 SRC_DIR = src
@@ -41,11 +41,15 @@ test: $(TEST_EXECUTABLE)
 	./$(TEST_EXECUTABLE)
 	rm $(TEST_EXECUTABLE)
 
+memory: $(TEST_EXECUTABLE)
+	valgrind --track-origins=yes --leak-check=full ./$(TEST_EXECUTABLE)
+	rm $(TEST_EXECUTABLE)
+
 clean:
-	rm -f $(OBJ_FILES) $(TEST_EXECUTABLE) $(LIB_FILE)
+	rm -f $(SRC_OBJ_FILES) $(SUITES_OBJ_FILES) $(TEST_LIB_OBJ_FILES) $(TEST_EXECUTABLE) $(LIB_FILE)
 
 format:
-	clang-format -i $(SRC_FILES) $(TEST_FILES) $(INC_DIR)/*.h
+	clang-format -i $(SRC_FILES) $(TEST_LIB_FILES) $(SUITES_FILES) $(INC_DIR)/*.h
 
 tidy:
-	clang-tidy --fix --fix-errors --fix-notes $(SRC_FILES) $(TEST_FILES) -- $(CFLAGS) -I$(INC_DIR)
+	clang-tidy --fix --fix-errors --fix-notes $(SRC_FILES) $(TEST_LIB_FILES) $(SUITES_FILES) -- $(CFLAGS) -I$(INC_DIR)

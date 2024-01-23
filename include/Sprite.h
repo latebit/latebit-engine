@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "Colors.h"
 #include "Frame.h"
@@ -14,21 +15,21 @@ enum Slowdown {
 
 class Sprite {
  private:
-  int width;
-  int height;
-  int max_frame_count;
-  int frame_count;
-  int slowdown;
-  Color color;
-  Frame* frames;
-  std::string label;
-  char transparency_char;
-  Sprite();
+  int width = 0;
+  int height = 0;
+  int maxFrameCount = 0;
+  int frameCount = 0;
+  int slowdown = NO_SLOWDOWN;
+  Color color = COLOR_DEFAULT;
+  std::vector<Frame> frames = {};
+  std::string label = "";
+  char transparencyChar = ' ';
 
  public:
   ~Sprite();
-  Sprite(int max_frames);
+  Sprite(int maxFrames = 0);
   Sprite(const Sprite& other);
+  auto operator==(const Sprite& other) const -> bool;
 
   void setWidth(int width);
   [[nodiscard]] auto getWidth() const -> int;
@@ -40,7 +41,7 @@ class Sprite {
   [[nodiscard]] auto getColor() const -> Color;
 
   void setLabel(std::string label);
-  auto getLabel() const -> std::string;
+  [[nodiscard]] auto getLabel() const -> std::string;
 
   void setSlowdown(int slowdown);
   [[nodiscard]] auto getSlowdown() const -> int;
@@ -48,9 +49,9 @@ class Sprite {
   void setTransparencyChar(char transparency_char);
   [[nodiscard]] auto getTransparencyChar() const -> char;
 
-  [[nodiscard]] auto getFrameCount() const -> int;
   auto addFrame(Frame frame) -> int;
   [[nodiscard]] auto getFrame(int frame_number) const -> Frame;
+  [[nodiscard]] auto getFrameCount() const -> int;
 
   [[nodiscard]] auto draw(int frame_number, Vector position) const -> int;
 };

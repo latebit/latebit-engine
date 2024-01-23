@@ -15,7 +15,7 @@ Object::Object() {
 }
 
 Object::~Object() {
-  // Resources for this object are freed in WorldManager::shutDown
+  // Resources for this object are freed in WorldManager::shutDown/update
   WM.removeObject(this);
 }
 

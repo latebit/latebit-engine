@@ -183,11 +183,11 @@ auto WorldManager::markForDelete(Object* o) -> int {
 }
 
 void WorldManager::draw() {
-  auto iterator = new ObjectListIterator(&this->updates);
+  auto iterator = ObjectListIterator(&this->updates);
 
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
-    for (iterator->first(); !iterator->isDone(); iterator->next()) {
-      auto object = iterator->currentObject();
+    for (iterator.first(); !iterator.isDone(); iterator.next()) {
+      auto object = iterator.currentObject();
       if (object != nullptr && object->getAltitude() == i &&
           intersects(object->getWorldBox(), this->view)) {
         object->draw();

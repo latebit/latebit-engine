@@ -5,6 +5,7 @@
 #include "../lib/test.h"
 #include "Box.h"
 #include "EventOut.h"
+#include "Object.h"
 #include "Vector.h"
 
 using namespace std;
@@ -283,30 +284,24 @@ void WorldManager_outOfBounds_test() {
 }
 
 void WorldManager_objectManagement_test() {
-  auto obj1 = new Object;
-  auto obj2 = new Object;
-  auto obj3 = new Object;
-  auto obj4 = new Object;
-
-  obj3->setType("type");
-  obj4->setType("type");
-
   WM.startUp();
+  array<Object*, 4> objects;
 
-  WM.insertObject(obj1);
-  WM.insertObject(obj2);
-  WM.insertObject(obj3);
-  WM.insertObject(obj4);
+  for (int i = 0; i < 4; i++) objects[i] = new Object;
+
+  objects[2]->setType("type");
+  objects[3]->setType("type");
+
   WM.update();
 
   assert_int("has all the objects", WM.getAllObjects().getCount(), 4);
   assert_int("filters objects by type", WM.objectsOfType("type").getCount(), 2);
 
-  WM.markForDelete(obj1);
+  WM.markForDelete(objects[0]);
   WM.update();
   assert_int("has one less object", WM.getAllObjects().getCount(), 3);
 
-  WM.removeObject(obj2);
+  WM.removeObject(objects[1]);
   WM.update();
   assert_int("removes an object", WM.getAllObjects().getCount(), 2);
 

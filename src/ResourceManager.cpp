@@ -56,13 +56,7 @@ auto ResourceManager::loadSprite(std::string filename, std::string label)
     return -1;
   }
 
-  Sprite* sprite = SpriteParser::parseSprite(filename, label);
-
-  if (sprite == nullptr) {
-    LM.writeLog("ResourceManager::loadSprite(): could not parse sprite '%s'.",
-                label.c_str());
-    return -1;
-  }
+  auto* sprite = new Sprite(SpriteParser::parseSprite(filename, label));
 
   this->sprite[this->spriteCount] = sprite;
   this->spriteCount++;

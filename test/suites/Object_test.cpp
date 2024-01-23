@@ -100,23 +100,27 @@ void Object_eventSubscription_test() {
   assert_ok("subscribes to Keyboard", IM.subscribe(&obj, KEYBOARD_EVENT));
   assert_ok("subscribes to Mouse", IM.subscribe(&obj, MSE_EVENT));
 
-  WM.onEvent(new EventCollision());
+  EventCollision collision;
+  WM.onEvent(&collision);
   assert_int("responds to Collision",
              Object_eventSubscription_test_emittedCount[COLLISION_EVENT], 1);
-
-  WM.onEvent(new EventOut());
+  EventOut out;
+  WM.onEvent(&out);
   assert_int("responds to Out",
              Object_eventSubscription_test_emittedCount[OUT_EVENT], 1);
 
-  GM.onEvent(new EventStep());
+  EventStep step;
+  GM.onEvent(&step);
   assert_int("responds to Step",
              Object_eventSubscription_test_emittedCount[STEP_EVENT], 1);
 
-  IM.onEvent(new EventKeyboard());
+  EventKeyboard keyboard;
+  IM.onEvent(&keyboard);
   assert_int("responds to Keyboard",
              Object_eventSubscription_test_emittedCount[KEYBOARD_EVENT], 1);
 
-  IM.onEvent(new EventMouse());
+  EventMouse mouse;
+  IM.onEvent(&mouse);
   assert_int("responds to Mouse",
              Object_eventSubscription_test_emittedCount[MSE_EVENT], 1);
 }

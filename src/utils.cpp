@@ -1,7 +1,6 @@
 #include "utils.h"
 
 #include <cmath>
-#include <cstdio>
 #include <ctime>
 #include <iomanip>
 #include <iostream>
@@ -61,6 +60,11 @@ auto intersects(Box a, Box b) -> bool {
 auto worldToView(Vector worldPosition) -> Vector {
   auto viewOrigin = WM.getView().getCorner();
   return worldPosition - viewOrigin;
+}
+
+auto viewToWorld(Vector viewPosition) -> Vector {
+  auto viewOrigin = WM.getView().getCorner();
+  return viewPosition + viewOrigin;
 }
 
 auto clamp(float value, float min, float max) -> float {

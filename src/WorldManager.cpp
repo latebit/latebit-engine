@@ -2,6 +2,7 @@
 
 #include "EventCollision.h"
 #include "EventOut.h"
+#include "EventView.h"
 #include "LogManager.h"
 #include "ObjectListIterator.h"
 #include "utils.h"
@@ -43,7 +44,8 @@ void WorldManager::shutDown() {
 }
 
 auto WorldManager::isValid(string eventType) const -> bool {
-  return eventType == OUT_EVENT || eventType == COLLISION_EVENT;
+  return eventType == OUT_EVENT || eventType == COLLISION_EVENT ||
+         eventType == VIEW_EVENT;
 }
 
 auto WorldManager::insertObject(Object* o) -> int {

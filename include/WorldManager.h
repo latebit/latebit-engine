@@ -3,19 +3,16 @@
 #include "Manager.h"
 #include "Object.h"
 #include "ObjectList.h"
+#include "SceneGraph.h"
 
 #define WM df::WorldManager::getInstance()
 
 namespace df {
 
-const int MAX_ALTITUDE = 4;
-
 class WorldManager : public Manager {
  private:
   // Make WorldManager a singleton
   WorldManager();
-  WorldManager(WorldManager const &) = delete;
-  void operator=(WorldManager const &) = delete;
 
   // Objects that receive the update callback
   ObjectList updates = ObjectList();
@@ -29,11 +26,17 @@ class WorldManager : public Manager {
   Object *viewFollowing = nullptr;
   // Part of the view where viewFollowing can move without moving the camera
   Box viewDeadZone = Box();
+  // The current SceneGraph
+  SceneGraph sceneGraph = SceneGraph();
 
   // Move object and check if it is out of bounds
   void moveAndCheckBounds(Object *o, Vector where);
 
  public:
+  // Singleton
+  WorldManager(WorldManager const &) = delete;
+  void operator=(WorldManager const &) = delete;
+
   static auto getInstance() -> WorldManager &;
 
   auto startUp() -> int override;
@@ -91,5 +94,8 @@ class WorldManager : public Manager {
   void setViewDeadZone(Box d);
   // Get the dead zone for the view following
   [[nodiscard]] auto getViewDeadZone() const -> Box;
+
+  // Returns the current SceneGraph
+  [[nodiscard]] auto getSceneGraph() -> SceneGraph &;
 };
 }  // namespace df

@@ -4,6 +4,7 @@
 #include "GameManager.h"
 #include "InputManager.h"
 #include "ResourceManager.h"
+#include "SceneGraph.h"
 #include "WorldManager.h"
 
 namespace df {
@@ -28,7 +29,10 @@ void Object::setPosition(Vector p) { this->position = p; }
 auto Object::getPosition() const -> Vector { return this->position; }
 
 void Object::setAltitude(int a) {
-  if (a <= MAX_ALTITUDE && a >= 0) this->altitude = a;
+  if (a <= MAX_ALTITUDE && a >= 0) {
+    WM.getSceneGraph().setAltitude(this, a);
+    this->altitude = a;
+  }
 }
 auto Object::getAltitude() const -> int { return this->altitude; }
 
@@ -55,7 +59,10 @@ auto Object::predictPosition() -> Vector {
 
 auto Object::isSolid() const -> bool { return this->solidness != SPECTRAL; }
 
-void Object::setSolidness(Solidness s) { this->solidness = s; }
+void Object::setSolidness(Solidness s) {
+  WM.getSceneGraph().setSolidness(this, s);
+  this->solidness = s;
+}
 auto Object::getSolidness() const -> Solidness { return this->solidness; }
 
 void Object::setAnimation(Animation a) { this->animation = a; }

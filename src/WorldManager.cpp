@@ -29,8 +29,8 @@ auto WorldManager::startUp() -> int {
 }
 
 void WorldManager::shutDown() {
-  auto updates = this->updates;  // create a copy
-  auto iterator = ObjectListIterator(&updates);
+  auto all = getAllObjects();
+  auto iterator = ObjectListIterator(&all);
   for (iterator.first(); !iterator.isDone(); iterator.next()) {
     // This is not leaving a danglig null reference!
     // In the destructor of Object, we also remove it from the world
@@ -49,18 +49,21 @@ auto WorldManager::isValid(string eventType) const -> bool {
 }
 
 auto WorldManager::insertObject(Object* o) -> int {
-  return this->updates.insert(o);
+  return this->sceneGraph.insertObject(o);
 }
 
 auto WorldManager::removeObject(Object* o) -> int {
-  return this->updates.remove(o);
+  return this->sceneGraph.removeObject(o);
 }
 
-auto WorldManager::getAllObjects() const -> ObjectList { return this->updates; }
+auto WorldManager::getAllObjects() const -> ObjectList {
+  return this->sceneGraph.getAllObjects();
+}
 
 auto WorldManager::objectsOfType(std::string type) const -> ObjectList {
   ObjectList result;
-  auto iterator = ObjectListIterator(&this->updates);
+  auto solid = this->sceneGraph.getAllObjects();
+  auto iterator = ObjectListIterator(&solid);
 
   for (iterator.first(); !iterator.isDone(); iterator.next()) {
     if (iterator.currentObject()->getType() == type) {
@@ -73,7 +76,8 @@ auto WorldManager::objectsOfType(std::string type) const -> ObjectList {
 
 auto WorldManager::getCollisions(Object* o, Vector where) const -> ObjectList {
   ObjectList collisions;
-  auto iterator = ObjectListIterator(&this->updates);
+  auto solid = this->sceneGraph.getSolidObjects();
+  auto iterator = ObjectListIterator(&solid);
   auto box = o->getWorldBox(where);
 
   for (iterator.first(); !iterator.isDone(); iterator.next()) {
@@ -82,7 +86,7 @@ auto WorldManager::getCollisions(Object* o, Vector where) const -> ObjectList {
 
     auto currentBox = current->getWorldBox();
 
-    if (current->isSolid() && intersects(box, currentBox)) {
+    if (intersects(box, currentBox)) {
       collisions.insert(current);
     }
   }
@@ -143,7 +147,7 @@ void WorldManager::moveAndCheckBounds(Object* o, Vector where) {
   }
 
   if (this->viewFollowing == o) {
-    auto viewDeadZone = getViewDeadZone();
+    auto viewDeadZone = this->getViewDeadZone();
 
     // Move the view if the object is outside of the dead zone
     if (!contains(viewDeadZone, final)) {
@@ -162,7 +166,8 @@ void WorldManager::update() {
   }
   this->deletions.clear();
 
-  auto updates = ObjectListIterator(&this->updates);
+  auto all = getAllObjects();
+  auto updates = ObjectListIterator(&all);
   for (updates.first(); !updates.isDone(); updates.next()) {
     auto object = updates.currentObject();
     auto oldPosition = object->getPosition();
@@ -185,13 +190,15 @@ auto WorldManager::markForDelete(Object* o) -> int {
 }
 
 void WorldManager::draw() {
-  auto iterator = ObjectListIterator(&this->updates);
+  // auto iterator = ObjectListIterator(&this->updates);
 
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
+    auto visible = this->getSceneGraph().getVisibleObjects(i);
+    auto iterator = ObjectListIterator(&visible);
+
     for (iterator.first(); !iterator.isDone(); iterator.next()) {
       auto object = iterator.currentObject();
-      if (object != nullptr && object->getAltitude() == i &&
-          intersects(object->getWorldBox(), this->view)) {
+      if (object != nullptr && intersects(object->getWorldBox(), this->view)) {
         object->draw();
       };
     }
@@ -233,7 +240,8 @@ auto WorldManager::setViewFollowing(Object* o) -> int {
     return 0;
   }
 
-  auto iterator = ObjectListIterator(&this->updates);
+  auto updates = getAllObjects();
+  auto iterator = ObjectListIterator(&updates);
   for (iterator.first(); !iterator.isDone(); iterator.next()) {
     if (iterator.currentObject() == o) {
       this->viewFollowing = o;
@@ -257,4 +265,5 @@ void WorldManager::setViewDeadZone(Box d) {
 
 auto WorldManager::getViewDeadZone() const -> Box { return this->viewDeadZone; }
 
+auto WorldManager::getSceneGraph() -> SceneGraph& { return this->sceneGraph; }
 }  // namespace df

@@ -287,6 +287,8 @@ void WorldManager_objectManagement_test() {
   WM.startUp();
   array<Object*, 4> objects;
 
+  // This will generate a known memory leak, but it's fine for testing
+  // We need this type of behaviour to test the shutdown method below
   for (int i = 0; i < 4; i++) objects[i] = new Object;
 
   objects[2]->setType("type");

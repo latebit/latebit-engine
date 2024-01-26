@@ -2,6 +2,7 @@
 
 #include "DisplayManager.h"
 #include "EventView.h"
+#include "SceneGraph.h"
 #include "Vector.h"
 #include "WorldManager.h"
 #include "utils.h"

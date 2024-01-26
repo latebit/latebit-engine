@@ -22,6 +22,10 @@ void Object_altitude_test() {
     assert_int("updates altitude", subject.getAltitude(), i);
   }
 
+  subject.setAltitude(1);
+  assert("updates current scene",
+         WM.getSceneGraph().getVisibleObjects(1).find(&subject) > -1);
+
   auto initialAltitude = subject.getAltitude();
 
   subject.setAltitude(10);
@@ -56,6 +60,8 @@ void Object_solidness_test() {
 
   subject.setSolidness(SOFT);
   assert_int("updates solidness", subject.getSolidness(), SOFT);
+  assert("updates current scene",
+         WM.getSceneGraph().getSolidObjects().find(&subject) > -1);
 
   assert("SOFT is solid", subject.isSolid());
   subject.setSolidness(HARD);
@@ -153,9 +159,6 @@ void Object_test() {
     Object subject;
     subject.setType("type");
     assert_string("updates type", subject.getType(), "type");
-
-    subject.setAltitude(1);
-    assert_int("updates altitude", subject.getAltitude(), 1);
 
     auto animation = Animation();
     animation.setName("sprite");

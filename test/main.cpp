@@ -16,6 +16,7 @@
 #include "suites/ObjectList_test.cpp"
 #include "suites/Object_test.cpp"
 #include "suites/ResourceManager_test.cpp"
+#include "suites/SceneGraph_test.cpp"
 #include "suites/Sound_test.cpp"
 #include "suites/SpriteParser_test.cpp"
 #include "suites/Sprite_test.cpp"
@@ -41,6 +42,7 @@ auto main() -> int {
     suite("ObjectList", ObjectList_test);
     suite("ObjectListIterator", ObjectListIterator_test);
     suite("ResourceManager", ResourceManager_test);
+    suite("SceneGraph", SceneGraph_test);
     suite("Sound", Sound_test);
     suite("Sprite", Sprite_test);
     suite("SpriteParser", SpriteParser_test);

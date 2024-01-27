@@ -71,10 +71,13 @@ auto Manager::onEvent(const Event* event) const -> int {
       auto iterator = ObjectListIterator(&subscribers[i]);
 
       for (iterator.first(); !iterator.isDone(); iterator.next()) {
-        if (iterator.currentObject() == nullptr) continue;
+        auto currentObject = iterator.currentObject();
+        if (currentObject == nullptr) continue;
 
-        iterator.currentObject()->eventHandler(event);
-        count++;
+        if (currentObject->isActive()) {
+          iterator.currentObject()->eventHandler(event);
+          count++;
+        }
       }
     }
   }

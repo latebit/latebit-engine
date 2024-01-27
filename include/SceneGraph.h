@@ -10,8 +10,11 @@ const int MAX_ALTITUDE = 4;
 
 class SceneGraph {
  private:
-  // All the objects in the scene
-  ObjectList all = ObjectList();
+  // Active objects in the scene
+  ObjectList active = ObjectList();
+
+  // Inactive objects in the scene
+  ObjectList inactive = ObjectList();
 
   // Solid objects in the scene
   ObjectList solid = ObjectList();
@@ -29,17 +32,17 @@ class SceneGraph {
   // Remove object from the scene
   auto removeObject(Object *o) -> int;
 
-  // Returns all active objects
-  [[nodiscard]] auto getAllObjects() const -> ObjectList;
+  // Returns active objects
+  [[nodiscard]] auto getActiveObjects() const -> ObjectList;
+
+  // Returns inactive objects
+  [[nodiscard]] auto getInactiveObjects() const -> ObjectList;
 
   // Returns all active solid objects
   [[nodiscard]] auto getSolidObjects() const -> ObjectList;
 
   // Returns all active visible objects on a given rendering layer
   [[nodiscard]] auto getVisibleObjects(int altitude) const -> ObjectList;
-
-  // Returns all inactive objects
-  [[nodiscard]] auto getInactiveObjects() const -> ObjectList;
 
   // Update solidness for a given object
   auto setSolidness(Object *o, Solidness solidness) -> int;
@@ -48,7 +51,7 @@ class SceneGraph {
   auto setAltitude(Object *o, int altitude) -> int;
 
   // Update visibility for a given object
-  auto setVisibility(Object *o, bool isVisible) -> int;
+  auto setVisible(Object *o, bool isVisible) -> int;
 
   // Marks an object as active
   auto setActive(Object *o, bool isActive) -> int;

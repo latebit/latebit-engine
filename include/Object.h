@@ -46,6 +46,12 @@ class Object {
   // Box defining the bounds of this object.
   Box boundingBox = Box(1, 1);
 
+  // True if the engine interacts with this object.
+  bool active = true;
+
+  // True if this object will be drawn.
+  bool visible = true;
+
   // If true it displays debugging information.
   bool debug = false;
 
@@ -130,5 +136,18 @@ class Object {
   virtual auto eventHandler(const Event *e) -> int;
   // Draw single sprite frame and bounding box (if debug).
   virtual auto draw() -> int;
+
+  // Set object to be active or not active.
+  void setActive(bool active = true);
+  // Return true if object is active, else false.
+  [[nodiscard]] auto isActive() const -> bool;
+
+  // Set object to be visible or invisible.
+  void setVisible(bool visible = true);
+  // Return true if object is visible, else false.
+  [[nodiscard]] auto isVisible() const -> bool;
+
+  // Represent the object as a string
+  [[nodiscard]] auto toString() const -> string;
 };
 }  // namespace df

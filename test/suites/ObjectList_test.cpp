@@ -62,10 +62,25 @@ void ObjectList_find_test() {
   assert_int("does not find item", subject.find(&item2), -1);
 }
 
+void ObjectList_concat_test() {
+  ObjectList subject;
+  ObjectList other;
+  Object item, item2, item3;
+  subject.insert(&item);
+  other.insert(&item2);
+  other.insert(&item3);
+  auto result = subject + other;
+  assert_int("has 3 elements", result.getCount(), 3);
+  assert_int("finds item", result.find(&item), 0);
+  assert_int("finds item2", result.find(&item2), 1);
+  assert_int("finds item3", result.find(&item3), 2);
+}
+
 void ObjectList_test() {
   test("empty list", ObjectList_emptyList_test);
   test("one item", ObjectList_oneItem_test);
   test("many items", ObjectList_manyItems_test);
   test("full list", ObjectList_fullList_test);
   test("find", ObjectList_find_test);
+  test("concat (+)", ObjectList_concat_test);
 }

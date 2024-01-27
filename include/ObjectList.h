@@ -19,6 +19,7 @@ class ObjectList {
   friend class ObjectListIterator;
 
   ObjectList();
+  auto operator+(ObjectList const &other) const -> ObjectList;
 
   auto insert(Object *o) -> int;
 

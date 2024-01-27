@@ -1,5 +1,7 @@
 #include "Object.h"
 
+#include <cstdio>
+#include <string>
 #include <unordered_map>
 
 #include "../lib/test.h"
@@ -11,6 +13,8 @@
 #include "EventStep.h"
 #include "GameManager.h"
 #include "InputManager.h"
+#include "ObjectList.h"
+#include "ObjectListIterator.h"
 #include "ResourceManager.h"
 #include "WorldManager.h"
 
@@ -131,6 +135,49 @@ void Object_eventSubscription_test() {
              Object_eventSubscription_test_emittedCount[MSE_EVENT], 1);
 }
 
+void Object_visible_test() {
+  Object subject;
+
+  subject.setVisible(false);
+  assert("is invisible", !subject.isVisible());
+  for (int i = 0; i <= MAX_ALTITUDE; i++) {
+    assert("does not appear in visible list for altitude " + to_string(i),
+           WM.getSceneGraph().getVisibleObjects(i).find(&subject) == -1);
+  }
+
+  subject.setVisible(true);
+  assert("is visible", subject.isVisible());
+  assert(
+    "appears in visible list for altitude " + to_string(subject.getAltitude()),
+    WM.getSceneGraph().getVisibleObjects(subject.getAltitude()).find(&subject) >
+      -1);
+
+  for (int i = 0; i <= MAX_ALTITUDE; i++) {
+    if (i == subject.getAltitude()) continue;
+
+    assert("does not appear in visible for altitude " + to_string(i),
+           WM.getSceneGraph().getVisibleObjects(i).find(&subject) == -1);
+  }
+}
+
+void Object_active_test() {
+  Object subject;
+
+  subject.setActive(false);
+  assert("sets active to false", !subject.isActive());
+  assert_int("does not appear in active objects",
+             WM.getSceneGraph().getActiveObjects().find(&subject), -1);
+  assert("appears in inactive objects",
+         WM.getSceneGraph().getInactiveObjects().find(&subject) > -1);
+
+  subject.setActive(true);
+  assert("sets active to true", subject.isActive());
+  assert("does not appear in inactive objects",
+         WM.getSceneGraph().getInactiveObjects().find(&subject) == -1);
+  assert("appears in active objects",
+         WM.getSceneGraph().getActiveObjects().find(&subject) > -1);
+}
+
 void Object_test() {
   test("constructor", []() {
     Object subject;
@@ -177,6 +224,9 @@ void Object_test() {
     auto box = Box(Vector(), 1, 1);
     subject.setBox(box);
     assert("updates the box", subject.getBox() == box);
+
+    subject.setDebug(true);
+    assert("updates debug", subject.getDebug());
   });
 
   test("altitude", Object_altitude_test);
@@ -184,4 +234,6 @@ void Object_test() {
   test("solidness", Object_solidness_test);
   test("boundingBox", Object_boundingBox_test);
   test("eventSubscription", Object_eventSubscription_test);
+  test("visible", Object_visible_test);
+  test("active", Object_active_test);
 }

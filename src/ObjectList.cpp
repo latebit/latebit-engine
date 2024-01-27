@@ -1,5 +1,7 @@
 #include "ObjectList.h"
 
+#include "LogManager.h"
+
 namespace df {
 
 ObjectList::ObjectList() = default;
@@ -40,4 +42,27 @@ auto ObjectList::find(Object* o) const -> int {
 
   return -1;
 }
+
+auto ObjectList::operator+(ObjectList const& other) const -> ObjectList {
+  ObjectList result = ObjectList();
+
+  if (this->count + other.getCount() > MAX_SIZE) {
+    LM.writeLog(
+      "ObjectList::operator+: Resulting ObjectList is too large (got %d, max "
+      "%d)",
+      this->count + other.getCount(), MAX_SIZE);
+    return result;
+  }
+
+  for (int i = 0; i < this->count; i++) {
+    result.insert(this->obj[i]);
+  }
+
+  for (int i = 0; i < other.count; i++) {
+    result.insert(other.obj[i]);
+  }
+
+  return result;
+}
+
 }  // namespace df

@@ -56,13 +56,19 @@ auto WorldManager::removeObject(Object* o) -> int {
   return this->sceneGraph.removeObject(o);
 }
 
-auto WorldManager::getAllObjects() const -> ObjectList {
-  return this->sceneGraph.getAllObjects();
+auto WorldManager::getAllObjects(bool includeInactive) const -> ObjectList {
+  if (includeInactive) {
+    return this->sceneGraph.getActiveObjects() +
+           this->sceneGraph.getInactiveObjects();
+  }
+
+  return this->sceneGraph.getActiveObjects();
 }
 
-auto WorldManager::objectsOfType(std::string type) const -> ObjectList {
+auto WorldManager::objectsOfType(std::string type, bool includeInactive) const
+  -> ObjectList {
   ObjectList result;
-  auto solid = this->sceneGraph.getAllObjects();
+  auto solid = this->getAllObjects(includeInactive);
   auto iterator = ObjectListIterator(&solid);
 
   for (iterator.first(); !iterator.isDone(); iterator.next()) {

@@ -7,6 +7,8 @@
 #include "SceneGraph.h"
 #include "WorldManager.h"
 
+using namespace std;
+
 namespace df {
 
 Object::Object() {
@@ -22,8 +24,8 @@ Object::~Object() {
 
 auto Object::getId() const -> int { return this->id; }
 
-void Object::setType(std::string t) { this->type = t; }
-auto Object::getType() const -> std::string { return this->type; }
+void Object::setType(string t) { this->type = t; }
+auto Object::getType() const -> string { return this->type; }
 
 void Object::setPosition(Vector p) { this->position = p; }
 auto Object::getPosition() const -> Vector { return this->position; }
@@ -68,7 +70,7 @@ auto Object::getSolidness() const -> Solidness { return this->solidness; }
 void Object::setAnimation(Animation a) { this->animation = a; }
 auto Object::getAnimation() const -> Animation { return this->animation; }
 
-auto Object::setSprite(std::string label) -> int {
+auto Object::setSprite(string label) -> int {
   auto s = RM.getSprite(label);
   if (s == nullptr) return -1;
 
@@ -118,7 +120,7 @@ auto Object::drawBoundingBox() const -> int {
   return result;
 }
 
-auto Object::subscribe(std::string eventType) -> int {
+auto Object::subscribe(string eventType) -> int {
   if (WM.isValid(eventType)) {
     return WM.subscribe(this, eventType);
   } else if (IM.isValid(eventType)) {
@@ -128,4 +130,21 @@ auto Object::subscribe(std::string eventType) -> int {
   }
   return -1;
 }
+
+auto Object::setActive(bool active) -> void {
+  WM.getSceneGraph().setActive(this, active);
+  this->active = active;
+}
+auto Object::isActive() const -> bool { return this->active; }
+
+auto Object::setVisible(bool visible) -> void {
+  WM.getSceneGraph().setVisible(this, visible);
+  this->visible = visible;
+}
+auto Object::isVisible() const -> bool { return this->visible; }
+
+auto Object::toString() const -> string {
+  return "Object(id=" + to_string(this->id) + ",type=" + this->type + ")";
+}
+
 }  // namespace df

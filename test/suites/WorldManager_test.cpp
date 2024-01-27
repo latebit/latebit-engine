@@ -285,19 +285,25 @@ void WorldManager_outOfBounds_test() {
 
 void WorldManager_objectManagement_test() {
   WM.startUp();
-  array<Object*, 4> objects;
+  array<Object*, 5> objects;
 
   // This will generate a known memory leak, but it's fine for testing
   // We need this type of behaviour to test the shutdown method below
-  for (int i = 0; i < 4; i++) objects[i] = new Object;
+  for (int i = 0; i < 5; i++) objects[i] = new Object;
 
   objects[2]->setType("type");
   objects[3]->setType("type");
+  objects[4]->setType("type");
+  objects[4]->setActive(false);
 
   WM.update();
 
   assert_int("has all the objects", WM.getAllObjects().getCount(), 4);
+  assert_int("has all the objects (with inactive)",
+             WM.getAllObjects(true).getCount(), 5);
   assert_int("filters objects by type", WM.objectsOfType("type").getCount(), 2);
+  assert_int("filters objects by type (with inactive)",
+             WM.objectsOfType("type", true).getCount(), 3);
 
   WM.markForDelete(objects[0]);
   WM.update();

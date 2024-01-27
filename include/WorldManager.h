@@ -7,6 +7,8 @@
 
 #define WM df::WorldManager::getInstance()
 
+using namespace std;
+
 namespace df {
 
 class WorldManager : public Manager {
@@ -50,10 +52,13 @@ class WorldManager : public Manager {
   auto removeObject(Object *o) -> int;
 
   // Returns all active objects
-  [[nodiscard]] auto getAllObjects() const -> ObjectList;
+  [[nodiscard]] auto getAllObjects(bool includeInactive = false) const
+    -> ObjectList;
 
   // Returns a list of all active objects of a given type
-  [[nodiscard]] auto objectsOfType(std::string type) const -> ObjectList;
+  [[nodiscard]] auto objectsOfType(string type,
+                                   bool includeInactive = false) const
+    -> ObjectList;
 
   // Returns a list of object colliding with the object at a given position
   auto getCollisions(Object *o, Vector where) const -> ObjectList;

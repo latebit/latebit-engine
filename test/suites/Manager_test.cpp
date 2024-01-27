@@ -58,13 +58,20 @@ void Manager_test() {
               manager.unsubscribe(&obj, Manager_test_evt));
 
     auto event = Event();
-    manager.onEvent(&event);
+
     manager.subscribe(&obj, Manager_test_evt);
-
-    assert_int("does not trigger for wrong type", Manager_test_emittedCount, 0);
-    event.setType(Manager_test_evt);
     manager.onEvent(&event);
+    assert_int("does not trigger for wrong type", Manager_test_emittedCount, 0);
 
+    event.setType(Manager_test_evt);
+
+    obj.setActive(false);
+    manager.onEvent(&event);
+    assert_int("does not trigger if object is inactive",
+               Manager_test_emittedCount, 0);
+
+    obj.setActive(true);
+    manager.onEvent(&event);
     assert_int("triggers for correct type", Manager_test_emittedCount, 1);
 
     assert("returns true for valid events", manager.isValid(Manager_test_evt));

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cstddef>
+#include <ctime>
+
 #include "Clock.h"
 #include "Manager.h"
 
@@ -13,8 +16,6 @@ const int FRAME_TIME_DEFAULT = 33333;  // ~30fps
 class GameManager : public Manager {
  private:
   GameManager();
-  GameManager(GameManager const &) = delete;
-  void operator=(GameManager const &) = delete;
 
   // True when game loop is done
   bool gameOver = false;
@@ -25,9 +26,12 @@ class GameManager : public Manager {
   Clock *clock = new Clock;
 
  public:
+  GameManager(GameManager const &) = delete;
+  void operator=(GameManager const &) = delete;
   static auto getInstance() -> GameManager &;
 
-  auto startUp(int frame_time = FRAME_TIME_DEFAULT) -> int;
+  auto startUp(int frameTime = FRAME_TIME_DEFAULT, int seed = time(nullptr))
+    -> int;
   void shutDown() override;
   [[nodiscard]] auto isValid(string eventType) const -> bool override;
 

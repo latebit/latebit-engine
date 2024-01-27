@@ -14,8 +14,6 @@ class InputManager : public Manager {
  private:
   // Singleton
   InputManager();
-  InputManager(InputManager const &) = delete;
-  void operator=(InputManager const &) = delete;
 
   // Map for quick lookup of keyboard events.
   std::unordered_map<sf::Keyboard::Key, Keyboard::Key> keyboardEvent;
@@ -31,8 +29,12 @@ class InputManager : public Manager {
 
  public:
   static auto getInstance() -> InputManager &;
+  InputManager(InputManager const &) = delete;
+  void operator=(InputManager const &) = delete;
+
   auto startUp() -> int override;
   void shutDown() override;
+  // Returns true if event is can be handled by this manager
   [[nodiscard]] auto isValid(string eventType) const -> bool override;
 
   // Get input from the keyboard and mouse.

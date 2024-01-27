@@ -93,19 +93,25 @@ enum Key {
 
 class EventKeyboard : public Event {
  private:
-  Keyboard::Key key_val;                ///< Key value.
-  EventKeyboardAction keyboard_action;  ///< Key action.
+  // The key value
+  Keyboard::Key key = Keyboard::UNDEFINED_KEY;
+  // The key action
+  EventKeyboardAction action = UNDEFINED_KEYBOARD_ACTION;
 
  public:
   EventKeyboard();
+  // Create keyboard event with key value corresponding to the button pressed
+  // and an action
   EventKeyboard(Keyboard::Key k, EventKeyboardAction a);
 
-  void setKey(Keyboard::Key new_key);
-
+  // Update the key value for this event
+  void setKey(Keyboard::Key key);
+  // Return the key value for this event
   [[nodiscard]] auto getKey() const -> Keyboard::Key;
 
-  void setKeyboardAction(EventKeyboardAction new_action);
-
+  // Update the action for this event
+  void setKeyboardAction(EventKeyboardAction action);
+  // Return the action for this event
   [[nodiscard]] auto getKeyboardAction() const -> EventKeyboardAction;
 };
 

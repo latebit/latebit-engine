@@ -15,9 +15,6 @@ const int MAX_MUSICS = 50;
 class ResourceManager : public Manager {
  private:
   ResourceManager();
-  ResourceManager(ResourceManager const &) = delete;
-  void operator=(ResourceManager const &) = delete;
-
   // Loaded sound buffers
   std::array<Sound *, MAX_SOUNDS> sound = {};
   // Number of loaded sound buffers
@@ -34,6 +31,8 @@ class ResourceManager : public Manager {
   int spriteCount = 0;
 
  public:
+  ResourceManager(ResourceManager const &) = delete;
+  void operator=(ResourceManager const &) = delete;
   static auto getInstance() -> ResourceManager &;
 
   auto startUp() -> int override;

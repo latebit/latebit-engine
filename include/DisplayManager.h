@@ -6,6 +6,8 @@
 #include "Manager.h"
 #include "Vector.h"
 
+using namespace std;
+
 #define DM df::DisplayManager::getInstance()
 
 namespace df {
@@ -22,55 +24,80 @@ const int WINDOW_HORIZONTAL_CHARS_DEFAULT = 80;
 const int WINDOW_VERTICAL_CHARS_DEFAULT = 24;
 const int WINDOW_STYLE_DEFAULT = sf::Style::Titlebar | sf::Style::Close;
 const Color WINDOW_BACKGROUND_COLOR_DEFAULT = BLACK;
-const std::string WINDOW_TITLE_DEFAULT = "Dragonfly";
-const std::string FONT_FILE_DEFAULT = "df-font.ttf";
+const string WINDOW_TITLE_DEFAULT = "Dragonfly";
+const string FONT_FILE_DEFAULT = "df-font.ttf";
 
+// Returns height of a single character
 auto charHeight() -> float;
+// Returns width of a single character
 auto charWidth() -> float;
 
-auto spacesToPixels(Vector spaces) -> Vector;
-auto pixelsToSpaces(Vector pixels) -> Vector;
+// Converts cell coodinates to pixel coordinates
+auto cellsToPixels(Vector cells) -> Vector;
+// Converts pixel coodinates to cell coordinates
+auto pixelsToCells(Vector pixels) -> Vector;
 
 class DisplayManager : public Manager {
  private:
   DisplayManager();
-  DisplayManager(DisplayManager const &) = delete;
-  void operator=(DisplayManager const &) = delete;
-  sf::Font font;
-  sf::RenderWindow *window;
-  int window_horizontal_pixels;
-  int window_vertical_pixels;
-  int window_horizontal_cells;
-  int window_vertical_cells;
-  Color background_color;
+  // Font used to draw text
+  sf::Font font = sf::Font();
+  // The window has an initial given size in pixels and cells. All we draw
+  // are characters and all the coordinates we use are in cells
+  sf::RenderWindow *window = nullptr;
+  // Window width in pixels
+  int widthInPixels = WINDOW_HORIZONTAL_PIXELS_DEFAULT;
+  // Window height in pixels
+  int heightInPixels = WINDOW_VERTICAL_PIXELS_DEFAULT;
+  // Window width in cells
+  int widthInCells = WINDOW_HORIZONTAL_CHARS_DEFAULT;
+  // Window height in cells
+  int heightInCells = WINDOW_VERTICAL_CHARS_DEFAULT;
+  // Background color of the window
+  Color backgroundColor = WINDOW_BACKGROUND_COLOR_DEFAULT;
 
  public:
+  DisplayManager(DisplayManager const &) = delete;
+  void operator=(DisplayManager const &) = delete;
   static auto getInstance() -> DisplayManager &;
 
+  // Sets up the window and font
   auto startUp() -> int override;
-
   void shutDown() override;
 
-  auto drawCh(Vector world_pos, char ch, Color fg) const -> int;
-  auto drawCh(Vector world_pos, char ch, Color fg, Color bg) const -> int;
-
-  auto drawString(Vector world_pos, std::string s, Alignment a, Color fg) const
+  // Draws a single character to the window at the given position
+  auto drawCh(Vector position, char c, Color color) const -> int;
+  // Draws a single character to the window at the given position with
+  // the given background color
+  auto drawCh(Vector position, char c, Color foreground, Color background) const
     -> int;
-  auto drawString(Vector world_pos, std::string s, Alignment a, Color fg,
-                  Color bg) const -> int;
 
+  // Draws a string to the window at the given world position
+  auto drawString(Vector postion, string s, Alignment a, Color color) const
+    -> int;
+  // Draws a string to the window at the given world position with the given
+  // background color
+  auto drawString(Vector position, string s, Alignment a, Color foreground,
+                  Color background) const -> int;
+
+  // Change the background color of the window
   void setBackground(Color color);
 
+  // Return the amount of horizontal cells
   auto getHorizontalCells() const -> int;
-
+  // Return the amount of vertical cells
   auto getVerticalCells() const -> int;
-
+  // Return the window width in pixels
   auto getHorizontalPixels() const -> int;
-
+  // Return the window height in pixels
   auto getVerticalPixels() const -> int;
 
+  // Swap the buffers for drawing.
+  // This is the result of Double Buffering: first we draw to a hidden buffer
+  // and then we display it to the screen
   auto swapBuffers() -> int;
 
-  auto getWindow() const -> sf::RenderWindow *;
+  // Returns a pointer to the window
+  [[nodiscard]] auto getWindow() const -> sf::RenderWindow *;
 };
 }  // namespace df

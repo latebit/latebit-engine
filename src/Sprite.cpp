@@ -66,8 +66,8 @@ auto Sprite::getLabel() const -> std::string { return this->label; }
 void Sprite::setSlowdown(int slowdown) { this->slowdown = slowdown; }
 auto Sprite::getSlowdown() const -> int { return this->slowdown; }
 
-void Sprite::setTransparencyChar(char c) { this->transparencyChar = c; }
-auto Sprite::getTransparencyChar() const -> char {
+void Sprite::setTransparencyCharachter(char c) { this->transparencyChar = c; }
+auto Sprite::getTransparencyCharchter() const -> char {
   return this->transparencyChar;
 }
 

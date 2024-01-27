@@ -4,7 +4,8 @@ namespace df {
 
 class Clock {
  private:
-  long int previous_time;
+  // Time of last delta() call
+  long int previousTime;
 
  public:
   Clock();

@@ -1,11 +1,6 @@
 #include "EventStep.h"
 
 namespace df {
-EventStep::EventStep() {
-  setType(STEP_EVENT);
-  this->stepCount = 0;
-}
-
 EventStep::EventStep(int count) {
   setType(STEP_EVENT);
   this->stepCount = count;

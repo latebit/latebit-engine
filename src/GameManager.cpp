@@ -14,7 +14,7 @@ GameManager::GameManager() {
   LM.writeLog("GameManager::GameManager(): Created GameManager");
 }
 
-auto GameManager::startUp(int ft) -> int {
+auto GameManager::startUp(int frameTime, int seed) -> int {
   if (LM.startUp() != 0) {
     printf("GameManager::startUp(): Error starting LogManager\n");
     return -1;
@@ -35,12 +35,13 @@ auto GameManager::startUp(int ft) -> int {
     return -1;
   }
 
+  this->frameTime = frameTime;
+  srand(seed);
+
   // By default boundary equates view and it's the whole window
   Box boundary(Vector(0, 0), DM.getHorizontalCells(), DM.getVerticalCells());
   WM.setBoundary(boundary);
   WM.setView(boundary);
-
-  frameTime = ft;
 
   LM.writeLog("GameManager::startUp(): Started successfully");
   return Manager::startUp();

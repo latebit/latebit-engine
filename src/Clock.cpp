@@ -6,20 +6,20 @@ using namespace std;
 
 namespace df {
 
-Clock::Clock() { this->previous_time = getNow(); }
+Clock::Clock() { this->previousTime = getNow(); }
 
 auto Clock::delta() -> long int {
-  if (!this->previous_time) return -1;
+  if (!this->previousTime) return -1;
   long int now = getNow();
-  long int result = now - this->previous_time;
-  this->previous_time = now;
+  long int result = now - this->previousTime;
+  this->previousTime = now;
 
   return result;
 }
 
 auto Clock::split() const -> long int {
   long int now = getNow();
-  return now - this->previous_time;
+  return now - this->previousTime;
 }
 
 auto Clock::getNow() -> long int {

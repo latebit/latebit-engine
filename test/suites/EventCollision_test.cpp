@@ -18,14 +18,14 @@ void EventCollision_test() {
   assert_vector("sets correct position", subject.getPos(), pos);
 
   Object obj3;
-  subject.setObject1(&obj3);
+  subject.setFirstObject(&obj3);
   assert("sets correct object1", subject.getObject1() == &obj3);
 
   Object obj4;
-  subject.setObject2(&obj4);
+  subject.setSecondObject(&obj4);
   assert("sets correct object2", subject.getObject2() == &obj4);
 
   Vector pos2(2, 2);
-  subject.setPos(pos2);
+  subject.setPosition(pos2);
   assert_vector("sets correct position", subject.getPos(), pos2);
 }

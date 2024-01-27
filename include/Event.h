@@ -1,16 +1,23 @@
 #pragma once
 #include <string>
+
+using namespace std;
+
 namespace df {
-const std::string UNDEFINED_EVENT = "df::undefined";
+const string UNDEFINED_EVENT = "df::undefined";
 
 class Event {
  private:
-  std::string event_type;
+  // Holds the type of the event
+  string type = UNDEFINED_EVENT;
 
  public:
   Event();
   virtual ~Event();
-  void setType(std::string t);
-  [[nodiscard]] auto getType() const -> std::string;
+
+  // Set the type of the event
+  void setType(string t);
+  // Get the type of the event
+  [[nodiscard]] auto getType() const -> string;
 };
 }  // namespace df

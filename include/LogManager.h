@@ -11,19 +11,27 @@ extern const char *LOGFILE_NAME;
 class LogManager : public Manager {
  private:
   LogManager();
-  LogManager(LogManager const &) = delete;
-  void operator=(LogManager const &) = delete;
-  bool do_flush;
-  FILE *f;
+  // If true, the logs will be flushed after each write
+  bool flush;
+  // File pointer to the logfile
+  FILE *file;
 
  public:
   ~LogManager() override;
   static auto getInstance() -> LogManager &;
+  LogManager(LogManager const &) = delete;
+  void operator=(LogManager const &) = delete;
+
   auto startUp() -> int override;
   void shutDown() override;
-  void setFlush(bool do_flush = true);
+
+  // Set flush of logfile after each write
+  void setFlush(bool flush = true);
+
+  // Write to logfile
   auto writeLog(const char *fmt, ...) const -> int;
-  // To be used when the logger is not yet initialized
+
+  // Fallback log to be used when the logger is not yet initialized
   void stdoutLog(const char *fmt, ...) const;
 };
 

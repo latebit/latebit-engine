@@ -9,12 +9,12 @@ class Music {
   // Music is immutable
   Music(Music const &) = delete;
   // Music is immutable
-  void operator=(Music const &) = delete;
 
   sf::Music music = sf::Music();
   std::string label = "";
 
  public:
+  void operator=(Music const &) = delete;
   Music();
   ~Music();
 

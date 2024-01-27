@@ -1,28 +1,24 @@
 #include "EventKeyboard.h"
 
 namespace df {
-EventKeyboard::EventKeyboard() {
-  setType(KEYBOARD_EVENT);
-  this->key_val = Keyboard::UNDEFINED_KEY;
-  this->keyboard_action = EventKeyboardAction::UNDEFINED_KEYBOARD_ACTION;
-}
+EventKeyboard::EventKeyboard() { setType(KEYBOARD_EVENT); }
 
 EventKeyboard::EventKeyboard(Keyboard::Key k, EventKeyboardAction a) {
   setType(KEYBOARD_EVENT);
-  this->key_val = k;
-  this->keyboard_action = a;
+  this->key = k;
+  this->action = a;
 }
 
-void EventKeyboard::setKey(Keyboard::Key new_key) { this->key_val = new_key; }
+void EventKeyboard::setKey(Keyboard::Key key) { this->key = key; }
 
-auto EventKeyboard::getKey() const -> Keyboard::Key { return this->key_val; }
+auto EventKeyboard::getKey() const -> Keyboard::Key { return this->key; }
 
-void EventKeyboard::setKeyboardAction(EventKeyboardAction new_action) {
-  this->keyboard_action = new_action;
+void EventKeyboard::setKeyboardAction(EventKeyboardAction action) {
+  this->action = action;
 }
 
 auto EventKeyboard::getKeyboardAction() const -> EventKeyboardAction {
-  return this->keyboard_action;
+  return this->action;
 }
 
 }  // namespace df

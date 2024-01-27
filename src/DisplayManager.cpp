@@ -7,12 +7,6 @@ namespace df {
 
 DisplayManager::DisplayManager() {
   setType("DisplayManager");
-  this->window_horizontal_pixels = WINDOW_HORIZONTAL_PIXELS_DEFAULT;
-  this->window_horizontal_cells = WINDOW_HORIZONTAL_CHARS_DEFAULT;
-  this->window_vertical_cells = WINDOW_VERTICAL_CHARS_DEFAULT;
-  this->window_vertical_pixels = WINDOW_VERTICAL_PIXELS_DEFAULT;
-  this->background_color = WINDOW_BACKGROUND_COLOR_DEFAULT;
-  this->window = nullptr;
   LM.writeLog("DisplayManager::DisplayManager(): Created DisplayManager");
 }
 
@@ -26,8 +20,7 @@ auto DisplayManager::startUp() -> int {
     return 0;
   }
 
-  auto mode =
-    sf::VideoMode(this->window_horizontal_pixels, this->window_vertical_pixels);
+  auto mode = sf::VideoMode(this->widthInPixels, this->heightInPixels);
   this->window =
     new sf::RenderWindow(mode, WINDOW_TITLE_DEFAULT, WINDOW_STYLE_DEFAULT);
 
@@ -57,7 +50,7 @@ auto DisplayManager::drawCh(Vector worldPosition, char ch, Color fg,
   if (this->window == nullptr) return -1;
 
   auto viewPosition = worldToView(worldPosition);
-  auto pixelPosition = spacesToPixels(viewPosition);
+  auto pixelPosition = cellsToPixels(viewPosition);
 
   static auto width = charWidth();
   static auto height = charHeight();
@@ -90,7 +83,7 @@ auto DisplayManager::drawCh(Vector worldPosition, char ch, Color fg,
 
 auto DisplayManager::drawCh(Vector worldPosition, char ch, Color fg) const
   -> int {
-  return DisplayManager::drawCh(worldPosition, ch, fg, this->background_color);
+  return DisplayManager::drawCh(worldPosition, ch, fg, this->backgroundColor);
 }
 
 auto DisplayManager::drawString(Vector worldPosition, std::string s,
@@ -121,27 +114,27 @@ auto DisplayManager::drawString(Vector worldPosition, std::string s,
 auto DisplayManager::drawString(Vector worldPosition, std::string s,
                                 Alignment a, Color fg) const -> int {
   return DisplayManager::drawString(worldPosition, s, a, fg,
-                                    this->background_color);
+                                    this->backgroundColor);
 }
 
 void DisplayManager::setBackground(Color color) {
-  this->background_color = color;
+  this->backgroundColor = color;
 }
 
 auto DisplayManager::getHorizontalCells() const -> int {
-  return this->window_horizontal_cells;
+  return this->widthInCells;
 }
 
 auto DisplayManager::getVerticalCells() const -> int {
-  return this->window_vertical_cells;
+  return this->heightInCells;
 }
 
 auto DisplayManager::getHorizontalPixels() const -> int {
-  return this->window_horizontal_pixels;
+  return this->widthInPixels;
 }
 
 auto DisplayManager::getVerticalPixels() const -> int {
-  return this->window_vertical_pixels;
+  return this->heightInPixels;
 }
 
 auto DisplayManager::swapBuffers() -> int {
@@ -154,7 +147,7 @@ auto DisplayManager::swapBuffers() -> int {
   this->window->display();
 
   // clears second buffer
-  this->window->clear(toSFColor(this->background_color));
+  this->window->clear(toSFColor(this->backgroundColor));
 
   return 0;
 }
@@ -171,11 +164,11 @@ auto charWidth() -> float {
   return DM.getHorizontalPixels() / (float)DM.getHorizontalCells();
 }
 
-auto spacesToPixels(Vector spaces) -> Vector {
+auto cellsToPixels(Vector spaces) -> Vector {
   return {spaces.getX() * charWidth(), spaces.getY() * charHeight()};
 }
 
-auto pixelsToSpaces(Vector pixels) -> Vector {
+auto pixelsToCells(Vector pixels) -> Vector {
   return {pixels.getX() / charWidth(), pixels.getY() / charHeight()};
 }
 

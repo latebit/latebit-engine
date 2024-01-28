@@ -216,7 +216,7 @@ auto SceneGraph::setActive(Object *o, bool isActive) -> int {
     return -1;
   }
 
-  if (o->isSolid() && this->solid.remove(o) != 0) {
+  if (o->isSolid() && this->solid.insert(o) != 0) {
     LM.writeLog("SceneGraph::setActive(): Failed to remove %s from solid list",
                 o->toString().c_str());
     return -1;

@@ -210,12 +210,16 @@ void SceneGraph_setActive_test() {
          sg.getActiveObjects().find(&obj) > -1);
   assert_int("list of inactive objects does not contain object",
              sg.getInactiveObjects().find(&obj), -1);
+  assert("list of solid objects contains object",
+         sg.getSolidObjects().find(&obj) > -1);
 
   assert_ok("sets inactive", sg.setActive(&obj, false));
   assert_int("list of active objects does not contain object",
              sg.getActiveObjects().find(&obj), -1);
-  assert("list of inactive objects does not contain object",
+  assert("list of inactive objects contains object",
          sg.getInactiveObjects().find(&obj) > -1);
+  assert_int("list of solid objects does not contain object",
+             sg.getSolidObjects().find(&obj), -1);
 }
 
 void SceneGraph_test() {

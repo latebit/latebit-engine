@@ -148,10 +148,8 @@ void InputManager::getInput() const {
         break;
       case sf::Event::MouseMoved:
         mouseEvent.setMouseAction(df::EventMouseAction::MOVED);
-        mouseEvent.setMouseButton(
-          fromSFMLMouseButton(event.mouseButton.button));
         mouseEvent.setMousePosition(
-          Vector(event.mouseMove.x, event.mouseMove.y));
+          pixelsToCells(Vector(event.mouseMove.x, event.mouseMove.y)));
         onEvent(&mouseEvent);
         break;
       case sf::Event::MouseButtonPressed:
@@ -159,11 +157,11 @@ void InputManager::getInput() const {
         mouseEvent.setMouseButton(
           fromSFMLMouseButton(event.mouseButton.button));
         mouseEvent.setMousePosition(
-          Vector(event.mouseMove.x, event.mouseMove.y));
+          pixelsToCells(Vector(event.mouseButton.x, event.mouseButton.y)));
         onEvent(&mouseEvent);
         break;
       case sf::Event::Closed:
-        GM.shutDown();
+        GM.setGameOver();
         // This is meant to break out of the while loop
         return;
       default:

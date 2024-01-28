@@ -15,7 +15,7 @@ class ObjectList {
   // Amount of objects in the list
   int count = 0;
   // Array of objects
-  array<Object *, MAX_SIZE> obj;
+  array<Object *, MAX_SIZE> obj = {};
 
  public:
   friend class ObjectListIterator;

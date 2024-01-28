@@ -22,41 +22,46 @@ auto Manager::startUp() -> int {
 void Manager::shutDown() { this->started = false; }
 
 auto Manager::subscribe(Object* o, string eventType) -> int {
-  if (!isValid(eventType)) {
+  if (!this->isValid(eventType)) {
     return -1;
   }
 
-  for (int i = 0; i < eventCount; i++) {
-    if (events[i] == eventType) {
-      subscribers[i].insert(o);
+  if (this->eventCount >= MAX_EVENTS) return -1;
+
+  for (int i = 0; i < this->eventCount; i++) {
+    if (this->events[i] == eventType) {
+      this->subscribers[i].insert(o);
       return 0;
     }
   }
 
-  if (eventCount >= MAX_EVENTS) return -1;
-
-  events[eventCount] = eventType;
-  subscribers[eventCount].clear();
-  subscribers[eventCount].insert(o);
-  eventCount++;
+  // Subscribe to a new event
+  this->events[this->eventCount] = eventType;
+  this->subscribers[this->eventCount].clear();
+  this->subscribers[this->eventCount].insert(o);
+  this->eventCount++;
 
   return 0;
 }
 
 auto Manager::unsubscribe(Object* o, string eventType) -> int {
+  if (!this->isValid(eventType)) {
+    return -1;
+  }
+
   int foundIndex = 0;
-  for (int i = 0; i < eventCount; i++) {
-    if (events[i] == eventType) {
-      subscribers[i].remove(o);
+  for (int i = 0; i < this->eventCount; i++) {
+    if (this->events[i] == eventType) {
+      this->subscribers[i].remove(o);
       foundIndex = i;
       break;
     }
   }
 
-  if (subscribers[foundIndex].isEmpty()) {
-    subscribers[foundIndex] = subscribers[eventCount];
-    events[foundIndex] = events[eventCount];
-    eventCount--;
+  if (this->subscribers[foundIndex].isEmpty()) {
+    this->subscribers[foundIndex] = this->subscribers[this->eventCount];
+    this->events[foundIndex] = this->events[this->eventCount];
+    this->eventCount--;
   }
 
   return 0;
@@ -65,17 +70,21 @@ auto Manager::unsubscribe(Object* o, string eventType) -> int {
 auto Manager::onEvent(const Event* event) const -> int {
   int count = 0;
 
-  for (int i = 0; i < eventCount; i++) {
-    auto currentEvent = events[i];
+  for (int i = 0; i < this->eventCount; i++) {
+    auto currentEvent = this->events[i];
     if (currentEvent == event->getType()) {
-      auto iterator = ObjectListIterator(&subscribers[i]);
+      // Generate a copy to avoid race conditions on the subscribers list
+      // For example when as a result of handling an event, a new subscriber
+      // is added to the list
+      auto subscribers = this->subscribers[i];
+      auto iterator = ObjectListIterator(&subscribers);
 
       for (iterator.first(); !iterator.isDone(); iterator.next()) {
         auto currentObject = iterator.currentObject();
         if (currentObject == nullptr) continue;
 
         if (currentObject->isActive()) {
-          iterator.currentObject()->eventHandler(event);
+          currentObject->eventHandler(event);
           count++;
         }
       }
@@ -85,6 +94,6 @@ auto Manager::onEvent(const Event* event) const -> int {
   return count;
 }
 
-auto Manager::isValid(string eventType) const -> bool { return true; }
+auto Manager::isValid(string eventType) const -> bool { return false; }
 
 }  // namespace df

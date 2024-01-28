@@ -12,12 +12,12 @@ EventCollision::EventCollision(Object *o1, Object *o2, Vector pos) {
 }
 
 void EventCollision::setFirstObject(Object *o) { this->firstObject = o; }
-auto EventCollision::getObject1() const -> Object * {
+auto EventCollision::getFirstObject() const -> Object * {
   return this->firstObject;
 }
 
 void EventCollision::setSecondObject(Object *o) { this->secondObject = o; }
-auto EventCollision::getObject2() const -> Object * {
+auto EventCollision::getSecondObject() const -> Object * {
   return this->secondObject;
 }
 

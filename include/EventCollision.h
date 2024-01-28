@@ -26,12 +26,12 @@ class EventCollision : public Event {
   // Updates the first object involved in the collision
   void setFirstObject(Object *o);
   // Returns the first object involved in the collision
-  [[nodiscard]] auto getObject1() const -> Object *;
+  [[nodiscard]] auto getFirstObject() const -> Object *;
 
   // Updates the second object involved in the collision
   void setSecondObject(Object *o2);
   // Returns the second object involved in the collision
-  [[nodiscard]] auto getObject2() const -> Object *;
+  [[nodiscard]] auto getSecondObject() const -> Object *;
 
   // Updates the position where the collision occurs
   void setPosition(Vector pos);

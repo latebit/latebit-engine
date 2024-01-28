@@ -6,15 +6,14 @@
 namespace df {
 class Music {
  private:
-  // Music is immutable
-  Music(Music const &) = delete;
-  // Music is immutable
-
   sf::Music music = sf::Music();
   std::string label = "";
 
  public:
+  // Music is immutable
+  Music(Music const &) = delete;
   void operator=(Music const &) = delete;
+
   Music();
   ~Music();
 

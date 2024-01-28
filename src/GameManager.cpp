@@ -14,7 +14,7 @@ GameManager::GameManager() {
   LM.writeLog("GameManager::GameManager(): Created GameManager");
 }
 
-auto GameManager::startUp(int frameTime, int seed) -> int {
+auto GameManager::startUp() -> int {
   if (LM.startUp() != 0) {
     printf("GameManager::startUp(): Error starting LogManager\n");
     return -1;
@@ -35,8 +35,7 @@ auto GameManager::startUp(int frameTime, int seed) -> int {
     return -1;
   }
 
-  this->frameTime = frameTime;
-  srand(seed);
+  this->setRandomSeed();
 
   // By default boundary equates view and it's the whole window
   Box boundary(Vector(0, 0), DM.getHorizontalCells(), DM.getVerticalCells());
@@ -95,5 +94,8 @@ void GameManager::setGameOver(bool gameOver) { this->gameOver = gameOver; }
 auto GameManager::getGameOver() const -> bool { return this->gameOver; }
 
 auto GameManager::getFrameTime() const -> int { return this->frameTime; }
+void GameManager::setFrameTime(int frameTime) { this->frameTime = frameTime; }
+
+void GameManager::setRandomSeed(int seed) { srand(seed); }
 
 }  // namespace df

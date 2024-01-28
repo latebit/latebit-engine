@@ -30,8 +30,7 @@ class GameManager : public Manager {
   void operator=(GameManager const &) = delete;
   static auto getInstance() -> GameManager &;
 
-  auto startUp(int frameTime = FRAME_TIME_DEFAULT, int seed = time(nullptr))
-    -> int;
+  auto startUp() -> int override;
   void shutDown() override;
   [[nodiscard]] auto isValid(string eventType) const -> bool override;
 
@@ -43,8 +42,13 @@ class GameManager : public Manager {
   // Get game over flag
   [[nodiscard]] auto getGameOver() const -> bool;
 
+  // Set duration of a frame in microseconds
+  void setFrameTime(int frameTime);
   // Get duration of a frame in microseconds
   [[nodiscard]] auto getFrameTime() const -> int;
+
+  // Define random starting seed. Better to be called before startUp().
+  void setRandomSeed(int seed = time(nullptr));
 };
 }  // namespace df
 

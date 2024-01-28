@@ -165,7 +165,8 @@ void WorldManager::update() {
 
   auto deletions = ObjectListIterator(&this->deletions);
   for (deletions.first(); !deletions.isDone(); deletions.next()) {
-    this->removeObject(deletions.currentObject());
+    // This is not leaving a danglig null reference!
+    // In the destructor of Object, we also remove it from the world
     delete deletions.currentObject();
   }
   this->deletions.clear();

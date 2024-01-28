@@ -1,8 +1,12 @@
 #include "Object.h"
 
+#include <array>
+#include <string>
+
 #include "DisplayManager.h"
 #include "GameManager.h"
 #include "InputManager.h"
+#include "LogManager.h"
 #include "ResourceManager.h"
 #include "SceneGraph.h"
 #include "WorldManager.h"
@@ -18,7 +22,13 @@ Object::Object() {
 }
 
 Object::~Object() {
-  // Resources for this object are freed in WorldManager::shutDown/update
+  auto count = this->eventCount;
+  for (int i = 0; i < count; i++) {
+    unsubscribe(this->events[i]);
+  }
+
+  // This object is owned by the world manager,
+  // so resources for this object are freed in WorldManager::shutDown/update
   WM.removeObject(this);
 }
 
@@ -121,25 +131,58 @@ auto Object::drawBoundingBox() const -> int {
 }
 
 auto Object::subscribe(string eventType) -> int {
-  if (WM.isValid(eventType)) {
-    return WM.subscribe(this, eventType);
-  } else if (IM.isValid(eventType)) {
-    return IM.subscribe(this, eventType);
-  } else if (GM.isValid(eventType)) {
-    return GM.subscribe(this, eventType);
+  if (this->eventCount >= MAX_EVENTS_PER_OBEJCT) {
+    LM.writeLog("Object::subscribe(): Too many events subscribed to");
+    return -1;
   }
-  return -1;
+
+  this->events[this->eventCount] = eventType;
+  this->eventCount++;
+
+  if (IM.subscribe(this, eventType) == 0) {
+    return 0;
+  }
+
+  if (GM.subscribe(this, eventType) == 0) {
+    return 0;
+  }
+
+  // WM handles custom (user defined) events, hence it's the fallback
+  return WM.subscribe(this, eventType);
 }
 
-auto Object::setActive(bool active) -> void {
-  WM.getSceneGraph().setActive(this, active);
+auto Object::unsubscribe(string eventType) -> int {
+  for (int i = 0; i < this->eventCount; i++) {
+    if (this->events[i] == eventType) {
+      this->events[i] = this->events[this->eventCount - 1];
+      this->eventCount--;
+      break;
+    }
+  }
+
+  if (IM.unsubscribe(this, eventType) == 0) {
+    return 0;
+  }
+
+  if (GM.unsubscribe(this, eventType) == 0) {
+    return 0;
+  }
+
+  // WM handles custom (user defined) events, hence it's the fallback
+  return WM.unsubscribe(this, eventType);
+}
+
+auto Object::setActive(bool active) -> int {
+  if (WM.getSceneGraph().setActive(this, active) != 0) return -1;
   this->active = active;
+  return 0;
 }
 auto Object::isActive() const -> bool { return this->active; }
 
-auto Object::setVisible(bool visible) -> void {
-  WM.getSceneGraph().setVisible(this, visible);
+auto Object::setVisible(bool visible) -> int {
+  if (WM.getSceneGraph().setVisible(this, visible) != 0) return -1;
   this->visible = visible;
+  return 0;
 }
 auto Object::isVisible() const -> bool { return this->visible; }
 

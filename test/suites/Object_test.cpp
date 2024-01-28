@@ -5,6 +5,7 @@
 
 #include "../lib/test.h"
 #include "Animation.h"
+#include "Event.h"
 #include "EventCollision.h"
 #include "EventKeyboard.h"
 #include "EventMouse.h"
@@ -102,12 +103,12 @@ void Object_eventSubscription_test() {
 
   TestObject obj;
 
-  assert_ok("subscribes to Collision", WM.subscribe(&obj, COLLISION_EVENT));
-  assert_ok("subscribes to Out", WM.subscribe(&obj, OUT_EVENT));
-  assert_ok("subscribes to Step", GM.subscribe(&obj, STEP_EVENT));
-
-  assert_ok("subscribes to Keyboard", IM.subscribe(&obj, KEYBOARD_EVENT));
-  assert_ok("subscribes to Mouse", IM.subscribe(&obj, MSE_EVENT));
+  assert_ok("subscribes to Collision", obj.subscribe(COLLISION_EVENT));
+  assert_ok("subscribes to Out", obj.subscribe(OUT_EVENT));
+  assert_ok("subscribes to Step", obj.subscribe(STEP_EVENT));
+  assert_ok("subscribes to Keyboard", obj.subscribe(KEYBOARD_EVENT));
+  assert_ok("subscribes to Mouse", obj.subscribe(MSE_EVENT));
+  assert_ok("subscribes to custom", obj.subscribe("custom"));
 
   EventCollision collision;
   WM.onEvent(&collision);
@@ -132,6 +133,43 @@ void Object_eventSubscription_test() {
   IM.onEvent(&mouse);
   assert_int("responds to Mouse",
              Object_eventSubscription_test_emittedCount[MSE_EVENT], 1);
+
+  Event customEvent;
+  customEvent.setType("custom");
+  WM.onEvent(&customEvent);
+  assert_int("responds to custom event",
+             Object_eventSubscription_test_emittedCount["custom"], 1);
+
+  assert_ok("unsubscribes to Collision", obj.unsubscribe(COLLISION_EVENT));
+  assert_ok("unsubscribes to Out", obj.unsubscribe(OUT_EVENT));
+  assert_ok("unsubscribes to Step", obj.unsubscribe(STEP_EVENT));
+  assert_ok("unsubscribes to Keyboard", obj.unsubscribe(KEYBOARD_EVENT));
+  assert_ok("unsubscribes to Mouse", obj.unsubscribe(MSE_EVENT));
+  assert_ok("unsubscribes to custom", obj.unsubscribe("custom"));
+
+  WM.onEvent(&collision);
+  assert_int("does not respond to Collision",
+             Object_eventSubscription_test_emittedCount[COLLISION_EVENT], 1);
+
+  WM.onEvent(&out);
+  assert_int("does not respond to Out",
+             Object_eventSubscription_test_emittedCount[OUT_EVENT], 1);
+
+  GM.onEvent(&step);
+  assert_int("does not respond to Step",
+             Object_eventSubscription_test_emittedCount[STEP_EVENT], 1);
+
+  IM.onEvent(&keyboard);
+  assert_int("does not respond to Keyboard",
+             Object_eventSubscription_test_emittedCount[KEYBOARD_EVENT], 1);
+
+  IM.onEvent(&mouse);
+  assert_int("does not respond to Mouse",
+             Object_eventSubscription_test_emittedCount[MSE_EVENT], 1);
+
+  WM.onEvent(&customEvent);
+  assert_int("does not respond to custom event",
+             Object_eventSubscription_test_emittedCount["custom"], 1);
 }
 
 void Object_visible_test() {

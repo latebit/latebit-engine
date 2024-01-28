@@ -16,8 +16,6 @@ class WorldManager : public Manager {
   // Make WorldManager a singleton
   WorldManager();
 
-  // Objects that receive the update callback
-  ObjectList updates = ObjectList();
   // Objects that are marked for deletion
   ObjectList deletions = ObjectList();
   // The boundaries of the world, regardless of where the camera points

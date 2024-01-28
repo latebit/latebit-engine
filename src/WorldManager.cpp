@@ -2,7 +2,6 @@
 
 #include "EventCollision.h"
 #include "EventOut.h"
-#include "EventView.h"
 #include "LogManager.h"
 #include "ObjectListIterator.h"
 #include "utils.h"
@@ -23,13 +22,13 @@ auto WorldManager::getInstance() -> WorldManager& {
 
 auto WorldManager::startUp() -> int {
   this->deletions = ObjectList();
-  this->updates = ObjectList();
+  this->sceneGraph = SceneGraph();
   LM.writeLog("WorldManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
 void WorldManager::shutDown() {
-  auto all = getAllObjects();
+  auto all = this->getAllObjects(true);
   auto iterator = ObjectListIterator(&all);
   for (iterator.first(); !iterator.isDone(); iterator.next()) {
     // This is not leaving a danglig null reference!
@@ -37,15 +36,14 @@ void WorldManager::shutDown() {
     delete iterator.currentObject();
   }
 
-  this->updates.clear();
-
   Manager::shutDown();
   LM.writeLog("WorldManager::shutDown(): Shut down successfully");
 }
 
 auto WorldManager::isValid(string eventType) const -> bool {
-  return eventType == OUT_EVENT || eventType == COLLISION_EVENT ||
-         eventType == VIEW_EVENT;
+  // World Manager needs to accept all the events because it is the Manager
+  // responsible for registering custom events
+  return true;
 }
 
 auto WorldManager::insertObject(Object* o) -> int {
@@ -157,7 +155,7 @@ void WorldManager::moveAndCheckBounds(Object* o, Vector where) {
 
     // Move the view if the object is outside of the dead zone
     if (!contains(viewDeadZone, final)) {
-      setViewPosition(where);
+      this->setViewPosition(where);
     }
   }
 }
@@ -167,13 +165,13 @@ void WorldManager::update() {
 
   auto deletions = ObjectListIterator(&this->deletions);
   for (deletions.first(); !deletions.isDone(); deletions.next()) {
-    removeObject(deletions.currentObject());
+    this->removeObject(deletions.currentObject());
     delete deletions.currentObject();
   }
   this->deletions.clear();
 
-  auto all = getAllObjects();
-  auto updates = ObjectListIterator(&all);
+  auto active = this->sceneGraph.getActiveObjects();
+  auto updates = ObjectListIterator(&active);
   for (updates.first(); !updates.isDone(); updates.next()) {
     auto object = updates.currentObject();
     auto oldPosition = object->getPosition();
@@ -196,8 +194,6 @@ auto WorldManager::markForDelete(Object* o) -> int {
 }
 
 void WorldManager::draw() {
-  // auto iterator = ObjectListIterator(&this->updates);
-
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
     auto visible = this->getSceneGraph().getVisibleObjects(i);
     auto iterator = ObjectListIterator(&visible);

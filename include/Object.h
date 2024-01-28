@@ -1,11 +1,14 @@
 #pragma once
 
+#include <array>
 #include <string>
 
 #include "Animation.h"
 #include "Box.h"
 #include "Event.h"
 #include "Vector.h"
+
+using namespace std;
 
 namespace df {
 enum Solidness {
@@ -14,13 +17,15 @@ enum Solidness {
   SPECTRAL,
 };
 
+const int MAX_EVENTS_PER_OBEJCT = 20;
+
 class Object {
  private:
   // Unique id of this object.
   int id;
 
   // A string representing the type of object.
-  std::string type = "Object";
+  string type = "Object";
 
   // Position of the object in World coordinates.
   Vector position = Vector();
@@ -55,6 +60,11 @@ class Object {
   // If true it displays debugging information.
   bool debug = false;
 
+  // List of events this object is subscribed to.
+  array<string, MAX_EVENTS_PER_OBEJCT> events = {};
+  // Current number of subscribed events
+  int eventCount = 0;
+
  public:
   Object();
 
@@ -64,9 +74,9 @@ class Object {
   [[nodiscard]] auto getId() const -> int;
 
   // Sets the type identifier of this object.
-  void setType(std::string t);
+  void setType(string t);
   // Returns the type identifier of this object.
-  [[nodiscard]] auto getType() const -> std::string;
+  [[nodiscard]] auto getType() const -> string;
 
   // Sets the position of this object in the game world.
   void setPosition(Vector p);
@@ -114,7 +124,7 @@ class Object {
   [[nodiscard]] auto getDebug() const -> bool;
 
   // Assign a loaded sprite to this object
-  auto setSprite(std::string label) -> int;
+  auto setSprite(string label) -> int;
 
   // Set bounding box for this object.
   void setBox(Box box);
@@ -130,7 +140,9 @@ class Object {
   [[nodiscard]] auto getWorldBox(Vector center) const -> Box;
 
   // Subscribe to event, e.g., "COLLISION" or "KEYBOARD".
-  auto subscribe(std::string eventType) -> int;
+  auto subscribe(string eventType) -> int;
+  // Unsubscribe to event, e.g., "COLLISION" or "KEYBOARD".
+  auto unsubscribe(string eventType) -> int;
 
   // Handle event (default is to ignore everything).
   virtual auto eventHandler(const Event *e) -> int;
@@ -138,12 +150,12 @@ class Object {
   virtual auto draw() -> int;
 
   // Set object to be active or not active.
-  void setActive(bool active = true);
+  auto setActive(bool active = true) -> int;
   // Return true if object is active, else false.
   [[nodiscard]] auto isActive() const -> bool;
 
   // Set object to be visible or invisible.
-  void setVisible(bool visible = true);
+  auto setVisible(bool visible = true) -> int;
   // Return true if object is visible, else false.
   [[nodiscard]] auto isVisible() const -> bool;
 

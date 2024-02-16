@@ -1,6 +1,12 @@
 #include "DisplayManager.h"
 
+#include <SFML/Graphics/PrimitiveType.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
+
+#include "Colors.h"
+#include "Frame.h"
 #include "LogManager.h"
+#include "Vector.h"
 #include "utils.h"
 
 namespace df {
@@ -20,9 +26,10 @@ auto DisplayManager::startUp() -> int {
     return 0;
   }
 
-  auto mode = sf::VideoMode(this->widthInPixels, this->heightInPixels);
-  this->window =
-    new sf::RenderWindow(mode, WINDOW_TITLE_DEFAULT, WINDOW_STYLE_DEFAULT);
+  auto widthInPixels = this->widthInCells * CELL_SIZE;
+  auto heightInPixels = this->heightInCells * CELL_SIZE;
+  auto mode = sf::VideoMode(widthInPixels, heightInPixels);
+  this->window = new sf::RenderWindow(mode, WINDOW_TITLE_DEFAULT, WINDOW_STYLE);
 
   this->window->setMouseCursorVisible(false);
   this->window->setVerticalSyncEnabled(true);
@@ -45,76 +52,97 @@ void DisplayManager::shutDown() {
   LM.writeLog("DisplayManager::shutDown(): Shut down successfully");
 }
 
-auto DisplayManager::drawCh(Vector worldPosition, char ch, Color fg,
-                            Color bg) const -> int {
+auto DisplayManager::drawFrame(Position position, const Frame* frame) const
+  -> int {
   if (this->window == nullptr) return -1;
 
-  auto viewPosition = worldToView(worldPosition);
+  auto viewPosition = worldToView(position);
   auto pixelPosition = cellsToPixels(viewPosition);
+  auto content = frame->getContent();
 
-  static auto width = charWidth();
-  static auto height = charHeight();
+  // TODO: This might need to move to frame! It's quite labor intensive and it
+  // does not change per frame
+  sf::VertexArray cells(sf::Quads);
 
-  if (bg != UNDEFINED_COLOR) {
-    static sf::RectangleShape background;
-    background.setSize(sf::Vector2f(width, height));
-    background.setFillColor(toSFColor(bg));
-    background.setPosition(pixelPosition.getX(), pixelPosition.getY());
-    this->window->draw(background);
-  }
+  for (int i = 0; i < frame->getHeight(); i++) {
+    for (int j = 0; j < frame->getWidth(); j++) {
+      auto index = i * frame->getWidth() + j;
 
-  static sf::Text text("", this->font);
-  text.setString(ch);
-  text.setStyle(sf::Text::Bold);
+      float posX = pixelPosition.getX() + j * CELL_SIZE;
+      float posY = pixelPosition.getY() + i * CELL_SIZE;
 
-  if (width < height) {
-    text.setCharacterSize(width * 2);
-  } else {
-    text.setCharacterSize(height * 2);
-  }
+      // Define the four corners of the quad
+      sf::Vertex topLeft(sf::Vector2f(posX, posY));
+      sf::Vertex topRight(sf::Vector2f(posX + CELL_SIZE, posY));
+      sf::Vertex bottomRight(sf::Vector2f(posX + CELL_SIZE, posY + CELL_SIZE));
+      sf::Vertex bottomLeft(sf::Vector2f(posX, posY + CELL_SIZE));
 
-  text.setFillColor(toSFColor(fg));
-  text.setPosition(pixelPosition.getX(), pixelPosition.getY());
+      // Set the color for the cell (quad)
+      sf::Color cellColor = toSFColor(content[index]);
+      topLeft.color = cellColor;
+      topRight.color = cellColor;
+      bottomRight.color = cellColor;
+      bottomLeft.color = cellColor;
 
-  this->window->draw(text);
-
-  return 0;
-}
-
-auto DisplayManager::drawCh(Vector worldPosition, char ch, Color fg) const
-  -> int {
-  return DisplayManager::drawCh(worldPosition, ch, fg, this->backgroundColor);
-}
-
-auto DisplayManager::drawString(Vector worldPosition, std::string s,
-                                Alignment a, Color fg, Color bg) const -> int {
-  Vector start = worldPosition;
-  switch (a) {
-    case ALIGN_CENTER:
-      start.setX(worldPosition.getX() - s.size() / 2);
-      break;
-    case ALIGN_RIGHT:
-      start.setX(worldPosition.getX() - s.size());
-      break;
-    case ALIGN_LEFT:
-    default:
-      break;
-  }
-
-  for (int i = 0; i < s.size(); i++) {
-    Vector pos(start.getX() + i, start.getY());
-    if (drawCh(pos, s[i], fg, bg) != 0) {
-      return -1;
+      // Add the vertices to the VertexArray
+      cells.append(topLeft);
+      cells.append(topRight);
+      cells.append(bottomRight);
+      cells.append(bottomLeft);
     }
   }
 
+  window->draw(cells);
+
   return 0;
 }
 
-auto DisplayManager::drawString(Vector worldPosition, std::string s,
-                                Alignment a, Color fg) const -> int {
-  return DisplayManager::drawString(worldPosition, s, a, fg,
-                                    this->backgroundColor);
+auto DisplayManager::drawRectangle(Position position, int width, int height,
+                                   Color borderColor, Color fillColor) const
+  -> int {
+  if (this->window == nullptr) return -1;
+
+  auto viewPosition = worldToView(position);
+  auto pixelPosition = cellsToPixels(viewPosition);
+
+  sf::RectangleShape rectangle;
+  rectangle.setSize(sf::Vector2f(width * CELL_SIZE, height * CELL_SIZE));
+  rectangle.setOutlineColor(toSFColor(borderColor));
+  rectangle.setOutlineThickness(1);
+  rectangle.setFillColor(toSFColor(fillColor));
+  rectangle.setPosition(pixelPosition.getX(), pixelPosition.getY());
+
+  this->window->draw(rectangle);
+
+  return 0;
+}
+
+auto DisplayManager::drawRectangle(Position position, int width, int height,
+                                   Color borderColor) const -> int {
+  return drawRectangle(position, width, height, borderColor, UNDEFINED_COLOR);
+}
+
+auto DisplayManager::drawString(Position position, string string,
+                                Alignment alignment, Color color) const -> int {
+  if (this->window == nullptr) return -1;
+
+  this->window->draw(makeText(position, string, alignment, color));
+
+  return 0;
+}
+
+auto DisplayManager::measureString(string string) const -> Box {
+  auto text = makeText({0, 0}, string, ALIGN_LEFT, UNDEFINED_COLOR);
+  auto bounds = text.getGlobalBounds();
+  auto cellBounds = pixelsToCells({bounds.width, bounds.height});
+  auto position = pixelsToCells({bounds.left, bounds.top});
+
+  // Adding the position to height and width allows this object to return the
+  // real rectangle around the text (that takes into account the whitespace
+  // added around the characters by the font itself). For example, when you have
+  // "g" this trick makes room for the tail of the "g" character
+  return {cellBounds.getX() + position.getX(),
+          cellBounds.getY() + position.getY()};
 }
 
 void DisplayManager::setBackground(Color color) {
@@ -127,14 +155,6 @@ auto DisplayManager::getHorizontalCells() const -> int {
 
 auto DisplayManager::getVerticalCells() const -> int {
   return this->heightInCells;
-}
-
-auto DisplayManager::getHorizontalPixels() const -> int {
-  return this->widthInPixels;
-}
-
-auto DisplayManager::getVerticalPixels() const -> int {
-  return this->heightInPixels;
 }
 
 auto DisplayManager::swapBuffers() -> int {
@@ -156,20 +176,37 @@ auto DisplayManager::getWindow() const -> sf::RenderWindow* {
   return this->window;
 }
 
-auto charHeight() -> float {
-  return DM.getVerticalPixels() / (float)DM.getVerticalCells();
+auto DisplayManager::makeText(Position position, string string,
+                              Alignment alignment, Color color) const
+  -> sf::Text {
+  sf::Text text(string, this->font);
+  auto viewPosition = worldToView(position);
+  auto pixelPosition = cellsToPixels(viewPosition);
+  text.setCharacterSize(FONT_SIZE_DEFAULT);
+  text.setFillColor(toSFColor(color));
+  auto width = text.getLocalBounds().width;
+
+  switch (alignment) {
+    case ALIGN_CENTER:
+      text.setPosition(pixelPosition.getX() - width / 2, pixelPosition.getY());
+      break;
+    case ALIGN_RIGHT:
+      text.setPosition(pixelPosition.getX() - width, pixelPosition.getY());
+      break;
+    case ALIGN_LEFT:
+      text.setPosition(pixelPosition.getX(), pixelPosition.getY());
+      break;
+  }
+
+  return text;
 }
 
-auto charWidth() -> float {
-  return DM.getHorizontalPixels() / (float)DM.getHorizontalCells();
+auto cellsToPixels(Position spaces) -> Vector {
+  return {spaces.getX() * CELL_SIZE, spaces.getY() * CELL_SIZE};
 }
 
-auto cellsToPixels(Vector spaces) -> Vector {
-  return {spaces.getX() * charWidth(), spaces.getY() * charHeight()};
-}
-
-auto pixelsToCells(Vector pixels) -> Vector {
-  return {pixels.getX() / charWidth(), pixels.getY() / charHeight()};
+auto pixelsToCells(Vector pixels) -> Position {
+  return {pixels.getX() / CELL_SIZE, pixels.getY() / CELL_SIZE};
 }
 
 }  // namespace df

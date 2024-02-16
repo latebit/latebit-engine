@@ -3,6 +3,7 @@
 #include <array>
 #include <string>
 
+#include "Colors.h"
 #include "DisplayManager.h"
 #include "GameManager.h"
 #include "InputManager.h"
@@ -122,12 +123,7 @@ auto Object::drawBoundingBox() const -> int {
   float width = box.getWidth();
   float height = box.getHeight();
 
-  int result = 0;
-  result += DM.drawCh(corner, '+', CYAN);
-  result += DM.drawCh(corner + df::Vector(width, 0), '+', CYAN);
-  result += DM.drawCh(corner + df::Vector(width, height), '+', CYAN);
-  result += DM.drawCh(corner + df::Vector(0, height), '+', CYAN);
-  return result;
+  return DM.drawRectangle(corner, width, height, RED);
 }
 
 auto Object::subscribe(string eventType) -> int {

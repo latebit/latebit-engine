@@ -18,9 +18,9 @@ class WorldManager : public Manager {
 
   // Objects that are marked for deletion
   ObjectList deletions = ObjectList();
-  // The boundaries of the world, regardless of where the camera points
+  // The boundaries of the world, regardless of where the camera points in cells
   Box boundary = Box();
-  // The boundaries of the visible portion of the world
+  // The boundaries of the visible portion of the world in cells
   Box view = Box();
   // The object the view is following, if any
   Object *viewFollowing = nullptr;

@@ -1,6 +1,6 @@
 #include "EventStep.h"
 
-namespace df {
+namespace lb {
 EventStep::EventStep(int count) {
   setType(STEP_EVENT);
   this->stepCount = count;
@@ -8,4 +8,4 @@ EventStep::EventStep(int count) {
 
 void EventStep::setStepCount(int c) { this->stepCount = c; }
 auto EventStep::getStepCount() const -> int { return this->stepCount; }
-}  // namespace df
+}  // namespace lb

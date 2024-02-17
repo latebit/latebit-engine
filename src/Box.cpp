@@ -5,7 +5,7 @@
 #include "Vector.h"
 #include "utils.h"
 
-namespace df {
+namespace lb {
 Box::Box() {
   this->corner = Vector();
   this->width = 0;
@@ -42,4 +42,4 @@ auto Box::toString() const -> std::string {
   return "Box(" + this->corner.toString() + ", " + std::to_string(this->width) +
          ", " + std::to_string(this->height) + ")";
 }
-}  // namespace df
+}  // namespace lb

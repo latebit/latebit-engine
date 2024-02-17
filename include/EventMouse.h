@@ -5,10 +5,10 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 
 // MOUSE_EVENT would conflict with a macro in Windows
-const string MSE_EVENT = "df::mouse";
+const string MSE_EVENT = "lb::mouse";
 
 enum EventMouseAction {
   UNDEFINED_MOUSE_ACTION = -1,
@@ -53,4 +53,4 @@ class EventMouse : public Event {
   [[nodiscard]] auto getMousePosition() const -> Vector;
 };
 
-}  // namespace df
+}  // namespace lb

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 
 Clock::Clock() { this->previousTime = getNow(); }
 
@@ -28,4 +28,4 @@ auto Clock::getNow() -> long int {
     .count();
 }
 
-}  // namespace df
+}  // namespace lb

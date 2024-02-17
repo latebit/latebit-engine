@@ -8,7 +8,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 
 // duration of a frame in microseconds
 const int FRAME_TIME_DEFAULT = 33333;  // ~30fps
@@ -50,6 +50,6 @@ class GameManager : public Manager {
   // Define random starting seed. Better to be called before startUp().
   void setRandomSeed(int seed = time(nullptr));
 };
-}  // namespace df
+}  // namespace lb
 
-#define GM df::GameManager::getInstance()
+#define GM lb::GameManager::getInstance()

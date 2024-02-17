@@ -1,6 +1,6 @@
 #include "Animation.h"
 
-namespace df {
+namespace lb {
 Animation::Animation() {
   this->sprite = nullptr;
   this->name = "";
@@ -65,4 +65,4 @@ auto Animation::operator==(const Animation& other) const -> bool {
          this->slowdownCount == other.slowdownCount;
 }
 
-}  // namespace df
+}  // namespace lb

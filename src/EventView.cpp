@@ -1,6 +1,6 @@
 #include "EventView.h"
 
-namespace df {
+namespace lb {
 
 EventView::EventView() { setType(VIEW_EVENT); }
 
@@ -20,4 +20,4 @@ auto EventView::getValue() const -> int { return value; }
 void EventView::setDelta(bool delta) { this->delta = delta; }
 auto EventView::getDelta() const -> bool { return delta; }
 
-}  // namespace df
+}  // namespace lb

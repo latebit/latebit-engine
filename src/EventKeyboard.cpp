@@ -1,6 +1,6 @@
 #include "EventKeyboard.h"
 
-namespace df {
+namespace lb {
 EventKeyboard::EventKeyboard() { setType(KEYBOARD_EVENT); }
 
 EventKeyboard::EventKeyboard(Keyboard::Key k, EventKeyboardAction a) {
@@ -21,4 +21,4 @@ auto EventKeyboard::getKeyboardAction() const -> EventKeyboardAction {
   return this->action;
 }
 
-}  // namespace df
+}  // namespace lb

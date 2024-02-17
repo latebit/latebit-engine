@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-namespace df {
+namespace lb {
 
 static const sf::Color Black = sf::Color(0, 0, 0);
 static const sf::Color DarkBlue = sf::Color(29, 43, 83);
@@ -106,4 +106,4 @@ auto fromHex(char c) -> Color {
   }
 }
 
-}  // namespace df
+}  // namespace lb

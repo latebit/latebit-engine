@@ -1,5 +1,5 @@
 #include "EventOut.h"
 
-namespace df {
+namespace lb {
 EventOut::EventOut() { setType(OUT_EVENT); }
-}  // namespace df
+}  // namespace lb

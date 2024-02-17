@@ -8,7 +8,7 @@
 #include "WorldManager.h"
 #include "utils.h"
 
-namespace df {
+namespace lb {
 
 ViewObject::ViewObject() {
   setType("ViewObject");
@@ -112,4 +112,4 @@ auto ViewObject::setLabel(string label) -> void {
 }
 auto ViewObject::getLabel() const -> string { return label; }
 
-}  // namespace df
+}  // namespace lb

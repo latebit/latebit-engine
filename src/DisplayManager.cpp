@@ -9,7 +9,7 @@
 #include "Vector.h"
 #include "utils.h"
 
-namespace df {
+namespace lb {
 
 DisplayManager::DisplayManager() {
   setType("DisplayManager");
@@ -208,4 +208,4 @@ auto pixelsToCells(Vector pixels) -> Position {
   return {pixels.getX() / CELL_SIZE, pixels.getY() / CELL_SIZE};
 }
 
-}  // namespace df
+}  // namespace lb

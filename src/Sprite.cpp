@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 Sprite::Sprite(string label, int width, int height, int slowdown,
                int frameCount) {
   this->label = label;
@@ -88,4 +88,4 @@ auto Sprite::operator==(const Sprite& other) const -> bool {
          equal(this->frames.begin(), this->frames.end(), other.frames.begin());
 }
 
-}  // namespace df
+}  // namespace lb

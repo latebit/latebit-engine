@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 
 Object::Object() {
   static int id = 0;
@@ -186,4 +186,4 @@ auto Object::toString() const -> string {
   return "Object(id=" + to_string(this->id) + ",type=" + this->type + ")";
 }
 
-}  // namespace df
+}  // namespace lb

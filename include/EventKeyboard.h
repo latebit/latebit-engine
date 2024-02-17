@@ -2,9 +2,9 @@
 
 #include "Event.h"
 
-namespace df {
+namespace lb {
 
-const std::string KEYBOARD_EVENT = "df::keyboard";
+const std::string KEYBOARD_EVENT = "lb::keyboard";
 
 enum EventKeyboardAction {
   UNDEFINED_KEYBOARD_ACTION = -1,
@@ -115,4 +115,4 @@ class EventKeyboard : public Event {
   [[nodiscard]] auto getKeyboardAction() const -> EventKeyboardAction;
 };
 
-}  // namespace df
+}  // namespace lb

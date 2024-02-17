@@ -5,7 +5,7 @@
 #include "../lib/test.h"
 
 using namespace std;
-using namespace df;
+using namespace lb;
 
 void Colors_fromHex_test() {
   array<char, 22> validColors = {'0', '1', '2', '3', '4', '5', '6', '7',

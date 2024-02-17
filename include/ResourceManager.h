@@ -5,9 +5,9 @@
 #include "Sound.h"
 #include "Sprite.h"
 
-#define RM df::ResourceManager::getInstance()
+#define RM lb::ResourceManager::getInstance()
 
-namespace df {
+namespace lb {
 const int MAX_SPRITES = 500;
 const int MAX_SOUNDS = 50;
 const int MAX_MUSICS = 50;
@@ -59,4 +59,4 @@ class ResourceManager : public Manager {
   // Return pointer to music associated with label
   [[nodiscard]] auto getMusic(std::string label) const -> Music *;
 };
-}  // namespace df
+}  // namespace lb

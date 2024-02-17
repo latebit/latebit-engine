@@ -9,7 +9,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 Frame::Frame() = default;
 
 Frame::Frame(int w, int h, vector<Color> content) {
@@ -39,4 +39,4 @@ auto Frame::operator==(const Frame& other) const -> bool {
                other.content.begin());
 }
 
-}  // namespace df
+}  // namespace lb

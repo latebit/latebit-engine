@@ -6,9 +6,9 @@
 #include "ObjectListIterator.h"
 #include "utils.h"
 
-#define WM df::WorldManager::getInstance()
+#define WM lb::WorldManager::getInstance()
 
-namespace df {
+namespace lb {
 
 WorldManager::WorldManager() {
   setType("WorldManager");
@@ -269,4 +269,4 @@ void WorldManager::setViewDeadZone(Box d) {
 auto WorldManager::getViewDeadZone() const -> Box { return this->viewDeadZone; }
 
 auto WorldManager::getSceneGraph() -> SceneGraph& { return this->sceneGraph; }
-}  // namespace df
+}  // namespace lb

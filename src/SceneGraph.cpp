@@ -4,7 +4,7 @@
 #include "Object.h"
 #include "ObjectList.h"
 
-namespace df {
+namespace lb {
 SceneGraph::SceneGraph() = default;
 SceneGraph::~SceneGraph() = default;
 
@@ -237,4 +237,4 @@ auto SceneGraph::setVisible(Object *o, bool isVisible) -> int {
   return this->visible[o->getAltitude()].insert(o);
 }
 
-}  // namespace df
+}  // namespace lb

@@ -8,7 +8,7 @@
 #include "GameManager.h"
 #include "LogManager.h"
 
-namespace df {
+namespace lb {
 
 auto InputManager::getInstance() -> InputManager& {
   static InputManager instance;
@@ -122,7 +122,7 @@ void InputManager::shutDown() {
 }
 
 auto InputManager::isValid(string eventType) const -> bool {
-  return eventType == df::KEYBOARD_EVENT || eventType == df::MSE_EVENT;
+  return eventType == lb::KEYBOARD_EVENT || eventType == lb::MSE_EVENT;
 }
 
 void InputManager::getInput() const {
@@ -138,22 +138,22 @@ void InputManager::getInput() const {
     switch (event.type) {
       case sf::Event::KeyPressed:
         keyEvent.setKey(fromSFMLKeyCode(event.key.code));
-        keyEvent.setKeyboardAction(df::EventKeyboardAction::KEY_PRESSED);
+        keyEvent.setKeyboardAction(lb::EventKeyboardAction::KEY_PRESSED);
         onEvent(&keyEvent);
         break;
       case sf::Event::KeyReleased:
         keyEvent.setKey(fromSFMLKeyCode(event.key.code));
-        keyEvent.setKeyboardAction(df::EventKeyboardAction::KEY_RELEASED);
+        keyEvent.setKeyboardAction(lb::EventKeyboardAction::KEY_RELEASED);
         onEvent(&keyEvent);
         break;
       case sf::Event::MouseMoved:
-        mouseEvent.setMouseAction(df::EventMouseAction::MOVED);
+        mouseEvent.setMouseAction(lb::EventMouseAction::MOVED);
         mouseEvent.setMousePosition(
           pixelsToCells(Vector(event.mouseMove.x, event.mouseMove.y)));
         onEvent(&mouseEvent);
         break;
       case sf::Event::MouseButtonPressed:
-        mouseEvent.setMouseAction(df::EventMouseAction::CLICKED);
+        mouseEvent.setMouseAction(lb::EventMouseAction::CLICKED);
         mouseEvent.setMouseButton(
           fromSFMLMouseButton(event.mouseButton.button));
         mouseEvent.setMousePosition(
@@ -188,4 +188,4 @@ auto InputManager::fromSFMLMouseButton(sf::Mouse::Button btn) const
   return Mouse::UNDEFINED_MOUSE_BUTTON;
 }
 
-}  // namespace df
+}  // namespace lb

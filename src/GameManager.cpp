@@ -9,7 +9,7 @@
 #include "WorldManager.h"
 #include "utils.h"
 
-namespace df {
+namespace lb {
 
 GameManager::GameManager() {
   setType("GameManager");
@@ -104,4 +104,4 @@ void GameManager::setFrameTime(int frameTime) { this->frameTime = frameTime; }
 
 void GameManager::setRandomSeed(int seed) { srand(seed); }
 
-}  // namespace df
+}  // namespace lb

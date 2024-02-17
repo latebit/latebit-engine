@@ -6,7 +6,7 @@
 
 #include "utils.h"
 
-namespace df {
+namespace lb {
 
 const char* LOGFILE_NAME = "dragonfly.log";
 
@@ -73,4 +73,4 @@ void LogManager::stdoutLog(const char* fmt, ...) const {
   va_end(args);
   printf("\n");
 }
-}  // namespace df
+}  // namespace lb

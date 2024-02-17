@@ -5,11 +5,11 @@
 #include "ObjectList.h"
 #include "SceneGraph.h"
 
-#define WM df::WorldManager::getInstance()
+#define WM lb::WorldManager::getInstance()
 
 using namespace std;
 
-namespace df {
+namespace lb {
 
 class WorldManager : public Manager {
  private:
@@ -101,4 +101,4 @@ class WorldManager : public Manager {
   // Returns the current SceneGraph
   [[nodiscard]] auto getSceneGraph() -> SceneGraph &;
 };
-}  // namespace df
+}  // namespace lb

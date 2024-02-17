@@ -9,7 +9,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 enum Slowdown {
   STOANIMATION = 0,
   NO_SLOWDOWN = 1,
@@ -68,4 +68,4 @@ class Sprite {
   [[nodiscard]] auto draw(int i, Vector position) const -> int;
 };
 
-}  // namespace df
+}  // namespace lb

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 
 const int MAX_SIZE = 2000;
 
@@ -39,4 +39,4 @@ class ObjectList {
   auto find(Object *o) const -> int;
 };
 
-}  // namespace df
+}  // namespace lb

@@ -4,7 +4,7 @@
 #include "Colors.h"
 #include "DisplayManager.h"
 
-using namespace df;
+using namespace lb;
 using namespace std;
 
 void Sprite_constructor_test() {

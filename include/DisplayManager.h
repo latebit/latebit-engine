@@ -8,9 +8,9 @@
 
 using namespace std;
 
-#define DM df::DisplayManager::getInstance()
+#define DM lb::DisplayManager::getInstance()
 
-namespace df {
+namespace lb {
 
 enum Alignment {
   ALIGN_LEFT,
@@ -108,4 +108,4 @@ class DisplayManager : public Manager {
   // Returns a pointer to the window
   [[nodiscard]] auto getWindow() const -> sf::RenderWindow *;
 };
-}  // namespace df
+}  // namespace lb

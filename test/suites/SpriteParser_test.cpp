@@ -2,7 +2,7 @@
 
 #include "../lib/test.h"
 
-using namespace df;
+using namespace lb;
 using namespace std;
 
 void makeFile(string filename, string content) {

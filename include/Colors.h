@@ -4,7 +4,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 enum Color {
   UNDEFINED_COLOR = -1,
   BLACK = 0,
@@ -32,4 +32,4 @@ auto fromHex(char c) -> Color;
 
 // Converts a Color to a SFML Color
 auto toSFColor(Color c) -> sf::Color;
-}  // namespace df
+}  // namespace lb

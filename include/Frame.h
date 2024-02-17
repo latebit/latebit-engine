@@ -8,7 +8,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 
 class Frame {
  private:
@@ -40,4 +40,4 @@ class Frame {
   // Compares two frames for equality
   auto operator==(const Frame& other) const -> bool;
 };
-}  // namespace df
+}  // namespace lb

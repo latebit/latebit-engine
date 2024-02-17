@@ -1,6 +1,5 @@
 #include "SpriteParser.h"
 
-#include <cstdio>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -11,7 +10,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 auto SpriteParser::getLine(ifstream* file) -> string {
   string line;
   getline(*file, line);
@@ -69,4 +68,4 @@ auto SpriteParser::parseSprite(string filename, string label) -> Sprite {
   return sprite;
 }
 
-}  // namespace df
+}  // namespace lb

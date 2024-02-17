@@ -4,7 +4,7 @@
 
 #include "../lib/test.h"
 
-using namespace df;
+using namespace lb;
 
 void Frame_test() {
   test("constructor", []() {

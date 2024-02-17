@@ -6,7 +6,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 class Box {
  private:
   // Bottom left corner of box
@@ -45,4 +45,4 @@ class Box {
   // Represent the box as a string
   [[nodiscard]] auto toString() const -> string;
 };
-}  // namespace df
+}  // namespace lb

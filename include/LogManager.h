@@ -2,9 +2,9 @@
 
 #include "Manager.h"
 
-#define LM df::LogManager::getInstance()
+#define LM lb::LogManager::getInstance()
 
-namespace df {
+namespace lb {
 
 extern const char *LOGFILE_NAME;
 
@@ -35,4 +35,4 @@ class LogManager : public Manager {
   void stdoutLog(const char *fmt, ...) const;
 };
 
-}  // namespace df
+}  // namespace lb

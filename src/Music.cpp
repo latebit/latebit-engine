@@ -1,35 +1,41 @@
 #include "Music.h"
 
-#include <SFML/Audio/Music.hpp>
+#include <SDL2/SDL_audio.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_stdinc.h>
 
 #include "LogManager.h"
 
-namespace df {
+using namespace std;
 
-Music::Music() { this->label = ""; }
+namespace lb {
 
-Music::~Music() { this->music.stop(); }
+Music::Music() = default;
+
+Music::~Music() {
+  Mix_FreeMusic(this->music);
+  this->music = nullptr;
+}
 
 auto Music::play(bool loop) -> void {
-  this->music.setLoop(loop);
-  this->music.play();
+  Mix_PlayMusic(this->music, loop ? -1 : 0);
 }
-auto Music::stop() -> void { this->music.stop(); }
-auto Music::pause() -> void { this->music.pause(); }
+auto Music::pause() -> void { Mix_PauseMusic(); }
+auto Music::stop() -> void { Mix_HaltMusic(); }
 
-auto Music::getLabel() const -> std::string { return this->label; }
-auto Music::setLabel(std::string l) -> void { this->label = l; }
+auto Music::getLabel() const -> string { return this->label; }
+auto Music::setLabel(string l) -> void { this->label = l; }
 
-auto Music::loadMusic(std::string filename) -> int {
-  if (!this->music.openFromFile(filename)) {
-    LM.writeLog("Music::loadMusic(): Failed to load music from %s",
-                filename.c_str());
+auto Music::loadMusic(string filename) -> int {
+  this->music = Mix_LoadMUS(filename.c_str());
+
+  if (this->music == nullptr) {
+    LM.writeLog("Music::loadMusic(): unable to load music. %s.",
+                Mix_GetError());
     return -1;
   }
 
   return 0;
 }
 
-auto Music::getMusic() const -> const sf::Music* { return &this->music; }
-
-}  // namespace df
+}  // namespace lb

@@ -8,7 +8,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 const int MAX_EVENTS = 100;
 
 class Manager {
@@ -61,4 +61,4 @@ class Manager {
   // notified
   auto unsubscribe(Object *o, string eventType) -> int;
 };
-};  // namespace df
+};  // namespace lb

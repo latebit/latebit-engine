@@ -1,6 +1,10 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_video.h>
 
 #include "Colors.h"
 #include "Manager.h"
@@ -8,9 +12,9 @@
 
 using namespace std;
 
-#define DM df::DisplayManager::getInstance()
+#define DM lb::DisplayManager::getInstance()
 
-namespace df {
+namespace lb {
 
 enum Alignment {
   ALIGN_LEFT,
@@ -18,43 +22,49 @@ enum Alignment {
   ALIGN_RIGHT,
 };
 
-const int WINDOW_HORIZONTAL_PIXELS_DEFAULT = 1024;
-const int WINDOW_VERTICAL_PIXELS_DEFAULT = 768;
-const int WINDOW_HORIZONTAL_CHARS_DEFAULT = 80;
-const int WINDOW_VERTICAL_CHARS_DEFAULT = 24;
-const int WINDOW_STYLE_DEFAULT = sf::Style::Titlebar | sf::Style::Close;
+// A 2D Vector representing a position in the world in cells
+using Position = Vector;
+
+const int WINDOW_HORIZONTAL_CELLS = 240;
+const int WINDOW_VERTICAL_CELLS = 160;
+const int CELL_SIZE = 3;
 const Color WINDOW_BACKGROUND_COLOR_DEFAULT = BLACK;
-const string WINDOW_TITLE_DEFAULT = "Dragonfly";
-const string FONT_FILE_DEFAULT = "df-font.ttf";
+const string WINDOW_TITLE_DEFAULT = "Latebits";
+const string FONT_FILE_DEFAULT = "font.ttf";
+const uint FONT_SIZE_DEFAULT = CELL_SIZE * 8;
 
 // Returns height of a single character
 auto charHeight() -> float;
 // Returns width of a single character
-auto charWidth() -> float;
+auto cellSize() -> float;
 
 // Converts cell coodinates to pixel coordinates
-auto cellsToPixels(Vector cells) -> Vector;
+auto cellsToPixels(Position cells) -> Vector;
 // Converts pixel coodinates to cell coordinates
-auto pixelsToCells(Vector pixels) -> Vector;
+auto pixelsToCells(Vector pixels) -> Position;
 
 class DisplayManager : public Manager {
  private:
   DisplayManager();
   // Font used to draw text
-  sf::Font font = sf::Font();
+  TTF_Font *font = nullptr;
   // The window has an initial given size in pixels and cells. All we draw
   // are characters and all the coordinates we use are in cells
-  sf::RenderWindow *window = nullptr;
-  // Window width in pixels
-  int widthInPixels = WINDOW_HORIZONTAL_PIXELS_DEFAULT;
-  // Window height in pixels
-  int heightInPixels = WINDOW_VERTICAL_PIXELS_DEFAULT;
+  SDL_Window *window = nullptr;
+  SDL_Renderer *renderer = nullptr;
+
   // Window width in cells
-  int widthInCells = WINDOW_HORIZONTAL_CHARS_DEFAULT;
+  int widthInCells = WINDOW_HORIZONTAL_CELLS;
   // Window height in cells
-  int heightInCells = WINDOW_VERTICAL_CHARS_DEFAULT;
+  int heightInCells = WINDOW_VERTICAL_CELLS;
   // Background color of the window
   Color backgroundColor = WINDOW_BACKGROUND_COLOR_DEFAULT;
+
+  // Returns an sf::Text object with the default font and the given parameters
+  // It does not draw the text to the window. It's meant to be used to preview
+  // the text before drawing it
+  auto makeText(Position position, string string, Color color,
+                SDL_Texture *texture) const -> SDL_Rect;
 
  public:
   DisplayManager(DisplayManager const &) = delete;
@@ -65,20 +75,23 @@ class DisplayManager : public Manager {
   auto startUp() -> int override;
   void shutDown() override;
 
-  // Draws a single character to the window at the given position
-  auto drawCh(Vector position, char c, Color color) const -> int;
-  // Draws a single character to the window at the given position with
-  // the given background color
-  auto drawCh(Vector position, char c, Color foreground, Color background) const
-    -> int;
+  // Draws a frame in the given position
+  auto drawFrame(Position position, const Frame *frame) const -> int;
+
+  // Draws a rectangle outline at the given world position (top left cell)
+  auto drawRectangle(Position position, int width, int height,
+                     Color borderColor) const -> int;
+
+  // Draws a rectangle at the given world position (top left cell)
+  auto drawRectangle(Position position, int width, int height,
+                     Color borderColor, Color fillColor) const -> int;
 
   // Draws a string to the window at the given world position
-  auto drawString(Vector postion, string s, Alignment a, Color color) const
-    -> int;
-  // Draws a string to the window at the given world position with the given
-  // background color
-  auto drawString(Vector position, string s, Alignment a, Color foreground,
-                  Color background) const -> int;
+  auto drawString(Position postion, string string, Alignment alignment,
+                  Color color) const -> int;
+
+  // Returns the bounding box of a given string. Dimensions are in cells
+  [[nodiscard]] auto measureString(string string) const -> Box;
 
   // Change the background color of the window
   void setBackground(Color color);
@@ -87,17 +100,10 @@ class DisplayManager : public Manager {
   auto getHorizontalCells() const -> int;
   // Return the amount of vertical cells
   auto getVerticalCells() const -> int;
-  // Return the window width in pixels
-  auto getHorizontalPixels() const -> int;
-  // Return the window height in pixels
-  auto getVerticalPixels() const -> int;
 
   // Swap the buffers for drawing.
   // This is the result of Double Buffering: first we draw to a hidden buffer
   // and then we display it to the screen
   auto swapBuffers() -> int;
-
-  // Returns a pointer to the window
-  [[nodiscard]] auto getWindow() const -> sf::RenderWindow *;
 };
-}  // namespace df
+}  // namespace lb

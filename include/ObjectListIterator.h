@@ -3,7 +3,7 @@
 #include "Object.h"
 #include "ObjectList.h"
 
-namespace df {
+namespace lb {
 
 class ObjectList;
 
@@ -28,4 +28,4 @@ class ObjectListIterator {
   // Returns the object at the current index in the list
   [[nodiscard]] auto currentObject() const -> Object *;
 };
-}  // namespace df
+}  // namespace lb

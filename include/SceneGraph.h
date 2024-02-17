@@ -5,7 +5,7 @@
 #include "Object.h"
 #include "ObjectList.h"
 
-namespace df {
+namespace lb {
 const int MAX_ALTITUDE = 4;
 
 class SceneGraph {
@@ -56,4 +56,4 @@ class SceneGraph {
   // Marks an object as active
   auto setActive(Object *o, bool isActive) -> int;
 };
-}  // namespace df
+}  // namespace lb

@@ -6,9 +6,9 @@
 
 #include "utils.h"
 
-namespace df {
+namespace lb {
 
-const char* LOGFILE_NAME = "dragonfly.log";
+const char* LOGFILE_NAME = "latebits.log";
 
 LogManager::LogManager() {
   setType("LogManager");
@@ -45,6 +45,7 @@ void LogManager::shutDown() {
 
 void LogManager::setFlush(bool flush) { this->flush = flush; }
 
+#ifndef __EMSCRIPTEN__
 auto LogManager::writeLog(const char* fmt, ...) const -> int {
   if (this->file == nullptr) {
     stdoutLog("LogManager::writeLog(): Warning! Log file not open");
@@ -64,6 +65,19 @@ auto LogManager::writeLog(const char* fmt, ...) const -> int {
 
   return 0;
 }
+#endif
+
+#ifdef __EMSCRIPTEN__
+int LogManager::writeLog(const char* fmt, ...) const {
+  printf("[%s] ", getTimeString().c_str());
+  va_list args;
+  va_start(args, fmt);
+  vprintf(fmt, args);
+  va_end(args);
+  printf("\n");
+  return 0;
+}
+#endif
 
 void LogManager::stdoutLog(const char* fmt, ...) const {
   printf("[%s] ", getTimeString().c_str());
@@ -73,4 +87,4 @@ void LogManager::stdoutLog(const char* fmt, ...) const {
   va_end(args);
   printf("\n");
 }
-}  // namespace df
+}  // namespace lb

@@ -5,7 +5,7 @@
 #include "LogManager.h"
 #include "WorldManager.h"
 
-using namespace df;
+using namespace lb;
 
 void GameManager_test() {
   GM.startUp();

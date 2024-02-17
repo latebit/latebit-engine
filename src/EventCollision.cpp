@@ -1,6 +1,6 @@
 #include "EventCollision.h"
 
-namespace df {
+namespace lb {
 
 EventCollision::EventCollision() { setType(COLLISION_EVENT); }
 
@@ -24,4 +24,4 @@ auto EventCollision::getSecondObject() const -> Object * {
 void EventCollision::setPosition(Vector position) { this->position = position; }
 auto EventCollision::getPos() const -> Vector { return this->position; }
 
-}  // namespace df
+}  // namespace lb

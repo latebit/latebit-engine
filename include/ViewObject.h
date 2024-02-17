@@ -6,7 +6,7 @@
 #include "Event.h"
 #include "Object.h"
 
-namespace df {
+namespace lb {
 enum ViewObjectLocation {
   TOP_LEFT,
   TOP_CENTER,
@@ -72,4 +72,4 @@ class ViewObject : public Object {
   // Returns true if value is drawn
   [[nodiscard]] auto getDrawValue() const -> bool;
 };
-}  // namespace df
+}  // namespace lb

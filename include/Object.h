@@ -10,7 +10,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 enum Solidness {
   HARD,
   SOFT,
@@ -162,4 +162,4 @@ class Object {
   // Represent the object as a string
   [[nodiscard]] auto toString() const -> string;
 };
-}  // namespace df
+}  // namespace lb

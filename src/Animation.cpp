@@ -1,6 +1,6 @@
 #include "Animation.h"
 
-namespace df {
+namespace lb {
 Animation::Animation() {
   this->sprite = nullptr;
   this->name = "";
@@ -8,7 +8,15 @@ Animation::Animation() {
   this->slowdownCount = 0;
 }
 
-void Animation::setSprite(Sprite* s) { this->sprite = s; }
+void Animation::setSprite(Sprite* s) {
+  this->sprite = s;
+  // In case the new sprite has a different number of frames, reset the index
+  // and slowdown count to not have blank frames
+  // For exmaple, when you try to render index 4, but the new sprite has only 3
+  // frames, it will render a blank frame instead of the first one)
+  this->index = 0;
+  this->slowdownCount = 0;
+}
 auto Animation::getSprite() const -> Sprite* { return this->sprite; }
 
 void Animation::setName(std::string n) { this->name = n; }
@@ -57,4 +65,4 @@ auto Animation::operator==(const Animation& other) const -> bool {
          this->slowdownCount == other.slowdownCount;
 }
 
-}  // namespace df
+}  // namespace lb

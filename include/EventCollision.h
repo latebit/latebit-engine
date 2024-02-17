@@ -5,9 +5,9 @@
 #include "Object.h"
 #include "Vector.h"
 
-namespace df {
+namespace lb {
 
-const std::string COLLISION_EVENT = "df::collision";
+const std::string COLLISION_EVENT = "lb::collision";
 
 class EventCollision : public Event {
  private:
@@ -39,4 +39,4 @@ class EventCollision : public Event {
   [[nodiscard]] auto getPos() const -> Vector;
 };
 
-}  // namespace df
+}  // namespace lb

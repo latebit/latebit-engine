@@ -1,5 +1,9 @@
 #include "InputManager.h"
 
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keycode.h>
+#include <SDL2/SDL_mouse.h>
+
 #include <unordered_map>
 
 #include "DisplayManager.h"
@@ -8,7 +12,7 @@
 #include "GameManager.h"
 #include "LogManager.h"
 
-namespace df {
+namespace lb {
 
 auto InputManager::getInstance() -> InputManager& {
   static InputManager instance;
@@ -19,86 +23,79 @@ InputManager::InputManager() {
   setType("InputManager");
   LM.writeLog("InputManager::InputManager(): Created InputManager");
 
-  this->keyboardEvent[sf::Keyboard::Space] = Keyboard::SPACE;
-  this->keyboardEvent[sf::Keyboard::Return] = Keyboard::RETURN;
-  this->keyboardEvent[sf::Keyboard::Escape] = Keyboard::ESCAPE;
-  this->keyboardEvent[sf::Keyboard::Tab] = Keyboard::TAB;
-  this->keyboardEvent[sf::Keyboard::Left] = Keyboard::LEFTARROW;
-  this->keyboardEvent[sf::Keyboard::Right] = Keyboard::RIGHTARROW;
-  this->keyboardEvent[sf::Keyboard::Up] = Keyboard::UPARROW;
-  this->keyboardEvent[sf::Keyboard::Down] = Keyboard::DOWNARROW;
-  this->keyboardEvent[sf::Keyboard::Pause] = Keyboard::PAUSE;
-  this->keyboardEvent[sf::Keyboard::Dash] = Keyboard::MINUS;
-  this->keyboardEvent[sf::Keyboard::Equal] = Keyboard::PLUS;
-  this->keyboardEvent[sf::Keyboard::Tilde] = Keyboard::TILDE;
-  this->keyboardEvent[sf::Keyboard::Period] = Keyboard::PERIOD;
-  this->keyboardEvent[sf::Keyboard::Comma] = Keyboard::COMMA;
-  this->keyboardEvent[sf::Keyboard::Slash] = Keyboard::SLASH;
-  this->keyboardEvent[sf::Keyboard::BackSlash] = Keyboard::BACKSLASH;
-  this->keyboardEvent[sf::Keyboard::Multiply] = Keyboard::MULTIPLY;
-  this->keyboardEvent[sf::Keyboard::Quote] = Keyboard::QUOTE;
-  this->keyboardEvent[sf::Keyboard::SemiColon] = Keyboard::SEMICOLON;
-  this->keyboardEvent[sf::Keyboard::LControl] = Keyboard::LEFTCONTROL;
-  this->keyboardEvent[sf::Keyboard::RControl] = Keyboard::RIGHTCONTROL;
-  this->keyboardEvent[sf::Keyboard::LShift] = Keyboard::LEFTSHIFT;
-  this->keyboardEvent[sf::Keyboard::RShift] = Keyboard::RIGHTSHIFT;
-  this->keyboardEvent[sf::Keyboard::F1] = Keyboard::F1;
-  this->keyboardEvent[sf::Keyboard::F2] = Keyboard::F2;
-  this->keyboardEvent[sf::Keyboard::F3] = Keyboard::F3;
-  this->keyboardEvent[sf::Keyboard::F4] = Keyboard::F4;
-  this->keyboardEvent[sf::Keyboard::F5] = Keyboard::F5;
-  this->keyboardEvent[sf::Keyboard::F6] = Keyboard::F6;
-  this->keyboardEvent[sf::Keyboard::F7] = Keyboard::F7;
-  this->keyboardEvent[sf::Keyboard::F8] = Keyboard::F8;
-  this->keyboardEvent[sf::Keyboard::F9] = Keyboard::F9;
-  this->keyboardEvent[sf::Keyboard::F10] = Keyboard::F10;
-  this->keyboardEvent[sf::Keyboard::F11] = Keyboard::F11;
-  this->keyboardEvent[sf::Keyboard::F12] = Keyboard::F12;
-  this->keyboardEvent[sf::Keyboard::A] = Keyboard::A;
-  this->keyboardEvent[sf::Keyboard::B] = Keyboard::B;
-  this->keyboardEvent[sf::Keyboard::C] = Keyboard::C;
-  this->keyboardEvent[sf::Keyboard::D] = Keyboard::D;
-  this->keyboardEvent[sf::Keyboard::E] = Keyboard::E;
-  this->keyboardEvent[sf::Keyboard::F] = Keyboard::F;
-  this->keyboardEvent[sf::Keyboard::G] = Keyboard::G;
-  this->keyboardEvent[sf::Keyboard::H] = Keyboard::H;
-  this->keyboardEvent[sf::Keyboard::I] = Keyboard::I;
-  this->keyboardEvent[sf::Keyboard::J] = Keyboard::J;
-  this->keyboardEvent[sf::Keyboard::K] = Keyboard::K;
-  this->keyboardEvent[sf::Keyboard::L] = Keyboard::L;
-  this->keyboardEvent[sf::Keyboard::M] = Keyboard::M;
-  this->keyboardEvent[sf::Keyboard::N] = Keyboard::N;
-  this->keyboardEvent[sf::Keyboard::O] = Keyboard::O;
-  this->keyboardEvent[sf::Keyboard::P] = Keyboard::P;
-  this->keyboardEvent[sf::Keyboard::Q] = Keyboard::Q;
-  this->keyboardEvent[sf::Keyboard::R] = Keyboard::R;
-  this->keyboardEvent[sf::Keyboard::S] = Keyboard::S;
-  this->keyboardEvent[sf::Keyboard::T] = Keyboard::T;
-  this->keyboardEvent[sf::Keyboard::U] = Keyboard::U;
-  this->keyboardEvent[sf::Keyboard::V] = Keyboard::V;
-  this->keyboardEvent[sf::Keyboard::W] = Keyboard::W;
-  this->keyboardEvent[sf::Keyboard::X] = Keyboard::X;
-  this->keyboardEvent[sf::Keyboard::Y] = Keyboard::Y;
-  this->keyboardEvent[sf::Keyboard::Z] = Keyboard::Z;
-  this->keyboardEvent[sf::Keyboard::Num0] = Keyboard::NUM0;
-  this->keyboardEvent[sf::Keyboard::Num1] = Keyboard::NUM1;
-  this->keyboardEvent[sf::Keyboard::Num2] = Keyboard::NUM2;
-  this->keyboardEvent[sf::Keyboard::Num3] = Keyboard::NUM3;
-  this->keyboardEvent[sf::Keyboard::Num4] = Keyboard::NUM4;
-  this->keyboardEvent[sf::Keyboard::Num5] = Keyboard::NUM5;
-  this->keyboardEvent[sf::Keyboard::Num6] = Keyboard::NUM6;
-  this->keyboardEvent[sf::Keyboard::Num7] = Keyboard::NUM7;
-  this->keyboardEvent[sf::Keyboard::Num8] = Keyboard::NUM8;
-  this->keyboardEvent[sf::Keyboard::Num9] = Keyboard::NUM9;
-  this->keyboardEvent[sf::Keyboard::BackSpace] = Keyboard::BACKSPACE;
+  this->keyboardEvent[SDLK_SPACE] = Keyboard::SPACE;
+  this->keyboardEvent[SDLK_RETURN] = Keyboard::RETURN;
+  this->keyboardEvent[SDLK_ESCAPE] = Keyboard::ESCAPE;
+  this->keyboardEvent[SDLK_TAB] = Keyboard::TAB;
+  this->keyboardEvent[SDLK_LEFT] = Keyboard::LEFTARROW;
+  this->keyboardEvent[SDLK_RIGHT] = Keyboard::RIGHTARROW;
+  this->keyboardEvent[SDLK_UP] = Keyboard::UPARROW;
+  this->keyboardEvent[SDLK_DOWN] = Keyboard::DOWNARROW;
+  this->keyboardEvent[SDLK_PAUSE] = Keyboard::PAUSE;
+  this->keyboardEvent[SDLK_MINUS] = Keyboard::MINUS;
+  this->keyboardEvent[SDLK_PLUS] = Keyboard::PLUS;
+  this->keyboardEvent[SDLK_PERIOD] = Keyboard::PERIOD;
+  this->keyboardEvent[SDLK_COMMA] = Keyboard::COMMA;
+  this->keyboardEvent[SDLK_SLASH] = Keyboard::SLASH;
+  this->keyboardEvent[SDLK_BACKSLASH] = Keyboard::BACKSLASH;
+  this->keyboardEvent[SDLK_ASTERISK] = Keyboard::MULTIPLY;
+  this->keyboardEvent[SDLK_QUOTE] = Keyboard::QUOTE;
+  this->keyboardEvent[SDLK_SEMICOLON] = Keyboard::SEMICOLON;
+  this->keyboardEvent[SDLK_LCTRL] = Keyboard::LEFTCONTROL;
+  this->keyboardEvent[SDLK_RCTRL] = Keyboard::RIGHTCONTROL;
+  this->keyboardEvent[SDLK_LSHIFT] = Keyboard::LEFTSHIFT;
+  this->keyboardEvent[SDLK_RSHIFT] = Keyboard::RIGHTSHIFT;
+  this->keyboardEvent[SDLK_F1] = Keyboard::F1;
+  this->keyboardEvent[SDLK_F2] = Keyboard::F2;
+  this->keyboardEvent[SDLK_F3] = Keyboard::F3;
+  this->keyboardEvent[SDLK_F4] = Keyboard::F4;
+  this->keyboardEvent[SDLK_F5] = Keyboard::F5;
+  this->keyboardEvent[SDLK_F6] = Keyboard::F6;
+  this->keyboardEvent[SDLK_F7] = Keyboard::F7;
+  this->keyboardEvent[SDLK_F8] = Keyboard::F8;
+  this->keyboardEvent[SDLK_F9] = Keyboard::F9;
+  this->keyboardEvent[SDLK_F10] = Keyboard::F10;
+  this->keyboardEvent[SDLK_F11] = Keyboard::F11;
+  this->keyboardEvent[SDLK_F12] = Keyboard::F12;
+  this->keyboardEvent[SDLK_a] = Keyboard::A;
+  this->keyboardEvent[SDLK_b] = Keyboard::B;
+  this->keyboardEvent[SDLK_c] = Keyboard::C;
+  this->keyboardEvent[SDLK_d] = Keyboard::D;
+  this->keyboardEvent[SDLK_e] = Keyboard::E;
+  this->keyboardEvent[SDLK_f] = Keyboard::F;
+  this->keyboardEvent[SDLK_g] = Keyboard::G;
+  this->keyboardEvent[SDLK_h] = Keyboard::H;
+  this->keyboardEvent[SDLK_i] = Keyboard::I;
+  this->keyboardEvent[SDLK_j] = Keyboard::J;
+  this->keyboardEvent[SDLK_k] = Keyboard::K;
+  this->keyboardEvent[SDLK_l] = Keyboard::L;
+  this->keyboardEvent[SDLK_m] = Keyboard::M;
+  this->keyboardEvent[SDLK_n] = Keyboard::N;
+  this->keyboardEvent[SDLK_o] = Keyboard::O;
+  this->keyboardEvent[SDLK_p] = Keyboard::P;
+  this->keyboardEvent[SDLK_q] = Keyboard::Q;
+  this->keyboardEvent[SDLK_r] = Keyboard::R;
+  this->keyboardEvent[SDLK_s] = Keyboard::S;
+  this->keyboardEvent[SDLK_t] = Keyboard::T;
+  this->keyboardEvent[SDLK_u] = Keyboard::U;
+  this->keyboardEvent[SDLK_v] = Keyboard::V;
+  this->keyboardEvent[SDLK_w] = Keyboard::W;
+  this->keyboardEvent[SDLK_x] = Keyboard::X;
+  this->keyboardEvent[SDLK_y] = Keyboard::Y;
+  this->keyboardEvent[SDLK_z] = Keyboard::Z;
+  this->keyboardEvent[SDLK_0] = Keyboard::NUM0;
+  this->keyboardEvent[SDLK_1] = Keyboard::NUM1;
+  this->keyboardEvent[SDLK_2] = Keyboard::NUM2;
+  this->keyboardEvent[SDLK_3] = Keyboard::NUM3;
+  this->keyboardEvent[SDLK_4] = Keyboard::NUM4;
+  this->keyboardEvent[SDLK_5] = Keyboard::NUM5;
+  this->keyboardEvent[SDLK_6] = Keyboard::NUM6;
+  this->keyboardEvent[SDLK_7] = Keyboard::NUM7;
+  this->keyboardEvent[SDLK_8] = Keyboard::NUM8;
+  this->keyboardEvent[SDLK_9] = Keyboard::NUM9;
+  this->keyboardEvent[SDLK_BACKSPACE] = Keyboard::BACKSPACE;
 
   LM.writeLog("InputManager::InputManager(): Populated keyboard event map");
-
-  this->mouseEvent[sf::Mouse::Left] = Mouse::LEFT;
-  this->mouseEvent[sf::Mouse::Right] = Mouse::RIGHT;
-  this->mouseEvent[sf::Mouse::Middle] = Mouse::MIDDLE;
-
-  LM.writeLog("InputManager::InputManager(): Populated mouse event map");
 }
 
 auto InputManager::startUp() -> int {
@@ -107,60 +104,50 @@ auto InputManager::startUp() -> int {
     return -1;
   }
 
-  sf::RenderWindow* win = DM.getWindow();
-  win->setKeyRepeatEnabled(false);
   LM.writeLog("InputManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
 void InputManager::shutDown() {
-  auto win = DM.getWindow();
-  if (win != nullptr) win->setKeyRepeatEnabled(true);
-
   Manager::shutDown();
   LM.writeLog("InputManager::shutDown(): Shut down successfully");
 }
 
 auto InputManager::isValid(string eventType) const -> bool {
-  return eventType == df::KEYBOARD_EVENT || eventType == df::MSE_EVENT;
+  return eventType == lb::KEYBOARD_EVENT || eventType == lb::MSE_EVENT;
 }
 
 void InputManager::getInput() const {
-  sf::Event event;
-  auto win = DM.getWindow();
-
-  if (win == nullptr) return;
-
+  SDL_Event event;
   EventKeyboard keyEvent;
   EventMouse mouseEvent;
 
-  while (win->pollEvent(event)) {
+  while (SDL_PollEvent(&event)) {
     switch (event.type) {
-      case sf::Event::KeyPressed:
-        keyEvent.setKey(fromSFMLKeyCode(event.key.code));
-        keyEvent.setKeyboardAction(df::EventKeyboardAction::KEY_PRESSED);
+      case SDL_KEYDOWN:
+        keyEvent.setKey(fromSDLKeyCode(event.key.keysym.sym));
+        keyEvent.setKeyboardAction(lb::EventKeyboardAction::KEY_PRESSED);
         onEvent(&keyEvent);
         break;
-      case sf::Event::KeyReleased:
-        keyEvent.setKey(fromSFMLKeyCode(event.key.code));
-        keyEvent.setKeyboardAction(df::EventKeyboardAction::KEY_RELEASED);
+      case SDL_KEYUP:
+        keyEvent.setKey(fromSDLKeyCode(event.key.keysym.sym));
+        keyEvent.setKeyboardAction(lb::EventKeyboardAction::KEY_RELEASED);
         onEvent(&keyEvent);
         break;
-      case sf::Event::MouseMoved:
-        mouseEvent.setMouseAction(df::EventMouseAction::MOVED);
+      case SDL_MOUSEMOTION:
+        mouseEvent.setMouseAction(lb::EventMouseAction::MOVED);
         mouseEvent.setMousePosition(
-          pixelsToCells(Vector(event.mouseMove.x, event.mouseMove.y)));
+          pixelsToCells(Vector(event.motion.x, event.motion.y)));
         onEvent(&mouseEvent);
         break;
-      case sf::Event::MouseButtonPressed:
-        mouseEvent.setMouseAction(df::EventMouseAction::CLICKED);
-        mouseEvent.setMouseButton(
-          fromSFMLMouseButton(event.mouseButton.button));
+      case SDL_MOUSEBUTTONDOWN:
+        mouseEvent.setMouseAction(lb::EventMouseAction::CLICKED);
+        mouseEvent.setMouseButton(fromSDLMouseButton(event.button.button));
         mouseEvent.setMousePosition(
-          pixelsToCells(Vector(event.mouseButton.x, event.mouseButton.y)));
+          pixelsToCells(Vector(event.motion.x, event.motion.y)));
         onEvent(&mouseEvent);
         break;
-      case sf::Event::Closed:
+      case SDL_QUIT:
         GM.setGameOver();
         // This is meant to break out of the while loop
         return;
@@ -170,8 +157,7 @@ void InputManager::getInput() const {
   }
 }
 
-auto InputManager::fromSFMLKeyCode(sf::Keyboard::Key key) const
-  -> Keyboard::Key {
+auto InputManager::fromSDLKeyCode(SDL_Keycode key) const -> Keyboard::Key {
   auto item = this->keyboardEvent.find(key);
   if (item != this->keyboardEvent.end()) {
     return item->second;
@@ -179,13 +165,16 @@ auto InputManager::fromSFMLKeyCode(sf::Keyboard::Key key) const
   return Keyboard::UNDEFINED_KEY;
 }
 
-auto InputManager::fromSFMLMouseButton(sf::Mouse::Button btn) const
-  -> Mouse::Button {
-  auto item = this->mouseEvent.find(btn);
-  if (item != this->mouseEvent.end()) {
-    return item->second;
+auto InputManager::fromSDLMouseButton(char btn) const -> Mouse::Button {
+  switch (btn) {
+    case SDL_BUTTON_LEFT:
+      return Mouse::LEFT;
+    case SDL_BUTTON_RIGHT:
+      return Mouse::RIGHT;
+    case SDL_BUTTON_MIDDLE:
+      return Mouse::MIDDLE;
   }
   return Mouse::UNDEFINED_MOUSE_BUTTON;
 }
 
-}  // namespace df
+}  // namespace lb

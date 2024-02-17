@@ -6,7 +6,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 ObjectListIterator::ObjectListIterator(const ObjectList* l) {
   this->currentIndex = 0;
   this->list = l;
@@ -29,4 +29,4 @@ auto ObjectListIterator::currentObject() const -> Object* {
   return nullptr;
 }
 
-}  // namespace df
+}  // namespace lb

@@ -2,7 +2,7 @@
 
 #include "../lib/test.h"
 
-using namespace df;
+using namespace lb;
 
 void ObjectList_fullList_test() {
   ObjectList subject;

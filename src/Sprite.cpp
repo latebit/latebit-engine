@@ -2,54 +2,63 @@
 
 #include <string>
 
-#include "Colors.h"
 #include "LogManager.h"
 #include "Vector.h"
 
-namespace df {
-Sprite::Sprite(int maxFrames) {
-  this->maxFrameCount = maxFrames;
-  this->frames = std::vector<Frame>(maxFrames);
+using namespace std;
+
+namespace lb {
+Sprite::Sprite(string label, int width, int height, int slowdown,
+               int frameCount) {
+  this->label = label;
+  this->width = width;
+  this->height = height;
+  this->slowdown = slowdown;
+  this->frames = vector<Frame>();
+  this->frames.reserve(frameCount);
 }
 
 Sprite::Sprite(const Sprite& other) {
   this->width = other.width;
   this->height = other.height;
-  this->maxFrameCount = other.maxFrameCount;
-  this->frameCount = other.frameCount;
   this->slowdown = other.slowdown;
-  this->color = other.color;
   this->label = other.label;
-  this->transparencyChar = other.transparencyChar;
   this->frames = other.frames;
 }
 
 Sprite::~Sprite() = default;
 
 auto Sprite::addFrame(Frame frame) -> int {
-  if (this->frameCount >= this->maxFrameCount) {
+  if (this->frames.size() >= this->frames.capacity()) {
     LM.writeLog("Sprite::addFrame(): Cannot add frame, maximum (%d) reached.",
-                this->maxFrameCount);
+                this->frames.capacity());
     return -1;
   }
 
-  this->frames[this->frameCount] = frame;
-  this->frameCount++;
+  if (frame.getWidth() != this->width || frame.getHeight() != this->height) {
+    LM.writeLog(
+      "Sprite::addFrame(): Frame dimensions (%d, %d) do not match sprite "
+      "dimensions (%d, %d).",
+      frame.getWidth(), frame.getHeight(), this->width, this->height);
+    return -1;
+  }
+
+  this->frames.push_back(frame);
 
   return 0;
 }
 
 auto Sprite::getFrame(int frameNumber) const -> Frame {
-  if (frameNumber < 0 || frameNumber >= this->frameCount) {
+  if (frameNumber < 0 || frameNumber >= this->frames.size()) {
     LM.writeLog("Sprite::getFrame(): Invalid frame number (%d) with %d frames.",
-                frameNumber, this->frameCount);
+                frameNumber, this->frames.size());
     return {};
   }
 
   return this->frames[frameNumber];
 }
 
-auto Sprite::getFrameCount() const -> int { return this->frameCount; }
+auto Sprite::getFrameCount() const -> int { return this->frames.size(); }
 
 void Sprite::setWidth(int width) { this->width = width; }
 auto Sprite::getWidth() const -> int { return this->width; }
@@ -57,38 +66,26 @@ auto Sprite::getWidth() const -> int { return this->width; }
 void Sprite::setHeight(int height) { this->height = height; }
 auto Sprite::getHeight() const -> int { return this->height; }
 
-void Sprite::setColor(Color color) { this->color = color; }
-auto Sprite::getColor() const -> Color { return this->color; }
-
 void Sprite::setLabel(std::string label) { this->label = label; }
 auto Sprite::getLabel() const -> std::string { return this->label; }
 
 void Sprite::setSlowdown(int slowdown) { this->slowdown = slowdown; }
 auto Sprite::getSlowdown() const -> int { return this->slowdown; }
 
-void Sprite::setTransparencyCharachter(char c) { this->transparencyChar = c; }
-auto Sprite::getTransparencyCharchter() const -> char {
-  return this->transparencyChar;
-}
-
 auto Sprite::draw(int frameNumber, Vector position) const -> int {
-  if (frameNumber < 0 || frameNumber >= this->frameCount) {
+  if (frameNumber < 0 || frameNumber >= this->frames.size()) {
     LM.writeLog("Sprite::draw(): Invalid frame number (%d) with %d frames.",
-                frameNumber, this->frameCount);
+                frameNumber, this->frames.size());
     return -1;
   }
 
-  return this->frames[frameNumber].draw(position, this->color,
-                                        this->transparencyChar);
+  return this->frames[frameNumber].draw(position);
 }
 
 auto Sprite::operator==(const Sprite& other) const -> bool {
   return this->width == other.width && this->height == other.height &&
-         this->maxFrameCount == other.maxFrameCount &&
-         this->frameCount == other.frameCount &&
-         this->slowdown == other.slowdown && this->color == other.color &&
-         this->label == other.label &&
-         this->transparencyChar == other.transparencyChar;
+         this->slowdown == other.slowdown && this->label == other.label &&
+         equal(this->frames.begin(), this->frames.end(), other.frames.begin());
 }
 
-}  // namespace df
+}  // namespace lb

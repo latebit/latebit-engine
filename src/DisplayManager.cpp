@@ -1,9 +1,21 @@
 #include "DisplayManager.h"
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_error.h>
+#include <SDL2/SDL_pixels.h>
+#include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_video.h>
+
+#include "Colors.h"
+#include "Frame.h"
 #include "LogManager.h"
+#include "Vector.h"
 #include "utils.h"
 
-namespace df {
+namespace lb {
 
 DisplayManager::DisplayManager() {
   setType("DisplayManager");
@@ -20,101 +32,220 @@ auto DisplayManager::startUp() -> int {
     return 0;
   }
 
-  auto mode = sf::VideoMode(this->widthInPixels, this->heightInPixels);
-  this->window =
-    new sf::RenderWindow(mode, WINDOW_TITLE_DEFAULT, WINDOW_STYLE_DEFAULT);
+  auto widthInPixels = this->widthInCells * CELL_SIZE;
+  auto heightInPixels = this->heightInCells * CELL_SIZE;
 
-  this->window->setMouseCursorVisible(false);
-  this->window->setVerticalSyncEnabled(true);
-
-  sf::Font font;
-  if (font.loadFromFile(FONT_FILE_DEFAULT) == false) {
-    LM.writeLog("DisplayManager::startUp(): Warning! Font file not found");
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO) != 0) {
+    LM.writeLog("DisplayManager::startUp(): SDL_Init failed");
     return -1;
   }
-  this->font = font;
+
+  this->window = SDL_CreateWindow(
+    WINDOW_TITLE_DEFAULT.c_str(), SDL_WINDOWPOS_CENTERED,
+    SDL_WINDOWPOS_CENTERED, widthInPixels, heightInPixels, SDL_WINDOW_SHOWN);
+
+  if (this->window == nullptr) {
+    LM.writeLog("DisplayManager::startUp(): Cannot create window. %s.",
+                SDL_GetError());
+    return -1;
+  }
+
+  this->renderer = SDL_CreateRenderer(
+    this->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+  if (this->renderer == nullptr) {
+    LM.writeLog("DisplayManager::startUp(): Cannot create renderer. %s.",
+                SDL_GetError());
+    this->shutDown();
+    return -1;
+  }
+
+  if (TTF_Init() != 0) {
+    LM.writeLog("DisplayManager::startUp(): Cannot initiate TTF. %s.",
+                SDL_GetError());
+    this->shutDown();
+    return -1;
+  }
+
+  this->font = TTF_OpenFont(FONT_FILE_DEFAULT.c_str(), FONT_SIZE_DEFAULT);
+  if (this->font == nullptr) {
+    LM.writeLog("DisplayManager::startUp(): Cannot open font \"%s\". %s.",
+                FONT_FILE_DEFAULT.c_str(), SDL_GetError());
+    this->shutDown();
+    return -1;
+  }
 
   LM.writeLog("DisplayManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
 void DisplayManager::shutDown() {
-  this->window->close();
-  delete this->window;
+  if (this->window != nullptr) {
+    SDL_DestroyWindow(this->window);
+  }
+
+  if (this->renderer != nullptr) {
+    SDL_DestroyRenderer(this->renderer);
+  }
+
+  this->window = nullptr;
+  this->renderer = nullptr;
+  SDL_Quit();
   Manager::shutDown();
   LM.writeLog("DisplayManager::shutDown(): Shut down successfully");
 }
 
-auto DisplayManager::drawCh(Vector worldPosition, char ch, Color fg,
-                            Color bg) const -> int {
-  if (this->window == nullptr) return -1;
-
-  auto viewPosition = worldToView(worldPosition);
-  auto pixelPosition = cellsToPixels(viewPosition);
-
-  static auto width = charWidth();
-  static auto height = charHeight();
-
-  if (bg != UNDEFINED_COLOR) {
-    static sf::RectangleShape background;
-    background.setSize(sf::Vector2f(width, height));
-    background.setFillColor(toSFColor(bg));
-    background.setPosition(pixelPosition.getX(), pixelPosition.getY());
-    this->window->draw(background);
-  }
-
-  static sf::Text text("", this->font);
-  text.setString(ch);
-  text.setStyle(sf::Text::Bold);
-
-  if (width < height) {
-    text.setCharacterSize(width * 2);
-  } else {
-    text.setCharacterSize(height * 2);
-  }
-
-  text.setFillColor(toSFColor(fg));
-  text.setPosition(pixelPosition.getX(), pixelPosition.getY());
-
-  this->window->draw(text);
-
-  return 0;
-}
-
-auto DisplayManager::drawCh(Vector worldPosition, char ch, Color fg) const
+auto DisplayManager::drawFrame(Position position, const Frame* frame) const
   -> int {
-  return DisplayManager::drawCh(worldPosition, ch, fg, this->backgroundColor);
-}
-
-auto DisplayManager::drawString(Vector worldPosition, std::string s,
-                                Alignment a, Color fg, Color bg) const -> int {
-  Vector start = worldPosition;
-  switch (a) {
-    case ALIGN_CENTER:
-      start.setX(worldPosition.getX() - s.size() / 2);
-      break;
-    case ALIGN_RIGHT:
-      start.setX(worldPosition.getX() - s.size());
-      break;
-    case ALIGN_LEFT:
-    default:
-      break;
+  if (this->window == nullptr) {
+    LM.writeLog("DisplayManager::drawFrame(): Window is null");
+    return -1;
   }
 
-  for (int i = 0; i < s.size(); i++) {
-    Vector pos(start.getX() + i, start.getY());
-    if (drawCh(pos, s[i], fg, bg) != 0) {
-      return -1;
+  auto viewPosition = worldToView(position);
+  auto pixelPosition = cellsToPixels(viewPosition);
+  auto content = frame->getContent();
+
+  SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(
+    0, frame->getWidth() * CELL_SIZE, frame->getHeight() * CELL_SIZE, 32,
+    SDL_PIXELFORMAT_RGBA32);
+
+  if (surface == nullptr) {
+    LM.writeLog("DisplayManager::drawFrame(): Cannot create surface. %s.",
+                SDL_GetError());
+    return -1;
+  }
+
+  SDL_LockSurface(surface);
+  for (int i = 0; i < frame->getHeight(); i++) {
+    for (int j = 0; j < frame->getWidth(); j++) {
+      auto index = i * frame->getWidth() + j;
+      auto color = toSDLColor(content[index]);
+
+      // Iterate over each pixel CELL_SIZE times in both width and height
+      for (int k = 0; k < CELL_SIZE; k++) {
+        for (int l = 0; l < CELL_SIZE; l++) {
+          // Calculate the position in the surface to draw the pixel
+          int x = j * CELL_SIZE + l;
+          int y = i * CELL_SIZE + k;
+
+          // Calculate the index in the surface's pixel buffer
+          int surfaceIndex = y * surface->pitch + x * sizeof(Uint32);
+
+          // Map the color to an SDL-compatible format
+          Uint32 pixelColor =
+            SDL_MapRGBA(surface->format, color.r, color.g, color.b, color.a);
+
+          // Write the color to the surface's pixel buffer
+          *((Uint32*)((Uint8*)surface->pixels + surfaceIndex)) = pixelColor;
+        }
+      }
     }
   }
 
+  SDL_UnlockSurface(surface);
+  auto texture = SDL_CreateTextureFromSurface(this->renderer, surface);
+  SDL_FreeSurface(surface);
+
+  if (texture == nullptr) {
+    LM.writeLog("DisplayManager::drawFrame(): Cannot create texture. %s.",
+                SDL_GetError());
+    return -1;
+  }
+
+  SDL_Rect rectangle = {(int)pixelPosition.getX(), (int)pixelPosition.getY(),
+                        frame->getWidth() * CELL_SIZE,
+                        frame->getHeight() * CELL_SIZE};
+
+  SDL_RenderCopy(this->renderer, texture, nullptr, &rectangle);
+  SDL_DestroyTexture(texture);
+
   return 0;
 }
 
-auto DisplayManager::drawString(Vector worldPosition, std::string s,
-                                Alignment a, Color fg) const -> int {
-  return DisplayManager::drawString(worldPosition, s, a, fg,
-                                    this->backgroundColor);
+auto DisplayManager::drawRectangle(Position position, int width, int height,
+                                   Color borderColor, Color fillColor) const
+  -> int {
+  if (this->window == nullptr) return -1;
+
+  auto viewPosition = worldToView(position);
+  auto pixelPosition = cellsToPixels(viewPosition);
+
+  SDL_Rect rectangle = {(int)pixelPosition.getX(), (int)pixelPosition.getY(),
+                        width * CELL_SIZE, height * CELL_SIZE};
+
+  if (fillColor != UNDEFINED_COLOR) {
+    auto fill = toSDLColor(fillColor);
+    SDL_SetRenderDrawColor(this->renderer, fill.r, fill.g, fill.b, fill.a);
+    SDL_RenderFillRect(this->renderer, &rectangle);
+  }
+
+  auto border = toSDLColor(borderColor);
+  SDL_SetRenderDrawColor(this->renderer, border.r, border.g, border.b,
+                         border.a);
+  SDL_RenderDrawRect(this->renderer, &rectangle);
+
+  return 0;
+}
+
+auto DisplayManager::drawRectangle(Position position, int width, int height,
+                                   Color borderColor) const -> int {
+  return drawRectangle(position, width, height, borderColor, UNDEFINED_COLOR);
+}
+
+auto DisplayManager::drawString(Position position, string string,
+                                Alignment alignment, Color color) const -> int {
+  if (this->window == nullptr) return -1;
+
+  auto viewPosition = worldToView(position);
+  auto pixelPosition = cellsToPixels(viewPosition);
+
+  SDL_Surface* textSurface =
+    TTF_RenderText_Solid(this->font, string.c_str(), toSDLColor(color));
+
+  if (textSurface == nullptr) {
+    LM.writeLog("DisplayManager::makeText(): TTF_RenderText_Solid failed");
+    return -1;
+  }
+
+  SDL_Texture* texture =
+    SDL_CreateTextureFromSurface(this->renderer, textSurface);
+  SDL_FreeSurface(textSurface);
+
+  if (texture == nullptr) {
+    LM.writeLog(
+      "DisplayManager::makeText(): SDL_CreateTextureFromSurface failed");
+    return -1;
+  }
+
+  auto rect = SDL_Rect{(int)pixelPosition.getX(), (int)pixelPosition.getY() + 2,
+                       textSurface->w, textSurface->h};
+
+  switch (alignment) {
+    case ALIGN_CENTER:
+      rect.x = rect.x - rect.w / 2;
+      break;
+    case ALIGN_RIGHT:
+      rect.x = rect.x - rect.w;
+      break;
+    case ALIGN_LEFT:
+      break;
+  }
+
+  SDL_RenderCopy(renderer, texture, nullptr, &rect);
+  SDL_DestroyTexture(texture);
+
+  return 0;
+}
+
+auto DisplayManager::measureString(string string) const -> Box {
+  int h = 0, w = 0;
+  TTF_SizeText(this->font, string.c_str(), &w, &h);
+
+  auto cellBounds =
+    pixelsToCells({static_cast<float>(w), static_cast<float>(h)});
+
+  return {cellBounds.getX(), cellBounds.getY()};
 }
 
 void DisplayManager::setBackground(Color color) {
@@ -129,14 +260,6 @@ auto DisplayManager::getVerticalCells() const -> int {
   return this->heightInCells;
 }
 
-auto DisplayManager::getHorizontalPixels() const -> int {
-  return this->widthInPixels;
-}
-
-auto DisplayManager::getVerticalPixels() const -> int {
-  return this->heightInPixels;
-}
-
 auto DisplayManager::swapBuffers() -> int {
   if (this->window == nullptr) {
     LM.writeLog("DisplayManager::swapBuffers(): Window is null");
@@ -144,32 +267,47 @@ auto DisplayManager::swapBuffers() -> int {
   }
 
   // displays current buffer
-  this->window->display();
+  SDL_RenderPresent(this->renderer);
 
   // clears second buffer
-  this->window->clear(toSFColor(this->backgroundColor));
+  auto c = toSDLColor(this->backgroundColor);
+  SDL_SetRenderDrawColor(this->renderer, c.r, c.g, c.b, c.a);
+  SDL_RenderClear(this->renderer);
 
   return 0;
 }
 
-auto DisplayManager::getWindow() const -> sf::RenderWindow* {
-  return this->window;
+auto DisplayManager::makeText(Position position, string string, Color color,
+                              SDL_Texture* texture) const -> SDL_Rect {
+  auto viewPosition = worldToView(position);
+  auto pixelPosition = cellsToPixels(viewPosition);
+
+  SDL_Surface* textSurface =
+    TTF_RenderText_Solid(this->font, string.c_str(), toSDLColor(color));
+
+  if (textSurface == nullptr) {
+    LM.writeLog("DisplayManager::makeText(): TTF_RenderText_Solid failed");
+    return SDL_Rect{0, 0, 0, 0};
+  }
+
+  texture = SDL_CreateTextureFromSurface(this->renderer, textSurface);
+  SDL_FreeSurface(textSurface);
+  if (texture == nullptr) {
+    LM.writeLog(
+      "DisplayManager::makeText(): SDL_CreateTextureFromSurface failed");
+    return SDL_Rect{0, 0, 0, 0};
+  }
+
+  return SDL_Rect{(int)pixelPosition.getX(), (int)pixelPosition.getY(),
+                  textSurface->w, textSurface->h};
 }
 
-auto charHeight() -> float {
-  return DM.getVerticalPixels() / (float)DM.getVerticalCells();
+auto cellsToPixels(Position spaces) -> Vector {
+  return {spaces.getX() * CELL_SIZE, spaces.getY() * CELL_SIZE};
 }
 
-auto charWidth() -> float {
-  return DM.getHorizontalPixels() / (float)DM.getHorizontalCells();
+auto pixelsToCells(Vector pixels) -> Position {
+  return {pixels.getX() / CELL_SIZE, pixels.getY() / CELL_SIZE};
 }
 
-auto cellsToPixels(Vector spaces) -> Vector {
-  return {spaces.getX() * charWidth(), spaces.getY() * charHeight()};
-}
-
-auto pixelsToCells(Vector pixels) -> Vector {
-  return {pixels.getX() / charWidth(), pixels.getY() / charHeight()};
-}
-
-}  // namespace df
+}  // namespace lb

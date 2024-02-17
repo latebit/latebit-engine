@@ -3,6 +3,7 @@
 #include <array>
 #include <string>
 
+#include "Colors.h"
 #include "DisplayManager.h"
 #include "GameManager.h"
 #include "InputManager.h"
@@ -13,7 +14,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 
 Object::Object() {
   static int id = 0;
@@ -122,12 +123,7 @@ auto Object::drawBoundingBox() const -> int {
   float width = box.getWidth();
   float height = box.getHeight();
 
-  int result = 0;
-  result += DM.drawCh(corner, '+', CYAN);
-  result += DM.drawCh(corner + df::Vector(width, 0), '+', CYAN);
-  result += DM.drawCh(corner + df::Vector(width, height), '+', CYAN);
-  result += DM.drawCh(corner + df::Vector(0, height), '+', CYAN);
-  return result;
+  return DM.drawRectangle(corner, width, height, RED);
 }
 
 auto Object::subscribe(string eventType) -> int {
@@ -190,4 +186,4 @@ auto Object::toString() const -> string {
   return "Object(id=" + to_string(this->id) + ",type=" + this->type + ")";
 }
 
-}  // namespace df
+}  // namespace lb

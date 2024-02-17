@@ -1,6 +1,25 @@
-CXX = clang++
-CFLAGS:= $(CFLAGS) -std=c++20 -fPIC -gdwarf-4
-SMLFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+ifdef WASM
+	CXX=emcc
+	SDL=-s USE_SDL=2 -s USE_SDL_TTF=2 -s USE_SDL_MIXER=2
+	AR=emar
+else
+	CXX=clang++
+	SDL=-lSDL2 -lSDL2_ttf -lSDL2_mixer
+	AR=ar
+endif
+
+CFLAGS:=$(CFLAGS) -std=c++20 -fPIC
+
+ifdef DEBUG
+	ifdef WASM
+		CFLAGS:=-gsource-map
+	else
+		CFLAGS:=-gdwarf-4
+	endif
+else
+	CFLAGS:=-O3
+endif
+
 
 SRC_DIR = src
 INC_DIR = include
@@ -15,23 +34,28 @@ SRC_OBJ_FILES = $(SRC_FILES:.cpp=.o)
 TEST_LIB_OBJ_FILES = $(TEST_LIB_FILES:.cpp=.o)
 SUITES_OBJ_FILES = $(SUITES_FILES:.cpp=.o)
 
-LIB_NAME = dragonfly
-LIB_FILE = $(LIB_DIR)/lib$(LIB_NAME).a
+LIB_NAME = latebits
+
+ifdef WASM
+	LIB_FILE = $(LIB_DIR)/lib$(LIB_NAME)-wasm.a
+else
+	LIB_FILE = $(LIB_DIR)/lib$(LIB_NAME).a
+endif
 
 TEST_EXECUTABLE = test.out
 
 .PHONY: debug test clean format tidy
 
-all: $(TEST_EXECUTABLE) $(LIB_FILE)
+all: library
 
 %.o: %.cpp
 	$(CXX) $(CFLAGS) -I$(INC_DIR) -c -o $@ $<
 
 $(TEST_EXECUTABLE): $(SRC_OBJ_FILES) $(TEST_LIB_OBJ_FILES) $(SUITES_OBJ_FILES) test/main.cpp
-	$(CXX) -o $@ test/main.cpp $(CFLAGS) -I$(INC_DIR) $(SMLFLAGS) $(SRC_OBJ_FILES) $(TEST_LIB_OBJ_FILES)
+	$(CXX) -o $@ test/main.cpp $(CFLAGS) -I$(INC_DIR) $(SDL) $(SRC_OBJ_FILES) $(TEST_LIB_OBJ_FILES)
 
-$(LIB_FILE): $(SRC_OBJ_FILES)
-	ar rcs $@ $(SRC_OBJ_FILES)
+library: $(SRC_OBJ_FILES)
+	$(AR) rcs $(LIB_FILE) $(SRC_OBJ_FILES)
 
 debug: $(TEST_EXECUTABLE)
 	gdb $(TEST_EXECUTABLE)

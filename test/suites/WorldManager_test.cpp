@@ -9,7 +9,7 @@
 #include "Vector.h"
 
 using namespace std;
-using namespace df;
+using namespace lb;
 
 array<int, 5> WorldManager_draw_test_drawCount;
 void WorldManager_draw_test() {

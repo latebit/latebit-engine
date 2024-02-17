@@ -4,8 +4,8 @@
 
 using namespace std;
 
-namespace df {
-const string VIEW_EVENT = "df::view";
+namespace lb {
+const string VIEW_EVENT = "lb::view";
 
 class EventView : public Event {
  private:
@@ -35,4 +35,4 @@ class EventView : public Event {
   // Returns true to update the value by adding the new value to the old one
   [[nodiscard]] auto getDelta() const -> bool;
 };
-}  // namespace df
+}  // namespace lb

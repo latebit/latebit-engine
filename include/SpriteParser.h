@@ -9,7 +9,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 class SpriteParser {
  private:
   static auto getLine(ifstream *file_stream) -> string;
@@ -20,4 +20,4 @@ class SpriteParser {
   // Parses a file and returns a sprite with a given label
   static auto parseSprite(string filename, string label) -> Sprite;
 };
-}  // namespace df
+}  // namespace lb

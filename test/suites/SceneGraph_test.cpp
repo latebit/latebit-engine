@@ -3,7 +3,7 @@
 #include "../lib/test.h"
 #include "Object.h"
 
-using namespace df;
+using namespace lb;
 
 void SceneGraph_insertObject_test() {
   SceneGraph sg;

@@ -5,7 +5,7 @@
 
 #include "utils.h"
 
-namespace df {
+namespace lb {
 Vector::Vector(float x, float y) {
   this->x = x;
   this->y = y;
@@ -65,4 +65,4 @@ auto Vector::toString() const -> std::string {
   return "(" + std::to_string(this->x) + ", " + std::to_string(this->y) + ")";
 }
 
-}  // namespace df
+}  // namespace lb

@@ -1,8 +1,10 @@
 #include "Sound.h"
 
 #include "../lib/test.h"
+#include "AudioManager.h"
 
 void Sound_test() {
+  AM.startUp();
   test("constructor", []() {
     Sound sound;
     assert("initializes the label", sound.getLabel().empty());
@@ -20,4 +22,5 @@ void Sound_test() {
     assert_fail("doesn't load invalid file",
                 sound.loadSound("invalid_sound.wav"));
   });
+  AM.shutDown();
 }

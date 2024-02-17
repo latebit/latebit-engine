@@ -4,11 +4,12 @@
 #include <ctime>
 
 #include "Clock.h"
+#include "EventStep.h"
 #include "Manager.h"
 
 using namespace std;
 
-namespace df {
+namespace lb {
 
 // duration of a frame in microseconds
 const int FRAME_TIME_DEFAULT = 33333;  // ~30fps
@@ -42,6 +43,8 @@ class GameManager : public Manager {
   // Get game over flag
   [[nodiscard]] auto getGameOver() const -> bool;
 
+  void loop(Clock *clock, long int &steps, long int &loopTime, EventStep &step);
+
   // Set duration of a frame in microseconds
   void setFrameTime(int frameTime);
   // Get duration of a frame in microseconds
@@ -49,7 +52,11 @@ class GameManager : public Manager {
 
   // Define random starting seed. Better to be called before startUp().
   void setRandomSeed(int seed = time(nullptr));
-};
-}  // namespace df
 
-#define GM df::GameManager::getInstance()
+#ifdef __EMSCRIPTEN__
+  static void loop(void *arg);
+#endif
+};
+}  // namespace lb
+
+#define GM lb::GameManager::getInstance()

@@ -1,7 +1,7 @@
-Dragonfly
+LateBits
 ===
 
-An C++ implementation of the Dragonfly game engine.
+A minimal game engine integrated in your IDE to create pixel based games.
 
 ## :warning: Warning
 

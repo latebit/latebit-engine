@@ -3,7 +3,7 @@
 #include <SFML/Audio.hpp>
 #include <string>
 
-namespace df {
+namespace lb {
 class Music {
  private:
   sf::Music music = sf::Music();
@@ -37,4 +37,4 @@ class Music {
   // Return SFML Music
   auto getMusic() const -> const sf::Music *;
 };
-}  // namespace df
+}  // namespace lb

@@ -7,9 +7,9 @@
 #include "Manager.h"
 #include "SFML/Window.hpp"
 
-#define IM df::InputManager::getInstance()
+#define IM lb::InputManager::getInstance()
 
-namespace df {
+namespace lb {
 class InputManager : public Manager {
  private:
   // Singleton
@@ -40,4 +40,4 @@ class InputManager : public Manager {
   // Get input from the keyboard and mouse.
   void getInput() const;
 };
-}  // namespace df
+}  // namespace lb

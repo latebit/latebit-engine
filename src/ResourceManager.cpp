@@ -3,7 +3,7 @@
 #include "LogManager.h"
 #include "SpriteParser.h"
 
-namespace df {
+namespace lb {
 
 ResourceManager::ResourceManager() {
   setType("ResourceManager");
@@ -231,4 +231,4 @@ auto ResourceManager::getMusic(std::string label) const -> Music* {
   return nullptr;
 }
 
-}  // namespace df
+}  // namespace lb

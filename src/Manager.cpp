@@ -3,7 +3,7 @@
 #include "Event.h"
 #include "ObjectListIterator.h"
 
-namespace df {
+namespace lb {
 
 void Manager::setType(std::string type) { this->type = type; }
 
@@ -96,4 +96,4 @@ auto Manager::onEvent(const Event* event) const -> int {
 
 auto Manager::isValid(string eventType) const -> bool { return false; }
 
-}  // namespace df
+}  // namespace lb

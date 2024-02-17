@@ -5,27 +5,32 @@
 #include "../lib/test.h"
 
 using namespace std;
-using namespace df;
+using namespace lb;
 
-void Colors_fromColorString_test() {
-  array<string, 8> validColors = {"black", "blue",    "red",  "yellow",
-                                  "green", "magenta", "cyan", "white"};
-  array<Color, 8> expectedColors = {BLACK, BLUE,    RED,  YELLOW,
-                                    GREEN, MAGENTA, CYAN, WHITE};
-  for (int i = 0; i < 8; i++) {
+void Colors_fromHex_test() {
+  array<char, 22> validColors = {'0', '1', '2', '3', '4', '5', '6', '7',
+                                 '8', '9', 'A', 'a', 'B', 'b', 'C', 'c',
+                                 'D', 'd', 'E', 'e', 'F', 'f'};
+  array<Color, 22> expectedColors = {
+    BLACK,      DARK_BLUE, DARK_PURPLE, DARK_GREEN, BROWN,  DARK_GRAY,
+    LIGHT_GRAY, WHITE,     RED,         ORANGE,     YELLOW, YELLOW,
+    GREEN,      GREEN,     BLUE,        BLUE,       INDIGO, INDIGO,
+    PINK,       PINK,      PEACH,       PEACH};
+
+  for (int i = 0; i < 22; i++) {
     Color expectedColor = expectedColors[i];
-    Color actualColor = fromColorString(validColors[i]);
-    assert_int("returns correct color for " + validColors[i], actualColor,
-               expectedColor);
+    Color actualColor = fromHex(validColors[i]);
+    auto msg = "returns correct color for " + string(1, validColors[i]);
+    assert_int(msg, actualColor, expectedColor);
   }
 
-  array<string, 4> invalidColors = {"invalid", "123", "orange", "purple"};
+  array<char, 2> invalidColors = {'$', 'K'};
   Color undefinedColor = UNDEFINED_COLOR;
   for (auto& invalidColor : invalidColors) {
-    Color actualColor = fromColorString(invalidColor);
+    Color actualColor = fromHex(invalidColor);
     assert_int("returns UNDEFINED_COLOR for invalid string", actualColor,
                undefinedColor);
   }
 }
 
-void Colors_test() { test("fromColorString", Colors_fromColorString_test); }
+void Colors_test() { test("fromHex", Colors_fromHex_test); }

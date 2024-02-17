@@ -1,6 +1,6 @@
 #include "EventMouse.h"
 
-namespace df {
+namespace lb {
 EventMouse::EventMouse() { setType(MSE_EVENT); }
 
 EventMouse::EventMouse(EventMouseAction a, Mouse::Button b, Vector p) {
@@ -30,4 +30,4 @@ void EventMouse::setMousePosition(Vector position) {
 
 auto EventMouse::getMousePosition() const -> Vector { return this->position; }
 
-}  // namespace df
+}  // namespace lb

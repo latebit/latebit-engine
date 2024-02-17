@@ -8,7 +8,7 @@
 
 using namespace std;
 
-namespace df {
+namespace lb {
 int const STOP_ANIMATION_SLOWDOWN = -1;
 
 class Animation {
@@ -53,4 +53,4 @@ class Animation {
 
   auto operator==(const Animation &other) const -> bool;
 };
-}  // namespace df
+}  // namespace lb

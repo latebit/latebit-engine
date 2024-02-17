@@ -2,8 +2,8 @@
 
 #include "Event.h"
 
-namespace df {
-const std::string STEP_EVENT = "df::step";
+namespace lb {
+const std::string STEP_EVENT = "lb::step";
 
 class EventStep : public Event {
  private:
@@ -18,4 +18,4 @@ class EventStep : public Event {
   // Returns the step count
   [[nodiscard]] auto getStepCount() const -> int;
 };
-}  // namespace df
+}  // namespace lb

@@ -1,5 +1,7 @@
 #include "GameManager.h"
 
+#include <cstdio>
+
 #include "DisplayManager.h"
 #include "EventStep.h"
 #include "InputManager.h"
@@ -7,7 +9,7 @@
 #include "WorldManager.h"
 #include "utils.h"
 
-namespace df {
+namespace lb {
 
 GameManager::GameManager() {
   setType("GameManager");
@@ -75,7 +77,7 @@ void GameManager::run() {
   while (!gameOver) {
     clock->delta();
 
-    // Send a step event to all Objects
+    // Send a step event to all subscribers
     step.setStepCount(++steps);
     onEvent(&step);
 
@@ -90,7 +92,6 @@ void GameManager::run() {
 }
 
 void GameManager::setGameOver(bool gameOver) { this->gameOver = gameOver; }
-
 auto GameManager::getGameOver() const -> bool { return this->gameOver; }
 
 auto GameManager::getFrameTime() const -> int { return this->frameTime; }
@@ -98,4 +99,4 @@ void GameManager::setFrameTime(int frameTime) { this->frameTime = frameTime; }
 
 void GameManager::setRandomSeed(int seed) { srand(seed); }
 
-}  // namespace df
+}  // namespace lb

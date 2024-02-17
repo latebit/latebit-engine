@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Event.h"
-namespace df {
-const std::string OUT_EVENT = "df::out";
+namespace lb {
+const std::string OUT_EVENT = "lb::out";
 
 class EventOut : public Event {
  public:
@@ -10,4 +10,4 @@ class EventOut : public Event {
   EventOut();
 };
 
-}  // namespace df
+}  // namespace lb

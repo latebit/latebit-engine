@@ -2,7 +2,7 @@
 
 #include "LogManager.h"
 
-namespace df {
+namespace lb {
 
 ObjectList::ObjectList() = default;
 
@@ -65,4 +65,4 @@ auto ObjectList::operator+(ObjectList const& other) const -> ObjectList {
   return result;
 }
 
-}  // namespace df
+}  // namespace lb

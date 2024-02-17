@@ -5,11 +5,11 @@
 #include "ObjectList.h"
 #include "SceneGraph.h"
 
-#define WM df::WorldManager::getInstance()
+#define WM lb::WorldManager::getInstance()
 
 using namespace std;
 
-namespace df {
+namespace lb {
 
 class WorldManager : public Manager {
  private:
@@ -18,9 +18,9 @@ class WorldManager : public Manager {
 
   // Objects that are marked for deletion
   ObjectList deletions = ObjectList();
-  // The boundaries of the world, regardless of where the camera points
+  // The boundaries of the world, regardless of where the camera points in cells
   Box boundary = Box();
-  // The boundaries of the visible portion of the world
+  // The boundaries of the visible portion of the world in cells
   Box view = Box();
   // The object the view is following, if any
   Object *viewFollowing = nullptr;
@@ -101,4 +101,4 @@ class WorldManager : public Manager {
   // Returns the current SceneGraph
   [[nodiscard]] auto getSceneGraph() -> SceneGraph &;
 };
-}  // namespace df
+}  // namespace lb

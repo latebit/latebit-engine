@@ -15,7 +15,7 @@ SRC_OBJ_FILES = $(SRC_FILES:.cpp=.o)
 TEST_LIB_OBJ_FILES = $(TEST_LIB_FILES:.cpp=.o)
 SUITES_OBJ_FILES = $(SUITES_FILES:.cpp=.o)
 
-LIB_NAME = dragonfly
+LIB_NAME = latebits
 LIB_FILE = $(LIB_DIR)/lib$(LIB_NAME).a
 
 TEST_EXECUTABLE = test.out

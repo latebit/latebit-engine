@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace df {
+namespace lb {
 class Vector {
  private:
   // The horizontal component of the vector
@@ -52,4 +52,4 @@ class Vector {
   [[nodiscard]] auto toString() const -> std::string;
 };
 
-}  // namespace df
+}  // namespace lb

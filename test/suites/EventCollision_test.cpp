@@ -2,7 +2,7 @@
 
 #include "../lib/test.h"
 
-using namespace df;
+using namespace lb;
 
 void EventCollision_test() {
   EventCollision subject;

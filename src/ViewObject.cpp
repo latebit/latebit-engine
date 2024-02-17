@@ -1,5 +1,6 @@
 #include "ViewObject.h"
 
+#include "Box.h"
 #include "DisplayManager.h"
 #include "EventView.h"
 #include "SceneGraph.h"
@@ -7,7 +8,7 @@
 #include "WorldManager.h"
 #include "utils.h"
 
-namespace df {
+namespace lb {
 
 ViewObject::ViewObject() {
   setType("ViewObject");
@@ -22,9 +23,6 @@ auto ViewObject::getDisplayString() -> string {
 }
 
 auto ViewObject::draw() -> int {
-  // TODO maybe we can cache the view position instead of recalculating it every
-  // time and calculate the world position based on that
-  refresh();
   return DM.drawString(getPosition(), getDisplayString(), ALIGN_LEFT, color);
 }
 
@@ -44,12 +42,6 @@ auto ViewObject::eventHandler(const Event* p_e) -> int {
 }
 
 auto ViewObject::refresh() -> void {
-  // Update the bounding box depending on the content
-  auto width = getDisplayString().size();
-  auto height = 1;
-  this->setBox(Box(Vector(), width, height));
-
-  // Update the position depending on the location
   float textWidth = getBox().getWidth();
   float textHeight = getBox().getHeight();
   float viewWidth = WM.getView().getWidth();
@@ -99,16 +91,25 @@ auto ViewObject::refresh() -> void {
 
 auto ViewObject::setLocation(ViewObjectLocation l) -> void {
   this->location = l;
+  this->refresh();
 }
 auto ViewObject::getLocation() const -> ViewObjectLocation { return location; }
 
-auto ViewObject::setValue(int value) -> void { this->value = value; }
+auto ViewObject::setValue(int value) -> void {
+  this->value = value;
+  this->setBox(DM.measureString(getDisplayString()));
+  this->refresh();
+}
 auto ViewObject::getValue() const -> int { return value; }
 
 auto ViewObject::setColor(Color color) -> void { this->color = color; }
 auto ViewObject::getColor() const -> Color { return color; }
 
-auto ViewObject::setLabel(string label) -> void { this->label = label; }
+auto ViewObject::setLabel(string label) -> void {
+  this->label = label;
+  this->setBox(DM.measureString(getDisplayString()));
+  this->refresh();
+}
 auto ViewObject::getLabel() const -> string { return label; }
 
-}  // namespace df
+}  // namespace lb

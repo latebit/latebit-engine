@@ -2,7 +2,7 @@
 
 #include "LogManager.h"
 
-namespace df {
+namespace lb {
 
 Sound::Sound() = default;
 
@@ -34,4 +34,4 @@ auto Sound::loadSound(std::string filename) -> int {
 }
 
 auto Sound::getSound() const -> const sf::Sound* { return &this->sound; }
-}  // namespace df
+}  // namespace lb

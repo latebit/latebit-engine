@@ -4,7 +4,7 @@
 
 #include "LogManager.h"
 
-namespace df {
+namespace lb {
 
 Music::Music() { this->label = ""; }
 
@@ -32,4 +32,4 @@ auto Music::loadMusic(std::string filename) -> int {
 
 auto Music::getMusic() const -> const sf::Music* { return &this->music; }
 
-}  // namespace df
+}  // namespace lb

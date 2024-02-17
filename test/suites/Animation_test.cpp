@@ -1,7 +1,5 @@
 #include "Animation.h"
 
-#include <cstdio>
-
 #include "../lib/test.h"
 #include "Box.h"
 #include "DisplayManager.h"
@@ -15,6 +13,8 @@ void setSprite_test() {
   Animation animation;
   RM.loadSprite("test/fixtures/correct.txt", "sprite");
   Sprite *sprite = RM.getSprite("sprite");
+  animation.setIndex(1);
+  animation.setSlowdownCount(1);
   animation.setSprite(sprite);
 
   assert("sets sprite", animation.getSprite() == sprite);
@@ -46,9 +46,6 @@ void draw_test() {
 
   RM.loadSprite(filename, label);
   Sprite *sprite = RM.getSprite(label);
-
-  printf("sprite->getSlowdown(): %d\n", sprite->getSlowdown());
-  printf("sprite->getFrameCount(): %d\n", sprite->getFrameCount());
 
   Animation animation;
   animation.setSprite(sprite);

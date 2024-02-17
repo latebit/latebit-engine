@@ -20,6 +20,18 @@ void SpriteParser_test() {
   assert_int("width is correct", sprite.getWidth(), 3);
   assert_int("height is correct", sprite.getHeight(), 4);
   assert_int("slowdown is correct", sprite.getSlowdown(), 2);
+  assert("content of first frame is correct",
+         sprite.getFrame(0).getContent() ==
+           vector<Color>({Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE,
+                          Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE,
+                          Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE,
+                          Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE}));
+  assert("content of second frame is correct",
+         sprite.getFrame(1).getContent() ==
+           vector<Color>({Color::DARK_GREEN, Color::BROWN, Color::DARK_GRAY,
+                          Color::DARK_GREEN, Color::BROWN, Color::DARK_GRAY,
+                          Color::DARK_GREEN, Color::BROWN, Color::DARK_GRAY,
+                          Color::DARK_GREEN, Color::BROWN, Color::DARK_GRAY}));
 
   test("validations", []() {
     auto sprite = SpriteParser::parseSprite("test/fixtures/missing-frame.txt",

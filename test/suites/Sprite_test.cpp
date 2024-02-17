@@ -18,12 +18,17 @@ void Sprite_constructor_test() {
   assert("slowdown is initialized to NO_SLOWDOWN",
          sprite.getSlowdown() == NO_SLOWDOWN);
   assert("label is initialized to an empty string", sprite.getLabel().empty());
+
+  Sprite sprite2("s", 1, 1, 1, 1);
+  Sprite sprite3(sprite2);
+
+  assert("clones itself", sprite2 == sprite3);
 }
 
 void Sprite_frame_test() {
   Sprite sprite("s", 1, 1, 1, 1);
   Frame frame1(1, 1, {Color::RED});
-  Frame frame2(1, 2, {Color::BLUE});
+  Frame frame2(1, 1, {Color::BLUE});
   Frame frame3(2, 2, {Color::BLUE});
 
   // Add frames
@@ -75,6 +80,22 @@ void Sprite_test() {
   test("constructor", Sprite_constructor_test);
   test("frame", Sprite_frame_test);
   test("draw", Sprite_draw_test);
+  test("==", []() {
+    Sprite sprite1("s", 1, 1, 1, 1);
+    Sprite sprite2("s", 1, 1, 1, 1);
+    Sprite sprite3("s", 2, 1, 1, 1);
+    Sprite sprite4("s", 1, 2, 1, 1);
+    Sprite sprite5("s", 1, 1, 2, 1);
+    Sprite sprite6("test", 1, 1, 1, 1);
+
+    assert("equals itself", sprite1 == sprite1);
+    assert("equals another sprite", sprite1 == sprite2);
+    assert("not equals different width", !(sprite1 == sprite3));
+    assert("not equals different height", !(sprite1 == sprite4));
+    assert("not equals different slowdown", !(sprite1 == sprite5));
+    assert("not equals different label", !(sprite1 == sprite6));
+    assert("not equals empty sprite", !(sprite1 == Sprite()));
+  });
   DM.shutDown();
   DM.startUp();
 }

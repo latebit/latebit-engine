@@ -86,7 +86,7 @@ class DisplayManager : public Manager {
   auto drawString(Position postion, string string, Alignment alignment,
                   Color color) const -> int;
 
-  // Returns the size of the string in cells
+  // Returns the bounding box of a given string. Dimensions are in cells
   auto measureString(string string) const -> Box;
 
   // Change the background color of the window
@@ -96,9 +96,6 @@ class DisplayManager : public Manager {
   auto getHorizontalCells() const -> int;
   // Return the amount of vertical cells
   auto getVerticalCells() const -> int;
-
-  // Returns the size of a character in cells
-  [[nodiscard]] auto getFontSize() const -> int;
 
   // Swap the buffers for drawing.
   // This is the result of Double Buffering: first we draw to a hidden buffer

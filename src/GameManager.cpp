@@ -54,10 +54,15 @@ auto GameManager::getInstance() -> GameManager& {
 }
 
 void GameManager::shutDown() {
+  printf("GameManager::shutDown\n");
   setGameOver(true);
+  printf("GameOver set\n");
   IM.shutDown();
+  printf("IM::shutDown(): Shut down successfully\n");
   DM.shutDown();
+  printf("DM::shutDown(): Shut down successfully\n");
   WM.shutDown();
+  printf("WM::shutDown(): Shut down successfully\n");
   Manager::shutDown();
   LM.writeLog("GameManager::shutDown(): Shut down successfully");
   LM.shutDown();

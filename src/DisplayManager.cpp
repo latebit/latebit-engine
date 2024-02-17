@@ -48,6 +48,7 @@ auto DisplayManager::startUp() -> int {
 void DisplayManager::shutDown() {
   this->window->close();
   delete this->window;
+  this->window = nullptr;
   Manager::shutDown();
   LM.writeLog("DisplayManager::shutDown(): Shut down successfully");
 }
@@ -60,8 +61,6 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame) const
   auto pixelPosition = cellsToPixels(viewPosition);
   auto content = frame->getContent();
 
-  // TODO: This might need to move to frame! It's quite labor intensive and it
-  // does not change per frame
   sf::VertexArray cells(sf::Quads);
 
   for (int i = 0; i < frame->getHeight(); i++) {

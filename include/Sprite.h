@@ -21,25 +21,18 @@ class Sprite {
   int width = 0;
   // The height of the sprite
   int height = 0;
-  // The maximum number of frames the sprite can hold
-  int maxFrameCount = 0;
-  // The number of frames the sprite currently holds
-  int frameCount = 0;
   // The number of frames to wait before changing frame
   int slowdown = NO_SLOWDOWN;
-  // The color of the sprite
-  Color color = COLOR_DEFAULT;
   // The frames of the sprite
   vector<Frame> frames = {};
   // The label of the sprite, used to reference it
   string label = "";
-  // The character to use for transparency (i.e., not drawn)
-  char transparencyChar = ' ';
 
  public:
   ~Sprite();
   // Creates a sprite with a given maximum number of frames
-  Sprite(int maxFrames = 0);
+  Sprite(string label = "", int width = 0, int height = 0,
+         int slowdown = NO_SLOWDOWN, int frameCount = 0);
   // Creates a sprite from another sprite
   Sprite(const Sprite& other);
   // Checks if two sprites are equal
@@ -55,11 +48,6 @@ class Sprite {
   // Get the height of the sprite
   [[nodiscard]] auto getHeight() const -> int;
 
-  // Set the color of the sprite
-  void setColor(Color color);
-  // Get the color of the sprite
-  [[nodiscard]] auto getColor() const -> Color;
-
   // Set the label of the sprite
   void setLabel(string label);
   // Get the label of the sprite
@@ -69,11 +57,6 @@ class Sprite {
   void setSlowdown(int slowdown);
   // Get the number of frames to wait before changing frame
   [[nodiscard]] auto getSlowdown() const -> int;
-
-  // Set the character to use for transparency
-  void setTransparencyCharachter(char character);
-  // Get the character to use for transparency
-  [[nodiscard]] auto getTransparencyCharchter() const -> char;
 
   // Add a frame to the sprite
   auto addFrame(Frame frame) -> int;

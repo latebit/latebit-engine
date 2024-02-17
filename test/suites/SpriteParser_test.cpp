@@ -1,7 +1,6 @@
 #include "SpriteParser.h"
 
 #include "../lib/test.h"
-#include "Colors.h"
 
 using namespace df;
 using namespace std;
@@ -21,7 +20,6 @@ void SpriteParser_test() {
   assert_int("width is correct", sprite.getWidth(), 3);
   assert_int("height is correct", sprite.getHeight(), 4);
   assert_int("slowdown is correct", sprite.getSlowdown(), 2);
-  assert_int("color is correct", sprite.getColor(), BLUE);
 
   test("validations", []() {
     auto sprite = SpriteParser::parseSprite("test/fixtures/missing-frame.txt",
@@ -38,17 +36,15 @@ void SpriteParser_test() {
   });
 
   test("handles carriage return", []() {
-    makeFile(
-      "carriage.txt",
-      "2\r\n3\r\n3\r\n2\r\nblue\r\n***\r\n***\r\n***\r\n***\r\n@@@\r\n@@@"
-      "\r\n@@@\r\n@@@");
+    makeFile("carriage.txt",
+             "2\r\n3\r\n4\r\n2\r\n012\r\n012\r\n012\r\n012\r\nFFF\r\nFFF"
+             "\r\nFFF\r\nFFF");
     auto sprite = SpriteParser::parseSprite("carriage.txt", "test_sprite");
     assert_string("label is correct", sprite.getLabel(), "test_sprite");
     assert_int("frame count is correct", sprite.getFrameCount(), 2);
     assert_int("width is correct", sprite.getWidth(), 3);
-    assert_int("height is correct", sprite.getHeight(), 3);
+    assert_int("height is correct", sprite.getHeight(), 4);
     assert_int("slowdown is correct", sprite.getSlowdown(), 2);
-    assert_int("color is correct", sprite.getColor(), BLUE);
     remove("carriage.txt");
   });
 }

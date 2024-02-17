@@ -1,7 +1,9 @@
 #include "SpriteParser.h"
 
+#include <cstdio>
 #include <fstream>
 #include <string>
+#include <vector>
 
 #include "Colors.h"
 #include "LogManager.h"
@@ -33,14 +35,8 @@ auto SpriteParser::parseSprite(string filename, string label) -> Sprite {
   int width = stoi(getLine(&file));
   int height = stoi(getLine(&file));
   int slowdown = stoi(getLine(&file));
-  Color color = fromColorString(getLine(&file));
 
-  Sprite sprite(frames);
-  sprite.setLabel(label);
-  sprite.setWidth(width);
-  sprite.setHeight(height);
-  sprite.setSlowdown(slowdown);
-  sprite.setColor(color);
+  Sprite sprite(label, width, height, slowdown, frames);
 
   for (int i = 0; i < frames; i++) {
     if (!file.good()) {
@@ -51,22 +47,23 @@ auto SpriteParser::parseSprite(string filename, string label) -> Sprite {
       return {};
     }
 
-    string frameString;
+    vector<Color> content;
+    content.reserve(width * height);
 
     for (int j = 0; j < height; j++) {
       auto line = getLine(&file);
       if (line.size() != width) {
         LM.writeLog(
-          "SpriteParser::parseSpriteBody(): Invalid line length "
+          "SpriteParser::parseSprite(): Invalid line length "
           "for frame %d, line %d, expected %d got %d.",
           i, j, width, line.length());
         return {};
       }
 
-      frameString += line;
+      for (char c : line) content.push_back(fromHex(c));
     }
 
-    sprite.addFrame(Frame(width, height, frameString));
+    sprite.addFrame(Frame(width, height, content));
   }
 
   return sprite;

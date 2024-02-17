@@ -1,10 +1,15 @@
 #include "Animation.h"
 
+#include <cstdio>
+
 #include "../lib/test.h"
 #include "Box.h"
+#include "DisplayManager.h"
 #include "ResourceManager.h"
 #include "Sprite.h"
 #include "Vector.h"
+
+using namespace std;
 
 void setSprite_test() {
   Animation animation;
@@ -12,10 +17,9 @@ void setSprite_test() {
   Sprite *sprite = RM.getSprite("sprite");
   animation.setSprite(sprite);
 
-  int result = assert("sets sprite", animation.getSprite() == sprite);
-
-  RM.shutDown();
-  RM.startUp();
+  assert("sets sprite", animation.getSprite() == sprite);
+  assert_int("resets index", animation.getIndex(), 0);
+  assert_int("resets slowdown count", animation.getSlowdownCount(), 0);
 }
 
 void setName_test() {
@@ -43,10 +47,11 @@ void draw_test() {
   RM.loadSprite(filename, label);
   Sprite *sprite = RM.getSprite(label);
 
+  printf("sprite->getSlowdown(): %d\n", sprite->getSlowdown());
+  printf("sprite->getFrameCount(): %d\n", sprite->getFrameCount());
+
   Animation animation;
   animation.setSprite(sprite);
-  animation.setIndex(0);
-  animation.setSlowdownCount(0);
 
   assert_ok("draws the frame", animation.draw(Vector()));
   assert_int("does't update index before slowdown", animation.getIndex(), 0);
@@ -83,10 +88,16 @@ void getBox_test() {
 }
 
 void Animation_test() {
+  DM.startUp();
+  RM.startUp();
   test("setSprite", setSprite_test);
   test("setName", setName_test);
   test("setIndex", setIndex_test);
   test("setSlowdownCount", setSlowdownCount_test);
   test("draw", draw_test);
   test("getBox", getBox_test);
+  RM.shutDown();
+  RM.startUp();
+  DM.shutDown();
+  DM.startUp();
 }

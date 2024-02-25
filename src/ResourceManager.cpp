@@ -1,7 +1,5 @@
 #include "ResourceManager.h"
 
-#include <cstdio>
-
 #include "LogManager.h"
 #include "SpriteParser.h"
 

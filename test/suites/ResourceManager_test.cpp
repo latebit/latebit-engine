@@ -22,7 +22,8 @@ void ResourceManager_test() {
     assert_fail("does not load more than max",
                 RM.loadSprite(filename, label + to_string(MAX_SPRITES)));
 
-    assert_fail("does not load missing file", RM.loadSprite(filename, label));
+    assert_fail("does not load missing file",
+                RM.loadSprite("does-not-exist", label));
 
     string anotherFile = "test/fixtures/missing-frame.txt";
     assert_fail("does not load on invalid file",
@@ -30,9 +31,7 @@ void ResourceManager_test() {
 
     Sprite* sprite = RM.getSprite(label);
     assert("retrieves loaded sprite", sprite != nullptr);
-    if (sprite != nullptr) {
-      assert_string("and label is correct", sprite->getLabel(), label);
-    }
+    assert_string("and label is correct", sprite->getLabel(), label);
 
     sprite = RM.getSprite("another");
     assert("returns null for missing label", sprite == nullptr);

@@ -60,12 +60,6 @@ class DisplayManager : public Manager {
   // Background color of the window
   Color backgroundColor = WINDOW_BACKGROUND_COLOR_DEFAULT;
 
-  // Returns an sf::Text object with the default font and the given parameters
-  // It does not draw the text to the window. It's meant to be used to preview
-  // the text before drawing it
-  auto makeText(Position position, string string, Color color,
-                SDL_Texture *texture) const -> SDL_Rect;
-
  public:
   DisplayManager(DisplayManager const &) = delete;
   void operator=(DisplayManager const &) = delete;

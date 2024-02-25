@@ -26,4 +26,5 @@ void Music_test() {
   });
 
   AM.shutDown();
+  AM.startUp();
 }

@@ -43,8 +43,6 @@ class GameManager : public Manager {
   // Get game over flag
   [[nodiscard]] auto getGameOver() const -> bool;
 
-  void loop(Clock *clock, long int &steps, long int &loopTime, EventStep &step);
-
   // Set duration of a frame in microseconds
   void setFrameTime(int frameTime);
   // Get duration of a frame in microseconds

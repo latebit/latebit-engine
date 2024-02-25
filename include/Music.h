@@ -35,6 +35,7 @@ class Music {
   void stop();
 
  private:
+  // Pointer to the music resource in SDL_mixer representation.
   Mix_Music *music = nullptr;
   // Label associated with sound. Used to retrieve the resource.
   string label = "";

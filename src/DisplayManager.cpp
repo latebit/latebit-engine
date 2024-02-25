@@ -204,7 +204,7 @@ auto DisplayManager::drawString(Position position, string string,
     TTF_RenderText_Solid(this->font, string.c_str(), toSDLColor(color));
 
   if (textSurface == nullptr) {
-    LM.writeLog("DisplayManager::makeText(): TTF_RenderText_Solid failed");
+    LM.writeLog("DisplayManager::drawString(): TTF_RenderText_Solid failed");
     return -1;
   }
 
@@ -214,7 +214,7 @@ auto DisplayManager::drawString(Position position, string string,
 
   if (texture == nullptr) {
     LM.writeLog(
-      "DisplayManager::makeText(): SDL_CreateTextureFromSurface failed");
+      "DisplayManager::drawString(): SDL_CreateTextureFromSurface failed");
     return -1;
   }
 
@@ -275,31 +275,6 @@ auto DisplayManager::swapBuffers() -> int {
   SDL_RenderClear(this->renderer);
 
   return 0;
-}
-
-auto DisplayManager::makeText(Position position, string string, Color color,
-                              SDL_Texture* texture) const -> SDL_Rect {
-  auto viewPosition = worldToView(position);
-  auto pixelPosition = cellsToPixels(viewPosition);
-
-  SDL_Surface* textSurface =
-    TTF_RenderText_Solid(this->font, string.c_str(), toSDLColor(color));
-
-  if (textSurface == nullptr) {
-    LM.writeLog("DisplayManager::makeText(): TTF_RenderText_Solid failed");
-    return SDL_Rect{0, 0, 0, 0};
-  }
-
-  texture = SDL_CreateTextureFromSurface(this->renderer, textSurface);
-  SDL_FreeSurface(textSurface);
-  if (texture == nullptr) {
-    LM.writeLog(
-      "DisplayManager::makeText(): SDL_CreateTextureFromSurface failed");
-    return SDL_Rect{0, 0, 0, 0};
-  }
-
-  return SDL_Rect{(int)pixelPosition.getX(), (int)pixelPosition.getY(),
-                  textSurface->w, textSurface->h};
 }
 
 auto cellsToPixels(Position spaces) -> Vector {

@@ -23,4 +23,5 @@ void Sound_test() {
                 sound.loadSound("invalid_sound.wav"));
   });
   AM.shutDown();
+  AM.startUp();
 }

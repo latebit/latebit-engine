@@ -35,7 +35,7 @@ class Sound {
   void pause();
 
  private:
-  // SDLMixer chunk object
+  // Pointer to the chunk resource in SDL_mixer representation.
   Mix_Chunk* sound = nullptr;
 
   // Channel on which the current sound will be playing.

@@ -5,6 +5,8 @@
 #include "Sound.h"
 #include "Sprite.h"
 
+using namespace std;
+
 #define RM lb::ResourceManager::getInstance()
 
 namespace lb {
@@ -16,17 +18,17 @@ class ResourceManager : public Manager {
  private:
   ResourceManager();
   // Loaded sound buffers
-  std::array<Sound *, MAX_SOUNDS> sound = {};
+  array<Sound *, MAX_SOUNDS> sound = {};
   // Number of loaded sound buffers
   int soundCount = 0;
 
   // Loaded music
-  std::array<Music *, MAX_MUSICS> music = {};
+  array<Music *, MAX_MUSICS> music = {};
   // Number of loaded musics
   int musicCount = 0;
 
   // Loaded sprites
-  std::array<Sprite *, MAX_SPRITES> sprite = {};
+  array<Sprite *, MAX_SPRITES> sprite = {};
   // Number of loaded sprites
   int spriteCount = 0;
 
@@ -39,24 +41,24 @@ class ResourceManager : public Manager {
   void shutDown() override;
 
   // Load a sprite by its filename and associate it with a label
-  auto loadSprite(std::string filename, std::string label) -> int;
+  auto loadSprite(string filename, string label) -> int;
   // Frees the sprite label and associated resources
-  auto unloadSprite(std::string label) -> int;
+  auto unloadSprite(string label) -> int;
   // Return pointer to sprite associated with label
-  [[nodiscard]] auto getSprite(std::string label) const -> Sprite *;
+  [[nodiscard]] auto getSprite(string label) const -> Sprite *;
 
   // Load a sound by its filename and associate it with a label
-  auto loadSound(std::string filename, std::string label) -> int;
+  auto loadSound(string filename, string label) -> int;
   // Frees the sound label and associated resources
-  auto unloadSound(std::string label) -> int;
+  auto unloadSound(string label) -> int;
   // Return pointer to sound associated with label
-  [[nodiscard]] auto getSound(std::string label) const -> Sound *;
+  [[nodiscard]] auto getSound(string label) const -> Sound *;
 
   // Load a music by its filename and associate it with a label
-  auto loadMusic(std::string filename, std::string label) -> int;
+  auto loadMusic(string filename, string label) -> int;
   // Frees the music label and associated resources
-  auto unloadMusic(std::string label) -> int;
+  auto unloadMusic(string label) -> int;
   // Return pointer to music associated with label
-  [[nodiscard]] auto getMusic(std::string label) const -> Music *;
+  [[nodiscard]] auto getMusic(string label) const -> Music *;
 };
 }  // namespace lb

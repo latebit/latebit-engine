@@ -4,6 +4,7 @@
 #include <ctime>
 
 #include "Clock.h"
+#include "EventStep.h"
 #include "Manager.h"
 
 using namespace std;
@@ -49,6 +50,10 @@ class GameManager : public Manager {
 
   // Define random starting seed. Better to be called before startUp().
   void setRandomSeed(int seed = time(nullptr));
+
+#ifdef __EMSCRIPTEN__
+  static void loop(void *arg);
+#endif
 };
 }  // namespace lb
 

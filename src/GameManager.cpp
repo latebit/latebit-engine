@@ -2,12 +2,17 @@
 
 #include <cstdio>
 
+#include "AudioManager.h"
 #include "DisplayManager.h"
 #include "EventStep.h"
 #include "InputManager.h"
 #include "LogManager.h"
 #include "WorldManager.h"
 #include "utils.h"
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 namespace lb {
 
@@ -37,6 +42,11 @@ auto GameManager::startUp() -> int {
     return -1;
   }
 
+  if (AM.startUp() != 0) {
+    LM.writeLog("GameManager::startUp(): Error starting AudioManager");
+    return -1;
+  }
+
   this->setRandomSeed();
 
   // By default boundary equates view and it's the whole window
@@ -55,6 +65,7 @@ auto GameManager::getInstance() -> GameManager& {
 
 void GameManager::shutDown() {
   setGameOver(true);
+  AM.shutDown();
   IM.shutDown();
   DM.shutDown();
   WM.shutDown();
@@ -67,6 +78,7 @@ auto GameManager::isValid(string eventType) const -> bool {
   return eventType == STEP_EVENT;
 }
 
+#ifndef __EMSCRIPTEN__
 void GameManager::run() {
   long int adjustTime = 0;
   long int loopTime = 0;
@@ -90,8 +102,50 @@ void GameManager::run() {
     sleep(frameTime - loopTime);
   }
 }
-
 void GameManager::setGameOver(bool gameOver) { this->gameOver = gameOver; }
+#endif
+
+#ifdef __EMSCRIPTEN__
+struct EmscriptenLoopArgs {
+  long int* adjustTime = 0;
+  long int* loopTime = 0;
+  long int* steps = 0;
+  EventStep* step = 0;
+  Clock* clock = 0;
+  int frameTime = 0;
+};
+
+void GameManager::loop(void* a) {
+  EmscriptenLoopArgs* args = (EmscriptenLoopArgs*)a;
+  args->step->setStepCount(++(*args->steps));
+  GM.onEvent(args->step);
+
+  IM.getInput();
+  WM.update();
+  WM.draw();
+  DM.swapBuffers();
+};
+
+void GameManager::run() {
+  long int adjustTime = 0;
+  long int loopTime = 0;
+  long int steps = 0;
+  EventStep step(0);
+
+  EmscriptenLoopArgs args = {&adjustTime, &loopTime, &steps,
+                             &step,       clock,     frameTime};
+
+  emscripten_set_main_loop_arg(loop, &args, 0, 1);
+  emscripten_set_main_loop_timing(EM_TIMING_RAF, 33);
+}
+void GameManager::setGameOver(bool gameOver) {
+  this->gameOver = gameOver;
+  if (gameOver) {
+    emscripten_cancel_main_loop();
+  }
+}
+#endif
+
 auto GameManager::getGameOver() const -> bool { return this->gameOver; }
 
 auto GameManager::getFrameTime() const -> int { return this->frameTime; }

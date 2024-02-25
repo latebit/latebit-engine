@@ -80,7 +80,7 @@ void Sprite_test() {
   test("constructor", Sprite_constructor_test);
   test("frame", Sprite_frame_test);
   test("draw", Sprite_draw_test);
-  test("==", []() {
+  test("equals (==)", []() {
     Sprite sprite1("s", 1, 1, 1, 1);
     Sprite sprite2("s", 1, 1, 1, 1);
     Sprite sprite3("s", 2, 1, 1, 1);

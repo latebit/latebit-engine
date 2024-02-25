@@ -1,14 +1,16 @@
 #pragma once
 
-#include <SFML/Audio.hpp>
+#include <SDL2/SDL_audio.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_stdinc.h>
+
+#include <cstddef>
 #include <string>
+
+using namespace std;
 
 namespace lb {
 class Music {
- private:
-  sf::Music music = sf::Music();
-  std::string label = "";
-
  public:
   // Music is immutable
   Music(Music const &) = delete;
@@ -18,23 +20,24 @@ class Music {
   ~Music();
 
   // Load music from a file. Return 0 if ok, else -1.
-  auto loadMusic(std::string filename) -> int;
+  auto loadMusic(string filename) -> int;
 
   // Set label associated with sound. Used to retrieve the resource.
-  auto setLabel(std::string label) -> void;
+  auto setLabel(string label) -> void;
   // Get label associated with sound. Used to retrieve the resource.
-  auto getLabel() const -> std::string;
+  [[nodiscard]] auto getLabel() const -> string;
 
-  // Play sound.
+  // Play music.
   void play(bool loop = false);
-
-  // Stop sound.
+  // Pause music.
+  void pause();
+  // Stop music.
   void stop();
 
-  // Pause sound.
-  void pause();
-
-  // Return SFML Music
-  auto getMusic() const -> const sf::Music *;
+ private:
+  // Pointer to the music resource in SDL_mixer representation.
+  Mix_Music *music = nullptr;
+  // Label associated with sound. Used to retrieve the resource.
+  string label = "";
 };
 }  // namespace lb

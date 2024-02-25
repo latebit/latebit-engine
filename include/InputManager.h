@@ -1,11 +1,12 @@
 #pragma once
 
+#include <SDL2/SDL_keycode.h>
+
 #include <unordered_map>
 
 #include "EventKeyboard.h"
 #include "EventMouse.h"
 #include "Manager.h"
-#include "SFML/Window.hpp"
 
 #define IM lb::InputManager::getInstance()
 
@@ -16,16 +17,13 @@ class InputManager : public Manager {
   InputManager();
 
   // Map for quick lookup of keyboard events.
-  std::unordered_map<sf::Keyboard::Key, Keyboard::Key> keyboardEvent;
+  std::unordered_map<SDL_Keycode, Keyboard::Key> keyboardEvent;
 
-  // Map for quick lookup of mouse events.
-  std::unordered_map<sf::Mouse::Button, Mouse::Button> mouseEvent;
+  // Converts SDL key code to local key code.
+  auto fromSDLKeyCode(SDL_Keycode key) const -> Keyboard::Key;
 
-  // Converts SFML key code to local key code.
-  auto fromSFMLKeyCode(sf::Keyboard::Key key) const -> Keyboard::Key;
-
-  // Converts SFML mouse buttons to local mouse button.
-  auto fromSFMLMouseButton(sf::Mouse::Button btn) const -> Mouse::Button;
+  // Converts SDL mouse buttons to local mouse button.
+  auto fromSDLMouseButton(char btn) const -> Mouse::Button;
 
  public:
   static auto getInstance() -> InputManager &;

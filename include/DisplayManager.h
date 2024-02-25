@@ -1,6 +1,10 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_video.h>
 
 #include "Colors.h"
 #include "Manager.h"
@@ -23,12 +27,11 @@ using Position = Vector;
 
 const int WINDOW_HORIZONTAL_CELLS = 240;
 const int WINDOW_VERTICAL_CELLS = 160;
-const float CELL_SIZE = 3.0f;
-const int WINDOW_STYLE = sf::Style::Titlebar | sf::Style::Close;
+const int CELL_SIZE = 3;
 const Color WINDOW_BACKGROUND_COLOR_DEFAULT = BLACK;
-const string WINDOW_TITLE_DEFAULT = "New Game";
-const string FONT_FILE_DEFAULT = "df-font.ttf";
-const uint FONT_SIZE_DEFAULT = CELL_SIZE * 6;
+const string WINDOW_TITLE_DEFAULT = "Latebits";
+const string FONT_FILE_DEFAULT = "font.ttf";
+const uint FONT_SIZE_DEFAULT = CELL_SIZE * 8;
 
 // Returns height of a single character
 auto charHeight() -> float;
@@ -44,10 +47,11 @@ class DisplayManager : public Manager {
  private:
   DisplayManager();
   // Font used to draw text
-  sf::Font font = sf::Font();
+  TTF_Font *font = nullptr;
   // The window has an initial given size in pixels and cells. All we draw
   // are characters and all the coordinates we use are in cells
-  sf::RenderWindow *window = nullptr;
+  SDL_Window *window = nullptr;
+  SDL_Renderer *renderer = nullptr;
 
   // Window width in cells
   int widthInCells = WINDOW_HORIZONTAL_CELLS;
@@ -55,12 +59,6 @@ class DisplayManager : public Manager {
   int heightInCells = WINDOW_VERTICAL_CELLS;
   // Background color of the window
   Color backgroundColor = WINDOW_BACKGROUND_COLOR_DEFAULT;
-
-  // Returns an sf::Text object with the default font and the given parameters
-  // It does not draw the text to the window. It's meant to be used to preview
-  // the text before drawing it
-  auto makeText(Position position, string string, Alignment alignment,
-                Color color) const -> sf::Text;
 
  public:
   DisplayManager(DisplayManager const &) = delete;
@@ -87,7 +85,7 @@ class DisplayManager : public Manager {
                   Color color) const -> int;
 
   // Returns the bounding box of a given string. Dimensions are in cells
-  auto measureString(string string) const -> Box;
+  [[nodiscard]] auto measureString(string string) const -> Box;
 
   // Change the background color of the window
   void setBackground(Color color);
@@ -101,8 +99,5 @@ class DisplayManager : public Manager {
   // This is the result of Double Buffering: first we draw to a hidden buffer
   // and then we display it to the screen
   auto swapBuffers() -> int;
-
-  // Returns a pointer to the window
-  [[nodiscard]] auto getWindow() const -> sf::RenderWindow *;
 };
 }  // namespace lb

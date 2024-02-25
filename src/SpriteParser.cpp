@@ -1,5 +1,6 @@
 #include "SpriteParser.h"
 
+#include <algorithm>
 #include <fstream>
 #include <string>
 #include <vector>

@@ -1,37 +1,44 @@
 #include "Sound.h"
 
+#include <SDL2/SDL_error.h>
+#include <SDL2/SDL_mixer.h>
+
 #include "LogManager.h"
+
+using namespace std;
 
 namespace lb {
 
 Sound::Sound() = default;
 
 Sound::~Sound() {
-  this->sound.stop();
-  this->sound.resetBuffer();
+  Mix_FreeChunk(this->sound);
+  this->sound = nullptr;
+  this->channel = UNINITIALIZED_CHANNEL;
 }
 
 auto Sound::play(bool loop) -> void {
-  this->sound.setLoop(loop);
-  this->sound.play();
+  this->channel = Mix_PlayChannel(this->channel, this->sound, loop ? -1 : 0);
 }
 
-auto Sound::stop() -> void { this->sound.stop(); }
+auto Sound::pause() -> void { Mix_Pause(this->channel); }
+auto Sound::stop() -> void {
+  Mix_HaltChannel(this->channel);
+  this->channel = UNINITIALIZED_CHANNEL;
+}
 
-auto Sound::pause() -> void { this->sound.pause(); }
+auto Sound::getLabel() const -> string { return this->label; }
+auto Sound::setLabel(string l) -> void { this->label = l; }
 
-auto Sound::getLabel() const -> std::string { return this->label; }
-auto Sound::setLabel(std::string l) -> void { this->label = l; }
+auto Sound::loadSound(string filename) -> int {
+  this->sound = Mix_LoadWAV(filename.c_str());
 
-auto Sound::loadSound(std::string filename) -> int {
-  if (!this->buffer.loadFromFile(filename)) {
-    LM.writeLog("Sound::loadSound(): Failed to load sound from %s",
-                filename.c_str());
+  if (this->sound == nullptr) {
+    LM.writeLog("Sound::loadSound(): unable to load sound. %s.",
+                Mix_GetError());
     return -1;
   }
-  this->sound.setBuffer(this->buffer);
+
   return 0;
 }
-
-auto Sound::getSound() const -> const sf::Sound* { return &this->sound; }
 }  // namespace lb

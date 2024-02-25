@@ -1,27 +1,25 @@
 #include "Colors.h"
 
-#include <SFML/Graphics.hpp>
-
 namespace lb {
 
-static const sf::Color Black = sf::Color(0, 0, 0);
-static const sf::Color DarkBlue = sf::Color(29, 43, 83);
-static const sf::Color DarkPurple = sf::Color(126, 37, 83);
-static const sf::Color DarkGreen = sf::Color(0, 135, 81);
-static const sf::Color Brown = sf::Color(171, 82, 54);
-static const sf::Color DarkGray = sf::Color(95, 87, 79);
-static const sf::Color LightGray = sf::Color(194, 195, 199);
-static const sf::Color White = sf::Color(255, 241, 232);
-static const sf::Color Red = sf::Color(255, 0, 77);
-static const sf::Color Orange = sf::Color(255, 163, 0);
-static const sf::Color Yellow = sf::Color(255, 236, 39);
-static const sf::Color Green = sf::Color(0, 228, 54);
-static const sf::Color Blue = sf::Color(41, 173, 255);
-static const sf::Color Indigo = sf::Color(131, 118, 156);
-static const sf::Color Pink = sf::Color(255, 119, 168);
-static const sf::Color Peach = sf::Color(255, 204, 170);
+static const SDL_Color Black = {0, 0, 0, 255};
+static const SDL_Color DarkBlue = {29, 43, 83, 255};
+static const SDL_Color DarkPurple = {126, 37, 83, 255};
+static const SDL_Color DarkGreen = {0, 135, 81, 255};
+static const SDL_Color Brown = {171, 82, 54, 255};
+static const SDL_Color DarkGray = {95, 87, 79, 255};
+static const SDL_Color LightGray = {194, 195, 199, 255};
+static const SDL_Color White = {255, 241, 232, 255};
+static const SDL_Color Red = {255, 0, 77, 255};
+static const SDL_Color Orange = {255, 163, 0, 255};
+static const SDL_Color Yellow = {255, 236, 39, 255};
+static const SDL_Color Green = {0, 228, 54, 255};
+static const SDL_Color Blue = {41, 173, 255, 255};
+static const SDL_Color Indigo = {131, 118, 156, 255};
+static const SDL_Color Pink = {255, 119, 168, 255};
+static const SDL_Color Peach = {255, 204, 170, 255};
 
-auto toSFColor(Color c) -> sf::Color {
+auto toSDLColor(Color c) -> SDL_Color {
   switch (c) {
     case BLACK:
       return Black;
@@ -57,7 +55,7 @@ auto toSFColor(Color c) -> sf::Color {
       return Peach;
     case UNDEFINED_COLOR:
     default:
-      return sf::Color::Transparent;
+      return SDL_Color{0, 0, 0, 0};
   }
 }
 

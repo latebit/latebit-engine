@@ -1,26 +1,29 @@
 #pragma once
 
-#include <SFML/Audio.hpp>
+#include <SDL2/SDL_audio.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_stdinc.h>
+
 #include <string>
 
-namespace lb {
-class Sound {
- private:
-  sf::Sound sound = sf::Sound();
-  sf::SoundBuffer buffer = sf::SoundBuffer();
-  std::string label = "";
+using namespace std;
 
+namespace lb {
+
+const int UNINITIALIZED_CHANNEL = -1;
+
+class Sound {
  public:
   Sound();
   ~Sound();
 
   // Load sound buffer from a file. Return 0 if ok, else -1.
-  auto loadSound(std::string filename) -> int;
+  auto loadSound(string filename) -> int;
 
   // Set label associated with sound. Used to retrieve the resource.
-  auto setLabel(std::string l) -> void;
+  auto setLabel(string l) -> void;
   // Get label associated with sound. Used to retrieve the resource.
-  auto getLabel() const -> std::string;
+  [[nodiscard]] auto getLabel() const -> string;
 
   // Play sound.
   void play(bool loop = false);
@@ -31,7 +34,15 @@ class Sound {
   // Pause sound.
   void pause();
 
-  // Return SFML Sound
-  auto getSound() const -> const sf::Sound*;
+ private:
+  // Pointer to the chunk resource in SDL_mixer representation.
+  Mix_Chunk* sound = nullptr;
+
+  // Channel on which the current sound will be playing.
+  // It will be chosen upon the first `play` call.
+  int channel = UNINITIALIZED_CHANNEL;
+
+  // Label associated with sound. Used to retrieve the resource.
+  string label = "";
 };
 }  // namespace lb

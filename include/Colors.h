@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include <SDL2/SDL_pixels.h>
 
 using namespace std;
 
@@ -30,6 +30,6 @@ const Color COLOR_DEFAULT = WHITE;
 // Maps an hexadecimal character to a Color
 auto fromHex(char c) -> Color;
 
-// Converts a Color to a SFML Color
-auto toSFColor(Color c) -> sf::Color;
+// Converts a Color to a SDL Color
+auto toSDLColor(Color c) -> SDL_Color;
 }  // namespace lb

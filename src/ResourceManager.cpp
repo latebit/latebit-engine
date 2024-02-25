@@ -1,5 +1,7 @@
 #include "ResourceManager.h"
 
+#include <cstdio>
+
 #include "LogManager.h"
 #include "SpriteParser.h"
 
@@ -38,8 +40,7 @@ void ResourceManager::shutDown() {
   Manager::shutDown();
 }
 
-auto ResourceManager::loadSprite(std::string filename, std::string label)
-  -> int {
+auto ResourceManager::loadSprite(string filename, string label) -> int {
   if (this->spriteCount >= MAX_SPRITES) {
     LM.writeLog(
       "ResourceManager::loadSprite(): Cannot load sprite, maximum (%d) "
@@ -69,7 +70,7 @@ auto ResourceManager::getInstance() -> ResourceManager& {
   return instance;
 }
 
-auto ResourceManager::unloadSprite(std::string label) -> int {
+auto ResourceManager::unloadSprite(string label) -> int {
   for (int i = 0; i < this->spriteCount; i++) {
     if (this->sprite[i] != nullptr && this->sprite[i]->getLabel() == label) {
       delete this->sprite[i];
@@ -86,7 +87,7 @@ auto ResourceManager::unloadSprite(std::string label) -> int {
   return -1;
 }
 
-auto ResourceManager::getSprite(std::string label) const -> Sprite* {
+auto ResourceManager::getSprite(string label) const -> Sprite* {
   for (int i = 0; i < this->spriteCount; i++) {
     if (this->sprite[i] == nullptr) continue;
 
@@ -101,8 +102,7 @@ auto ResourceManager::getSprite(std::string label) const -> Sprite* {
   return nullptr;
 }
 
-auto ResourceManager::loadSound(std::string filename, std::string label)
-  -> int {
+auto ResourceManager::loadSound(string filename, string label) -> int {
   if (this->soundCount >= MAX_SOUNDS) {
     LM.writeLog(
       "ResourceManager::loadSound(): Cannot load sound, maximum (%d) "
@@ -133,7 +133,7 @@ auto ResourceManager::loadSound(std::string filename, std::string label)
   return 0;
 }
 
-auto ResourceManager::unloadSound(std::string label) -> int {
+auto ResourceManager::unloadSound(string label) -> int {
   for (int i = 0; i < this->soundCount; i++) {
     auto sound = this->sound[i];
     if (sound != nullptr && sound->getLabel() == label) {
@@ -154,7 +154,7 @@ auto ResourceManager::unloadSound(std::string label) -> int {
   return -1;
 }
 
-auto ResourceManager::getSound(std::string label) const -> Sound* {
+auto ResourceManager::getSound(string label) const -> Sound* {
   for (int i = 0; i < this->soundCount; i++) {
     if (this->sound[i] != nullptr && this->sound[i]->getLabel() == label) {
       return this->sound[i];
@@ -166,8 +166,7 @@ auto ResourceManager::getSound(std::string label) const -> Sound* {
   return nullptr;
 }
 
-auto ResourceManager::loadMusic(std::string filename, std::string label)
-  -> int {
+auto ResourceManager::loadMusic(string filename, string label) -> int {
   if (this->musicCount >= MAX_MUSICS) {
     LM.writeLog(
       "ResourceManager::loadmusic(): Cannot load music, maximum (%d) "
@@ -198,7 +197,7 @@ auto ResourceManager::loadMusic(std::string filename, std::string label)
   return 0;
 }
 
-auto ResourceManager::unloadMusic(std::string label) -> int {
+auto ResourceManager::unloadMusic(string label) -> int {
   for (int i = 0; i < this->musicCount; i++) {
     auto music = this->music[i];
     if (music != nullptr && music->getLabel() == label) {
@@ -219,7 +218,7 @@ auto ResourceManager::unloadMusic(std::string label) -> int {
   return -1;
 }
 
-auto ResourceManager::getMusic(std::string label) const -> Music* {
+auto ResourceManager::getMusic(string label) const -> Music* {
   for (int i = 0; i < this->musicCount; i++) {
     if (this->music[i] != nullptr && this->music[i]->getLabel() == label) {
       return this->music[i];

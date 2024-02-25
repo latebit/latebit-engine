@@ -2,7 +2,7 @@
 
 #include "EventCollision.h"
 #include "EventOut.h"
-#include "LogManager.h"
+#include "Logger.h"
 #include "ObjectListIterator.h"
 #include "utils.h"
 
@@ -12,7 +12,7 @@ namespace lb {
 
 WorldManager::WorldManager() {
   setType("WorldManager");
-  LM.debug("WorldManager::WorldManager(): Created WorldManager");
+  Log.debug("WorldManager::WorldManager(): Created WorldManager");
 }
 
 auto WorldManager::getInstance() -> WorldManager& {
@@ -23,7 +23,7 @@ auto WorldManager::getInstance() -> WorldManager& {
 auto WorldManager::startUp() -> int {
   this->deletions = ObjectList();
   this->sceneGraph = SceneGraph();
-  LM.debug("WorldManager::startUp(): Started successfully");
+  Log.debug("WorldManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
@@ -37,7 +37,7 @@ void WorldManager::shutDown() {
   }
 
   Manager::shutDown();
-  LM.debug("WorldManager::shutDown(): Shut down successfully");
+  Log.debug("WorldManager::shutDown(): Shut down successfully");
 }
 
 auto WorldManager::isValid(string eventType) const -> bool {
@@ -252,14 +252,14 @@ auto WorldManager::setViewFollowing(Object* o) -> int {
     }
   }
 
-  LM.debug(
+  Log.debug(
     "WorldManager::setViewFollowing(): Object to be followed not found.");
   return -1;
 }
 
 void WorldManager::setViewDeadZone(Box d) {
   if (!contains(this->view, d)) {
-    LM.debug("WorldManager::setViewDeadZone(): Dead zone larger than view.");
+    Log.debug("WorldManager::setViewDeadZone(): Dead zone larger than view.");
     return;
   }
 

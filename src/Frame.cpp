@@ -4,7 +4,7 @@
 
 #include "Colors.h"
 #include "DisplayManager.h"
-#include "LogManager.h"
+#include "Logger.h"
 #include "Vector.h"
 
 using namespace std;
@@ -26,7 +26,7 @@ auto Frame::getContent() const -> vector<Color> { return this->content; }
 
 auto Frame::draw(Vector position) const -> int {
   if (this->width <= 0 || this->height <= 0 || this->content.empty()) {
-    LM.debug("Frame::draw(): Cannot draw empty frame");
+    Log.debug("Frame::draw(): Cannot draw empty frame");
     return -1;
   }
 

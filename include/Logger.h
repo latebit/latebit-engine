@@ -8,19 +8,24 @@
 #include "Manager.h"
 #include "utils.h"
 
-#define LM lb::LogManager::getInstance()
+using namespace std;
+
+#define Log lb::Logger::getInstance()
+#define Debug(a) lb::Logger::getInstance().debug(a)
 
 namespace lb {
 
 enum LogLevel { ERROR, WARNING, INFO, DEBUG };
 enum LogDestination { LOG_FILE, STDOUT };
 
-class LogManager {
+const string LOGFILE_NAME = "latebits.log";
+
+class Logger {
  public:
-  ~LogManager();
-  static auto getInstance() -> LogManager &;
-  LogManager(LogManager const &) = delete;
-  void operator=(LogManager const &) = delete;
+  ~Logger();
+  static auto getInstance() -> Logger &;
+  Logger(Logger const &) = delete;
+  void operator=(Logger const &) = delete;
 
   void setLevel(LogLevel level);
   void setDestination(LogDestination destination);
@@ -46,11 +51,12 @@ class LogManager {
   }
 
  private:
-  LogManager();
+  Logger();
   // Log level
   LogLevel level = INFO;
   // Log destination
-  unique_ptr<std::ostream> output = make_unique<ostream>(cout.rdbuf());
+  unique_ptr<std::ostream> output =
+    make_unique<ofstream>(LOGFILE_NAME, ios::out);
 
   // Writes a log line to the chosen destination
   template <typename... Args>

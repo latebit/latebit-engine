@@ -3,7 +3,7 @@
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_mixer.h>
 
-#include "LogManager.h"
+#include "Logger.h"
 
 using namespace std;
 
@@ -34,7 +34,7 @@ auto Sound::loadSound(string filename) -> int {
   this->sound = Mix_LoadWAV(filename.c_str());
 
   if (this->sound == nullptr) {
-    LM.debug("Sound::loadSound(): unable to load sound. %s.", Mix_GetError());
+    Log.debug("Sound::loadSound(): unable to load sound. %s.", Mix_GetError());
     return -1;
   }
 

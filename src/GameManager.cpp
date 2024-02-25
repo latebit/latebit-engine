@@ -4,7 +4,7 @@
 #include "DisplayManager.h"
 #include "EventStep.h"
 #include "InputManager.h"
-#include "LogManager.h"
+#include "Logger.h"
 #include "WorldManager.h"
 #include "utils.h"
 
@@ -16,32 +16,32 @@ namespace lb {
 
 GameManager::GameManager() {
   setType("GameManager");
-  LM.debug("GameManager::GameManager(): Created GameManager");
+  Log.debug("GameManager::GameManager(): Created GameManager");
 }
 
 auto GameManager::startUp() -> int {
-  // if (LM.startUp() != 0) {
-  //   printf("GameManager::startUp(): Error starting LogManager\n");
+  // if (Log.startUp() != 0) {
+  //   printf("GameManager::startUp(): Error starting Logger\n");
   //   return -1;
   // }
 
   if (WM.startUp() != 0) {
-    LM.debug("GameManager::startUp(): Error starting WorldManager");
+    Log.debug("GameManager::startUp(): Error starting WorldManager");
     return -1;
   }
 
   if (DM.startUp() != 0) {
-    LM.debug("GameManager::startUp(): Error starting DisplayManager");
+    Log.debug("GameManager::startUp(): Error starting DisplayManager");
     return -1;
   }
 
   if (IM.startUp() != 0) {
-    LM.debug("GameManager::startUp(): Error starting InputManager");
+    Log.debug("GameManager::startUp(): Error starting InputManager");
     return -1;
   }
 
   if (AM.startUp() != 0) {
-    LM.debug("GameManager::startUp(): Error starting AudioManager");
+    Log.debug("GameManager::startUp(): Error starting AudioManager");
     return -1;
   }
 
@@ -52,7 +52,7 @@ auto GameManager::startUp() -> int {
   WM.setBoundary(boundary);
   WM.setView(boundary);
 
-  LM.debug("GameManager::startUp(): Started successfully");
+  Log.debug("GameManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
@@ -68,8 +68,8 @@ void GameManager::shutDown() {
   DM.shutDown();
   WM.shutDown();
   Manager::shutDown();
-  LM.debug("GameManager::shutDown(): Shut down successfully");
-  // LM.shutDown();
+  Log.debug("GameManager::shutDown(): Shut down successfully");
+  // Log.shutDown();
 }
 
 auto GameManager::isValid(string eventType) const -> bool {

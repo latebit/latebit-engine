@@ -6,13 +6,13 @@
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_timer.h>
 
-#include "LogManager.h"
+#include "Logger.h"
 #include "Manager.h"
 
 namespace lb {
 AudioManager::AudioManager() {
   setType("AudioManager");
-  LM.debug("AudioManager::AudioManager(): Created AudioManager");
+  Log.debug("AudioManager::AudioManager(): Created AudioManager");
 }
 
 auto AudioManager::getInstance() -> AudioManager& {
@@ -24,8 +24,8 @@ auto AudioManager::startUp() -> int {
   auto result =
     Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024);
   if (result != 0) {
-    LM.debug("AudioManager::startUp(): failed to open audio %s",
-             Mix_GetError());
+    Log.debug("AudioManager::startUp(): failed to open audio %s",
+              Mix_GetError());
     return -1;
   }
 

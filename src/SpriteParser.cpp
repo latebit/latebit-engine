@@ -25,8 +25,8 @@ auto SpriteParser::parseSprite(string filename, string label) -> Sprite {
   ifstream file(filename);
 
   if (!file.is_open()) {
-    LM.writeLog("SpriteParser::parseSprite(): Could not open file '%s'.",
-                filename.c_str());
+    LM.debug("SpriteParser::parseSprite(): Could not open file '%s'.",
+             filename.c_str());
     return {};
   }
 
@@ -40,7 +40,7 @@ auto SpriteParser::parseSprite(string filename, string label) -> Sprite {
 
   for (int i = 0; i < frames; i++) {
     if (!file.good()) {
-      LM.writeLog(
+      LM.debug(
         "SpriteParser::parseSprite(): Unexpected end of file at frame "
         "%d.",
         i);
@@ -53,7 +53,7 @@ auto SpriteParser::parseSprite(string filename, string label) -> Sprite {
     for (int j = 0; j < height; j++) {
       auto line = getLine(&file);
       if (line.size() != width) {
-        LM.writeLog(
+        LM.debug(
           "SpriteParser::parseSprite(): Invalid line length "
           "for frame %d, line %d, expected %d got %d.",
           i, j, width, line.length());

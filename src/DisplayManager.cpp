@@ -19,7 +19,7 @@ namespace lb {
 
 DisplayManager::DisplayManager() {
   setType("DisplayManager");
-  LM.writeLog("DisplayManager::DisplayManager(): Created DisplayManager");
+  LM.debug("DisplayManager::DisplayManager(): Created DisplayManager");
 }
 
 auto DisplayManager::getInstance() -> DisplayManager& {
@@ -36,7 +36,7 @@ auto DisplayManager::startUp() -> int {
   auto heightInPixels = this->heightInCells * CELL_SIZE;
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO) != 0) {
-    LM.writeLog("DisplayManager::startUp(): SDL_Init failed");
+    LM.debug("DisplayManager::startUp(): SDL_Init failed");
     return -1;
   }
 
@@ -45,8 +45,8 @@ auto DisplayManager::startUp() -> int {
     SDL_WINDOWPOS_CENTERED, widthInPixels, heightInPixels, SDL_WINDOW_SHOWN);
 
   if (this->window == nullptr) {
-    LM.writeLog("DisplayManager::startUp(): Cannot create window. %s.",
-                SDL_GetError());
+    LM.debug("DisplayManager::startUp(): Cannot create window. %s.",
+             SDL_GetError());
     return -1;
   }
 
@@ -54,28 +54,28 @@ auto DisplayManager::startUp() -> int {
     this->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
   if (this->renderer == nullptr) {
-    LM.writeLog("DisplayManager::startUp(): Cannot create renderer. %s.",
-                SDL_GetError());
+    LM.debug("DisplayManager::startUp(): Cannot create renderer. %s.",
+             SDL_GetError());
     this->shutDown();
     return -1;
   }
 
   if (TTF_Init() != 0) {
-    LM.writeLog("DisplayManager::startUp(): Cannot initiate TTF. %s.",
-                SDL_GetError());
+    LM.debug("DisplayManager::startUp(): Cannot initiate TTF. %s.",
+             SDL_GetError());
     this->shutDown();
     return -1;
   }
 
   this->font = TTF_OpenFont(FONT_FILE_DEFAULT.c_str(), FONT_SIZE_DEFAULT);
   if (this->font == nullptr) {
-    LM.writeLog("DisplayManager::startUp(): Cannot open font \"%s\". %s.",
-                FONT_FILE_DEFAULT.c_str(), SDL_GetError());
+    LM.debug("DisplayManager::startUp(): Cannot open font \"%s\". %s.",
+             FONT_FILE_DEFAULT.c_str(), SDL_GetError());
     this->shutDown();
     return -1;
   }
 
-  LM.writeLog("DisplayManager::startUp(): Started successfully");
+  LM.debug("DisplayManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
@@ -92,13 +92,13 @@ void DisplayManager::shutDown() {
   this->renderer = nullptr;
   SDL_Quit();
   Manager::shutDown();
-  LM.writeLog("DisplayManager::shutDown(): Shut down successfully");
+  LM.debug("DisplayManager::shutDown(): Shut down successfully");
 }
 
 auto DisplayManager::drawFrame(Position position, const Frame* frame) const
   -> int {
   if (this->window == nullptr) {
-    LM.writeLog("DisplayManager::drawFrame(): Window is null");
+    LM.debug("DisplayManager::drawFrame(): Window is null");
     return -1;
   }
 
@@ -111,8 +111,8 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame) const
     SDL_PIXELFORMAT_RGBA32);
 
   if (surface == nullptr) {
-    LM.writeLog("DisplayManager::drawFrame(): Cannot create surface. %s.",
-                SDL_GetError());
+    LM.debug("DisplayManager::drawFrame(): Cannot create surface. %s.",
+             SDL_GetError());
     return -1;
   }
 
@@ -148,8 +148,8 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame) const
   SDL_FreeSurface(surface);
 
   if (texture == nullptr) {
-    LM.writeLog("DisplayManager::drawFrame(): Cannot create texture. %s.",
-                SDL_GetError());
+    LM.debug("DisplayManager::drawFrame(): Cannot create texture. %s.",
+             SDL_GetError());
     return -1;
   }
 
@@ -204,7 +204,7 @@ auto DisplayManager::drawString(Position position, string string,
     TTF_RenderText_Solid(this->font, string.c_str(), toSDLColor(color));
 
   if (textSurface == nullptr) {
-    LM.writeLog("DisplayManager::drawString(): TTF_RenderText_Solid failed");
+    LM.debug("DisplayManager::drawString(): TTF_RenderText_Solid failed");
     return -1;
   }
 
@@ -213,7 +213,7 @@ auto DisplayManager::drawString(Position position, string string,
   SDL_FreeSurface(textSurface);
 
   if (texture == nullptr) {
-    LM.writeLog(
+    LM.debug(
       "DisplayManager::drawString(): SDL_CreateTextureFromSurface failed");
     return -1;
   }
@@ -262,7 +262,7 @@ auto DisplayManager::getVerticalCells() const -> int {
 
 auto DisplayManager::swapBuffers() -> int {
   if (this->window == nullptr) {
-    LM.writeLog("DisplayManager::swapBuffers(): Window is null");
+    LM.debug("DisplayManager::swapBuffers(): Window is null");
     return -1;
   }
 

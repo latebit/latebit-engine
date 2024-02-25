@@ -2,7 +2,6 @@
 
 #include "../lib/test.h"
 #include "DisplayManager.h"
-#include "LogManager.h"
 #include "WorldManager.h"
 
 using namespace lb;
@@ -16,6 +15,4 @@ void GameManager_test() {
   assert_box("view is set up", WM.getView(), wanted);
 
   GM.shutDown();
-  // Restore log manager to continue testing
-  LM.startUp();
 }

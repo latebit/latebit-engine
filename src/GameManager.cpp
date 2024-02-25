@@ -1,7 +1,5 @@
 #include "GameManager.h"
 
-#include <cstdio>
-
 #include "AudioManager.h"
 #include "DisplayManager.h"
 #include "EventStep.h"
@@ -18,32 +16,32 @@ namespace lb {
 
 GameManager::GameManager() {
   setType("GameManager");
-  LM.writeLog("GameManager::GameManager(): Created GameManager");
+  LM.debug("GameManager::GameManager(): Created GameManager");
 }
 
 auto GameManager::startUp() -> int {
-  if (LM.startUp() != 0) {
-    printf("GameManager::startUp(): Error starting LogManager\n");
-    return -1;
-  }
+  // if (LM.startUp() != 0) {
+  //   printf("GameManager::startUp(): Error starting LogManager\n");
+  //   return -1;
+  // }
 
   if (WM.startUp() != 0) {
-    LM.writeLog("GameManager::startUp(): Error starting WorldManager");
+    LM.debug("GameManager::startUp(): Error starting WorldManager");
     return -1;
   }
 
   if (DM.startUp() != 0) {
-    LM.writeLog("GameManager::startUp(): Error starting DisplayManager");
+    LM.debug("GameManager::startUp(): Error starting DisplayManager");
     return -1;
   }
 
   if (IM.startUp() != 0) {
-    LM.writeLog("GameManager::startUp(): Error starting InputManager");
+    LM.debug("GameManager::startUp(): Error starting InputManager");
     return -1;
   }
 
   if (AM.startUp() != 0) {
-    LM.writeLog("GameManager::startUp(): Error starting AudioManager");
+    LM.debug("GameManager::startUp(): Error starting AudioManager");
     return -1;
   }
 
@@ -54,7 +52,7 @@ auto GameManager::startUp() -> int {
   WM.setBoundary(boundary);
   WM.setView(boundary);
 
-  LM.writeLog("GameManager::startUp(): Started successfully");
+  LM.debug("GameManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
@@ -70,8 +68,8 @@ void GameManager::shutDown() {
   DM.shutDown();
   WM.shutDown();
   Manager::shutDown();
-  LM.writeLog("GameManager::shutDown(): Shut down successfully");
-  LM.shutDown();
+  LM.debug("GameManager::shutDown(): Shut down successfully");
+  // LM.shutDown();
 }
 
 auto GameManager::isValid(string eventType) const -> bool {

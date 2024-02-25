@@ -11,14 +11,13 @@ SceneGraph::~SceneGraph() = default;
 auto SceneGraph::insertObject(Object *o) -> int {
   if (o->isActive()) {
     if (this->active.insert(o) != 0) {
-      LM.writeLog(
-        "SceneGraph::insertObject(): Failed to insert %s in active list",
-        o->toString().c_str());
+      LM.debug("SceneGraph::insertObject(): Failed to insert %s in active list",
+               o->toString().c_str());
       return -1;
     }
   } else {
     if (this->inactive.insert(o) != 0) {
-      LM.writeLog(
+      LM.debug(
         "SceneGraph::insertObject(): Failed to insert %s in inactive list",
         o->toString().c_str());
       return -1;
@@ -27,16 +26,15 @@ auto SceneGraph::insertObject(Object *o) -> int {
 
   if (o->isSolid()) {
     if (this->solid.insert(o) != 0) {
-      LM.writeLog(
-        "SceneGraph::insertObject(): Failed to insert %s in solid list",
-        o->toString().c_str());
+      LM.debug("SceneGraph::insertObject(): Failed to insert %s in solid list",
+               o->toString().c_str());
       return -1;
     }
   }
 
   if (o->isVisible()) {
     if (this->visible.at(o->getAltitude()).insert(o) != 0) {
-      LM.writeLog(
+      LM.debug(
         "SceneGraph::insertObject(): Failed to insert %s in visible list "
         "(altitude %d)",
         o->toString().c_str(), o->getAltitude());
@@ -50,14 +48,14 @@ auto SceneGraph::insertObject(Object *o) -> int {
 auto SceneGraph::removeObject(Object *o) -> int {
   if (o->isActive()) {
     if (this->active.remove(o) != 0) {
-      LM.writeLog(
+      LM.debug(
         "SceneGraph::removeObject(): Failed to remove %s from active list",
         o->toString().c_str());
       return -1;
     }
   } else {
     if (this->inactive.remove(o) != 0) {
-      LM.writeLog(
+      LM.debug(
         "SceneGraph::removeObject(): Failed to remove %s from inactive "
         "list",
         o->toString().c_str());
@@ -67,7 +65,7 @@ auto SceneGraph::removeObject(Object *o) -> int {
 
   if (o->isSolid()) {
     if (this->solid.remove(o) != 0) {
-      LM.writeLog(
+      LM.debug(
         "SceneGraph::removeObject(): Failed to remove %s from solid list",
         o->toString().c_str());
       return -1;
@@ -76,7 +74,7 @@ auto SceneGraph::removeObject(Object *o) -> int {
 
   if (o->isVisible()) {
     if (this->visible.at(o->getAltitude()).remove(o) != 0) {
-      LM.writeLog(
+      LM.debug(
         "SceneGraph::removeObject(): Failed to remove %s from visible list "
         "(altitude %d)",
         o->toString().c_str(), o->getAltitude());
@@ -112,7 +110,7 @@ auto SceneGraph::setSolidness(Object *o, Solidness solidness) -> int {
 
   if (o->isSolid()) {
     if (this->solid.remove(o) != 0) {
-      LM.writeLog(
+      LM.debug(
         "SceneGraph::setSolidness(): Failed to remove %s from solid list",
         o->toString().c_str());
       return -1;
@@ -121,9 +119,8 @@ auto SceneGraph::setSolidness(Object *o, Solidness solidness) -> int {
 
   if (isSolid) {
     if (this->solid.insert(o) != 0) {
-      LM.writeLog(
-        "SceneGraph::setSolidness(): Failed to insert %s in solid list",
-        o->toString().c_str());
+      LM.debug("SceneGraph::setSolidness(): Failed to insert %s in solid list",
+               o->toString().c_str());
       return -1;
     }
   }
@@ -137,7 +134,7 @@ auto SceneGraph::setAltitude(Object *o, int altitude) -> int {
   }
 
   if (this->visible.at(o->getAltitude()).remove(o) != 0) {
-    LM.writeLog(
+    LM.debug(
       "SceneGraph::setAltitude(): Failed to remove %s from visible list "
       "(altitude %d)",
       o->toString().c_str(), o->getAltitude());
@@ -145,7 +142,7 @@ auto SceneGraph::setAltitude(Object *o, int altitude) -> int {
   }
 
   if (this->visible.at(altitude).insert(o) != 0) {
-    LM.writeLog(
+    LM.debug(
       "SceneGraph::setAltitude(): Failed to insert %s in visible list "
       "(altitude %d)",
       o->toString().c_str(), altitude);
@@ -163,21 +160,19 @@ auto SceneGraph::setActive(Object *o, bool isActive) -> int {
   // Switching from active to inactive
   if (o->isActive()) {
     if (this->active.remove(o) != 0) {
-      LM.writeLog(
-        "SceneGraph::setActive(): Failed to remove %s from active list",
-        o->toString().c_str());
+      LM.debug("SceneGraph::setActive(): Failed to remove %s from active list",
+               o->toString().c_str());
       return -1;
     }
 
     if (this->inactive.insert(o) != 0) {
-      LM.writeLog(
-        "SceneGraph::setActive(): Failed to insert %s in inactive list",
-        o->toString().c_str());
+      LM.debug("SceneGraph::setActive(): Failed to insert %s in inactive list",
+               o->toString().c_str());
       return -1;
     }
 
     if (this->visible[o->getAltitude()].remove(o) != 0) {
-      LM.writeLog(
+      LM.debug(
         "SceneGraph::setActive(): Failed to remove %s from visible list "
         "(altitude %d)",
         o->toString().c_str(), o->getAltitude());
@@ -185,9 +180,8 @@ auto SceneGraph::setActive(Object *o, bool isActive) -> int {
     }
 
     if (o->isSolid() && this->solid.remove(o) != 0) {
-      LM.writeLog(
-        "SceneGraph::setActive(): Failed to remove %s from solid list",
-        o->toString().c_str());
+      LM.debug("SceneGraph::setActive(): Failed to remove %s from solid list",
+               o->toString().c_str());
       return -1;
     }
 
@@ -196,20 +190,19 @@ auto SceneGraph::setActive(Object *o, bool isActive) -> int {
 
   // Switching from inactive to active
   if (this->active.insert(o) != 0) {
-    LM.writeLog("SceneGraph::setActive(): Failed to insert %s in active list",
-                o->toString().c_str());
+    LM.debug("SceneGraph::setActive(): Failed to insert %s in active list",
+             o->toString().c_str());
     return -1;
   }
 
   if (this->inactive.remove(o) != 0) {
-    LM.writeLog(
-      "SceneGraph::setActive(): Failed to remove %s from inactive list",
-      o->toString().c_str());
+    LM.debug("SceneGraph::setActive(): Failed to remove %s from inactive list",
+             o->toString().c_str());
     return -1;
   }
 
   if (this->visible[o->getAltitude()].insert(o) != 0) {
-    LM.writeLog(
+    LM.debug(
       "SceneGraph::setActive(): Failed to insert %s in visible list "
       "(altitude %d)",
       o->toString().c_str(), o->getAltitude());
@@ -217,8 +210,8 @@ auto SceneGraph::setActive(Object *o, bool isActive) -> int {
   }
 
   if (o->isSolid() && this->solid.insert(o) != 0) {
-    LM.writeLog("SceneGraph::setActive(): Failed to remove %s from solid list",
-                o->toString().c_str());
+    LM.debug("SceneGraph::setActive(): Failed to remove %s from solid list",
+             o->toString().c_str());
     return -1;
   }
 

@@ -128,7 +128,7 @@ auto Object::drawBoundingBox() const -> int {
 
 auto Object::subscribe(string eventType) -> int {
   if (this->eventCount >= MAX_EVENTS_PER_OBEJCT) {
-    LM.writeLog("Object::subscribe(): Too many events subscribed to");
+    LM.debug("Object::subscribe(): Too many events subscribed to");
     return -1;
   }
 

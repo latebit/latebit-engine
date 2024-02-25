@@ -21,7 +21,7 @@ auto InputManager::getInstance() -> InputManager& {
 
 InputManager::InputManager() {
   setType("InputManager");
-  LM.writeLog("InputManager::InputManager(): Created InputManager");
+  LM.debug("InputManager::InputManager(): Created InputManager");
 
   this->keyboardEvent[SDLK_SPACE] = Keyboard::SPACE;
   this->keyboardEvent[SDLK_RETURN] = Keyboard::RETURN;
@@ -95,22 +95,22 @@ InputManager::InputManager() {
   this->keyboardEvent[SDLK_9] = Keyboard::NUM9;
   this->keyboardEvent[SDLK_BACKSPACE] = Keyboard::BACKSPACE;
 
-  LM.writeLog("InputManager::InputManager(): Populated keyboard event map");
+  LM.debug("InputManager::InputManager(): Populated keyboard event map");
 }
 
 auto InputManager::startUp() -> int {
   if (!DM.isStarted()) {
-    LM.writeLog("InputManager::startUp(): DisplayManager is not started");
+    LM.debug("InputManager::startUp(): DisplayManager is not started");
     return -1;
   }
 
-  LM.writeLog("InputManager::startUp(): Started successfully");
+  LM.debug("InputManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
 void InputManager::shutDown() {
   Manager::shutDown();
-  LM.writeLog("InputManager::shutDown(): Shut down successfully");
+  LM.debug("InputManager::shutDown(): Shut down successfully");
 }
 
 auto InputManager::isValid(string eventType) const -> bool {

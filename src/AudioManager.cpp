@@ -12,7 +12,7 @@
 namespace lb {
 AudioManager::AudioManager() {
   setType("AudioManager");
-  LM.writeLog("AudioManager::AudioManager(): Created AudioManager");
+  LM.debug("AudioManager::AudioManager(): Created AudioManager");
 }
 
 auto AudioManager::getInstance() -> AudioManager& {
@@ -24,8 +24,8 @@ auto AudioManager::startUp() -> int {
   auto result =
     Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024);
   if (result != 0) {
-    LM.writeLog("AudioManager::startUp(): failed to open audio %s",
-                Mix_GetError());
+    LM.debug("AudioManager::startUp(): failed to open audio %s",
+             Mix_GetError());
     return -1;
   }
 

@@ -34,8 +34,7 @@ auto Sound::loadSound(string filename) -> int {
   this->sound = Mix_LoadWAV(filename.c_str());
 
   if (this->sound == nullptr) {
-    LM.writeLog("Sound::loadSound(): unable to load sound. %s.",
-                Mix_GetError());
+    LM.debug("Sound::loadSound(): unable to load sound. %s.", Mix_GetError());
     return -1;
   }
 

@@ -30,8 +30,7 @@ auto Music::loadMusic(string filename) -> int {
   this->music = Mix_LoadMUS(filename.c_str());
 
   if (this->music == nullptr) {
-    Log.error("Music::loadMusic(): Unable to load music. ", Mix_GetError(),
-              ".");
+    Log.error("Music::loadMusic(): Unable to load music. %s", Mix_GetError());
     return -1;
   }
 

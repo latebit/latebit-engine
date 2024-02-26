@@ -36,7 +36,7 @@ auto DisplayManager::startUp() -> int {
   auto heightInPixels = this->heightInCells * CELL_SIZE;
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO) != 0) {
-    Log.error("DisplayManager::startUp(): Cannot initiate SDL.",
+    Log.error("DisplayManager::startUp(): Cannot initiate SDL. %s",
               SDL_GetError());
     return -1;
   }
@@ -46,7 +46,7 @@ auto DisplayManager::startUp() -> int {
     SDL_WINDOWPOS_CENTERED, widthInPixels, heightInPixels, SDL_WINDOW_SHOWN);
 
   if (this->window == nullptr) {
-    Log.error("DisplayManager::startUp(): Cannot create window.",
+    Log.error("DisplayManager::startUp(): Cannot create window. %s",
               SDL_GetError());
     return -1;
   }
@@ -55,14 +55,14 @@ auto DisplayManager::startUp() -> int {
     this->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
   if (this->renderer == nullptr) {
-    Log.error("DisplayManager::startUp(): Cannot create renderer.",
+    Log.error("DisplayManager::startUp(): Cannot create renderer. %s",
               SDL_GetError());
     this->shutDown();
     return -1;
   }
 
   if (TTF_Init() != 0) {
-    Log.error("DisplayManager::startUp(): Cannot initiate TTF.",
+    Log.error("DisplayManager::startUp(): Cannot initiate TTF. %s",
               SDL_GetError());
     this->shutDown();
     return -1;
@@ -70,8 +70,8 @@ auto DisplayManager::startUp() -> int {
 
   this->font = TTF_OpenFont(FONT_FILE_DEFAULT.c_str(), FONT_SIZE_DEFAULT);
   if (this->font == nullptr) {
-    Log.error("DisplayManager::startUp(): Cannot open font", FONT_FILE_DEFAULT,
-              ".", SDL_GetError());
+    Log.error("DisplayManager::startUp(): Cannot open font %s. %s",
+              FONT_FILE_DEFAULT.c_str(), SDL_GetError());
     this->shutDown();
     return -1;
   }
@@ -112,7 +112,7 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame) const
     SDL_PIXELFORMAT_RGBA32);
 
   if (surface == nullptr) {
-    Log.error("DisplayManager::drawFrame(): Cannot create surface.",
+    Log.error("DisplayManager::drawFrame(): Cannot create surface. %s",
               SDL_GetError());
     return -1;
   }
@@ -149,7 +149,7 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame) const
   SDL_FreeSurface(surface);
 
   if (texture == nullptr) {
-    Log.error("DisplayManager::drawFrame(): Cannot create texture.",
+    Log.error("DisplayManager::drawFrame(): Cannot create texture. %s",
               SDL_GetError());
     return -1;
   }
@@ -205,7 +205,7 @@ auto DisplayManager::drawString(Position position, string string,
     TTF_RenderText_Solid(this->font, string.c_str(), toSDLColor(color));
 
   if (textSurface == nullptr) {
-    Log.error("DisplayManager::drawString(): Cannot render text.",
+    Log.error("DisplayManager::drawString(): Cannot render text. %s",
               TTF_GetError());
     return -1;
   }
@@ -215,7 +215,7 @@ auto DisplayManager::drawString(Position position, string string,
   SDL_FreeSurface(textSurface);
 
   if (texture == nullptr) {
-    Log.error("DisplayManager::drawString(): Cannot create texture.",
+    Log.error("DisplayManager::drawString(): Cannot create texture. %s",
               SDL_GetError());
     return -1;
   }

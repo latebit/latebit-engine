@@ -252,14 +252,15 @@ auto WorldManager::setViewFollowing(Object* o) -> int {
     }
   }
 
-  Log.error("WorldManager::setViewFollowing(): Object", o->toString(),
-            "to be followed was not found.");
+  Log.error(
+    "WorldManager::setViewFollowing(): Object %s to be followed was not found",
+    o->toString().c_str());
   return -1;
 }
 
 void WorldManager::setViewDeadZone(Box d) {
   if (!contains(this->view, d)) {
-    Log.error("WorldManager::setViewDeadZone(): Dead zone larger than view.");
+    Log.error("WorldManager::setViewDeadZone(): Dead zone larger than view");
     return;
   }
 

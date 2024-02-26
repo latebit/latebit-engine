@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdarg>
+#include <cstdio>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -30,25 +32,10 @@ class Logger {
   void setLevel(LogLevel level);
   void setDestination(LogDestination destination);
 
-  template <typename... Args>
-  void error(Args &&...args) const {
-    log(ERROR, args...);
-  }
-
-  template <typename... Args>
-  void warning(Args &&...args) const {
-    log(WARNING, args...);
-  }
-
-  template <typename... Args>
-  void info(Args &&...args) const {
-    log(INFO, args...);
-  }
-
-  template <typename... Args>
-  void debug(Args &&...args) const {
-    log(DEBUG, args...);
-  }
+  void error(const string fmt, ...) const;
+  void warning(const string fmt, ...) const;
+  void info(const string fmt, ...) const;
+  void debug(const string fmt, ...) const;
 
  private:
   Logger();
@@ -58,32 +45,10 @@ class Logger {
   unique_ptr<std::ostream> output =
     make_unique<ofstream>(LOGFILE_NAME, ios::out);
 
-  // Writes a log line to the chosen destination
-  template <typename... Args>
-  void log(LogLevel level, Args &&...args) const {
-    if (level <= this->level) {
-      string time = getTimeString();
+  // Writes a log line to the chosen destination with a format string
+  void logf(LogLevel level, const string fmt, va_list args) const;
 
-      string logLevel = "UNKNOWN";
-      switch (level) {
-        case LogLevel::DEBUG:
-          logLevel = "DEBUG";
-          break;
-        case LogLevel::INFO:
-          logLevel = "INFO";
-          break;
-        case LogLevel::WARNING:
-          logLevel = "WARNING";
-          break;
-        case LogLevel::ERROR:
-          logLevel = "ERROR";
-          break;
-      }
-
-      (*output) << time << " [" << logLevel << "] ";
-      (((*output) << args << ' '), ...) << endl;
-    }
-  }
+  [[nodiscard]] auto getLevelString(LogLevel level) const -> string;
 };
 
 }  // namespace lb

@@ -223,7 +223,7 @@ auto ResourceManager::getMusic(string label) const -> Music* {
     }
   }
 
-  Log.debug("ResourceManager::getMusic(): unable to find music with label %s",
+  Log.debug("ResourceManager::getMusic(): Unable to find music with label %s",
             label.c_str());
   return nullptr;
 }

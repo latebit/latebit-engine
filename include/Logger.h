@@ -32,9 +32,13 @@ class Logger {
   void setLevel(LogLevel level);
   void setDestination(LogDestination destination);
 
+  // Log line as an error. Always printed
   void error(const string fmt, ...) const;
+  // Log line as a warning. Printed if level is WARNING or higher
   void warning(const string fmt, ...) const;
+  // Log line as an info. Printed if level is INFO or higher
   void info(const string fmt, ...) const;
+  // Log line as a debug. Printed if level is DEBUG or higher
   void debug(const string fmt, ...) const;
 
  private:
@@ -48,6 +52,7 @@ class Logger {
   // Writes a log line to the chosen destination with a format string
   void logf(LogLevel level, const string fmt, va_list args) const;
 
+  // Returns a string version of the current level
   [[nodiscard]] auto getLevelString(LogLevel level) const -> string;
 };
 

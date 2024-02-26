@@ -31,7 +31,7 @@ void Frame_test() {
     assert_ok("draws the frame", frame.draw(Vector()));
 
     Frame empty;
-    assert_fail("fails on empty frame", empty.draw(Vector()));
+    assert_ok("doesn't fail on empty frame", empty.draw(Vector()));
   });
 
   test("equals (==)", []() {

@@ -20,28 +20,23 @@ GameManager::GameManager() {
 }
 
 auto GameManager::startUp() -> int {
-  // if (Log.startUp() != 0) {
-  //   printf("GameManager::startUp(): Error starting Logger\n");
-  //   return -1;
-  // }
-
   if (WM.startUp() != 0) {
-    Log.debug("GameManager::startUp(): Error starting WorldManager");
+    Log.error("GameManager::startUp(): Error starting WorldManager.");
     return -1;
   }
 
   if (DM.startUp() != 0) {
-    Log.debug("GameManager::startUp(): Error starting DisplayManager");
+    Log.error("GameManager::startUp(): Error starting DisplayManager.");
     return -1;
   }
 
   if (IM.startUp() != 0) {
-    Log.debug("GameManager::startUp(): Error starting InputManager");
+    Log.error("GameManager::startUp(): Error starting InputManager.");
     return -1;
   }
 
   if (AM.startUp() != 0) {
-    Log.debug("GameManager::startUp(): Error starting AudioManager");
+    Log.error("GameManager::startUp(): Error starting AudioManager.");
     return -1;
   }
 
@@ -52,7 +47,7 @@ auto GameManager::startUp() -> int {
   WM.setBoundary(boundary);
   WM.setView(boundary);
 
-  Log.debug("GameManager::startUp(): Started successfully");
+  Log.info("GameManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
@@ -68,8 +63,7 @@ void GameManager::shutDown() {
   DM.shutDown();
   WM.shutDown();
   Manager::shutDown();
-  Log.debug("GameManager::shutDown(): Shut down successfully");
-  // Log.shutDown();
+  Log.info("GameManager::shutDown(): Shut down successfully");
 }
 
 auto GameManager::isValid(string eventType) const -> bool {

@@ -23,7 +23,7 @@ auto WorldManager::getInstance() -> WorldManager& {
 auto WorldManager::startUp() -> int {
   this->deletions = ObjectList();
   this->sceneGraph = SceneGraph();
-  Log.debug("WorldManager::startUp(): Started successfully");
+  Log.info("WorldManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
@@ -37,7 +37,7 @@ void WorldManager::shutDown() {
   }
 
   Manager::shutDown();
-  Log.debug("WorldManager::shutDown(): Shut down successfully");
+  Log.info("WorldManager::shutDown(): Shut down successfully");
 }
 
 auto WorldManager::isValid(string eventType) const -> bool {
@@ -252,14 +252,14 @@ auto WorldManager::setViewFollowing(Object* o) -> int {
     }
   }
 
-  Log.debug(
-    "WorldManager::setViewFollowing(): Object to be followed not found.");
+  Log.error("WorldManager::setViewFollowing(): Object", o->toString(),
+            "to be followed was not found.");
   return -1;
 }
 
 void WorldManager::setViewDeadZone(Box d) {
   if (!contains(this->view, d)) {
-    Log.debug("WorldManager::setViewDeadZone(): Dead zone larger than view.");
+    Log.error("WorldManager::setViewDeadZone(): Dead zone larger than view.");
     return;
   }
 

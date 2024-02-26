@@ -81,7 +81,7 @@ class Logger {
       }
 
       (*output) << time << " [" << logLevel << "] ";
-      ((*output) << ... << args) << endl;
+      (((*output) << args << ' '), ...) << endl;
     }
   }
 };

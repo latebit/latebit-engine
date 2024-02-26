@@ -26,8 +26,8 @@ auto Frame::getContent() const -> vector<Color> { return this->content; }
 
 auto Frame::draw(Vector position) const -> int {
   if (this->width <= 0 || this->height <= 0 || this->content.empty()) {
-    Log.debug("Frame::draw(): Cannot draw empty frame");
-    return -1;
+    Log.warning("Frame::draw(): Won't draw empty frame.");
+    return 0;
   }
 
   return DM.drawFrame(position, this);

@@ -36,7 +36,8 @@ auto DisplayManager::startUp() -> int {
   auto heightInPixels = this->heightInCells * CELL_SIZE;
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO) != 0) {
-    Log.debug("DisplayManager::startUp(): SDL_Init failed");
+    Log.error("DisplayManager::startUp(): Cannot initiate SDL.",
+              SDL_GetError());
     return -1;
   }
 
@@ -45,7 +46,7 @@ auto DisplayManager::startUp() -> int {
     SDL_WINDOWPOS_CENTERED, widthInPixels, heightInPixels, SDL_WINDOW_SHOWN);
 
   if (this->window == nullptr) {
-    Log.debug("DisplayManager::startUp(): Cannot create window. %s.",
+    Log.error("DisplayManager::startUp(): Cannot create window.",
               SDL_GetError());
     return -1;
   }
@@ -54,14 +55,14 @@ auto DisplayManager::startUp() -> int {
     this->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
   if (this->renderer == nullptr) {
-    Log.debug("DisplayManager::startUp(): Cannot create renderer. %s.",
+    Log.error("DisplayManager::startUp(): Cannot create renderer.",
               SDL_GetError());
     this->shutDown();
     return -1;
   }
 
   if (TTF_Init() != 0) {
-    Log.debug("DisplayManager::startUp(): Cannot initiate TTF. %s.",
+    Log.error("DisplayManager::startUp(): Cannot initiate TTF.",
               SDL_GetError());
     this->shutDown();
     return -1;
@@ -69,13 +70,13 @@ auto DisplayManager::startUp() -> int {
 
   this->font = TTF_OpenFont(FONT_FILE_DEFAULT.c_str(), FONT_SIZE_DEFAULT);
   if (this->font == nullptr) {
-    Log.debug("DisplayManager::startUp(): Cannot open font \"%s\". %s.",
-              FONT_FILE_DEFAULT.c_str(), SDL_GetError());
+    Log.error("DisplayManager::startUp(): Cannot open font", FONT_FILE_DEFAULT,
+              ".", SDL_GetError());
     this->shutDown();
     return -1;
   }
 
-  Log.debug("DisplayManager::startUp(): Started successfully");
+  Log.info("DisplayManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
@@ -92,13 +93,13 @@ void DisplayManager::shutDown() {
   this->renderer = nullptr;
   SDL_Quit();
   Manager::shutDown();
-  Log.debug("DisplayManager::shutDown(): Shut down successfully");
+  Log.info("DisplayManager::shutDown(): Shut down successfully");
 }
 
 auto DisplayManager::drawFrame(Position position, const Frame* frame) const
   -> int {
   if (this->window == nullptr) {
-    Log.debug("DisplayManager::drawFrame(): Window is null");
+    Log.error("DisplayManager::drawFrame(): Window is null");
     return -1;
   }
 
@@ -111,7 +112,7 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame) const
     SDL_PIXELFORMAT_RGBA32);
 
   if (surface == nullptr) {
-    Log.debug("DisplayManager::drawFrame(): Cannot create surface. %s.",
+    Log.error("DisplayManager::drawFrame(): Cannot create surface.",
               SDL_GetError());
     return -1;
   }
@@ -148,7 +149,7 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame) const
   SDL_FreeSurface(surface);
 
   if (texture == nullptr) {
-    Log.debug("DisplayManager::drawFrame(): Cannot create texture. %s.",
+    Log.error("DisplayManager::drawFrame(): Cannot create texture.",
               SDL_GetError());
     return -1;
   }
@@ -204,7 +205,8 @@ auto DisplayManager::drawString(Position position, string string,
     TTF_RenderText_Solid(this->font, string.c_str(), toSDLColor(color));
 
   if (textSurface == nullptr) {
-    Log.debug("DisplayManager::drawString(): TTF_RenderText_Solid failed");
+    Log.error("DisplayManager::drawString(): Cannot render text.",
+              TTF_GetError());
     return -1;
   }
 
@@ -213,8 +215,8 @@ auto DisplayManager::drawString(Position position, string string,
   SDL_FreeSurface(textSurface);
 
   if (texture == nullptr) {
-    Log.debug(
-      "DisplayManager::drawString(): SDL_CreateTextureFromSurface failed");
+    Log.error("DisplayManager::drawString(): Cannot create texture.",
+              SDL_GetError());
     return -1;
   }
 
@@ -262,7 +264,7 @@ auto DisplayManager::getVerticalCells() const -> int {
 
 auto DisplayManager::swapBuffers() -> int {
   if (this->window == nullptr) {
-    Log.debug("DisplayManager::swapBuffers(): Window is null");
+    Log.error("DisplayManager::swapBuffers(): Window is null");
     return -1;
   }
 

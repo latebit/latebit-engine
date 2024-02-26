@@ -100,17 +100,18 @@ InputManager::InputManager() {
 
 auto InputManager::startUp() -> int {
   if (!DM.isStarted()) {
-    Log.debug("InputManager::startUp(): DisplayManager is not started");
+    Log.error(
+      "InputManager::startUp(): Cannot start. DisplayManager is not started");
     return -1;
   }
 
-  Log.debug("InputManager::startUp(): Started successfully");
+  Log.info("InputManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
 void InputManager::shutDown() {
   Manager::shutDown();
-  Log.debug("InputManager::shutDown(): Shut down successfully");
+  Log.info("InputManager::shutDown(): Shut down successfully");
 }
 
 auto InputManager::isValid(string eventType) const -> bool {

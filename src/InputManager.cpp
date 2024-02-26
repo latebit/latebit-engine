@@ -10,7 +10,7 @@
 #include "EventKeyboard.h"
 #include "EventMouse.h"
 #include "GameManager.h"
-#include "LogManager.h"
+#include "Logger.h"
 
 namespace lb {
 
@@ -21,7 +21,7 @@ auto InputManager::getInstance() -> InputManager& {
 
 InputManager::InputManager() {
   setType("InputManager");
-  LM.writeLog("InputManager::InputManager(): Created InputManager");
+  Log.debug("InputManager::InputManager(): Created InputManager");
 
   this->keyboardEvent[SDLK_SPACE] = Keyboard::SPACE;
   this->keyboardEvent[SDLK_RETURN] = Keyboard::RETURN;
@@ -95,22 +95,23 @@ InputManager::InputManager() {
   this->keyboardEvent[SDLK_9] = Keyboard::NUM9;
   this->keyboardEvent[SDLK_BACKSPACE] = Keyboard::BACKSPACE;
 
-  LM.writeLog("InputManager::InputManager(): Populated keyboard event map");
+  Log.debug("InputManager::InputManager(): Populated keyboard event map");
 }
 
 auto InputManager::startUp() -> int {
   if (!DM.isStarted()) {
-    LM.writeLog("InputManager::startUp(): DisplayManager is not started");
+    Log.error(
+      "InputManager::startUp(): Cannot start. DisplayManager is not started");
     return -1;
   }
 
-  LM.writeLog("InputManager::startUp(): Started successfully");
+  Log.info("InputManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
 void InputManager::shutDown() {
   Manager::shutDown();
-  LM.writeLog("InputManager::shutDown(): Shut down successfully");
+  Log.info("InputManager::shutDown(): Shut down successfully");
 }
 
 auto InputManager::isValid(string eventType) const -> bool {

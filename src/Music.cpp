@@ -4,7 +4,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_stdinc.h>
 
-#include "LogManager.h"
+#include "Logger.h"
 
 using namespace std;
 
@@ -30,8 +30,7 @@ auto Music::loadMusic(string filename) -> int {
   this->music = Mix_LoadMUS(filename.c_str());
 
   if (this->music == nullptr) {
-    LM.writeLog("Music::loadMusic(): unable to load music. %s.",
-                Mix_GetError());
+    Log.error("Music::loadMusic(): Unable to load music. %s", Mix_GetError());
     return -1;
   }
 

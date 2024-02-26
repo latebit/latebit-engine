@@ -1,20 +1,20 @@
 #include "ResourceManager.h"
 
-#include "LogManager.h"
+#include "Logger.h"
 #include "SpriteParser.h"
 
 namespace lb {
 
 ResourceManager::ResourceManager() {
   setType("ResourceManager");
-  LM.writeLog("ResourceManager::ResourceManager(): Created ResourceManager");
+  Log.debug("ResourceManager::ResourceManager(): Created ResourceManager");
 }
 
 auto ResourceManager::startUp() -> int {
   this->spriteCount = 0;
   this->soundCount = 0;
   this->musicCount = 0;
-  LM.writeLog("ResourceManager::startUp(): Started successfully");
+  Log.info("ResourceManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
@@ -36,21 +36,22 @@ void ResourceManager::shutDown() {
   this->musicCount = 0;
 
   Manager::shutDown();
+  Log.info("ResourceManager::shutDown(): Shut down successfully");
 }
 
 auto ResourceManager::loadSprite(string filename, string label) -> int {
   if (this->spriteCount >= MAX_SPRITES) {
-    LM.writeLog(
-      "ResourceManager::loadSprite(): Cannot load sprite, maximum (%d) "
-      "reached.",
+    Log.error(
+      "ResourceManager::loadSprite(): Cannot load sprite. Maximum %d sprites "
+      "reached",
       MAX_SPRITES);
     return -1;
   }
 
   if (getSprite(label) != nullptr) {
-    LM.writeLog(
-      "ResourceManager::loadSprite(): Cannot load sprite, label '%s' "
-      "already in use.",
+    Log.error(
+      "ResourceManager::loadSprite(): Cannot load sprite, label %s already in "
+      "use",
       label.c_str());
     return -1;
   }
@@ -94,25 +95,24 @@ auto ResourceManager::getSprite(string label) const -> Sprite* {
     }
   }
 
-  LM.writeLog(
-    "ResourceManager::getSprite(): unable to find sprite with label %s",
-    label.c_str());
+  Log.debug("ResourceManager::getSprite(): Unable to find sprite with label %s",
+            label.c_str());
   return nullptr;
 }
 
 auto ResourceManager::loadSound(string filename, string label) -> int {
   if (this->soundCount >= MAX_SOUNDS) {
-    LM.writeLog(
-      "ResourceManager::loadSound(): Cannot load sound, maximum (%d) "
-      "reached.",
+    Log.error(
+      "ResourceManager::loadSound(): Cannot load sound. Maximum %d sound "
+      "reached",
       MAX_SOUNDS);
     return -1;
   }
 
   if (getSound(label) != nullptr) {
-    LM.writeLog(
-      "ResourceManager::loadSound(): Cannot load sound, label '%s' "
-      "already in use.",
+    Log.error(
+      "ResourceManager::loadSound(): Cannot load sound, label %s already in "
+      "use",
       label.c_str());
     return -1;
   }
@@ -120,8 +120,8 @@ auto ResourceManager::loadSound(string filename, string label) -> int {
   this->sound[this->soundCount] = new Sound();
 
   if (this->sound[this->soundCount]->loadSound(filename) != 0) {
-    LM.writeLog("ResourceManager::loadSound(): could not load sound '%s'.",
-                label.c_str());
+    Log.error("ResourceManager::loadSound(): Could not load sound %s",
+              label.c_str());
     return -1;
   };
 
@@ -146,8 +146,8 @@ auto ResourceManager::unloadSound(string label) -> int {
     }
   }
 
-  LM.writeLog(
-    "ResourceManager::unloadSound(): unable to find sound with label %s",
+  Log.debug(
+    "ResourceManager::unloadSound(): Unable to find sound with label %s",
     label.c_str());
   return -1;
 }
@@ -159,24 +159,24 @@ auto ResourceManager::getSound(string label) const -> Sound* {
     }
   }
 
-  LM.writeLog("ResourceManager::getSound(): unable to find sound with label %s",
-              label.c_str());
+  Log.debug("ResourceManager::getSound(): Unable to find sound with label %s",
+            label.c_str());
   return nullptr;
 }
 
 auto ResourceManager::loadMusic(string filename, string label) -> int {
   if (this->musicCount >= MAX_MUSICS) {
-    LM.writeLog(
-      "ResourceManager::loadmusic(): Cannot load music, maximum (%d) "
-      "reached.",
+    Log.error(
+      "ResourceManager::loadMusic(): Cannot load sound. Maximum %d musics "
+      "reached",
       MAX_MUSICS);
     return -1;
   }
 
   if (getMusic(label) != nullptr) {
-    LM.writeLog(
-      "ResourceManager::loadmusic(): Cannot load music, label '%s' "
-      "already in use.",
+    Log.error(
+      "ResourceManager::loadMusic(): Cannot load music, label %s already in "
+      "use",
       label.c_str());
     return -1;
   }
@@ -184,8 +184,8 @@ auto ResourceManager::loadMusic(string filename, string label) -> int {
   this->music[this->musicCount] = new Music();
 
   if (this->music[this->musicCount]->loadMusic(filename) != 0) {
-    LM.writeLog("ResourceManager::loadmusic(): could not load music '%s'.",
-                label.c_str());
+    Log.error("ResourceManager::loadMusic(): Could not load file %s",
+              filename.c_str());
     return -1;
   };
 
@@ -210,8 +210,8 @@ auto ResourceManager::unloadMusic(string label) -> int {
     }
   }
 
-  LM.writeLog(
-    "ResourceManager::unloadMusic(): unable to find music with label %s",
+  Log.debug(
+    "ResourceManager::unloadMusic(): Unable to find music with label %s",
     label.c_str());
   return -1;
 }
@@ -223,8 +223,8 @@ auto ResourceManager::getMusic(string label) const -> Music* {
     }
   }
 
-  LM.writeLog("ResourceManager::getMusic(): unable to find music with label %s",
-              label.c_str());
+  Log.debug("ResourceManager::getMusic(): Unable to find music with label %s",
+            label.c_str());
   return nullptr;
 }
 

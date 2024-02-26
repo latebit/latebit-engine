@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "LogManager.h"
+#include "Logger.h"
 #include "Vector.h"
 
 using namespace std;
@@ -30,15 +30,15 @@ Sprite::~Sprite() = default;
 
 auto Sprite::addFrame(Frame frame) -> int {
   if (this->frames.size() >= this->frames.capacity()) {
-    LM.writeLog("Sprite::addFrame(): Cannot add frame, maximum (%d) reached.",
-                this->frames.capacity());
+    Log.error("Sprite::addFrame(): Cannot add frame. Maximum %d reached",
+              this->frames.capacity());
     return -1;
   }
 
   if (frame.getWidth() != this->width || frame.getHeight() != this->height) {
-    LM.writeLog(
+    Log.error(
       "Sprite::addFrame(): Frame dimensions (%d, %d) do not match sprite "
-      "dimensions (%d, %d).",
+      "dimensions (%d, %d)",
       frame.getWidth(), frame.getHeight(), this->width, this->height);
     return -1;
   }
@@ -50,7 +50,7 @@ auto Sprite::addFrame(Frame frame) -> int {
 
 auto Sprite::getFrame(int frameNumber) const -> Frame {
   if (frameNumber < 0 || frameNumber >= this->frames.size()) {
-    LM.writeLog("Sprite::getFrame(): Invalid frame number (%d) with %d frames.",
+    Log.warning("Sprite::getFrame(): Invalid frame number (%d) with %d frames",
                 frameNumber, this->frames.size());
     return {};
   }
@@ -74,7 +74,7 @@ auto Sprite::getSlowdown() const -> int { return this->slowdown; }
 
 auto Sprite::draw(int frameNumber, Vector position) const -> int {
   if (frameNumber < 0 || frameNumber >= this->frames.size()) {
-    LM.writeLog("Sprite::draw(): Invalid frame number (%d) with %d frames.",
+    Log.warning("Sprite::draw(): Invalid frame number (%d) with %d frames",
                 frameNumber, this->frames.size());
     return -1;
   }

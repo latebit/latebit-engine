@@ -1,6 +1,6 @@
 #include "ObjectList.h"
 
-#include "LogManager.h"
+#include "Logger.h"
 
 namespace lb {
 
@@ -47,7 +47,7 @@ auto ObjectList::operator+(ObjectList const& other) const -> ObjectList {
   ObjectList result = ObjectList();
 
   if (this->count + other.getCount() > MAX_SIZE) {
-    LM.writeLog(
+    Log.debug(
       "ObjectList::operator+: Resulting ObjectList is too large (got %d, max "
       "%d)",
       this->count + other.getCount(), MAX_SIZE);

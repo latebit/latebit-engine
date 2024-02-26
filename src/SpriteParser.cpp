@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "Colors.h"
-#include "LogManager.h"
+#include "Logger.h"
 #include "Sprite.h"
 
 using namespace std;
@@ -25,8 +25,8 @@ auto SpriteParser::parseSprite(string filename, string label) -> Sprite {
   ifstream file(filename);
 
   if (!file.is_open()) {
-    LM.writeLog("SpriteParser::parseSprite(): Could not open file '%s'.",
-                filename.c_str());
+    Log.error("SpriteParser::parseSprite(): Could not open file %s",
+              filename.c_str());
     return {};
   }
 
@@ -40,10 +40,8 @@ auto SpriteParser::parseSprite(string filename, string label) -> Sprite {
 
   for (int i = 0; i < frames; i++) {
     if (!file.good()) {
-      LM.writeLog(
-        "SpriteParser::parseSprite(): Unexpected end of file at frame "
-        "%d.",
-        i);
+      Log.error(
+        "SpriteParser::parseSprite(): Unexpected end of file at frame %d", i);
       return {};
     }
 
@@ -53,9 +51,9 @@ auto SpriteParser::parseSprite(string filename, string label) -> Sprite {
     for (int j = 0; j < height; j++) {
       auto line = getLine(&file);
       if (line.size() != width) {
-        LM.writeLog(
-          "SpriteParser::parseSprite(): Invalid line length "
-          "for frame %d, line %d, expected %d got %d.",
+        Log.error(
+          "SpriteParser::parseSprite(): Invalid line length %d for frame %d. "
+          "Expected %d, got %d",
           i, j, width, line.length());
         return {};
       }

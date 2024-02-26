@@ -12,13 +12,13 @@ CFLAGS:=$(CFLAGS) -std=c++20 -fPIC
 
 ifdef DEBUG
 	ifdef WASM
-		CFLAGS:=-gsource-map
+		CFLAGS:=$(CFLAGS) -gsource-map
 	else
-		CFLAGS:=-gdwarf-4
+		CFLAGS:=$(CFLAGS) -gdwarf-4
 	endif
 else
 #TODO: Introducing any optimization flag will yield a segmentation fault in the tests
-	CFLAGS:=-O0
+	CFLAGS:=$(CFLAGS) -O0
 endif
 
 

@@ -75,8 +75,8 @@ auto ResourceManager::unloadSprite(string label) -> int {
       delete this->sprite[i];
 
       // We need not scooting here, sprites are not ordered
-      this->sprite[i] = this->sprite[this->spriteCount];
-      this->sprite[this->spriteCount] = nullptr;
+      this->sprite[i] = this->sprite[this->spriteCount - 1];
+      this->sprite[this->spriteCount - 1] = nullptr;
 
       this->spriteCount--;
       return 0;
@@ -138,8 +138,8 @@ auto ResourceManager::unloadSound(string label) -> int {
       delete sound;
 
       // We need not scooting here, sounds are not ordered
-      this->sound[i] = this->sound[this->soundCount];
-      this->sound[this->soundCount] = nullptr;
+      this->sound[i] = this->sound[this->soundCount - 1];
+      this->sound[this->soundCount - 1] = nullptr;
       this->soundCount--;
 
       return 0;
@@ -202,8 +202,8 @@ auto ResourceManager::unloadMusic(string label) -> int {
       delete music;
 
       // We need not scooting here, musics are not ordered
-      this->music[i] = this->music[this->musicCount];
-      this->music[this->musicCount] = nullptr;
+      this->music[i] = this->music[this->musicCount - 1];
+      this->music[this->musicCount - 1] = nullptr;
       this->musicCount--;
 
       return 0;

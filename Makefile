@@ -8,7 +8,7 @@ else
 	AR=ar
 endif
 
-CFLAGS:=$(CFLAGS) -std=c++20 -fPIC
+CFLAGS:=$(CFLAGS) -Wall -std=c++20 -fPIC
 
 ifdef DEBUG
 	ifdef WASM
@@ -18,7 +18,7 @@ ifdef DEBUG
 	endif
 else
 #TODO: Introducing any optimization flag will yield a segmentation fault in the tests
-	CFLAGS:=$(CFLAGS) -O0
+	CFLAGS:=$(CFLAGS) -O3
 endif
 
 

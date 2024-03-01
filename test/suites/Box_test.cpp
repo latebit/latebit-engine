@@ -5,9 +5,8 @@
 
 void constructor_test() {
   Box box;
-  int result =
-    assert_vector("default constructor sets top left corner to (0, 0)",
-                  box.getCorner(), Vector());
+  assert_vector("default constructor sets top left corner to (0, 0)",
+                box.getCorner(), Vector());
 
   assert_float("default constructor sets width to 0", box.getWidth(), 0);
 

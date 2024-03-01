@@ -35,7 +35,7 @@ class Frame {
 
   // Draws the frame at the given position with the given color.
   // The position is the top left corner of the frame.
-  [[nodiscard]] virtual auto draw(Vector position) const -> int;
+  [[nodiscard]] auto draw(Vector position) const -> int;
 
   // Compares two frames for equality
   auto operator==(const Frame& other) const -> bool;

@@ -25,6 +25,7 @@
 #include "suites/utils_test.cpp"
 
 auto main() -> int {
+  // Log.setDestination(lb::STDOUT);
   return run([]() -> void {
     suite("Animation", Animation_test);
     suite("Box", Box_test);

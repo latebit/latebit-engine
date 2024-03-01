@@ -42,7 +42,7 @@ void WorldManager_draw_test() {
   WM.shutDown();
   WM.startUp();
 
-  auto obj1 = new TestObject(0, Vector(-2, -2));
+  new TestObject(0, Vector(-2, -2));
   WM.draw();
   assert_int("does not draw out of bounds", WorldManager_draw_test_drawCount[0],
              1);

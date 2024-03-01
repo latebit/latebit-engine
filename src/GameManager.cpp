@@ -72,7 +72,6 @@ auto GameManager::isValid(string eventType) const -> bool {
 
 #ifndef __EMSCRIPTEN__
 void GameManager::run() {
-  long int adjustTime = 0;
   long int loopTime = 0;
   long int steps = 0;
 

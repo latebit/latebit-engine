@@ -17,7 +17,6 @@ ifdef DEBUG
 		CFLAGS:=$(CFLAGS) -gdwarf-4
 	endif
 else
-#TODO: Introducing any optimization flag will yield a segmentation fault in the tests
 	CFLAGS:=$(CFLAGS) -O3
 endif
 

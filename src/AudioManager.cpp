@@ -21,8 +21,8 @@ auto AudioManager::getInstance() -> AudioManager& {
 }
 
 auto AudioManager::startUp() -> int {
-  auto result = Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT,
-                              MIX_DEFAULT_CHANNELS, 1024);
+  auto result =
+    Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024);
   if (result != 0) {
     Log.error("AudioManager::startUp(): Failed to open audio. %s",
               Mix_GetError());

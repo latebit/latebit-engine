@@ -40,21 +40,21 @@ class ResourceManager : public Manager {
   auto startUp() -> int override;
   void shutDown() override;
 
-  // Load a sprite by its filename and associates it with a label
+  // Load a sprite by its filename and associate it with a label
   auto loadSprite(string filename, string label) -> int;
   // Frees the sprite label and associated resources
   auto unloadSprite(string label) -> int;
   // Return pointer to sprite associated with label
   [[nodiscard]] auto getSprite(string label) const -> Sprite *;
 
-  // Load a sound by its filename and associates it with a label
+  // Load a sound by its filename and associate it with a label
   auto loadSound(string filename, string label) -> int;
   // Frees the sound label and associated resources
   auto unloadSound(string label) -> int;
   // Return pointer to sound associated with label
   [[nodiscard]] auto getSound(string label) const -> Sound *;
 
-  // Load a music by its filename and associates it with a label
+  // Load a music by its filename and associate it with a label
   auto loadMusic(string filename, string label) -> int;
   // Frees the music label and associated resources
   auto unloadMusic(string label) -> int;

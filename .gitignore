@@ -38,3 +38,7 @@
 .idea/
 .vscode/
 .vim/
+
+build
+.cache
+vcpkg_installed

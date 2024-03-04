@@ -18,16 +18,17 @@ file(GLOB TEST_LIB_FILES "test/lib/*.cpp")
 file(GLOB TEST_SUITE_FILES "test/suites/*.cpp")
 file(GLOB INCLUDE_FILES "${INCLUDE}/*.h")
 
-add_custom_target(format
-	COMMAND clang-format -i ${SRC_FILES} ${TEST_LIB_FILES} ${TEST_SUITE_FILES} ${INCLUDE_FILES}
-)
-
-add_custom_target(tidy
-	COMMAND clang-tidy --fix --fix-errors --fix-notes ${SRC_FILES} ${TEST_LIB_FILES} ${TEST_SUITE_FILES} -- ${CMAKE_CXX_FLAGS} -I${INCLUDE}
-)
 
 if (WASM)
     include(cmake/WebAssembly.cmake)
 else()
     include(cmake/Native.cmake)
 endif()
+
+add_custom_target(format
+	COMMAND clang-format --dry-run --Werror ${SRC_FILES} ${TEST_LIB_FILES} ${TEST_SUITE_FILES} ${INCLUDE_FILES}
+)
+
+add_custom_target(tidy
+    COMMAND clang-tidy --fix --fix-errors --fix-notes --warnings-as-errors=* --header-filter='${INCLUDE}/.*' ${SRC_FILES} ${TEST_LIB_FILES} ${TEST_SUITE_FILES} -- ${CMAKE_CXX_FLAGS} -I${INCLUDE} -I${CMAKE_SOURCE_DIR}/vcpkg_installed/x64-linux/include
+)

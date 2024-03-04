@@ -1,3 +1,4 @@
+#include "Logger.h"
 #include "lib/run.h"
 #include "lib/test.h"
 #include "suites/Animation_test.cpp"
@@ -25,6 +26,7 @@
 #include "suites/utils_test.cpp"
 
 auto main() -> int {
+  Log.setLevel(lb::DEBUG);
   return run([]() -> void {
     suite("Animation", Animation_test);
     suite("Box", Box_test);

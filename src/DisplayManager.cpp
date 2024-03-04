@@ -51,9 +51,8 @@ auto DisplayManager::startUp() -> int {
     return -1;
   }
 
-  this->renderer = SDL_CreateRenderer(
-    this->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-
+  this->renderer =
+    SDL_CreateRenderer(this->window, -1, this->getRendererFlags());
   if (this->renderer == nullptr) {
     Log.error("DisplayManager::startUp(): Cannot create renderer. %s",
               SDL_GetError());
@@ -98,6 +97,12 @@ void DisplayManager::shutDown() {
   SDL_Quit();
   Manager::shutDown();
   Log.info("DisplayManager::shutDown(): Shut down successfully");
+}
+
+auto DisplayManager::getRendererFlags() const -> uint {
+  return string(SDL_GetCurrentVideoDriver()) == DUMMY_VIDEODRIVER
+           ? 0
+           : SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 }
 
 auto DisplayManager::drawFrame(Position position, const Frame* frame) const

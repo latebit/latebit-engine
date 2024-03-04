@@ -33,6 +33,8 @@ const string WINDOW_TITLE_DEFAULT = "Latebits";
 const string FONT_FILE_DEFAULT = "font.ttf";
 const uint FONT_SIZE_DEFAULT = CELL_SIZE * 8;
 
+const string DUMMY_VIDEODRIVER = "dummy";
+
 // Returns height of a single character
 auto charHeight() -> float;
 // Returns width of a single character
@@ -59,6 +61,9 @@ class DisplayManager : public Manager {
   int heightInCells = WINDOW_VERTICAL_CELLS;
   // Background color of the window
   Color backgroundColor = WINDOW_BACKGROUND_COLOR_DEFAULT;
+
+  // Returns appropriate renderer flags for the current driver
+  [[nodiscard]] auto getRendererFlags() const -> uint;
 
  public:
   DisplayManager(DisplayManager const &) = delete;

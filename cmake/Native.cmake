@@ -1,7 +1,7 @@
 set(VCPKG_ROOT $ENV{VCPKG_ROOT})
 set(CMAKE_TOOLCHAIN_FILE ${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 
-set(CMAKE_CXX_COMPILER "clang++")
+set(CMAKE_CXX_COMPILER $ENV{CXX})
 
 # Declare dependencies
 find_package(SDL2 2.30.0 CONFIG REQUIRED)
@@ -22,7 +22,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS})
 add_executable(test test/main.cpp ${TEST_LIB_FILES})
 target_link_libraries(test PRIVATE ${PROJECT_NAME})
 
-# Install target (sed by CPack)
+# Install target (needed by CPack)
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 install(FILES ${INCLUDE_FILES} DESTINATION include/${PROJECT_NAME})
 install(DIRECTORY ${SDL2_INCLUDE_DIR} DESTINATION include)

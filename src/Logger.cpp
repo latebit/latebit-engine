@@ -46,7 +46,7 @@ void Logger::logf(LogLevel level, const string fmt, va_list args) const {
     string time = getTimeString();
     string logLevel = getLevelString(level);
 
-    char buffer[1024];
+    char buffer[1024];  // NOLINT
     sprintf(buffer, "%s ", getTimeString().c_str());
     vsprintf(buffer, fmt.c_str(), args);
 

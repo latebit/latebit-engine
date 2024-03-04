@@ -89,6 +89,10 @@ void DisplayManager::shutDown() {
     SDL_DestroyRenderer(this->renderer);
   }
 
+  if (this->font != nullptr) {
+    TTF_CloseFont(this->font);
+  }
+
   this->window = nullptr;
   this->renderer = nullptr;
   SDL_Quit();

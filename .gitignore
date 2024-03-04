@@ -39,6 +39,6 @@
 .vscode/
 .vim/
 
-build
+build*
 .cache
 vcpkg_installed

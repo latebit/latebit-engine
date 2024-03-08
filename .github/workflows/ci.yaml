@@ -6,52 +6,80 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    env:
-      _VCPKG_: ${{ github.workspace }}/vcpkg
-      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
-      VCPKG_BINARY_SOURCES: 'clear;x-gha,readwrite'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, macos-13]
+        type: [native]
 
     steps:
-    - uses: actions/github-script@v7
-      with:
-        script: |
-          core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
-          core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
-    
     - name: Checkout code
       uses: actions/checkout@v4
     
-    - name: Install system dependencies
-      run: |
-        if ! command -v clang++-17 &> /dev/null
-        then
-            wget https://apt.llvm.org/llvm.sh
-            chmod +x ./llvm.sh
-            sudo ./llvm.sh 17
-        fi
+    - name: Cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          ./vcpkg
+          ~/vcpkg
+          ./build/vcpkg_installed
+          ${{ env.HOME }}/.cache/vcpkg/archives
+          ${{ env.XDG_CACHE_HOME }}/vcpkg/archives
+          ${{ env.LOCALAPPDATA }}\vcpkg\archives
+          ${{ env.APPDATA }}\vcpkg\archives
+          "**/cpm_modules"
+        key: ${{ runner.os }}-${{ matrix.type }}-${{ hashFiles('**/CMakeLists.txt') }}-${{ hashFiles('./vcpkg.json')}}
+        restore-keys: |
+          ${{ runner.os }}-${{ matrix.type }}-
     
-    - name: run-vcpkg
-      uses: lukka/run-vcpkg@v11.5
+    - name: Setup Cpp
+      uses: aminya/setup-cpp@v1
+      with:
+        compiler: llvm-15.0.3
+        cmake: 3.28.1
+        ninja: 1.11.1
+        vcpkg: true
+        clangtidy: true 
 
-    - name: Install dependencies
-      run: vcpkg install
-
-    - name: Configure and Build
+    - name: Set CPACK_GENERATOR
       run: |
-        cmake --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake -B build .
-        cmake --build build
-      env:
-        CC: clang-17
-        CXX: clang++-17
+        if [[ "${{ matrix.os }}" == ubuntu* ]]; then
+          echo "CPACK_GENERATOR=DEB;TGZ" >> $GITHUB_ENV
+        else
+          echo "CPACK_GENERATOR=DragNDrop;TGZ" >> $GITHUB_ENV
+        fi
 
-    - name: Lint
+    - name: Configure ${{ matrix.os }}/${{ matrix.type }}
+      run: |
+        cmake \
+          --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake \
+          -DCPACK_GENERATOR=${CPACK_GENERATOR} \
+          -B build .
+        
+    - name: Build ${{ matrix.os }}/${{ matrix.type }}
+      run: |
+        cmake --build build
+
+    - name: Lint ${{ matrix.os }}/${{ matrix.type }}
       run: |
         cmake --build build --target format
         cmake --build build --target tidy
-      env:
-        CC: clang-17
-        CXX: clang++-17
 
-    - name: Test
+    - name: Test ${{ matrix.os }}/${{ matrix.type }}
       run: SDL_AUDIODRIVER=dummy SDL_VIDEODRIVER=dummy ./build/test
+
+    - name: Package ${{ matrix.os }}/${{ matrix.type }}
+      run: |
+        cmake --build build --target package
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          build/latebit-*
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag_name: v1.0.0-001
+        prerelease: true
+        fail_on_unmatched_files: false
+        body: |
+          This is the first release of the project.

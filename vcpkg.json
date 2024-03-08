@@ -4,7 +4,14 @@
   "dependencies": [
     {
       "name": "sdl2",
-      "version>=": "2.30.0"
+      "features": [ "alsa", "x11", "wayland", "ibus" ],
+      "version>=": "2.30.0",
+      "platform": "linux"
+    },
+    {
+      "name": "sdl2",
+      "version>=": "2.30.0",
+      "platform": "!(linux)"
     },
     {
       "name": "sdl2-ttf",

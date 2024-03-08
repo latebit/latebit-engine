@@ -1,10 +1,12 @@
 wasm:
   # Creates a wasm build
+  export CXX=clang++-17
   emmake cmake -DWASM=1 -B build-wasm .
   emmake cmake --build build-wasm
 
 native:
   # Creates a native build
+  export CXX=clang++-17
   cmake --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake -B build .
   cmake --build build
 
@@ -14,8 +16,7 @@ tidy: native
 
 package: native
   # Builds the package with cpack
-  cd build
-  cpack
+  cmake --build build -t package
 
 test: native
   # Runs the test executable
@@ -31,6 +32,7 @@ memory: native
 
 prepare: clean
   # Prepares current directory for development
+  export CXX=clang++-17
   cmake --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build .
   ln -s build/compile_commands.json compile_commands.json
 

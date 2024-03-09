@@ -18,7 +18,6 @@ The dependencies we need in particular are:
   * compiler: `llvm-15.0.3`
   * cmake: `3.28.1`
   * vcpkg: `true`
-  * clangtidy: `true` 
 
 While not a strict dependency, [shmux](https://github.com/shikaan/shmux) may be convenient to save some typing.
 

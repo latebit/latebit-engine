@@ -32,9 +32,7 @@ jobs:
       with:
         compiler: llvm-15.0.3
         cmake: 3.28.1
-        ninja: 1.11.1
         vcpkg: true
-        clangtidy: true 
 
     - name: Configure
       run: |

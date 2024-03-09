@@ -72,7 +72,6 @@ jobs:
         compiler: llvm-15.0.3
         cmake: 3.28.1
         vcpkg: true
-        clangtidy: true 
 
     - name: Set CPACK_GENERATOR
       run: |

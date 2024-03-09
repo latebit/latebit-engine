@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.get_version.outputs.VERSION }}
+      major: ${{ steps.get_version.outputs.MAJOR }}
+      minor: ${{ steps.get_version.outputs.MINOR }}
+      patch: ${{ steps.get_version.outputs.PATCH }}
     steps:
       - name: Get the version
         id: get_version
@@ -19,6 +22,17 @@ jobs:
           fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "::set-output name=VERSION::$VERSION"
+          # Split the version string into major, minor, and patch components
+          IFS='.' read -ra VERSION_PARTS <<< "${VERSION#v}"
+          MAJOR="${VERSION_PARTS[0]}"
+          MINOR="${VERSION_PARTS[1]}"
+          PATCH="${VERSION_PARTS[2]}"
+          echo "MAJOR=$MAJOR" >> $GITHUB_ENV
+          echo "MINOR=$MINOR" >> $GITHUB_ENV
+          echo "PATCH=$PATCH" >> $GITHUB_ENV
+          echo "::set-output name=MAJOR::$MAJOR"
+          echo "::set-output name=MINOR::$MINOR"
+          echo "::set-output name=PATCH::$PATCH"
 
   build:
     if: startsWith(github.ref, 'refs/tags/')
@@ -72,6 +86,9 @@ jobs:
       run: |
         cmake \
           --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake \
+          -DCPACK_PACKAGE_VERSION_MAJOR=${{ needs.version.outputs.major }} \
+          -DCPACK_PACKAGE_VERSION_MINOR=${{ needs.version.outputs.minor }} \
+          -DCPACK_PACKAGE_VERSION_PATCH=${{ needs.version.outputs.patch }} \
           -DCPACK_GENERATOR=${CPACK_GENERATOR} \
           -B build .
         
@@ -85,7 +102,7 @@ jobs:
         cmake --build build --target tidy
 
     - name: Test ${{ matrix.os }}/${{ matrix.type }}
-      run: SDL_AUDIODRIVER=dummy SDL_VIDEODRIVER=dummy ./build/test
+      run: SDL_AUDIODRIVER=dummy SDL_VIDEODRIVER=dummy cmake --build build --target test
 
     - name: Package ${{ matrix.os }}/${{ matrix.type }}
       run: |
@@ -124,6 +141,10 @@ jobs:
       run: |
         emmake cmake \
           -DWASM=1 \
+          -DCPACK_PACKAGE_VERSION_MAJOR=${{ needs.version.outputs.major }} \
+          -DCPACK_PACKAGE_VERSION_MINOR=${{ needs.version.outputs.minor }} \
+          -DCPACK_PACKAGE_VERSION_PATCH=${{ needs.version.outputs.patch }} \
+          -DCPACK_PACKAGE_FILE_NAME=latebit-${{ needs.version.outputs.version }}-wasm \
           -DCPACK_GENERATOR=ZIP \
           -B build .
         

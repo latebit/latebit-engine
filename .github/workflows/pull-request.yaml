@@ -52,4 +52,4 @@ jobs:
         cmake --build build --target tidy
 
     - name: Test
-      run: SDL_AUDIODRIVER=dummy SDL_VIDEODRIVER=dummy ./build/test
+      run: SDL_AUDIODRIVER=dummy SDL_VIDEODRIVER=dummy cmake --build build --target test

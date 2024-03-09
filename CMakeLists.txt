@@ -18,7 +18,6 @@ file(GLOB TEST_LIB_FILES "test/lib/*.cpp")
 file(GLOB TEST_SUITE_FILES "test/suites/*.cpp")
 file(GLOB INCLUDE_FILES "${INCLUDE}/*.h")
 
-
 if (WASM)
     include(cmake/WebAssembly.cmake)
 else()

@@ -1,0 +1,55 @@
+name: Lint, Test, and Build
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          ./vcpkg
+          ~/vcpkg
+          ./build/vcpkg_installed
+          ${{ env.HOME }}/.cache/vcpkg/archives
+          ${{ env.XDG_CACHE_HOME }}/vcpkg/archives
+          ${{ env.LOCALAPPDATA }}\vcpkg\archives
+          ${{ env.APPDATA }}\vcpkg\archives
+          "**/cpm_modules"
+        key: ${{ runner.os }}-native-${{ hashFiles('**/CMakeLists.txt') }}-${{ hashFiles('./vcpkg.json')}}
+        restore-keys: |
+          ${{ runner.os }}-native-
+    
+    - name: Setup Cpp
+      uses: aminya/setup-cpp@v1
+      with:
+        compiler: llvm-15.0.3
+        cmake: 3.28.1
+        ninja: 1.11.1
+        vcpkg: true
+        clangtidy: true 
+
+    - name: Configure
+      run: |
+        cmake \
+          --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake \
+          -B build .
+        
+    - name: Build
+      run: |
+        cmake --build build
+
+    - name: Lint
+      run: |
+        cmake --build build --target format
+        cmake --build build --target tidy
+
+    - name: Test
+      run: SDL_AUDIODRIVER=dummy SDL_VIDEODRIVER=dummy ./build/test

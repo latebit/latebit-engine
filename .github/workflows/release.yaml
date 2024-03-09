@@ -1,8 +1,9 @@
 name: Release
 
 on:
-  create:
-    types: [tag]
+  push:
+    tags:
+      - '*'
 
 jobs:
   version:

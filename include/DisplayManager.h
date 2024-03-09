@@ -79,15 +79,16 @@ class DisplayManager : public Manager {
 
   // Draws a rectangle outline at the given world position (top left cell)
   [[nodiscard]] auto drawRectangle(Position position, int width, int height,
-                     Color borderColor) const -> int;
+                                   Color borderColor) const -> int;
 
   // Draws a rectangle at the given world position (top left cell)
   [[nodiscard]] auto drawRectangle(Position position, int width, int height,
-                     Color borderColor, Color fillColor) const -> int;
+                                   Color borderColor, Color fillColor) const
+    -> int;
 
   // Draws a string to the window at the given world position
-  [[nodiscard]] auto drawString(Position postion, string string, Alignment alignment,
-                  Color color) const -> int;
+  [[nodiscard]] auto drawString(Position postion, string string,
+                                Alignment alignment, Color color) const -> int;
 
   // Returns the bounding box of a given string. Dimensions are in cells
   [[nodiscard]] auto measureString(string string) const -> Box;

@@ -83,3 +83,49 @@ jobs:
         fail_on_unmatched_files: false
         body: |
           This is the first release of the project.
+  
+  wasm:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Cpp
+      uses: aminya/setup-cpp@v1
+      with:
+        compiler: llvm-15.0.3
+        cmake: 3.28.1
+
+    - name: Setup emsdk
+      uses: mymindstorm/setup-emsdk@v14
+      with:
+        version: 3.1.51
+        actions-cache-folder: 'emsdk-cache'
+
+    - name: Configure wasm
+      run: |
+        emmake cmake \
+          -DWASM=1 \
+          -DCPACK_GENERATOR=ZIP \
+          -B build .
+        
+    - name: Build wasm
+      run: |
+        emmake cmake --build build
+
+    - name: Package wasm
+      run: |
+        emmake cmake --build build --target package
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          build/latebit-*
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag_name: v1.0.0-001
+        prerelease: true
+        fail_on_unmatched_files: false
+        body: |
+          This is the first release of the project.

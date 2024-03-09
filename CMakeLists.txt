@@ -26,7 +26,7 @@ else()
 endif()
 
 add_custom_target(format
-	COMMAND clang-format --dry-run --Werror ${SRC_FILES} ${TEST_LIB_FILES} ${TEST_SUITE_FILES} ${INCLUDE_FILES}
+	COMMAND clang-format -n --Werror -ferror-limit=1 ${SRC_FILES} ${TEST_LIB_FILES} ${TEST_SUITE_FILES} ${INCLUDE_FILES}
 )
 
 add_custom_target(tidy

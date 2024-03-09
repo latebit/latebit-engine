@@ -78,15 +78,15 @@ class DisplayManager : public Manager {
   auto drawFrame(Position position, const Frame *frame) const -> int;
 
   // Draws a rectangle outline at the given world position (top left cell)
-  auto drawRectangle(Position position, int width, int height,
+  [[nodiscard]] auto drawRectangle(Position position, int width, int height,
                      Color borderColor) const -> int;
 
   // Draws a rectangle at the given world position (top left cell)
-  auto drawRectangle(Position position, int width, int height,
+  [[nodiscard]] auto drawRectangle(Position position, int width, int height,
                      Color borderColor, Color fillColor) const -> int;
 
   // Draws a string to the window at the given world position
-  auto drawString(Position postion, string string, Alignment alignment,
+  [[nodiscard]] auto drawString(Position postion, string string, Alignment alignment,
                   Color color) const -> int;
 
   // Returns the bounding box of a given string. Dimensions are in cells
@@ -96,9 +96,9 @@ class DisplayManager : public Manager {
   void setBackground(Color color);
 
   // Return the amount of horizontal cells
-  auto getHorizontalCells() const -> int;
+  [[nodiscard]] auto getHorizontalCells() const -> int;
   // Return the amount of vertical cells
-  auto getVerticalCells() const -> int;
+  [[nodiscard]] auto getVerticalCells() const -> int;
 
   // Swap the buffers for drawing.
   // This is the result of Double Buffering: first we draw to a hidden buffer

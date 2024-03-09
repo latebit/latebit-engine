@@ -20,10 +20,10 @@ class InputManager : public Manager {
   std::unordered_map<SDL_Keycode, Keyboard::Key> keyboardEvent;
 
   // Converts SDL key code to local key code.
-  auto fromSDLKeyCode(SDL_Keycode key) const -> Keyboard::Key;
+  [[nodiscard]] auto fromSDLKeyCode(SDL_Keycode key) const -> Keyboard::Key;
 
   // Converts SDL mouse buttons to local mouse button.
-  auto fromSDLMouseButton(char btn) const -> Mouse::Button;
+  [[nodiscard]] auto fromSDLMouseButton(char btn) const -> Mouse::Button;
 
  public:
   static auto getInstance() -> InputManager &;

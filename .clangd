@@ -1,3 +1,7 @@
 CompileFlags:
   Add:
-    - "-I/home/manuel/dev/manuel/game-engine/include"
+    - "-std=c++20"
+    - "-Wall"
+    - "-I./include"
+    - "-I./vcpkg_installed/x64-linux/include"
+

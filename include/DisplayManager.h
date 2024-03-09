@@ -33,6 +33,8 @@ const string WINDOW_TITLE_DEFAULT = "Latebits";
 const string FONT_FILE_DEFAULT = "font.ttf";
 const uint FONT_SIZE_DEFAULT = CELL_SIZE * 8;
 
+const string DUMMY_VIDEODRIVER = "dummy";
+
 // Returns height of a single character
 auto charHeight() -> float;
 // Returns width of a single character
@@ -60,6 +62,9 @@ class DisplayManager : public Manager {
   // Background color of the window
   Color backgroundColor = WINDOW_BACKGROUND_COLOR_DEFAULT;
 
+  // Returns appropriate renderer flags for the current driver
+  [[nodiscard]] auto getRendererFlags() const -> uint;
+
  public:
   DisplayManager(DisplayManager const &) = delete;
   void operator=(DisplayManager const &) = delete;
@@ -73,16 +78,17 @@ class DisplayManager : public Manager {
   auto drawFrame(Position position, const Frame *frame) const -> int;
 
   // Draws a rectangle outline at the given world position (top left cell)
-  auto drawRectangle(Position position, int width, int height,
-                     Color borderColor) const -> int;
+  [[nodiscard]] auto drawRectangle(Position position, int width, int height,
+                                   Color borderColor) const -> int;
 
   // Draws a rectangle at the given world position (top left cell)
-  auto drawRectangle(Position position, int width, int height,
-                     Color borderColor, Color fillColor) const -> int;
+  [[nodiscard]] auto drawRectangle(Position position, int width, int height,
+                                   Color borderColor, Color fillColor) const
+    -> int;
 
   // Draws a string to the window at the given world position
-  auto drawString(Position postion, string string, Alignment alignment,
-                  Color color) const -> int;
+  [[nodiscard]] auto drawString(Position postion, string string,
+                                Alignment alignment, Color color) const -> int;
 
   // Returns the bounding box of a given string. Dimensions are in cells
   [[nodiscard]] auto measureString(string string) const -> Box;
@@ -91,9 +97,9 @@ class DisplayManager : public Manager {
   void setBackground(Color color);
 
   // Return the amount of horizontal cells
-  auto getHorizontalCells() const -> int;
+  [[nodiscard]] auto getHorizontalCells() const -> int;
   // Return the amount of vertical cells
-  auto getVerticalCells() const -> int;
+  [[nodiscard]] auto getVerticalCells() const -> int;
 
   // Swap the buffers for drawing.
   // This is the result of Double Buffering: first we draw to a hidden buffer

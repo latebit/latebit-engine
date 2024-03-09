@@ -53,7 +53,9 @@ jobs:
         path: |
           ./vcpkg
           ~/vcpkg
+          ~/cmake
           ./build/vcpkg_installed
+          /usr/lib/llvm-15
           ${{ env.HOME }}/.cache/vcpkg/archives
           ${{ env.XDG_CACHE_HOME }}/vcpkg/archives
           ${{ env.LOCALAPPDATA }}\vcpkg\archives
@@ -123,6 +125,17 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+    
+    - name: Cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/cmake
+          /usr/lib/llvm-15
+          "**/cpm_modules"
+        key: ${{ runner.os }}-wasm
+        restore-keys: |
+          ${{ runner.os }}-wasm
     
     - name: Setup Cpp
       uses: aminya/setup-cpp@v1

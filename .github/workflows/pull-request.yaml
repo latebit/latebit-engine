@@ -17,7 +17,9 @@ jobs:
         path: |
           ./vcpkg
           ~/vcpkg
+          ~/cmake
           ./build/vcpkg_installed
+          /usr/lib/llvm-15
           ${{ env.HOME }}/.cache/vcpkg/archives
           ${{ env.XDG_CACHE_HOME }}/vcpkg/archives
           ${{ env.LOCALAPPDATA }}\vcpkg\archives

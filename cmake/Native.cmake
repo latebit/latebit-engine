@@ -12,7 +12,6 @@ find_package(SDL2_mixer 2.8.0 CONFIG REQUIRED)
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 target_link_libraries(${PROJECT_NAME} 
     PRIVATE
-    stdc++
     $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
     SDL2::SDL2-static
     SDL2_mixer::SDL2_mixer-static

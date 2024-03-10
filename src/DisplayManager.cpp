@@ -155,7 +155,6 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame) const
 
   SDL_UnlockSurface(surface);
   auto texture = SDL_CreateTextureFromSurface(this->renderer, surface);
-  SDL_FreeSurface(surface);
 
   if (texture == nullptr) {
     Log.error("DisplayManager::drawFrame(): Cannot create texture. %s",
@@ -168,6 +167,7 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame) const
                         frame->getHeight() * CELL_SIZE};
 
   SDL_RenderCopy(this->renderer, texture, nullptr, &rectangle);
+  SDL_FreeSurface(surface);
   SDL_DestroyTexture(texture);
 
   return 0;
@@ -221,7 +221,6 @@ auto DisplayManager::drawString(Position position, string string,
 
   SDL_Texture* texture =
     SDL_CreateTextureFromSurface(this->renderer, textSurface);
-  SDL_FreeSurface(textSurface);
 
   if (texture == nullptr) {
     Log.error("DisplayManager::drawString(): Cannot create texture. %s",
@@ -244,6 +243,7 @@ auto DisplayManager::drawString(Position position, string string,
   }
 
   SDL_RenderCopy(renderer, texture, nullptr, &rect);
+  SDL_FreeSurface(textSurface);
   SDL_DestroyTexture(texture);
 
   return 0;

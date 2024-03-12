@@ -1,6 +1,5 @@
 #include "SpriteParser.h"
 
-#include <algorithm>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -8,18 +7,11 @@
 #include "Colors.h"
 #include "Logger.h"
 #include "Sprite.h"
+#include "utils.h"
 
 using namespace std;
 
 namespace lb {
-auto SpriteParser::getLine(ifstream* file) -> string {
-  string line;
-  getline(*file, line);
-  line.erase(
-    remove_if(line.begin(), line.end(), [](char c) { return c == '\r'; }),
-    line.end());
-  return line;
-}
 
 auto SpriteParser::parseSprite(string filename, string label) -> Sprite {
   ifstream file(filename);

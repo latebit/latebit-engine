@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cstdio>
-#include <ctime>
 #include <string>
 
 #include "Box.h"
@@ -36,3 +34,7 @@ auto clamp(float value, float min, float max) -> float;
 
 // Return true if container contains content
 auto contains(Box container, Box content) -> bool;
+
+// Reads an ifstream line by line and returns a string
+// accounting for different line endings
+auto getLine(ifstream* file) -> string;

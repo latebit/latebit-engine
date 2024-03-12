@@ -1,6 +1,7 @@
 #include "GameManager.h"
 
 #include "AudioManager.h"
+#include "Configuration.h"
 #include "DisplayManager.h"
 #include "EventStep.h"
 #include "InputManager.h"
@@ -41,6 +42,7 @@ auto GameManager::startUp() -> int {
   }
 
   this->setRandomSeed();
+  this->setFrameTime(1000 / Configuration::getMaxFrameRate());
 
   // By default boundary equates view and it's the whole window
   Box boundary(Vector(0, 0), DM.getHorizontalCells(), DM.getVerticalCells());

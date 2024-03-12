@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <ctime>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -86,4 +87,16 @@ auto contains(Box container, Box content) -> bool {
 
   return containerLeft <= contentLeft && contentRight <= containerRight &&
          containerTop <= contentTop && contentBottom <= containerBottom;
+}
+
+auto getLine(ifstream* file) -> string {
+  string line;
+
+  getline(*file, line);
+
+  if (!line.empty() && line.back() == '\r') {
+    line.pop_back();
+  }
+
+  return line;
 }

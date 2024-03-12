@@ -10,6 +10,7 @@
 #include <SDL2/SDL_video.h>
 
 #include "Colors.h"
+#include "Configuration.h"
 #include "Frame.h"
 #include "Logger.h"
 #include "Vector.h"
@@ -42,7 +43,7 @@ auto DisplayManager::startUp() -> int {
   }
 
   this->window = SDL_CreateWindow(
-    WINDOW_TITLE_DEFAULT.c_str(), SDL_WINDOWPOS_CENTERED,
+    Configuration::getInitialWindowTitle().c_str(), SDL_WINDOWPOS_CENTERED,
     SDL_WINDOWPOS_CENTERED, widthInPixels, heightInPixels, SDL_WINDOW_SHOWN);
 
   if (this->window == nullptr) {
@@ -67,10 +68,11 @@ auto DisplayManager::startUp() -> int {
     return -1;
   }
 
-  this->font = TTF_OpenFont(FONT_FILE_DEFAULT.c_str(), FONT_SIZE_DEFAULT);
+  string fontFile = Configuration::getMainFontFile();
+  this->font = TTF_OpenFont(fontFile.c_str(), FONT_SIZE_DEFAULT);
   if (this->font == nullptr) {
     Log.error("DisplayManager::startUp(): Cannot open font %s. %s",
-              FONT_FILE_DEFAULT.c_str(), SDL_GetError());
+              fontFile.c_str(), SDL_GetError());
     this->shutDown();
     return -1;
   }

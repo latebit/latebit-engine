@@ -15,17 +15,12 @@ jobs:
       uses: actions/cache@v3
       with:
         path: |
-          ./vcpkg
           ~/vcpkg
           ~/cmake
           ./build/vcpkg_installed
-          /usr/lib/llvm-15
           ${{ env.HOME }}/.cache/vcpkg/archives
           ${{ env.XDG_CACHE_HOME }}/vcpkg/archives
-          ${{ env.LOCALAPPDATA }}\vcpkg\archives
-          ${{ env.APPDATA }}\vcpkg\archives
-          "**/cpm_modules"
-        key: ${{ runner.os }}-native-${{ hashFiles('**/CMakeLists.txt') }}-${{ hashFiles('./vcpkg.json')}}
+        key: ${{ runner.os }}-native-${{ hashFiles('./CMakeLists.txt') }}-${{ hashFiles('./vcpkg.json')}}
         restore-keys: |
           ${{ runner.os }}-native-
     

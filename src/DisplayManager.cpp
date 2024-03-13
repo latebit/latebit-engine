@@ -82,17 +82,9 @@ auto DisplayManager::startUp() -> int {
 }
 
 void DisplayManager::shutDown() {
-  if (this->window != nullptr) {
-    SDL_DestroyWindow(this->window);
-  }
-
-  if (this->renderer != nullptr) {
-    SDL_DestroyRenderer(this->renderer);
-  }
-
-  if (this->font != nullptr) {
-    TTF_CloseFont(this->font);
-  }
+  TTF_CloseFont(this->font);
+  SDL_DestroyRenderer(this->renderer);
+  SDL_DestroyWindow(this->window);
 
   this->window = nullptr;
   this->renderer = nullptr;

@@ -33,6 +33,9 @@ jobs:
 
     - name: Configure
       run: |
+        # temporary due to https://github.com/microsoft/vcpkg/issues/37279
+        sudo apt install python3-jinja2
+
         cmake \
           --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake \
           -B build .

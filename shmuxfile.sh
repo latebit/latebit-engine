@@ -5,12 +5,12 @@ wasm:
 
 native:
   # Creates a native build
-  cmake --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake -B build .
+  cmake --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake -B build .
   cmake --build build
 
 debug:
   # Creates a debug build
-  cmake --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Debug -B build .
+  cmake --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Debug -B build .
   cmake --build build
 
 tidy:
@@ -31,7 +31,7 @@ test:
 
 prepare: clean
   # Prepares current directory for development
-  cmake --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build .
+  cmake --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build .
   ln -s build/compile_commands.json compile_commands.json
 
 clean:

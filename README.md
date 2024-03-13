@@ -11,13 +11,11 @@ This is very much in progress and far from stable. Use it a your own risk.
 
 ### Dependencies
 
-The quickest way to setup your local environment to develop latebit is using [setup-cpp](https://github.com/aminya/setup-cpp). This is the same tool used CI and will guarantee the same results locally and in CI.
-
-The dependencies we need in particular are:
+The dependencies required to run the project locally are:
   
-  * compiler: `llvm-15.0.3`
-  * cmake: `3.28.1`
-  * vcpkg: `true`
+  * [LLVM/Clang](https://releases.llvm.org/): `>=15.0.6`
+  * [cmake](https://cmake.org/download/): `>=3.28.1`
+  * [vcpkg](https://github.com/microsoft/vcpkg): `>=2024-02-07-8a83681f921b10d86ae626fd833c253f4f8c355b`
 
 While not a strict dependency, [shmux](https://github.com/shikaan/shmux) may be convenient to save some typing.
 

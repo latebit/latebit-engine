@@ -20,7 +20,7 @@ namespace lb {
 enum LogLevel { ERROR, WARNING, INFO, DEBUG };
 enum LogDestination { LOG_FILE, STDOUT };
 
-const string LOGFILE_NAME = "latebits.log";
+const string LOGFILE_NAME = "latebit.log";
 
 class Logger {
  public:

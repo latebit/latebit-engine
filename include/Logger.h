@@ -1,14 +1,10 @@
 #pragma once
 
 #include <cstdarg>
-#include <cstdio>
 #include <fstream>
 #include <iostream>
 #include <memory>
 #include <ostream>
-
-#include "Manager.h"
-#include "utils.h"
 
 using namespace std;
 

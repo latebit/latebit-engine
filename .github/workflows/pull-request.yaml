@@ -25,7 +25,7 @@ jobs:
     - name: Install LLVM and Clang
       uses: KyleMayes/install-llvm-action@v1
       with:
-        version: "17"
+        version: "15"
         env: true
         
     - uses: lukka/get-cmake@latest

@@ -39,6 +39,10 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     needs: version
     runs-on: ${{ matrix.os }}
+    env:
+      _VCPKG_: ${{ github.workspace }}/vcpkg
+      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
+      VCPKG_BINARY_SOURCES: 'clear;x-gha,readwrite'
     strategy:
       matrix:
         os: [ubuntu-22.04, macos-13]
@@ -56,13 +60,19 @@ jobs:
     - name: Install LLVM and Clang
       uses: KyleMayes/install-llvm-action@v1
       with:
-        version: "17"
+        version: "15"
         env: true
 
     - uses: lukka/get-cmake@latest
       with:
         cmakeVersion: 3.28.1
         ninjaVersion: 1.11.1
+
+    - name: run-vcpkg
+      uses: lukka/run-vcpkg@v11.5
+
+    - name: Install dependencies
+      run: vcpkg install
 
     - name: Set CPACK_GENERATOR
       run: |
@@ -75,7 +85,7 @@ jobs:
     - name: Configure ${{ matrix.os }}/${{ matrix.type }}
       run: |
         cmake \
-          --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake \
+          --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake \
           -DCPACK_PACKAGE_VERSION_MAJOR=${{ needs.version.outputs.major }} \
           -DCPACK_PACKAGE_VERSION_MINOR=${{ needs.version.outputs.minor }} \
           -DCPACK_PACKAGE_VERSION_PATCH=${{ needs.version.outputs.patch }} \
@@ -113,7 +123,7 @@ jobs:
     - name: Install LLVM and Clang
       uses: KyleMayes/install-llvm-action@v1
       with:
-        version: "17"
+        version: "15"
         env: true
 
     - uses: lukka/get-cmake@latest

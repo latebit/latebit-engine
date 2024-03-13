@@ -4,6 +4,7 @@
 #include "suites/Animation_test.cpp"
 #include "suites/Box_test.cpp"
 #include "suites/Colors_test.cpp"
+#include "suites/Configuration_test.cpp"
 #include "suites/EventCollision_test.cpp"
 #include "suites/EventKeyboard_test.cpp"
 #include "suites/EventOut_test.cpp"
@@ -31,6 +32,7 @@ auto main() -> int {
     suite("Animation", Animation_test);
     suite("Box", Box_test);
     suite("Colors", Colors_test);
+    suite("Configuration", Configuration_test);
     suite("Event", Event_test);
     suite("EventCollision", EventCollision_test);
     suite("EventKeyboard", EventKeyboard_test);

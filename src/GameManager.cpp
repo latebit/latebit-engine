@@ -1,6 +1,7 @@
 #include "GameManager.h"
 
 #include "AudioManager.h"
+#include "Configuration.h"
 #include "DisplayManager.h"
 #include "EventStep.h"
 #include "InputManager.h"
@@ -41,6 +42,7 @@ auto GameManager::startUp() -> int {
   }
 
   this->setRandomSeed();
+  this->setFrameTime(1000 / Configuration::getMaxFrameRate());
 
   // By default boundary equates view and it's the whole window
   Box boundary(Vector(0, 0), DM.getHorizontalCells(), DM.getVerticalCells());
@@ -57,6 +59,11 @@ auto GameManager::getInstance() -> GameManager& {
 }
 
 void GameManager::shutDown() {
+  if (!this->isStarted()) {
+    Log.warning("GameManager::shutDown(): GameManager already shut down");
+    return;
+  }
+
   setGameOver(true);
   AM.shutDown();
   IM.shutDown();
@@ -72,6 +79,13 @@ auto GameManager::isValid(string eventType) const -> bool {
 
 #ifndef __EMSCRIPTEN__
 void GameManager::run() {
+  if (!this->isStarted()) {
+    Log.error(
+      "GameManager::run(): GameManager not started. Please call `startUp` "
+      "before running the game");
+    return;
+  }
+
   long int loopTime = 0;
   long int steps = 0;
 

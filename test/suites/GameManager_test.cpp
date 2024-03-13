@@ -14,5 +14,12 @@ void GameManager_test() {
   assert_box("boundary is set up", WM.getBoundary(), wanted);
   assert_box("view is set up", WM.getView(), wanted);
 
+  test("won't run if not started", []() {
+    GM.shutDown();
+    GM.run();
+    // Reaching this function means the test passed
+    assert("doesn't run", !GM.isStarted());
+  });
+
   GM.shutDown();
 }

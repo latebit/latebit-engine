@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+#include "utils.h"
+
 using namespace std;
 
 namespace lb {
@@ -47,8 +49,8 @@ void Logger::logf(LogLevel level, const string fmt, va_list args) const {
     string logLevel = getLevelString(level);
 
     char buffer[1024];  // NOLINT
-    sprintf(buffer, "%s ", getTimeString().c_str());
-    vsprintf(buffer, fmt.c_str(), args);
+    snprintf(buffer, 1024, "%s ", getTimeString().c_str());
+    vsnprintf(buffer, 1024, fmt.c_str(), args);
 
     (*output) << time << " [" << logLevel << "] " << buffer << endl;
   }

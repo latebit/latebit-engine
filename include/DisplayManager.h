@@ -29,8 +29,6 @@ const int WINDOW_HORIZONTAL_CELLS = 240;
 const int WINDOW_VERTICAL_CELLS = 160;
 const int CELL_SIZE = 3;
 const Color WINDOW_BACKGROUND_COLOR_DEFAULT = BLACK;
-const string WINDOW_TITLE_DEFAULT = "Latebits";
-const string FONT_FILE_DEFAULT = "font.ttf";
 const uint FONT_SIZE_DEFAULT = CELL_SIZE * 8;
 
 const string DUMMY_VIDEODRIVER = "dummy";

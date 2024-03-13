@@ -59,6 +59,11 @@ auto GameManager::getInstance() -> GameManager& {
 }
 
 void GameManager::shutDown() {
+  if (!this->isStarted()) {
+    Log.warning("GameManager::shutDown(): GameManager already shut down");
+    return;
+  }
+
   setGameOver(true);
   AM.shutDown();
   IM.shutDown();
@@ -74,6 +79,13 @@ auto GameManager::isValid(string eventType) const -> bool {
 
 #ifndef __EMSCRIPTEN__
 void GameManager::run() {
+  if (!this->isStarted()) {
+    Log.error(
+      "GameManager::run(): GameManager not started. Please call `startUp` "
+      "before running the game");
+    return;
+  }
+
   long int loopTime = 0;
   long int steps = 0;
 

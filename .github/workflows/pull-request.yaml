@@ -28,14 +28,15 @@ jobs:
       uses: aminya/setup-cpp@v1
       with:
         compiler: llvm-15.0.3
+        ninja: 1.11.1
         cmake: 3.28.1
-        vcpkg: true
+        vcpkg: 2024-02-07-8a83681f921b10d86ae626fd833c253f4f8c355b
 
     - name: Configure
       run: |
-        # temporary due to https://github.com/microsoft/vcpkg/issues/37279
-        sudo apt install python3-jinja2
-
+        # remove me
+        vcpkg update
+        
         cmake \
           --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake \
           -B build .

@@ -1,5 +1,3 @@
-#include <sys/types.h>
-
 #include <array>
 #include <string>
 
@@ -26,7 +24,7 @@ class Configuration {
 
  public:
   // Returns the maximum frame rate for the game
-  static auto getMaxFrameRate() -> uint;
+  static auto getMaxFrameRate() -> int;
   // Returns the initial window title
   static auto getInitialWindowTitle() -> string;
   // Returns the path to the main font file

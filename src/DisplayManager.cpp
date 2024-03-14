@@ -93,7 +93,7 @@ void DisplayManager::shutDown() {
   Log.info("DisplayManager::shutDown(): Shut down successfully");
 }
 
-auto DisplayManager::getRendererFlags() const -> uint {
+auto DisplayManager::getRendererFlags() const -> int {
   return string(SDL_GetCurrentVideoDriver()) == DUMMY_VIDEODRIVER
            ? 0
            : SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;

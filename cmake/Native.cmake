@@ -26,5 +26,3 @@ add_custom_target(test
     DEPENDS test
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
-
-include(./cmake/Release.cmake)

@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.18)
 
 option(WASM "Build for WebAssembly" OFF)
+set(VERSION_TAG "v0.0.0-development.0" CACHE STRING "Git tag to label artifacts of this build")
 
 # Compiler settings
 set(CMAKE_CXX_STANDARD 20)
@@ -31,3 +32,5 @@ add_custom_target(format
 add_custom_target(tidy
     COMMAND clang-tidy --fix --fix-errors --fix-notes --warnings-as-errors=* --header-filter='${INCLUDE}/.*' ${SRC_FILES} ${TEST_LIB_FILES} ${TEST_SUITE_FILES} -- ${CMAKE_CXX_FLAGS} -I${INCLUDE} -I${CMAKE_BINARY_DIR}/vcpkg_installed/x64-linux/include
 )
+
+include(cmake/Release.cmake)

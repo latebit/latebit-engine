@@ -13,7 +13,7 @@ jobs:
       major: ${{ steps.get_version.outputs.MAJOR }}
       minor: ${{ steps.get_version.outputs.MINOR }}
       patch: ${{ steps.get_version.outputs.PATCH }}
-      pre_Release: ${{ steps.get_version.outputs.PRE_RELEASE }}
+      pre_release: ${{ steps.get_version.outputs.PRE_RELEASE }}
     steps:
       - name: Get the version
         id: get_version

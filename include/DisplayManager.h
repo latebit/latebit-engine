@@ -29,7 +29,7 @@ const int WINDOW_HORIZONTAL_CELLS = 240;
 const int WINDOW_VERTICAL_CELLS = 160;
 const int CELL_SIZE = 3;
 const Color WINDOW_BACKGROUND_COLOR_DEFAULT = BLACK;
-const uint FONT_SIZE_DEFAULT = CELL_SIZE * 8;
+const int FONT_SIZE_DEFAULT = CELL_SIZE * 8;
 
 const string DUMMY_VIDEODRIVER = "dummy";
 
@@ -61,7 +61,7 @@ class DisplayManager : public Manager {
   Color backgroundColor = WINDOW_BACKGROUND_COLOR_DEFAULT;
 
   // Returns appropriate renderer flags for the current driver
-  [[nodiscard]] auto getRendererFlags() const -> uint;
+  [[nodiscard]] auto getRendererFlags() const -> int;
 
  public:
   DisplayManager(DisplayManager const &) = delete;

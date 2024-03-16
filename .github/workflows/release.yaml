@@ -9,31 +9,45 @@ jobs:
   version:
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.get_version.outputs.VERSION }}
+      version_tag: ${{ steps.get_version.outputs.VERSION_TAG }}
       major: ${{ steps.get_version.outputs.MAJOR }}
       minor: ${{ steps.get_version.outputs.MINOR }}
       patch: ${{ steps.get_version.outputs.PATCH }}
+      pre_release: ${{ steps.get_version.outputs.PRE_RELEASE }}
     steps:
       - name: Get the version
         id: get_version
         run: |
-          VERSION=$(echo $GITHUB_REF | sed -e "s/refs\/tags\///")
-          if [[ -z "$VERSION" ]]; then
-            VERSION="v0.0.0-development"
+          VERSION_TAG=$(echo $GITHUB_REF | sed -e "s/refs\/tags\///")
+          if [[ -z "$VERSION_TAG" ]]; then
+            VERSION_TAG="v0.0.0-development.0"
           fi
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "::set-output name=VERSION::$VERSION"
-          # Split the version string into major, minor, and patch components
-          IFS='.' read -ra VERSION_PARTS <<< "${VERSION#v}"
-          MAJOR="${VERSION_PARTS[0]}"
-          MINOR="${VERSION_PARTS[1]}"
-          PATCH="${VERSION_PARTS[2]}"
+          echo "VERSION_TAG=$VERSION_TAG" >> $GITHUB_ENV
+          echo "::set-output name=VERSION_TAG::$VERSION_TAG"
+          
+          # Remove the 'v' prefix
+          version=${VERSION_TAG:1}
+
+          # Split into main version and pre-release parts
+          IFS='-' read -r main_version pre_release <<< "$version"
+
+          # Split main version into major, minor, and patch versions
+          IFS='.' read -r major minor patch <<< "$main_version"
+          
+          MAJOR="${major}"
+          MINOR="${minor}"
+          PATCH="${patch}"
+          PRE_RELEASE="${pre_release}"
+          
           echo "MAJOR=$MAJOR" >> $GITHUB_ENV
           echo "MINOR=$MINOR" >> $GITHUB_ENV
           echo "PATCH=$PATCH" >> $GITHUB_ENV
+          echo "PRE_RELEASE=$PRE_RELEASE" >> $GITHUB_ENV
+
           echo "::set-output name=MAJOR::$MAJOR"
           echo "::set-output name=MINOR::$MINOR"
           echo "::set-output name=PATCH::$PATCH"
+          echo "::set-output name=PRE_RELEASE::$PRE_RELEASE"
 
   build:
     if: startsWith(github.ref, 'refs/tags/')
@@ -89,6 +103,7 @@ jobs:
           -DCPACK_PACKAGE_VERSION_MAJOR=${{ needs.version.outputs.major }} \
           -DCPACK_PACKAGE_VERSION_MINOR=${{ needs.version.outputs.minor }} \
           -DCPACK_PACKAGE_VERSION_PATCH=${{ needs.version.outputs.patch }} \
+          -DVERSION_TAG=${{ needs.version.outputs.version_tag }} \
           -DCPACK_GENERATOR=${CPACK_GENERATOR} \
           -B build .
         
@@ -144,8 +159,8 @@ jobs:
           -DCPACK_PACKAGE_VERSION_MAJOR=${{ needs.version.outputs.major }} \
           -DCPACK_PACKAGE_VERSION_MINOR=${{ needs.version.outputs.minor }} \
           -DCPACK_PACKAGE_VERSION_PATCH=${{ needs.version.outputs.patch }} \
-          -DCPACK_PACKAGE_FILE_NAME=latebit-${{ needs.version.outputs.version }}-wasm \
-          -DCPACK_GENERATOR=ZIP \
+          -DVERSION_TAG=${{ needs.version.outputs.version_tag }} \
+          -DCPACK_GENERATOR=TGZ \
           -B build .
         
     - name: Build wasm

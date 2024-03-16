@@ -14,9 +14,9 @@ auto trim(const string &str) -> string {
   return (start < end) ? string(start, end) : string();
 }
 
-// Takes a string value and attempts a conversion to uint. Uses a default value
+// Takes a string value and attempts a conversion to int. Uses a default value
 // on failure.
-auto uintOrDefault(string value, uint def) -> uint {
+auto intOrDefault(string value, int def) -> int {
   if (value.empty()) return def;
 
   try {
@@ -45,7 +45,7 @@ int Configuration::frameRate = DEFAULT_FRAME_RATE;
 string Configuration::title = DEFAULT_TITLE;
 string Configuration::fontFile = DEFAULT_FONT_FILE;
 
-auto Configuration::getMaxFrameRate() -> uint { return frameRate; }
+auto Configuration::getMaxFrameRate() -> int { return frameRate; }
 
 auto Configuration::getInitialWindowTitle() -> string { return title; }
 
@@ -74,7 +74,7 @@ auto Configuration::fromFile(string filename) -> int {
 
     try {
       if (key == CONFIG_KEYS[0]) {
-        frameRate = uintOrDefault(value, frameRate);
+        frameRate = intOrDefault(value, frameRate);
       } else if (key == CONFIG_KEYS[1]) {
         title = stringOrDefault(value, title);
       } else if (key == CONFIG_KEYS[2]) {

@@ -1,6 +1,44 @@
 #include "Font.h"
 
+#include <algorithm>
+
 namespace lb {
+
+Font::Font(GlyphList glyphs, int glyphWidth, int glyphHeight,
+           int horizontalSpacing) {
+  this->glyphs = glyphs;
+  this->glyphWidth = ranges::clamp(glyphWidth, 1, 8);
+  this->glyphHeight = ranges::clamp(glyphHeight, 1, 8);
+  this->horizontalSpacing = ranges::clamp(horizontalSpacing, 1, 8);
+}
+
+auto Font::getGlyphs() const -> const GlyphList& { return this->glyphs; }
+
+auto Font::getGlyphWidth() const -> int { return this->glyphWidth; }
+
+auto Font::getGlyphHeight() const -> int { return this->glyphHeight; }
+
+auto Font::getHorizontalSpacing() const -> int {
+  return this->horizontalSpacing;
+}
+
+auto Font::getGlyph(char c) const -> const Glyph& {
+  int code = static_cast<int>(c);
+
+  if (code < 32 || code > 126) {
+    code = 32;
+  }
+
+  return this->glyphs[code - 32];
+}
+
+auto Font::getLineWidth(const string& string) const -> int {
+  return string.size() * (this->glyphWidth + this->horizontalSpacing);
+}
+
+auto Font::getLineHeight(const string& string) const -> int {
+  return this->glyphHeight;
+}
 
 const GlyphList DEFAULT_FONT_GLYPHS = {
   // ASCII 32: Space

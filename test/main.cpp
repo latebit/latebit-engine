@@ -10,6 +10,7 @@
 #include "suites/EventOut_test.cpp"
 #include "suites/EventStep_test.cpp"
 #include "suites/Event_test.cpp"
+#include "suites/Font_test.cpp"
 #include "suites/Frame_test.cpp"
 #include "suites/GameManager_test.cpp"
 #include "suites/Manager_test.cpp"
@@ -38,6 +39,7 @@ auto main() -> int {
     suite("EventKeyboard", EventKeyboard_test);
     suite("EventOut", EventOut_test);
     suite("EventStep", EventStep_test);
+    suite("Font", Font_test);
     suite("Frame", Frame_test);
     suite("GameManager", GameManager_test);
     suite("Manager", Manager_test);

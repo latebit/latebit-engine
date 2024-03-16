@@ -6,7 +6,6 @@
 #include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_surface.h>
-#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_video.h>
 
 #include "Colors.h"
@@ -20,13 +19,6 @@
 namespace lb {
 
 const int CELL_SIZE = 3;
-
-auto getLineWidth(string line) -> int {
-  return line.size() *
-         (DEFAULT_FONT.glyphWidth + DEFAULT_FONT.horizontalSpacing);
-}
-
-auto getLineHeight(string line) -> int { return DEFAULT_FONT.glyphHeight; }
 
 DisplayManager::DisplayManager() {
   setType("DisplayManager");
@@ -193,11 +185,16 @@ auto DisplayManager::drawString(Position position, string string,
                                 Font font) const -> int {
   if (this->window == nullptr) return -1;
 
-  auto viewPosition = worldToView(position);
+  Position viewPosition = worldToView(position);
+  int len = string.size();
+  int lineWidth = font.getLineWidth(string);
+  int lineHeight = font.getLineHeight(string);
+  int gWidth = font.getGlyphWidth();
+  int gHeight = font.getGlyphHeight();
 
   SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(
-    0, font.glyphWidth * CELL_SIZE * string.size(),
-    font.glyphHeight * CELL_SIZE, 16, SDL_PIXELFORMAT_RGBA32);
+    0, lineWidth * CELL_SIZE, lineHeight * CELL_SIZE, 0,
+    SDL_PIXELFORMAT_RGBA32);
 
   if (surface == nullptr) {
     Log.error("DisplayManager::drawFrame(): Cannot create surface. %s",
@@ -205,27 +202,20 @@ auto DisplayManager::drawString(Position position, string string,
     return -1;
   }
 
-  auto lineWidth = getLineWidth(string);
-
-  for (int i = 0; i < string.size(); i++) {
-    // Find ascii code for the char
-    auto code = static_cast<int>(string[i]);
-
-    // Find the glyph corresponding to the code
-    auto glyph = font.glyphs.at(code - 32);
+  for (int i = 0; i < len; i++) {
+    auto glyph = font.getGlyph(string[i]);
 
     // Populate the content vector with the color of the glyph
     auto content = vector<Color>();
-    for (int y = font.glyphHeight - 1; y >= 0; y--) {
-      for (int x = font.glyphWidth - 1; x >= 0; x--) {
-        content.push_back(glyph[y * font.glyphWidth + x] ? color
-                                                         : UNDEFINED_COLOR);
+    for (int y = gHeight - 1; y >= 0; y--) {
+      for (int x = gWidth - 1; x >= 0; x--) {
+        content.push_back(glyph[y * gWidth + x] ? color : UNDEFINED_COLOR);
       }
     }
 
-    auto frame = Frame(font.glyphWidth, font.glyphHeight, content);
+    auto frame = Frame(gWidth, gHeight, content);
     auto position =
-      viewPosition + Vector((font.glyphWidth + font.horizontalSpacing) * i, 0);
+      viewPosition + Vector((gWidth + font.getHorizontalSpacing()) * i, 0);
 
     switch (alignment) {
       case ALIGN_CENTER:
@@ -245,10 +235,9 @@ auto DisplayManager::drawString(Position position, string string,
 }
 
 auto DisplayManager::measureString(string string, Font font) const -> Box {
-  int h = getLineHeight(string), w = getLineWidth(string);
-
   auto cellBounds =
-    pixelsToCells({static_cast<float>(w), static_cast<float>(h)});
+    pixelsToCells({static_cast<float>(font.getLineWidth(string)),
+                   static_cast<float>(font.getLineHeight(string))});
 
   return {cellBounds.getX(), cellBounds.getY()};
 }

@@ -45,8 +45,6 @@ auto pixelsToCells(Vector pixels) -> Position;
 class DisplayManager : public Manager {
  private:
   DisplayManager();
-  // Font used to draw text
-  TTF_Font *font = nullptr;
   // The window has an initial given size in pixels and cells. All we draw
   // are characters and all the coordinates we use are in cells
   SDL_Window *window = nullptr;

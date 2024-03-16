@@ -71,13 +71,6 @@ auto DisplayManager::startUp() -> int {
     return -1;
   }
 
-  if (TTF_Init() != 0) {
-    Log.error("DisplayManager::startUp(): Cannot initiate TTF. %s",
-              SDL_GetError());
-    this->shutDown();
-    return -1;
-  }
-
   Log.info("DisplayManager::startUp(): Started successfully");
   return Manager::startUp();
 }
@@ -252,7 +245,7 @@ auto DisplayManager::drawString(Position position, string string,
 }
 
 auto DisplayManager::measureString(string string, Font font) const -> Box {
-  int h = font.glyphHeight, w = getLineWidth(string);
+  int h = getLineHeight(string), w = getLineWidth(string);
 
   auto cellBounds =
     pixelsToCells({static_cast<float>(w), static_cast<float>(h)});

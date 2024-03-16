@@ -11,12 +11,22 @@
 
 #include "Colors.h"
 #include "Configuration.h"
+#include "Font.h"
 #include "Frame.h"
 #include "Logger.h"
 #include "Vector.h"
 #include "utils.h"
 
 namespace lb {
+
+const int CELL_SIZE = 3;
+
+auto getLineWidth(string line) -> int {
+  return line.size() *
+         (DEFAULT_FONT.glyphWidth + DEFAULT_FONT.horizontalSpacing);
+}
+
+auto getLineHeight(string line) -> int { return DEFAULT_FONT.glyphHeight; }
 
 DisplayManager::DisplayManager() {
   setType("DisplayManager");
@@ -68,21 +78,11 @@ auto DisplayManager::startUp() -> int {
     return -1;
   }
 
-  string fontFile = Configuration::getMainFontFile();
-  this->font = TTF_OpenFont(fontFile.c_str(), FONT_SIZE_DEFAULT);
-  if (this->font == nullptr) {
-    Log.error("DisplayManager::startUp(): Cannot open font %s. %s",
-              fontFile.c_str(), SDL_GetError());
-    this->shutDown();
-    return -1;
-  }
-
   Log.info("DisplayManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
 void DisplayManager::shutDown() {
-  TTF_CloseFont(this->font);
   SDL_DestroyRenderer(this->renderer);
   SDL_DestroyWindow(this->window);
 
@@ -120,7 +120,6 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame) const
     return -1;
   }
 
-  SDL_LockSurface(surface);
   for (int i = 0; i < frame->getHeight(); i++) {
     for (int j = 0; j < frame->getWidth(); j++) {
       auto index = i * frame->getWidth() + j;
@@ -147,8 +146,7 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame) const
     }
   }
 
-  SDL_UnlockSurface(surface);
-  auto texture = SDL_CreateTextureFromSurface(this->renderer, surface);
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(this->renderer, surface);
 
   if (texture == nullptr) {
     Log.error("DisplayManager::drawFrame(): Cannot create texture. %s",
@@ -198,54 +196,63 @@ auto DisplayManager::drawRectangle(Position position, int width, int height,
 }
 
 auto DisplayManager::drawString(Position position, string string,
-                                Alignment alignment, Color color) const -> int {
+                                Alignment alignment, Color color,
+                                Font font) const -> int {
   if (this->window == nullptr) return -1;
 
   auto viewPosition = worldToView(position);
-  auto pixelPosition = cellsToPixels(viewPosition);
 
-  SDL_Surface* textSurface =
-    TTF_RenderText_Solid(this->font, string.c_str(), toSDLColor(color));
+  SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(
+    0, font.glyphWidth * CELL_SIZE * string.size(),
+    font.glyphHeight * CELL_SIZE, 16, SDL_PIXELFORMAT_RGBA32);
 
-  if (textSurface == nullptr) {
-    Log.error("DisplayManager::drawString(): Cannot render text. %s",
-              TTF_GetError());
-    return -1;
-  }
-
-  SDL_Texture* texture =
-    SDL_CreateTextureFromSurface(this->renderer, textSurface);
-
-  if (texture == nullptr) {
-    Log.error("DisplayManager::drawString(): Cannot create texture. %s",
+  if (surface == nullptr) {
+    Log.error("DisplayManager::drawFrame(): Cannot create surface. %s",
               SDL_GetError());
     return -1;
   }
 
-  auto rect = SDL_Rect{(int)pixelPosition.getX(), (int)pixelPosition.getY() + 2,
-                       textSurface->w, textSurface->h};
+  auto lineWidth = getLineWidth(string);
 
-  switch (alignment) {
-    case ALIGN_CENTER:
-      rect.x = rect.x - rect.w / 2;
-      break;
-    case ALIGN_RIGHT:
-      rect.x = rect.x - rect.w;
-      break;
-    case ALIGN_LEFT:
-      break;
+  for (int i = 0; i < string.size(); i++) {
+    // Find ascii code for the char
+    auto code = static_cast<int>(string[i]);
+
+    // Find the glyph corresponding to the code
+    auto glyph = font.glyphs.at(code - 32);
+
+    // Populate the content vector with the color of the glyph
+    auto content = vector<Color>();
+    for (int y = font.glyphHeight - 1; y >= 0; y--) {
+      for (int x = font.glyphWidth - 1; x >= 0; x--) {
+        content.push_back(glyph[y * font.glyphWidth + x] ? color
+                                                         : UNDEFINED_COLOR);
+      }
+    }
+
+    auto frame = Frame(font.glyphWidth, font.glyphHeight, content);
+    auto position =
+      viewPosition + Vector((font.glyphWidth + font.horizontalSpacing) * i, 0);
+
+    switch (alignment) {
+      case ALIGN_CENTER:
+        position.setX(position.getX() - lineWidth / 2);
+        break;
+      case ALIGN_RIGHT:
+        position.setX(position.getX() - lineWidth);
+        break;
+      case ALIGN_LEFT:
+        break;
+    }
+
+    drawFrame(position, &frame);
   }
-
-  SDL_RenderCopy(renderer, texture, nullptr, &rect);
-  SDL_FreeSurface(textSurface);
-  SDL_DestroyTexture(texture);
 
   return 0;
 }
 
-auto DisplayManager::measureString(string string) const -> Box {
-  int h = 0, w = 0;
-  TTF_SizeText(this->font, string.c_str(), &w, &h);
+auto DisplayManager::measureString(string string, Font font) const -> Box {
+  int h = font.glyphHeight, w = getLineWidth(string);
 
   auto cellBounds =
     pixelsToCells({static_cast<float>(w), static_cast<float>(h)});

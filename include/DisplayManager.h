@@ -7,6 +7,7 @@
 #include <SDL2/SDL_video.h>
 
 #include "Colors.h"
+#include "Font.h"
 #include "Manager.h"
 #include "Vector.h"
 
@@ -27,9 +28,7 @@ using Position = Vector;
 
 const int WINDOW_HORIZONTAL_CELLS = 240;
 const int WINDOW_VERTICAL_CELLS = 160;
-const int CELL_SIZE = 3;
 const Color WINDOW_BACKGROUND_COLOR_DEFAULT = BLACK;
-const int FONT_SIZE_DEFAULT = CELL_SIZE * 8;
 
 const string DUMMY_VIDEODRIVER = "dummy";
 
@@ -86,10 +85,12 @@ class DisplayManager : public Manager {
 
   // Draws a string to the window at the given world position
   [[nodiscard]] auto drawString(Position postion, string string,
-                                Alignment alignment, Color color) const -> int;
+                                Alignment alignment, Color color,
+                                Font font = DEFAULT_FONT) const -> int;
 
   // Returns the bounding box of a given string. Dimensions are in cells
-  [[nodiscard]] auto measureString(string string) const -> Box;
+  [[nodiscard]] auto measureString(string string,
+                                   Font font = DEFAULT_FONT) const -> Box;
 
   // Change the background color of the window
   void setBackground(Color color);

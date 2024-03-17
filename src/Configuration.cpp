@@ -62,7 +62,7 @@ auto Configuration::fromFile(string filename) -> int {
     line = getLine(&file);
 
     // Ignore empty lines and comments
-    if (line.empty() || line.starts_with('#')) continue;
+    if (line.empty() || line.at(0) == '#') continue;
 
     string key = trim(line.substr(0, line.find('=')));
     string value = trim(line.substr(line.find('=') + 1));

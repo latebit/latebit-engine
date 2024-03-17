@@ -194,15 +194,6 @@ auto DisplayManager::drawString(Position position, string string,
   int lineWidth = len * gWidth * size + len * font.getHorizontalSpacing();
   int lineHeight = gHeight * size;
 
-  SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(
-    0, lineWidth, lineHeight, 0, SDL_PIXELFORMAT_RGBA32);
-
-  if (surface == nullptr) {
-    Log.error("DisplayManager::drawFrame(): Cannot create surface. %s",
-              SDL_GetError());
-    return -1;
-  }
-
   // Draw each character in the string in a separate frame
   // This is far simpler then trying to draw the string as a whole with only
   // one frame but might also be less efficient
@@ -237,7 +228,6 @@ auto DisplayManager::drawString(Position position, string string,
       return -1;
     }
   }
-
   return 0;
 }
 

@@ -7,13 +7,13 @@ namespace lb {
 const int DEFAULT_FRAME_RATE = 60;
 const string DEFAULT_TITLE = "LateBit";
 
-const array<string, 3> CONFIG_KEYS = {"max_frame_rate", "initial_window_title"};
+const array<string, 2> CONFIG_KEYS = {"max_frame_rate", "initial_window_title"};
 
 // This is a static class that can be used to set and retrieve
 // configuration values from a file.
 //
-// Using a configuration file is absolutely optional, and calling
-// the getters of this class will return some sensible defaults.
+// Using a configuration file is optional, and calling the getters of this class
+// will return some sensible defaults.
 class Configuration {
  private:
   static int frameRate;

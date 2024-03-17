@@ -204,6 +204,9 @@ auto DisplayManager::drawString(Position position, string string,
     return -1;
   }
 
+  // Draw each character in the string in a separate frame
+  // This is far simpler then trying to draw the string as a whole with only
+  // one frame but might also be less efficient
   for (int i = 0; i < len; i++) {
     auto glyph = font.getGlyph(string[i]);
 

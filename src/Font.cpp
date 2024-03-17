@@ -32,14 +32,6 @@ auto Font::getGlyph(char c) const -> const Glyph& {
   return this->glyphs[code - 32];
 }
 
-auto Font::getLineWidth(const string& string) const -> int {
-  return string.size() * (this->glyphWidth + this->horizontalSpacing);
-}
-
-auto Font::getLineHeight(const string& string) const -> int {
-  return this->glyphHeight;
-}
-
 const GlyphList DEFAULT_FONT_GLYPHS = {
   // ASCII 32: Space
   Glyph{"00000"

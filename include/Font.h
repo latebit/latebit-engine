@@ -46,12 +46,6 @@ class Font {
 
   // Returns the glyph corresponding to the given ASCII char
   [[nodiscard]] auto getGlyph(char c) const -> const Glyph&;
-
-  // Returns the width of a string in cells
-  [[nodiscard]] auto getLineWidth(const string& string) const -> int;
-
-  // Returns the height of a string in cells
-  [[nodiscard]] auto getLineHeight(const string& string) const -> int;
 };
 
 extern const Font DEFAULT_FONT;

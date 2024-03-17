@@ -192,7 +192,7 @@ auto DisplayManager::drawString(Position position, string string,
   int gWidth = font.getGlyphWidth();
   int gHeight = font.getGlyphHeight();
   int lineWidth = len * gWidth * size + len * font.getHorizontalSpacing();
-  int lineHeight = gWidth * size;
+  int lineHeight = gHeight * size;
 
   SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(
     0, lineWidth, lineHeight, 0, SDL_PIXELFORMAT_RGBA32);
@@ -241,10 +241,15 @@ auto DisplayManager::drawString(Position position, string string,
   return 0;
 }
 
-auto DisplayManager::measureString(string string, Font font) const -> Box {
-  auto cellBounds =
-    pixelsToCells({static_cast<float>(font.getLineWidth(string)),
-                   static_cast<float>(font.getLineHeight(string))});
+auto DisplayManager::measureString(string string, TextSize size,
+                                   Font font) const -> Box {
+  int len = string.size();
+  int gWidth = font.getGlyphWidth();
+  int gHeight = font.getGlyphHeight();
+  float lineWidth = len * gWidth * size + len * font.getHorizontalSpacing();
+  float lineHeight = gHeight * size;
+
+  auto cellBounds = pixelsToCells({lineWidth, lineHeight});
 
   return {cellBounds.getX(), cellBounds.getY()};
 }

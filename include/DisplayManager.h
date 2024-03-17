@@ -96,6 +96,7 @@ class DisplayManager : public Manager {
 
   // Returns the bounding box of a given string. Dimensions are in cells
   [[nodiscard]] auto measureString(string string,
+                                   TextSize size = TEXT_SIZE_NORMAL,
                                    Font font = DEFAULT_FONT) const -> Box;
 
   // Change the background color of the window

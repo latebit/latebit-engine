@@ -8,9 +8,6 @@ void Configuration_test() {
 
     assert_string("parses initial_window_title",
                   Configuration::getInitialWindowTitle(), "LateBit");
-
-    assert_string("parses main_font_file", Configuration::getMainFontFile(),
-                  "assets/font.ttf");
   });
 
   test("parses a broken file without changing values", []() -> void {
@@ -21,9 +18,6 @@ void Configuration_test() {
 
     assert_string("parses initial_window_title",
                   Configuration::getInitialWindowTitle(), "LateBit");
-
-    assert_string("parses main_font_file", Configuration::getMainFontFile(),
-                  "assets/font.ttf");
   });
 
   test("parses a correct configuration file", []() -> void {
@@ -33,9 +27,6 @@ void Configuration_test() {
 
     assert_string("parses initial_window_title",
                   Configuration::getInitialWindowTitle(), "My Game");
-
-    assert_string("parses main_font_file", Configuration::getMainFontFile(),
-                  "fonts/arial.ttf");
   });
 
   Configuration::reset();

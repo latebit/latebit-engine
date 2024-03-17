@@ -23,7 +23,8 @@ auto ViewObject::getDisplayString() -> string {
 }
 
 auto ViewObject::draw() -> int {
-  return DM.drawString(getPosition(), getDisplayString(), ALIGN_LEFT, color);
+  return DM.drawString(getPosition(), getDisplayString(), TEXT_ALIGN_LEFT,
+                       color);
 }
 
 auto ViewObject::eventHandler(const Event* p_e) -> int {
@@ -82,8 +83,8 @@ auto ViewObject::refresh() -> void {
       break;
   }
 
-  x = clamp(x, 0, viewWidth - textWidth);
-  y = clamp(y, 0, viewHeight - textHeight);
+  x = clamp(x, 0.0f, viewWidth - textWidth);
+  y = clamp(y, 0.0f, viewHeight - textHeight);
 
   auto position = viewToWorld(Vector(x, y));
   setPosition(position);

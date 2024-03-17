@@ -43,13 +43,10 @@ auto join(array<string, T> array) -> string {
 
 int Configuration::frameRate = DEFAULT_FRAME_RATE;
 string Configuration::title = DEFAULT_TITLE;
-string Configuration::fontFile = DEFAULT_FONT_FILE;
 
 auto Configuration::getMaxFrameRate() -> int { return frameRate; }
 
 auto Configuration::getInitialWindowTitle() -> string { return title; }
-
-auto Configuration::getMainFontFile() -> string { return fontFile; }
 
 auto Configuration::fromFile(string filename) -> int {
   ifstream file(filename);
@@ -65,7 +62,7 @@ auto Configuration::fromFile(string filename) -> int {
     line = getLine(&file);
 
     // Ignore empty lines and comments
-    if (line.empty() || line.starts_with('#')) continue;
+    if (line.empty() || line.at(0) == '#') continue;
 
     string key = trim(line.substr(0, line.find('=')));
     string value = trim(line.substr(line.find('=') + 1));
@@ -77,8 +74,6 @@ auto Configuration::fromFile(string filename) -> int {
         frameRate = intOrDefault(value, frameRate);
       } else if (key == CONFIG_KEYS[1]) {
         title = stringOrDefault(value, title);
-      } else if (key == CONFIG_KEYS[2]) {
-        fontFile = stringOrDefault(value, fontFile);
       } else {
         Log.warning(
           "Configuration::fromFile(): Unknown key %s. Expected one of %s.",
@@ -97,6 +92,5 @@ auto Configuration::fromFile(string filename) -> int {
 auto Configuration::reset() -> int {
   frameRate = DEFAULT_FRAME_RATE;
   title = DEFAULT_TITLE;
-  fontFile = DEFAULT_FONT_FILE;
   return 0;
 }

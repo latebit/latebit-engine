@@ -3,10 +3,10 @@
 #include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_surface.h>
-#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_video.h>
 
 #include "Colors.h"
+#include "Font.h"
 #include "Manager.h"
 #include "Vector.h"
 
@@ -16,10 +16,17 @@ using namespace std;
 
 namespace lb {
 
-enum Alignment {
-  ALIGN_LEFT,
-  ALIGN_CENTER,
-  ALIGN_RIGHT,
+enum TextAlignment {
+  TEXT_ALIGN_LEFT,
+  TEXT_ALIGN_CENTER,
+  TEXT_ALIGN_RIGHT,
+};
+
+enum TextSize {
+  TEXT_SIZE_NORMAL = 1,
+  TEXT_SIZE_LARGE,
+  TEXT_SIZE_XLARGE,
+  TEXT_SIZE_XXLARGE,
 };
 
 // A 2D Vector representing a position in the world in cells
@@ -27,9 +34,7 @@ using Position = Vector;
 
 const int WINDOW_HORIZONTAL_CELLS = 240;
 const int WINDOW_VERTICAL_CELLS = 160;
-const int CELL_SIZE = 3;
 const Color WINDOW_BACKGROUND_COLOR_DEFAULT = BLACK;
-const int FONT_SIZE_DEFAULT = CELL_SIZE * 8;
 
 const string DUMMY_VIDEODRIVER = "dummy";
 
@@ -46,8 +51,6 @@ auto pixelsToCells(Vector pixels) -> Position;
 class DisplayManager : public Manager {
  private:
   DisplayManager();
-  // Font used to draw text
-  TTF_Font *font = nullptr;
   // The window has an initial given size in pixels and cells. All we draw
   // are characters and all the coordinates we use are in cells
   SDL_Window *window = nullptr;
@@ -72,8 +75,9 @@ class DisplayManager : public Manager {
   auto startUp() -> int override;
   void shutDown() override;
 
-  // Draws a frame in the given position
-  auto drawFrame(Position position, const Frame *frame) const -> int;
+  // Draws a frame in the given position, scaling it by the given factor
+  [[nodiscard]] auto drawFrame(Position position, const Frame *frame,
+                               int scaling = 1) const -> int;
 
   // Draws a rectangle outline at the given world position (top left cell)
   [[nodiscard]] auto drawRectangle(Position position, int width, int height,
@@ -86,10 +90,13 @@ class DisplayManager : public Manager {
 
   // Draws a string to the window at the given world position
   [[nodiscard]] auto drawString(Position postion, string string,
-                                Alignment alignment, Color color) const -> int;
+                                TextAlignment alignment, Color color,
+                                TextSize size = TEXT_SIZE_NORMAL,
+                                Font font = DEFAULT_FONT) const -> int;
 
   // Returns the bounding box of a given string. Dimensions are in cells
-  [[nodiscard]] auto measureString(string string) const -> Box;
+  [[nodiscard]] auto measureString(string string,
+                                   Font font = DEFAULT_FONT) const -> Box;
 
   // Change the background color of the window
   void setBackground(Color color);

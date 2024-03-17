@@ -74,6 +74,12 @@ auto clamp(float value, float min, float max) -> float {
   return value;
 }
 
+auto clamp(int value, int min, int max) -> int {
+  if (value < min) return min;
+  if (value > max) return max;
+  return value;
+}
+
 auto contains(Box container, Box content) -> bool {
   float containerLeft = container.getCorner().getX();
   float containerRight = containerLeft + container.getWidth();

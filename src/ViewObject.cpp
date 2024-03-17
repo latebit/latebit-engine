@@ -82,8 +82,8 @@ auto ViewObject::refresh() -> void {
       break;
   }
 
-  x = clamp(x, 0, viewWidth - textWidth);
-  y = clamp(y, 0, viewHeight - textHeight);
+  x = clamp(x, 0.0f, viewWidth - textWidth);
+  y = clamp(y, 0.0f, viewHeight - textHeight);
 
   auto position = viewToWorld(Vector(x, y));
   setPosition(position);

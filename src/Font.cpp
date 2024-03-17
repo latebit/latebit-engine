@@ -1,15 +1,15 @@
 #include "Font.h"
 
-#include <algorithm>
+#include <utils.h>
 
 namespace lb {
 
 Font::Font(GlyphList glyphs, int glyphWidth, int glyphHeight,
            int horizontalSpacing) {
   this->glyphs = glyphs;
-  this->glyphWidth = ranges::clamp(glyphWidth, 1, 8);
-  this->glyphHeight = ranges::clamp(glyphHeight, 1, 8);
-  this->horizontalSpacing = ranges::clamp(horizontalSpacing, 1, 8);
+  this->glyphWidth = clamp(glyphWidth, 1, 8);
+  this->glyphHeight = clamp(glyphHeight, 1, 8);
+  this->horizontalSpacing = clamp(horizontalSpacing, 1, 8);
 }
 
 auto Font::getGlyphs() const -> const GlyphList& { return this->glyphs; }

@@ -20,18 +20,6 @@ void Font_test() {
            hiGlyph == font.getGlyphs()[0]);
   });
 
-  test("getLineWidth", []() {
-    Font font = DEFAULT_FONT;
-    int width = font.getLineWidth("test");
-    assert_int("line width is calculated", width, 24);
-  });
-
-  test("getLineHeight", []() {
-    Font font = DEFAULT_FONT;
-    int height = font.getLineHeight("test");
-    assert_int("line height is calculated", height, 8);
-  });
-
   test("constructor", []() {
     GlyphList glyphs = {};
     Font font = Font(glyphs, 2, 3, 1);

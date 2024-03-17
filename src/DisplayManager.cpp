@@ -189,14 +189,13 @@ auto DisplayManager::drawString(Position position, string string,
 
   Position viewPosition = worldToView(position);
   int len = string.size();
-  int lineWidth = font.getLineWidth(string);
-  int lineHeight = font.getLineHeight(string);
   int gWidth = font.getGlyphWidth();
   int gHeight = font.getGlyphHeight();
-  int cellSize = CELL_SIZE * size;
+  int lineWidth = len * gWidth * size + len * font.getHorizontalSpacing();
+  int lineHeight = gHeight * size;
 
   SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(
-    0, lineWidth * cellSize, lineHeight * cellSize, 0, SDL_PIXELFORMAT_RGBA32);
+    0, lineWidth, lineHeight, 0, SDL_PIXELFORMAT_RGBA32);
 
   if (surface == nullptr) {
     Log.error("DisplayManager::drawFrame(): Cannot create surface. %s",
@@ -221,14 +220,14 @@ auto DisplayManager::drawString(Position position, string string,
     auto frame = Frame(gWidth, gHeight, content);
     auto position =
       viewPosition +
-      Vector((gWidth + font.getHorizontalSpacing()) * i * size, 0);
+      Vector(gWidth * i * size + font.getHorizontalSpacing() * i, 0);
 
     switch (alignment) {
       case TEXT_ALIGN_CENTER:
-        position.setX(position.getX() - lineWidth * size / 2);
+        position.setX(position.getX() - lineWidth / 2);
         break;
       case TEXT_ALIGN_RIGHT:
-        position.setX(position.getX() - lineWidth * size);
+        position.setX(position.getX() - lineWidth);
         break;
       case TEXT_ALIGN_LEFT:
         break;
@@ -242,10 +241,15 @@ auto DisplayManager::drawString(Position position, string string,
   return 0;
 }
 
-auto DisplayManager::measureString(string string, Font font) const -> Box {
-  auto cellBounds =
-    pixelsToCells({static_cast<float>(font.getLineWidth(string)),
-                   static_cast<float>(font.getLineHeight(string))});
+auto DisplayManager::measureString(string string, TextSize size,
+                                   Font font) const -> Box {
+  int len = string.size();
+  int gWidth = font.getGlyphWidth();
+  int gHeight = font.getGlyphHeight();
+  float lineWidth = len * gWidth * size + len * font.getHorizontalSpacing();
+  float lineHeight = gHeight * size;
+
+  auto cellBounds = pixelsToCells({lineWidth, lineHeight});
 
   return {cellBounds.getX(), cellBounds.getY()};
 }

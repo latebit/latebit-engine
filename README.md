@@ -1,4 +1,4 @@
-LateBit
+latebit
 ===
 
 A game engine integrated in your IDE for pixel art games.

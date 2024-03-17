@@ -84,19 +84,21 @@ auto DisplayManager::getRendererFlags() const -> int {
            : SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 }
 
-auto DisplayManager::drawFrame(Position position, const Frame* frame) const
-  -> int {
+auto DisplayManager::drawFrame(Position position, const Frame* frame,
+                               int scaling) const -> int {
   if (this->window == nullptr) {
     Log.error("DisplayManager::drawFrame(): Window is null");
     return -1;
   }
 
+  scaling = clamp(scaling, 1, 10);
   auto viewPosition = worldToView(position);
   auto pixelPosition = cellsToPixels(viewPosition);
   auto content = frame->getContent();
+  auto cellSize = CELL_SIZE * scaling;
 
   SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(
-    0, frame->getWidth() * CELL_SIZE, frame->getHeight() * CELL_SIZE, 32,
+    0, frame->getWidth() * cellSize, frame->getHeight() * cellSize, 32,
     SDL_PIXELFORMAT_RGBA32);
 
   if (surface == nullptr) {
@@ -110,12 +112,12 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame) const
       auto index = i * frame->getWidth() + j;
       auto color = toSDLColor(content[index]);
 
-      // Iterate over each pixel CELL_SIZE times in both width and height
-      for (int k = 0; k < CELL_SIZE; k++) {
-        for (int l = 0; l < CELL_SIZE; l++) {
+      // Iterate over each pixel cellSize times in both width and height
+      for (int k = 0; k < cellSize; k++) {
+        for (int l = 0; l < cellSize; l++) {
           // Calculate the position in the surface to draw the pixel
-          int x = j * CELL_SIZE + l;
-          int y = i * CELL_SIZE + k;
+          int x = j * cellSize + l;
+          int y = i * cellSize + k;
 
           // Calculate the index in the surface's pixel buffer
           int surfaceIndex = y * surface->pitch + x * sizeof(Uint32);
@@ -140,8 +142,8 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame) const
   }
 
   SDL_Rect rectangle = {(int)pixelPosition.getX(), (int)pixelPosition.getY(),
-                        frame->getWidth() * CELL_SIZE,
-                        frame->getHeight() * CELL_SIZE};
+                        frame->getWidth() * cellSize,
+                        frame->getHeight() * cellSize};
 
   SDL_RenderCopy(this->renderer, texture, nullptr, &rectangle);
   SDL_FreeSurface(surface);
@@ -181,8 +183,8 @@ auto DisplayManager::drawRectangle(Position position, int width, int height,
 }
 
 auto DisplayManager::drawString(Position position, string string,
-                                Alignment alignment, Color color,
-                                Font font) const -> int {
+                                TextAlignment alignment, Color color,
+                                TextSize size, Font font) const -> int {
   if (this->window == nullptr) return -1;
 
   Position viewPosition = worldToView(position);
@@ -191,10 +193,10 @@ auto DisplayManager::drawString(Position position, string string,
   int lineHeight = font.getLineHeight(string);
   int gWidth = font.getGlyphWidth();
   int gHeight = font.getGlyphHeight();
+  int cellSize = CELL_SIZE * size;
 
   SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(
-    0, lineWidth * CELL_SIZE, lineHeight * CELL_SIZE, 0,
-    SDL_PIXELFORMAT_RGBA32);
+    0, lineWidth * cellSize, lineHeight * cellSize, 0, SDL_PIXELFORMAT_RGBA32);
 
   if (surface == nullptr) {
     Log.error("DisplayManager::drawFrame(): Cannot create surface. %s",
@@ -215,20 +217,23 @@ auto DisplayManager::drawString(Position position, string string,
 
     auto frame = Frame(gWidth, gHeight, content);
     auto position =
-      viewPosition + Vector((gWidth + font.getHorizontalSpacing()) * i, 0);
+      viewPosition +
+      Vector((gWidth + font.getHorizontalSpacing()) * i * size, 0);
 
     switch (alignment) {
-      case ALIGN_CENTER:
-        position.setX(position.getX() - lineWidth / 2);
+      case TEXT_ALIGN_CENTER:
+        position.setX(position.getX() - lineWidth * size / 2);
         break;
-      case ALIGN_RIGHT:
-        position.setX(position.getX() - lineWidth);
+      case TEXT_ALIGN_RIGHT:
+        position.setX(position.getX() - lineWidth * size);
         break;
-      case ALIGN_LEFT:
+      case TEXT_ALIGN_LEFT:
         break;
     }
 
-    drawFrame(position, &frame);
+    if (drawFrame(position, &frame, size) != 0) {
+      return -1;
+    }
   }
 
   return 0;

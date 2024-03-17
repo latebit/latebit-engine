@@ -16,10 +16,17 @@ using namespace std;
 
 namespace lb {
 
-enum Alignment {
-  ALIGN_LEFT,
-  ALIGN_CENTER,
-  ALIGN_RIGHT,
+enum TextAlignment {
+  TEXT_ALIGN_LEFT,
+  TEXT_ALIGN_CENTER,
+  TEXT_ALIGN_RIGHT,
+};
+
+enum TextSize {
+  TEXT_SIZE_NORMAL = 1,
+  TEXT_SIZE_LARGE,
+  TEXT_SIZE_XLARGE,
+  TEXT_SIZE_XXLARGE,
 };
 
 // A 2D Vector representing a position in the world in cells
@@ -68,8 +75,9 @@ class DisplayManager : public Manager {
   auto startUp() -> int override;
   void shutDown() override;
 
-  // Draws a frame in the given position
-  auto drawFrame(Position position, const Frame *frame) const -> int;
+  // Draws a frame in the given position, scaling it by the given factor
+  [[nodiscard]] auto drawFrame(Position position, const Frame *frame,
+                               int scaling = 1) const -> int;
 
   // Draws a rectangle outline at the given world position (top left cell)
   [[nodiscard]] auto drawRectangle(Position position, int width, int height,
@@ -82,7 +90,8 @@ class DisplayManager : public Manager {
 
   // Draws a string to the window at the given world position
   [[nodiscard]] auto drawString(Position postion, string string,
-                                Alignment alignment, Color color,
+                                TextAlignment alignment, Color color,
+                                TextSize size = TEXT_SIZE_NORMAL,
                                 Font font = DEFAULT_FONT) const -> int;
 
   // Returns the bounding box of a given string. Dimensions are in cells

@@ -19,14 +19,14 @@ void ResourceManager_test() {
     string label = "test_sprite";
     string filename = "test/fixtures/correct.txt";
 
-    assert_ok("loads sprite successfully", RM.loadSprite(filename, label));
-    assert_fail("does not load same label", RM.loadSprite(filename, label));
+    assert_ok("loads sprite successfully", RM.loadTextSprite(filename, label));
+    assert_fail("does not load same label", RM.loadTextSprite(filename, label));
 
     for (int i = 1; i < MAX_SPRITES; i++)
-      RM.loadSprite(filename, label + to_string(i));
+      RM.loadTextSprite(filename, label + to_string(i));
 
     assert_fail("does not load more than max",
-                RM.loadSprite(filename, label + to_string(MAX_SPRITES)));
+                RM.loadTextSprite(filename, label + to_string(MAX_SPRITES)));
 
     int result = 0;
     for (int i = 1; i < MAX_SPRITES; i++)
@@ -34,11 +34,11 @@ void ResourceManager_test() {
     assert_ok("cleans loaded sprites", result);
 
     assert_fail("does not load missing file",
-                RM.loadSprite("does-not-exist", label));
+                RM.loadTextSprite("does-not-exist", label));
 
     string anotherFile = "test/fixtures/missing-frame.txt";
     assert_fail("does not load on invalid file",
-                RM.loadSprite(anotherFile, label));
+                RM.loadTextSprite(anotherFile, label));
 
     Sprite* sprite = RM.getSprite(label);
     assert("retrieves loaded sprite", sprite != nullptr);

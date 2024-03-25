@@ -16,6 +16,10 @@ class SpriteParser {
 
  public:
   // Parses a file and returns a sprite with a given label
-  static auto parseSprite(string filename, string label) -> Sprite;
+  static auto parseTextSprite(string filename, string label) -> Sprite;
+
+  // Parses an indexed png file and returns a sprite with a given label
+  static auto parseImageSprite(string filename, string label, int slowdown,
+                               int frameCount) -> Sprite;
 };
 }  // namespace lb

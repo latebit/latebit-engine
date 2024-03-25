@@ -11,7 +11,7 @@ using namespace std;
 
 void setSprite_test() {
   Animation animation;
-  RM.loadSprite("test/fixtures/correct.txt", "sprite");
+  RM.loadTextSprite("test/fixtures/correct.txt", "sprite");
   Sprite *sprite = RM.getSprite("sprite");
   animation.setIndex(1);
   animation.setSlowdownCount(1);
@@ -44,7 +44,7 @@ void draw_test() {
   auto filename = "test/fixtures/correct.txt";
   auto label = "sprite";
 
-  RM.loadSprite(filename, label);
+  RM.loadTextSprite(filename, label);
   Sprite *sprite = RM.getSprite(label);
 
   Animation animation;
@@ -75,7 +75,7 @@ void getBox_test() {
 
   auto filename = "test/fixtures/correct.txt";
   auto label = "label";
-  RM.loadSprite(filename, label);
+  RM.loadTextSprite(filename, label);
   Sprite *sprite = RM.getSprite(label);
   animation.setSprite(sprite);
 

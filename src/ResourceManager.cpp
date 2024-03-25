@@ -40,6 +40,14 @@ void ResourceManager::shutDown() {
 }
 
 auto ResourceManager::loadSprite(string filename, string label) -> int {
+  Log.warning(
+    "ResourceManager::loadSprite(): loadSprite is deprecated, use "
+    "loadTextSprite "
+    "instead");
+  return this->loadTextSprite(filename, label);
+}
+
+auto ResourceManager::loadTextSprite(string filename, string label) -> int {
   if (this->spriteCount >= MAX_SPRITES) {
     Log.error(
       "ResourceManager::loadSprite(): Cannot load sprite. Maximum %d sprites "
@@ -56,7 +64,34 @@ auto ResourceManager::loadSprite(string filename, string label) -> int {
     return -1;
   }
 
-  auto* sprite = new Sprite(SpriteParser::parseSprite(filename, label));
+  auto* sprite = new Sprite(SpriteParser::parseTextSprite(filename, label));
+
+  this->sprite[this->spriteCount] = sprite;
+  this->spriteCount++;
+
+  return 0;
+}
+
+auto ResourceManager::loadImageSprite(string filename, string label, int frames,
+                                      int slowdown) -> int {
+  if (this->spriteCount >= MAX_SPRITES) {
+    Log.error(
+      "ResourceManager::loadSprite(): Cannot load sprite. Maximum %d sprites "
+      "reached",
+      MAX_SPRITES);
+    return -1;
+  }
+
+  if (getSprite(label) != nullptr) {
+    Log.error(
+      "ResourceManager::loadSprite(): Cannot load sprite, label %s already in "
+      "use",
+      label.c_str());
+    return -1;
+  }
+
+  auto* sprite = new Sprite(
+    SpriteParser::parseImageSprite(filename, label, frames, slowdown));
 
   this->sprite[this->spriteCount] = sprite;
   this->spriteCount++;

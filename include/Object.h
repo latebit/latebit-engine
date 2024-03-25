@@ -22,7 +22,7 @@ const int MAX_EVENTS_PER_OBEJCT = 20;
 class Object {
  private:
   // Unique id of this object.
-  int id;
+  int id = 0;
 
   // A string representing the type of object.
   string type = "Object";

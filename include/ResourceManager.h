@@ -52,9 +52,8 @@ class ResourceManager : public Manager {
   // Load a 16-colors PNG sprite by its filename and associate it with a label
   // The PNG can have multiple frames, in which case we will assume they all are
   // on the same line and divide the image width by the number of frames
-  auto loadImageSprite(string filename, string label,
-                       int slowDown = STOP_ANIMATION_SLOWDOWN,
-                       int frameCount = 1) -> int;
+  auto loadImageSprite(string filename, string label, int frames = 1,
+                       int slowDown = STOP_ANIMATION_SLOWDOWN) -> int;
 
   // Frees the sprite label and associated resources
   auto unloadSprite(string label) -> int;

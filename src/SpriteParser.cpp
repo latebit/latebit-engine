@@ -16,8 +16,8 @@
 using namespace std;
 
 namespace lb {
-auto SpriteParser::parseImageSprite(string filename, string label, int slowdown,
-                                    int frameCount) -> Sprite {
+auto SpriteParser::parseImageSprite(string filename, string label, int frames,
+                                    int slowdown) -> Sprite {
   auto decoder = PNGDecoder(filename);
 
   if (!decoder.canOpenFile()) {
@@ -65,18 +65,31 @@ auto SpriteParser::parseImageSprite(string filename, string label, int slowdown,
   int width = decoder.getWidth();
   int height = decoder.getHeight();
 
-  Sprite sprite(label, width, height, slowdown, frameCount);
-
-  vector<Color> content;
-  content.reserve(width * height);
-
-  for (int y = 0; y < height; y++) {
-    for (int x = 0; x < width; x++) {
-      content.push_back(decoder.getCellColor(x, y));
-    }
+  if (width % frames != 0) {
+    Log.error(
+      "SpriteParser::parseImageSprite(): Image width %d cannot be divided in "
+      "%d equal frames",
+      width, frames);
+    return {};
   }
 
-  sprite.addFrame(Frame(width, height, content));
+  // We assume the sprite is horizontal
+  int spriteWidth = width / frames;
+
+  Sprite sprite(label, spriteWidth, height, slowdown, frames);
+
+  for (int i = 0; i < frames; i++) {
+    vector<Color> content;
+    content.reserve(spriteWidth * height);
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < spriteWidth; x++) {
+        content.push_back(decoder.getCellColor(x + i * spriteWidth, y));
+      }
+    }
+
+    sprite.addFrame(Frame(spriteWidth, height, content));
+  }
 
   return sprite;
 }

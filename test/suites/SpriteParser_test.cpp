@@ -65,7 +65,7 @@ void SpriteParser_test() {
     remove("carriage.txt");
   });
 
-  test("parseImageSprite/success", []() {
+  test("parseImageSprite/single frame", []() {
     auto sprite = SpriteParser::parseImageSprite("test/fixtures/correct.png",
                                                  "correct", 1, 1);
     assert_string("label is correct", sprite.getLabel(), "correct");
@@ -76,13 +76,29 @@ void SpriteParser_test() {
     assert("content of first frame is correct",
            sprite.getFrame(0).getContent() ==
              vector<Color>({DARK_BLUE, DARK_PURPLE, DARK_GREEN, BROWN}));
+  });
 
-    sprite = SpriteParser::parseImageSprite(
+  test("parseImageSprite/with transparency", []() {
+    auto sprite = SpriteParser::parseImageSprite(
       "test/fixtures/correct-transparent.png", "transparent", 1, 1);
     assert(
       "detects transparency correctly",
       sprite.getFrame(0).getContent() ==
         vector<Color>({DARK_GREEN, DARK_GREEN, DARK_GREEN, UNDEFINED_COLOR}));
+  });
+
+  test("parseImageSprite/sprite sheet", []() {
+    auto sprite =
+      SpriteParser::parseImageSprite("test/fixtures/sheet.png", "sheet", 4, 1);
+    assert_int("frame count is correct", sprite.getFrameCount(), 4);
+    assert("content of first frame is correct",
+           sprite.getFrame(0).getContent() == vector<Color>({YELLOW}));
+    assert("content of second frame is correct",
+           sprite.getFrame(1).getContent() == vector<Color>({ORANGE}));
+    assert("content of third frame is correct",
+           sprite.getFrame(2).getContent() == vector<Color>({RED}));
+    assert("content of fourth frame is correct",
+           sprite.getFrame(3).getContent() == vector<Color>({DARK_PURPLE}));
   });
 
   test("parseImageSprite/validations", []() {
@@ -101,5 +117,10 @@ void SpriteParser_test() {
     sprite = SpriteParser::parseImageSprite("test/fixtures/correct.txt",
                                             "correct", 1, 1);
     assert("returns null with a non PNG file", sprite == Sprite());
+
+    sprite =
+      SpriteParser::parseImageSprite("test/fixtures/sheet.png", "sheet", 5, 1);
+    assert("returns null if width cannot be divided by frames",
+           sprite == Sprite());
   });
 }

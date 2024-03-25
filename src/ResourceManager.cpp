@@ -74,6 +74,13 @@ auto ResourceManager::loadTextSprite(string filename, string label) -> int {
 
 auto ResourceManager::loadImageSprite(string filename, string label, int frames,
                                       int slowdown) -> int {
+  if (frames < 1) {
+    Log.error(
+      "ResourceManager::loadImageSprite(): Cannot load sprite. Number of "
+      "frames must be greater than 0");
+    return -1;
+  }
+
   if (this->spriteCount >= MAX_SPRITES) {
     Log.error(
       "ResourceManager::loadSprite(): Cannot load sprite. Maximum %d sprites "

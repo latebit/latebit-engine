@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Animation.h"
 #include "Manager.h"
 #include "Music.h"
 #include "Sound.h"
@@ -40,8 +41,20 @@ class ResourceManager : public Manager {
   auto startUp() -> int override;
   void shutDown() override;
 
-  // Load a sprite by its filename and associate it with a label
-  auto loadSprite(string filename, string label) -> int;
+  // Load a text sprite by its filename and associate it with a label
+  [[deprecated("use loadTextSprite instead")]] auto loadSprite(string filename,
+                                                               string label)
+    -> int;
+
+  // Load a text sprite by its filename and associate it with a label
+  auto loadTextSprite(string filename, string label) -> int;
+
+  // Load a 16-colors PNG sprite by its filename and associate it with a label
+  // The PNG can have multiple frames, in which case we will assume they all are
+  // on the same line and divide the image width by the number of frames
+  auto loadImageSprite(string filename, string label, int frames = 1,
+                       int slowDown = STOP_ANIMATION_SLOWDOWN) -> int;
+
   // Frees the sprite label and associated resources
   auto unloadSprite(string label) -> int;
   // Return pointer to sprite associated with label

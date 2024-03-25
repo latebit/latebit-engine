@@ -2,8 +2,6 @@
 
 #include <SDL2/SDL_pixels.h>
 
-using namespace std;
-
 namespace lb {
 enum Color {
   UNDEFINED_COLOR = -1,

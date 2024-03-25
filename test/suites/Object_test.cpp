@@ -77,7 +77,7 @@ void Object_solidness_test() {
 void Object_boundingBox_test() {
   Object subject;
   subject.setPosition(Vector(1, 1));
-  RM.loadSprite("test/fixtures/correct.txt", "sprite");
+  RM.loadTextSprite("test/fixtures/correct.txt", "sprite");
 
   subject.setSprite("sprite");
 
@@ -249,7 +249,7 @@ void Object_test() {
     subject.setAnimation(animation);
     assert("updates animation", subject.getAnimation() == animation);
 
-    RM.loadSprite("test/fixtures/correct.txt", "sprite");
+    RM.loadTextSprite("test/fixtures/correct.txt", "sprite");
     assert_ok("sets valid sprite", subject.setSprite("sprite"));
     assert_fail("does not set invalid sprite", subject.setSprite("invalid"));
 

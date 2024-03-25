@@ -192,7 +192,6 @@ auto DisplayManager::drawString(Position position, string string,
   int gWidth = font.getGlyphWidth();
   int gHeight = font.getGlyphHeight();
   int lineWidth = len * gWidth * size + len * font.getHorizontalSpacing();
-  int lineHeight = gHeight * size;
 
   // Draw each character in the string in a separate frame
   // This is far simpler then trying to draw the string as a whole with only

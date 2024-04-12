@@ -3,6 +3,8 @@ install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 install(FILES ${INCLUDE_FILES} DESTINATION include/${PROJECT_NAME})
 install(DIRECTORY ${SDL2_PREFIX}/include/SDL2 DESTINATION include)
 
+message(STATUS "SDL2_PREFIX: ${SDL2_PREFIX}")
+
 # Package with CPack
 set(CPACK_PACKAGE_VENDOR "Manuel Spagnolo")
 set(CPACK_PACKAGE_CONTACT "manuelspagnolo@duck.com")

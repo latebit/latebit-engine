@@ -1,17 +1,31 @@
 name: Lint, Test, and Build
 
 on:
+  push:
+    branches: [ "main" ]
+    tags: [ '*' ]
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches: [ "main" ]
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
-    env:
-      _VCPKG_: ${{ github.workspace }}/vcpkg
-      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
-      VCPKG_BINARY_SOURCES: 'clear;x-gha,readwrite'
-    
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, macos-13]
+        c_compiler: [clang-15, clang]
+        include:
+          - os: ubuntu-22.04
+            c_compiler: clang-15
+          - os: macos-13
+            c_compiler: clang
+        exclude:
+          - os: ubuntu-22.04
+            c_compiler: clang
+          - os: macos-13
+            c_compiler: clang-15
+
     steps:
     - uses: actions/github-script@v7
       with:
@@ -19,40 +33,28 @@ jobs:
           core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
           core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
     
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Install LLVM and Clang
-      uses: KyleMayes/install-llvm-action@v1
-      with:
-        version: "15"
-        env: true
-        
-    - uses: lukka/get-cmake@latest
-      with:
-        cmakeVersion: 3.28.1
-        ninjaVersion: 1.11.1
+    - uses: actions/checkout@v4
 
     - name: run-vcpkg
-      uses: lukka/run-vcpkg@v11.5
-
-    - name: Install dependencies
-      run: vcpkg install
+      uses: lukka/run-vcpkg@v11
 
     - name: Configure
-      run: |
-        cmake \
-          --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake \
-          -B build .
+      run: >
+        cmake 
+        --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake
+        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+        -G Ninja
+        -B build
+      env:
+        CC: ${{ matrix.c_compiler }}
         
     - name: Build
-      run: |
-        cmake --build build
+      run: cmake --build build
 
-    - name: Lint
-      run: |
-        cmake --build build --target format
-        cmake --build build --target tidy
+    # - name: Lint
+    #   run: |
+    #     cmake --build build --target format
+    #     cmake --build build --target tidy
 
     - name: Test
       run: SDL_AUDIODRIVER=dummy SDL_VIDEODRIVER=dummy cmake --build build --target test

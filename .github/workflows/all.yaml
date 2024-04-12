@@ -57,7 +57,7 @@ jobs:
         CXX: ${{ matrix.cxx_compiler }}
         
     - name: Build
-      run: cmake --build build
+      run: cmake --build build -j 4
 
     - name: Unit Test
       run: cmake --build build -t test

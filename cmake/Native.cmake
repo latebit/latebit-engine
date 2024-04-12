@@ -1,7 +1,7 @@
 # Declare dependencies
-find_package(SDL2 2.30.0 CONFIG REQUIRED)
-find_package(SDL2_mixer 2.8.0 CONFIG REQUIRED)
-find_package(PNG 1.6.43 REQUIRED)
+find_package(SDL2 CONFIG REQUIRED)
+find_package(SDL2_mixer CONFIG REQUIRED)
+find_package(PNG REQUIRED)
 
 # Create shared library
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})

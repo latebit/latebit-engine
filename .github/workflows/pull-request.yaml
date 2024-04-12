@@ -64,8 +64,7 @@ jobs:
 
     - name: Package
       if: startsWith(github.ref, 'refs/tags/')
-      working-directory: build
-      run: cpack
+      run: cmake --build build -t package
 
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/')

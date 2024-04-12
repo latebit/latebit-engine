@@ -15,7 +15,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Project settings
-project(latebit VERSION ${VERSION} LANGUAGES CXX)
+project(latebit VERSION ${VERSION} LANGUAGES C CXX)
 
 set(INCLUDE ${CMAKE_SOURCE_DIR}/include)
 include_directories(${INCLUDE})

@@ -3,7 +3,13 @@ install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 install(FILES ${INCLUDE_FILES} DESTINATION include/${PROJECT_NAME})
 install(DIRECTORY ${SDL2_PREFIX}/include/SDL2 DESTINATION include)
 
-message(STATUS "SDL2_PREFIX: ${SDL2_PREFIX}")
+# loop over all the sdl variables
+get_cmake_property(_variableNames VARIABLES)
+foreach (_variableName ${_variableNames})
+  if (_variableName MATCHES "^SDL2_")
+    message(STATUS "${_variableName}=${${_variableName}}")
+  endif()
+endforeach()
 
 # Package with CPack
 set(CPACK_PACKAGE_VENDOR "Manuel Spagnolo")

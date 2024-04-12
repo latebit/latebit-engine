@@ -1,6 +1,3 @@
-set(VCPKG_ROOT $ENV{VCPKG_ROOT})
-set(CMAKE_TOOLCHAIN_FILE ${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
-
 set(CMAKE_CXX_COMPILER $ENV{CXX})
 
 # Declare dependencies

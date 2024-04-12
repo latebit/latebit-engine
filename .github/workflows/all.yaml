@@ -48,10 +48,11 @@ jobs:
       run: >
         cmake 
         --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake
-        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+        -DCMAKE_CXX_COMPILER=${{ matrix.c_compiler }}
         -B build
       env:
         CC: ${{ matrix.c_compiler }}
+        CXX: ${{ matrix.c_compiler }}
         
     - name: Build
       run: cmake --build build

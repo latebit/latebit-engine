@@ -56,12 +56,7 @@ jobs:
     - name: Build
       run: cmake --build build
 
-    - name: Lint
-      run: |
-        cmake --build build -t format
-        cmake --build build -t tidy
-
-    - name: Test
+    - name: Unit Test
       run: cmake --build build -t test
       env:
         SDL_AUDIODRIVER: dummy

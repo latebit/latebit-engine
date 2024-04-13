@@ -6,9 +6,7 @@ install(DIRECTORY ${SDL2_INCLUDE_DIR} DESTINATION include)
 # loop over all the sdl variables
 get_cmake_property(_variableNames VARIABLES)
 foreach (_variableName ${_variableNames})
-  if (_variableName MATCHES "^SDL2_")
     message(STATUS "${_variableName}=${${_variableName}}")
-  endif()
 endforeach()
 
 # Package with CPack

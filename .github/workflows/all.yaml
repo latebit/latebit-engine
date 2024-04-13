@@ -55,10 +55,7 @@ jobs:
         
     - name: Build
       run: |
-        ls build/vcpkg_installed/*/include
-        ls build/vcpkg_installed/*/share
-        
-        cmake --build build -j 4
+        cmake --build build -j 4 --verbose
 
     - name: Unit Test
       run: cmake --build build -t test

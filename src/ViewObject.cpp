@@ -1,11 +1,11 @@
 #include "ViewObject.h"
 
 #include "Box.h"
-#include "SceneGraph.h"
 #include "Vector.h"
-#include "WorldManager.h"
 #include "core/events/EventView.h"
 #include "core/graphics/DisplayManager.h"
+#include "core/objects/SceneGraph.h"
+#include "core/objects/WorldManager.h"
 #include "core/utils/utils.h"
 
 namespace lb {

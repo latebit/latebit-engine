@@ -1,7 +1,7 @@
-#include "SceneGraph.h"
+#include "core/objects/SceneGraph.h"
 
 #include "../lib/test.h"
-#include "Object.h"
+#include "core/objects/Object.h"
 
 using namespace lb;
 

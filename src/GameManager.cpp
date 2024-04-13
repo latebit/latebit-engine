@@ -1,11 +1,11 @@
 #include "GameManager.h"
 
 #include "Configuration.h"
-#include "WorldManager.h"
 #include "core/audio/AudioManager.h"
 #include "core/events/EventStep.h"
 #include "core/graphics/DisplayManager.h"
 #include "core/input/InputManager.h"
+#include "core/objects/WorldManager.h"
 #include "core/utils/Logger.h"
 #include "core/utils/utils.h"
 

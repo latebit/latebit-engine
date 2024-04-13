@@ -10,7 +10,7 @@
 
 #include "Box.h"
 #include "Vector.h"
-#include "WorldManager.h"
+#include "core/objects/WorldManager.h"
 
 using namespace lb;
 using namespace std;

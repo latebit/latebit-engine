@@ -1,7 +1,7 @@
 #include "core/utils/utils.h"
 
 #include "../lib/test.h"
-#include "WorldManager.h"
+#include "core/objects/WorldManager.h"
 
 void utils_match_test() {
   Vector v1(1, 2);

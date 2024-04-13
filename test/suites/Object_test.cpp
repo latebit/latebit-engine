@@ -1,14 +1,11 @@
-#include "Object.h"
+#include "core/objects/Object.h"
 
 #include <string>
 #include <unordered_map>
 
 #include "../lib/test.h"
 #include "GameManager.h"
-#include "ObjectList.h"
-#include "ObjectListIterator.h"
 #include "ResourceManager.h"
-#include "WorldManager.h"
 #include "core/events/Event.h"
 #include "core/events/EventCollision.h"
 #include "core/events/EventKeyboard.h"
@@ -16,6 +13,9 @@
 #include "core/events/EventStep.h"
 #include "core/graphics/Animation.h"
 #include "core/input/InputManager.h"
+#include "core/objects/ObjectList.h"
+#include "core/objects/ObjectListIterator.h"
+#include "core/objects/WorldManager.h"
 
 void Object_altitude_test() {
   Object subject;

@@ -1,12 +1,12 @@
-#include "WorldManager.h"
+#include "core/objects/WorldManager.h"
 
 #include <array>
 
 #include "../lib/test.h"
 #include "Box.h"
-#include "Object.h"
 #include "Vector.h"
-#include "core/events/EventKeyboard.h"
+#include "core/events/EventOut.h"
+#include "core/objects/Object.h"
 
 using namespace std;
 using namespace lb;

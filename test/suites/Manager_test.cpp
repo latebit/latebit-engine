@@ -3,7 +3,7 @@
 #include <string>
 
 #include "../lib/test.h"
-#include "Object.h"
+#include "core/objects/Object.h"
 
 const string Manager_test_evt = "TestEvent";
 const string Manager_test_wrongEvt = "TestEvent2";

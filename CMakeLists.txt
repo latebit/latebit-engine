@@ -19,10 +19,11 @@ project(latebit VERSION ${VERSION} LANGUAGES C CXX)
 
 set(INCLUDE ${CMAKE_SOURCE_DIR}/include)
 include_directories(${INCLUDE})
-file(GLOB SRC_FILES "src/*.cpp")
+include_directories("src")
+file(GLOB SRC_FILES "src/*.cpp" "src/core/**/*.cpp")
 file(GLOB TEST_LIB_FILES "test/lib/*.cpp")
 file(GLOB TEST_SUITE_FILES "test/suites/*.cpp")
-file(GLOB INCLUDE_FILES "${INCLUDE}/*.h")
+file(GLOB INCLUDE_FILES "${INCLUDE}/*.h" "src/core/**/*.h")
 
 if (WASM)
     include(cmake/WebAssembly.cmake)

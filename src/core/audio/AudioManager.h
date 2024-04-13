@@ -2,10 +2,7 @@
 
 #include <SDL2/SDL_audio.h>
 
-#include <string>
-
 #include "Manager.h"
-#include "Music.h"
 
 using namespace std;
 

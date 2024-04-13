@@ -1,9 +1,9 @@
 #include "ResourceManager.h"
 
 #include "../lib/test.h"
-#include "AudioManager.h"
 #include "Music.h"
 #include "Sound.h"
+#include "core/audio/AudioManager.h"
 
 using namespace lb;
 using namespace std;

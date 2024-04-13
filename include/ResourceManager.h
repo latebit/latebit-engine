@@ -2,9 +2,9 @@
 
 #include "Animation.h"
 #include "Manager.h"
-#include "Music.h"
-#include "Sound.h"
 #include "Sprite.h"
+#include "core/audio/Music.h"
+#include "core/audio/Sound.h"
 
 using namespace std;
 

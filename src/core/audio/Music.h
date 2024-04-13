@@ -4,7 +4,6 @@
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_stdinc.h>
 
-#include <cstddef>
 #include <string>
 
 using namespace std;

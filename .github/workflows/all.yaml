@@ -54,13 +54,6 @@ jobs:
       with:
         doNotCache: false
 
-    - name: Install Emscripten
-      if: matrix.c_compiler == 'emcc'
-      uses: mymindstorm/setup-emsdk@v14
-      with:
-        version: 3.1.51
-        actions-cache-folder: 'emsdk-cache'
-
     - name: Configure
       run: >
         cmake

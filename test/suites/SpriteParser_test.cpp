@@ -1,7 +1,7 @@
-#include "SpriteParser.h"
+#include "core/graphics/SpriteParser.h"
 
 #include "../lib/test.h"
-#include "Colors.h"
+#include "core/graphics/Colors.h"
 
 using namespace lb;
 using namespace std;

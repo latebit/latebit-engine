@@ -1,7 +1,7 @@
 #include "ResourceManager.h"
 
 #include "Logger.h"
-#include "SpriteParser.h"
+#include "core/graphics/SpriteParser.h"
 
 namespace lb {
 

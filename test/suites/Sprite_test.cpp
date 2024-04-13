@@ -1,8 +1,8 @@
-#include "Sprite.h"
+#include "core/graphics/Sprite.h"
 
 #include "../lib/test.h"
-#include "Colors.h"
-#include "DisplayManager.h"
+#include "core/graphics/Colors.h"
+#include "core/graphics/DisplayManager.h"
 
 using namespace lb;
 using namespace std;

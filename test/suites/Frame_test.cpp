@@ -1,9 +1,9 @@
-#include "Frame.h"
+#include "core/graphics/Frame.h"
 
 #include <vector>
 
 #include "../lib/test.h"
-#include "DisplayManager.h"
+#include "core/graphics/DisplayManager.h"
 
 using namespace lb;
 

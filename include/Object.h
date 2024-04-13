@@ -3,10 +3,10 @@
 #include <array>
 #include <string>
 
-#include "Animation.h"
 #include "Box.h"
 #include "Event.h"
 #include "Vector.h"
+#include "core/graphics/Animation.h"
 
 using namespace std;
 

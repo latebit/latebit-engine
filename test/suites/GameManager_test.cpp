@@ -1,8 +1,8 @@
 #include "GameManager.h"
 
 #include "../lib/test.h"
-#include "DisplayManager.h"
 #include "WorldManager.h"
+#include "core/graphics/DisplayManager.h"
 
 using namespace lb;
 

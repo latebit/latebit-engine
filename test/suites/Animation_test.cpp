@@ -1,11 +1,11 @@
-#include "Animation.h"
+#include "core/graphics/Animation.h"
 
 #include "../lib/test.h"
 #include "Box.h"
-#include "DisplayManager.h"
 #include "ResourceManager.h"
-#include "Sprite.h"
 #include "Vector.h"
+#include "core/graphics/DisplayManager.h"
+#include "core/graphics/Sprite.h"
 
 using namespace std;
 

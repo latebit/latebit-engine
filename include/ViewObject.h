@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include "Colors.h"
 #include "Event.h"
 #include "Object.h"
+#include "core/graphics/Colors.h"
 
 namespace lb {
 enum ViewObjectLocation {

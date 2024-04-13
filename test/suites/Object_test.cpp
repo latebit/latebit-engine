@@ -4,7 +4,6 @@
 #include <unordered_map>
 
 #include "../lib/test.h"
-#include "Animation.h"
 #include "Event.h"
 #include "EventCollision.h"
 #include "EventKeyboard.h"
@@ -17,6 +16,7 @@
 #include "ObjectListIterator.h"
 #include "ResourceManager.h"
 #include "WorldManager.h"
+#include "core/graphics/Animation.h"
 
 void Object_altitude_test() {
   Object subject;

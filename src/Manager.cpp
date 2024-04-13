@@ -1,7 +1,7 @@
 #include "Manager.h"
 
-#include "Event.h"
 #include "ObjectListIterator.h"
+#include "core/events/Event.h"
 
 namespace lb {
 

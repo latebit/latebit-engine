@@ -4,8 +4,8 @@
 #include <string>
 
 #include "Box.h"
-#include "Event.h"
 #include "Vector.h"
+#include "core/events/Event.h"
 #include "core/graphics/Animation.h"
 
 using namespace std;

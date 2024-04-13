@@ -4,18 +4,17 @@
 #include <unordered_map>
 
 #include "../lib/test.h"
-#include "Event.h"
-#include "EventCollision.h"
-#include "EventKeyboard.h"
-#include "EventMouse.h"
-#include "EventOut.h"
-#include "EventStep.h"
 #include "GameManager.h"
 #include "InputManager.h"
 #include "ObjectList.h"
 #include "ObjectListIterator.h"
 #include "ResourceManager.h"
 #include "WorldManager.h"
+#include "core/events/Event.h"
+#include "core/events/EventCollision.h"
+#include "core/events/EventKeyboard.h"
+#include "core/events/EventOut.h"
+#include "core/events/EventStep.h"
 #include "core/graphics/Animation.h"
 
 void Object_altitude_test() {

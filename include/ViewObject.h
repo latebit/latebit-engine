@@ -2,8 +2,8 @@
 
 #include <string>
 
-#include "Event.h"
 #include "Object.h"
+#include "core/events/Event.h"
 #include "core/graphics/Colors.h"
 
 namespace lb {

@@ -1,10 +1,10 @@
 #include "ViewObject.h"
 
 #include "Box.h"
-#include "EventView.h"
 #include "SceneGraph.h"
 #include "Vector.h"
 #include "WorldManager.h"
+#include "core/events/EventView.h"
 #include "core/graphics/DisplayManager.h"
 #include "utils.h"
 

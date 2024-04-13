@@ -1,9 +1,9 @@
 #include "WorldManager.h"
 
-#include "EventCollision.h"
-#include "EventOut.h"
 #include "Logger.h"
 #include "ObjectListIterator.h"
+#include "core/events/EventCollision.h"
+#include "core/events/EventOut.h"
 #include "utils.h"
 
 #define WM lb::WorldManager::getInstance()

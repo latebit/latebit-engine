@@ -4,9 +4,9 @@
 
 #include "../lib/test.h"
 #include "Box.h"
-#include "EventOut.h"
 #include "Object.h"
 #include "Vector.h"
+#include "core/events/EventKeyboard.h"
 
 using namespace std;
 using namespace lb;

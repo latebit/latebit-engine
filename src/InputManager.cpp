@@ -6,10 +6,10 @@
 
 #include <unordered_map>
 
-#include "EventKeyboard.h"
-#include "EventMouse.h"
 #include "GameManager.h"
 #include "Logger.h"
+#include "core/events/EventKeyboard.h"
+#include "core/events/EventMouse.h"
 #include "core/graphics/DisplayManager.h"
 
 namespace lb {

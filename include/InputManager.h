@@ -4,9 +4,9 @@
 
 #include <unordered_map>
 
-#include "EventKeyboard.h"
-#include "EventMouse.h"
 #include "Manager.h"
+#include "core/events/EventKeyboard.h"
+#include "core/events/EventMouse.h"
 
 #define IM lb::InputManager::getInstance()
 

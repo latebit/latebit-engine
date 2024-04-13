@@ -4,13 +4,13 @@
 #include <string>
 
 #include "GameManager.h"
-#include "InputManager.h"
 #include "Logger.h"
 #include "ResourceManager.h"
 #include "SceneGraph.h"
 #include "WorldManager.h"
 #include "core/graphics/Colors.h"
 #include "core/graphics/DisplayManager.h"
+#include "core/input/InputManager.h"
 
 using namespace std;
 

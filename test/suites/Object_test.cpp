@@ -5,7 +5,6 @@
 
 #include "../lib/test.h"
 #include "GameManager.h"
-#include "InputManager.h"
 #include "ObjectList.h"
 #include "ObjectListIterator.h"
 #include "ResourceManager.h"
@@ -16,6 +15,7 @@
 #include "core/events/EventOut.h"
 #include "core/events/EventStep.h"
 #include "core/graphics/Animation.h"
+#include "core/input/InputManager.h"
 
 void Object_altitude_test() {
   Object subject;

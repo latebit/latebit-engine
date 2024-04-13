@@ -1,5 +1,8 @@
-# TODO: for some reason SDL2_INCLUDE_DIR is wring in CI, we override it manually
-set(SDL2_INCLUDE_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed/${VCPKG_TARGET_TRIPLET}/include/SDL2")
+if (WASM)
+else() 
+  # TODO: for some reason SDL2_INCLUDE_DIR is wring in CI, we override it manually
+  set(SDL2_INCLUDE_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed/${VCPKG_TARGET_TRIPLET}/include/SDL2")
+endif()
 
 # Install target (needed by CPack)
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)

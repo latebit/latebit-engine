@@ -14,8 +14,9 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-22.04, macos-13]
-        c_compiler: [clang-15, clang]
-        cxx_compiler: [clang++-15, clang++]
+        c_compiler: [clang-15, clang, emcc]
+        cxx_compiler: [clang++-15, clang++, em++]
+        cmake: [cmake, emmake]
         exclude:
           - os: ubuntu-22.04
           - os: macos-13
@@ -23,9 +24,15 @@ jobs:
           - os: ubuntu-22.04
             c_compiler: clang-15
             cxx_compiler: clang++-15
+            cmake: cmake
           - os: macos-13
             c_compiler: clang
             cxx_compiler: clang++
+            cmake: cmake
+          - os: ubuntu-22.04
+            c_compiler: emcc
+            cxx_compiler: em++
+            cmake: emmake
 
     steps:
     - uses: actions/checkout@v4
@@ -33,21 +40,28 @@ jobs:
     - name: Set VCPKG_INSTALLATION_ROOT
       run: echo "VCPKG_INSTALLATION_ROOT=${VCPKG_INSTALLATION_ROOT}" >> $GITHUB_ENV
 
-    - name: Cache Packages
-      uses: actions/cache@v4
-      with:
-        path: ${{ env.VCPKG_INSTALLATION_ROOT }}
-        key: ${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
-
-    - name: "Extract version from tag"
+    - name: Set VERSION
       if: startsWith(github.ref, 'refs/tags/')
       run: |
         VERSION_WITH_PREFIX=${{ github.ref_name }}
         echo "VERSION=${VERSION_WITH_PREFIX:1}" >> $GITHUB_ENV
 
+    - name: Cache Packages
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.VCPKG_INSTALLATION_ROOT }}
+        key: ${{ runner.os }}-${{ hashFiles('vcpkg.json') }}-${{ matrix.c_compiler }}
+
+    - name: Install Emscripten
+      if: matrix.c_compiler == 'emcc'
+      uses: mymindstorm/setup-emsdk@v14
+      with:
+        version: 3.1.51
+        actions-cache-folder: 'emsdk-cache'
+
     - name: Configure
       run: >
-        cmake 
+        ${{ matrix.cmake }} 
         --toolchain=${VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake
         -B build
         -S .
@@ -55,13 +69,15 @@ jobs:
         CMAKE_BUILD_TYPE: Release
         CC: ${{ matrix.c_compiler }}
         CXX: ${{ matrix.cxx_compiler }}
+        WASM: ${{ matrix.c_compiler == 'emcc' }}
         
     - name: Build
       run: |
-        cmake --build build -j 4 --verbose
+        ${{ matrix.cmake }} --build build -j 4
 
     - name: Unit Test
-      run: cmake --build build -t test
+      if: matrix.c_compiler != 'emcc'
+      run: ${{ matrix.cmake }} --build build -t test
       env:
         SDL_AUDIODRIVER: dummy
         SDL_VIDEODRIVER: dummy
@@ -69,7 +85,7 @@ jobs:
     - name: Package
       if: startsWith(github.ref, 'refs/tags/')
       run: |
-        cmake --build build -t package
+        ${{ matrix.cmake }} --build build -t package
 
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/')

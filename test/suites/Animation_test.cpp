@@ -1,9 +1,9 @@
 #include "core/graphics/Animation.h"
 
 #include "../lib/test.h"
-#include "Box.h"
 #include "ResourceManager.h"
-#include "Vector.h"
+#include "core/geometry/Box.h"
+#include "core/geometry/Vector.h"
 #include "core/graphics/DisplayManager.h"
 #include "core/graphics/Sprite.h"
 

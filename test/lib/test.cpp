@@ -3,8 +3,8 @@
 #include <iostream>
 #include <regex>
 
-#include "Vector.h"
 #include "colors.h"
+#include "core/geometry/Vector.h"
 #include "core/utils/Clock.h"
 #include "core/utils/utils.h"
 #include "test.h"

@@ -4,7 +4,7 @@
 
 #include "Colors.h"
 #include "DisplayManager.h"
-#include "Vector.h"
+#include "core/geometry/Vector.h"
 #include "core/utils/Logger.h"
 
 using namespace std;

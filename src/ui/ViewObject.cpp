@@ -1,8 +1,8 @@
 #include "ViewObject.h"
 
-#include "Box.h"
-#include "Vector.h"
 #include "core/events/EventView.h"
+#include "core/geometry/Box.h"
+#include "core/geometry/Vector.h"
 #include "core/graphics/DisplayManager.h"
 #include "core/objects/SceneGraph.h"
 #include "core/objects/WorldManager.h"

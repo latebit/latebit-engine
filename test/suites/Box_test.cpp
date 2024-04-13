@@ -1,7 +1,7 @@
-#include "Box.h"
+#include "core/geometry/Box.h"
 
 #include "../lib/test.h"
-#include "Vector.h"
+#include "core/geometry/Vector.h"
 
 void constructor_test() {
   Box box;

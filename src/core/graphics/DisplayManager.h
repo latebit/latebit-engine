@@ -7,7 +7,7 @@
 
 #include "Colors.h"
 #include "Font.h"
-#include "Vector.h"
+#include "core/geometry/Vector.h"
 #include "core/utils/Manager.h"
 
 using namespace std;

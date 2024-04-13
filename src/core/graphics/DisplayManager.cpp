@@ -12,7 +12,7 @@
 #include "Configuration.h"
 #include "Font.h"
 #include "Frame.h"
-#include "Vector.h"
+#include "core/geometry/Vector.h"
 #include "core/utils/Logger.h"
 #include "core/utils/utils.h"
 

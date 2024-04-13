@@ -3,9 +3,9 @@
 #include <array>
 #include <string>
 
-#include "Box.h"
-#include "Vector.h"
 #include "core/events/Event.h"
+#include "core/geometry/Box.h"
+#include "core/geometry/Vector.h"
 #include "core/graphics/Animation.h"
 
 using namespace std;

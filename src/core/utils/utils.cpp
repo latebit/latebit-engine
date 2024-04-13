@@ -8,8 +8,8 @@
 #include <sstream>
 #include <thread>
 
-#include "Box.h"
-#include "Vector.h"
+#include "core/geometry/Box.h"
+#include "core/geometry/Vector.h"
 #include "core/objects/WorldManager.h"
 
 using namespace lb;

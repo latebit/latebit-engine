@@ -2,8 +2,8 @@
 
 #include <string>
 
-#include "Box.h"
-#include "Vector.h"
+#include "core/geometry/Box.h"
+#include "core/geometry/Vector.h"
 
 using namespace lb;
 using namespace std;

@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "Vector.h"
+#include "core/geometry/Vector.h"
 #include "core/utils/Logger.h"
 
 using namespace std;

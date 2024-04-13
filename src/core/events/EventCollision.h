@@ -2,7 +2,7 @@
 #include <string>
 
 #include "Event.h"
-#include "Vector.h"
+#include "core/geometry/Vector.h"
 #include "core/objects/Object.h"
 
 namespace lb {

@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "Colors.h"
-#include "Vector.h"
+#include "core/geometry/Vector.h"
 
 using namespace std;
 

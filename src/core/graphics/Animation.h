@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include "Box.h"
-#include "Sprite.h"
-#include "Vector.h"
+#include "core/geometry/Box.h"
+#include "core/geometry/Vector.h"
+#include "core/graphics/Sprite.h"
 
 using namespace std;
 

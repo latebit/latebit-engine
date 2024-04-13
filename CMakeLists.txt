@@ -1,7 +1,12 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.28.1)
+
+if(DEFINED ENV{VERSION})
+  set(VERSION $ENV{VERSION})
+else()
+  set(VERSION "0.0.0")
+endif()
 
 option(WASM "Build for WebAssembly" OFF)
-set(VERSION_TAG "v0.0.0-development.0" CACHE STRING "Git tag to label artifacts of this build")
 
 # Compiler settings
 set(CMAKE_CXX_STANDARD 20)
@@ -10,7 +15,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Project settings
-project(latebit VERSION 0.1.0 LANGUAGES C CXX)
+project(latebit VERSION ${VERSION} LANGUAGES C CXX)
 
 set(INCLUDE ${CMAKE_SOURCE_DIR}/include)
 include_directories(${INCLUDE})

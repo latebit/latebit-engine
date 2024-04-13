@@ -6,7 +6,7 @@ wasm:
 native:
   # Creates a native build
   cmake --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake -B build .
-  cmake --build build
+  cmake --build build -j 4 --verbose
 
 debug:
   # Creates a debug build

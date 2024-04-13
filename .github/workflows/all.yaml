@@ -1,0 +1,129 @@
+name: Build
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: [ '*' ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, macos-13]
+        c_compiler: [clang-15, clang]
+        cxx_compiler: [clang++-15, clang++]
+        exclude:
+          - os: ubuntu-22.04
+          - os: macos-13
+        include:
+          - os: ubuntu-22.04
+            c_compiler: clang-15
+            cxx_compiler: clang++-15
+          - os: macos-13
+            c_compiler: clang
+            cxx_compiler: clang++
+
+    env:
+      VCPKG_ENABLE_METRICS: 0
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set VCPKG_INSTALLATION_ROOT
+      run: echo "VCPKG_INSTALLATION_ROOT=${VCPKG_INSTALLATION_ROOT}" >> $GITHUB_ENV
+
+    - name: Set VERSION
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        VERSION_WITH_PREFIX=${{ github.ref_name }}
+        echo "VERSION=${VERSION_WITH_PREFIX:1}" >> $GITHUB_ENV
+
+    - name: Cache Packages
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/vcpkg
+        key: ${{ runner.os }}-${{ hashFiles('vcpkg.json') }}-${{ matrix.c_compiler }}
+
+    - name: Install vcpkg
+      if: matrix.c_compiler != 'emcc'
+      uses: lukka/run-vcpkg@v11
+      with:
+        doNotCache: false
+
+    - name: Configure
+      run: >
+        cmake
+        --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake
+        -B build
+        -S .
+      env:
+        CMAKE_BUILD_TYPE: Release
+        CC: ${{ matrix.c_compiler }}
+        CXX: ${{ matrix.cxx_compiler }}
+        
+    - name: Build
+      run: |
+        cmake --build build -j 4
+
+    - name: Unit Test
+      if: matrix.c_compiler != 'emcc'
+      run: cmake --build build -t test
+      env:
+        SDL_AUDIODRIVER: dummy
+        SDL_VIDEODRIVER: dummy
+
+    - name: Package
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        cmake --build build -t package
+
+    - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v2
+      with:
+        files: build/latebit-*
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag_name: ${{ github.ref_name }}
+        fail_on_unmatched_files: falsebuild
+
+  wasm:
+    runs-on: ubuntu-22.04
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set VERSION
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        VERSION_WITH_PREFIX=${{ github.ref_name }}
+        echo "VERSION=${VERSION_WITH_PREFIX:1}" >> $GITHUB_ENV
+
+    - name: Install Emscripten
+      uses: mymindstorm/setup-emsdk@v14
+      with:
+        version: 3.1.51
+        actions-cache-folder: 'emsdk-cache'
+
+    - name: Configure
+      run: >
+        emmake cmake
+        -B build
+        -DWASM=ON
+        -S .
+      env:
+        CMAKE_BUILD_TYPE: Release
+
+    - name: Package
+      run: emmake cmake --build build -j 4 -t package
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: build/latebit-*
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag_name: ${{ github.ref_name }}
+        fail_on_unmatched_files: falsebuild

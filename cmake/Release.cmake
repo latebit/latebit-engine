@@ -1,7 +1,7 @@
 # Install target (needed by CPack)
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 install(FILES ${INCLUDE_FILES} DESTINATION include/${PROJECT_NAME})
-install(DIRECTORY ${SDL2_PREFIX}/include/SDL2 DESTINATION include)
+install(DIRECTORY ${SDL2_INCLUDE_DIR}/include/SDL2 DESTINATION include)
 
 # loop over all the sdl variables
 get_cmake_property(_variableNames VARIABLES)

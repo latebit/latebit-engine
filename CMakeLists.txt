@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.28.1)
 
 if(DEFINED ENV{VERSION})
   set(VERSION $ENV{VERSION})

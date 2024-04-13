@@ -16,6 +16,9 @@ jobs:
         os: [ubuntu-22.04, macos-13]
         c_compiler: [clang-15, clang]
         cxx_compiler: [clang++-15, clang++]
+        exclude:
+          - os: ubuntu-22.04
+          - os: macos-13
         include:
           - os: ubuntu-22.04
             c_compiler: clang-15
@@ -23,9 +26,6 @@ jobs:
           - os: macos-13
             c_compiler: clang
             cxx_compiler: clang++
-        exclude:
-          - os: ubuntu-22.04
-          - os: macos-13
 
     steps:
     - uses: actions/checkout@v4
@@ -42,16 +42,14 @@ jobs:
         VERSION_WITH_PREFIX=${{ github.ref_name }}
         echo "VERSION=${VERSION_WITH_PREFIX:1}" >> $GITHUB_ENV
 
-    - name: run-vcpkg
-      uses: lukka/run-vcpkg@v11
-
     - name: Configure
       run: >
         cmake 
-        --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake
+        --toolchain=${VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake
         -B build
         -S .
       env:
+        VCPKG_ROOT: ${{ env.VCPKG_INSTALLATION_ROOT }}
         CMAKE_BUILD_TYPE: Release
         CC: ${{ matrix.c_compiler }}
         CXX: ${{ matrix.cxx_compiler }}

@@ -1,7 +1,7 @@
-#include "GameManager.h"
+#include "core/GameManager.h"
 
-#include "Configuration.h"
 #include "core/audio/AudioManager.h"
+#include "core/configuration/Configuration.h"
 #include "core/events/EventStep.h"
 #include "core/graphics/DisplayManager.h"
 #include "core/input/InputManager.h"

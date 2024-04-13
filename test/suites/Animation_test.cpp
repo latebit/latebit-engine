@@ -1,7 +1,7 @@
 #include "core/graphics/Animation.h"
 
 #include "../lib/test.h"
-#include "ResourceManager.h"
+#include "core/ResourceManager.h"
 #include "core/geometry/Box.h"
 #include "core/geometry/Vector.h"
 #include "core/graphics/DisplayManager.h"

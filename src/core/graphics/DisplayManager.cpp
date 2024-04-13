@@ -9,9 +9,9 @@
 #include <SDL2/SDL_video.h>
 
 #include "Colors.h"
-#include "Configuration.h"
 #include "Font.h"
 #include "Frame.h"
+#include "core/configuration/Configuration.h"
 #include "core/geometry/Vector.h"
 #include "core/utils/Logger.h"
 #include "core/utils/utils.h"

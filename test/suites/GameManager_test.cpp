@@ -1,4 +1,4 @@
-#include "GameManager.h"
+#include "core/GameManager.h"
 
 #include "../lib/test.h"
 #include "core/graphics/DisplayManager.h"

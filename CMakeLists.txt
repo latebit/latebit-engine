@@ -17,13 +17,11 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Project settings
 project(latebit VERSION ${VERSION} LANGUAGES C CXX)
 
-set(INCLUDE ${CMAKE_SOURCE_DIR}/include)
-include_directories(${INCLUDE})
-include_directories("src")
-file(GLOB SRC_FILES "src/*.cpp" "src/core/**/*.cpp")
-file(GLOB TEST_LIB_FILES "test/lib/*.cpp")
-file(GLOB TEST_SUITE_FILES "test/suites/*.cpp")
-file(GLOB INCLUDE_FILES "${INCLUDE}/*.h" "src/core/**/*.h")
+include_directories(${CMAKE_SOURCE_DIR}/src)
+file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/src/core/**/*.cpp" "${CMAKE_SOURCE_DIR}/src/core/*.cpp")
+file(GLOB TEST_LIB_FILES "${CMAKE_SOURCE_DIR}/test/lib/*.cpp")
+file(GLOB TEST_SUITE_FILES "${CMAKE_SOURCE_DIR}/test/suites/*.cpp")
+file(GLOB INCLUDE_FILES "${CMAKE_SOURCE_DIR}/src/core/**/*.h" "${CMAKE_SOURCE_DIR}/src/core/*.h")
 
 if (WASM)
     include(cmake/WebAssembly.cmake)

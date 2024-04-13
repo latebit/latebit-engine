@@ -3,10 +3,10 @@
 #include <array>
 #include <string>
 
-#include "GameManager.h"
-#include "ResourceManager.h"
 #include "SceneGraph.h"
 #include "WorldManager.h"
+#include "core/GameManager.h"
+#include "core/ResourceManager.h"
 #include "core/graphics/Colors.h"
 #include "core/graphics/DisplayManager.h"
 #include "core/input/InputManager.h"

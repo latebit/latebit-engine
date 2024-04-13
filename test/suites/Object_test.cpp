@@ -4,8 +4,8 @@
 #include <unordered_map>
 
 #include "../lib/test.h"
-#include "GameManager.h"
-#include "ResourceManager.h"
+#include "core/GameManager.h"
+#include "core/ResourceManager.h"
 #include "core/events/Event.h"
 #include "core/events/EventCollision.h"
 #include "core/events/EventKeyboard.h"

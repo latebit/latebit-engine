@@ -6,7 +6,7 @@
 
 #include <unordered_map>
 
-#include "GameManager.h"
+#include "core/GameManager.h"
 #include "core/events/EventKeyboard.h"
 #include "core/events/EventMouse.h"
 #include "core/graphics/DisplayManager.h"

@@ -8,8 +8,6 @@
 
 using namespace std;
 
-#define RM lb::ResourceManager::getInstance()
-
 namespace lb {
 const int MAX_SPRITES = 500;
 const int MAX_SOUNDS = 50;
@@ -75,3 +73,5 @@ class ResourceManager : public Manager {
   [[nodiscard]] auto getMusic(string label) const -> Music *;
 };
 }  // namespace lb
+
+#define RM lb::ResourceManager::getInstance()

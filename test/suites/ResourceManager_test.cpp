@@ -1,4 +1,4 @@
-#include "ResourceManager.h"
+#include "core/ResourceManager.h"
 
 #include "../lib/test.h"
 #include "core/audio/AudioManager.h"

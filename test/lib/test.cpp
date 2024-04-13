@@ -3,11 +3,11 @@
 #include <iostream>
 #include <regex>
 
-#include "Clock.h"
 #include "Vector.h"
 #include "colors.h"
+#include "core/utils/Clock.h"
+#include "core/utils/utils.h"
 #include "test.h"
-#include "utils.h"
 
 using namespace std;
 using namespace lb;

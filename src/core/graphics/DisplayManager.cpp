@@ -12,9 +12,9 @@
 #include "Configuration.h"
 #include "Font.h"
 #include "Frame.h"
-#include "Logger.h"
 #include "Vector.h"
-#include "utils.h"
+#include "core/utils/Logger.h"
+#include "core/utils/utils.h"
 
 namespace lb {
 

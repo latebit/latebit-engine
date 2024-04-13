@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Manager.h"
 #include "core/audio/Music.h"
 #include "core/audio/Sound.h"
 #include "core/graphics/Animation.h"
 #include "core/graphics/Sprite.h"
+#include "core/utils/Manager.h"
 
 using namespace std;
 

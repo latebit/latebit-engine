@@ -4,8 +4,8 @@
 #include <fstream>
 #include <string>
 
-#include "Logger.h"
-#include "utils.h"
+#include "core/utils/Logger.h"
+#include "core/utils/utils.h"
 
 // Trims whitespace from both ends
 auto trim(const string &str) -> string {

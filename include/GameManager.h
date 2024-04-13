@@ -2,8 +2,8 @@
 
 #include <ctime>
 
-#include "Clock.h"
-#include "Manager.h"
+#include "core/utils/Clock.h"
+#include "core/utils/Manager.h"
 
 using namespace std;
 

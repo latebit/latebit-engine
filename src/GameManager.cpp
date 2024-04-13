@@ -1,13 +1,13 @@
 #include "GameManager.h"
 
 #include "Configuration.h"
-#include "Logger.h"
 #include "WorldManager.h"
 #include "core/audio/AudioManager.h"
 #include "core/events/EventStep.h"
 #include "core/graphics/DisplayManager.h"
 #include "core/input/InputManager.h"
-#include "utils.h"
+#include "core/utils/Logger.h"
+#include "core/utils/utils.h"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>

@@ -9,9 +9,9 @@
 #include "./PNG.cpp"
 #include "Colors.h"
 #include "Frame.h"
-#include "Logger.h"
 #include "Sprite.h"
-#include "utils.h"
+#include "core/utils/Logger.h"
+#include "core/utils/utils.h"
 
 using namespace std;
 

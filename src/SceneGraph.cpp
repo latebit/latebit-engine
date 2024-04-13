@@ -1,8 +1,8 @@
 #include "SceneGraph.h"
 
-#include "Logger.h"
 #include "Object.h"
 #include "ObjectList.h"
+#include "core/utils/Logger.h"
 
 namespace lb {
 SceneGraph::SceneGraph() = default;

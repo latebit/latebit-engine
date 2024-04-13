@@ -4,8 +4,8 @@
 
 #include "Colors.h"
 #include "DisplayManager.h"
-#include "Logger.h"
 #include "Vector.h"
+#include "core/utils/Logger.h"
 
 using namespace std;
 

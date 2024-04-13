@@ -4,7 +4,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_stdinc.h>
 
-#include "Logger.h"
+#include "core/utils/Logger.h"
 
 using namespace std;
 

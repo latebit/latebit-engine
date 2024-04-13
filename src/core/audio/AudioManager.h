@@ -2,7 +2,7 @@
 
 #include <SDL2/SDL_audio.h>
 
-#include "Manager.h"
+#include "core/utils/Manager.h"
 
 using namespace std;
 

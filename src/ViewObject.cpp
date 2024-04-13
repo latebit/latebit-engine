@@ -6,7 +6,7 @@
 #include "WorldManager.h"
 #include "core/events/EventView.h"
 #include "core/graphics/DisplayManager.h"
-#include "utils.h"
+#include "core/utils/utils.h"
 
 namespace lb {
 

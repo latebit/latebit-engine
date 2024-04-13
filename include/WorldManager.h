@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Manager.h"
 #include "Object.h"
 #include "ObjectList.h"
 #include "SceneGraph.h"
+#include "core/utils/Manager.h"
 
 #define WM lb::WorldManager::getInstance()
 

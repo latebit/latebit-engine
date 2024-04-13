@@ -49,13 +49,16 @@ jobs:
         -B build
         -S .
       env:
-        VCPKG_ROOT: ${{ env.VCPKG_INSTALLATION_ROOT }}
         CMAKE_BUILD_TYPE: Release
         CC: ${{ matrix.c_compiler }}
         CXX: ${{ matrix.cxx_compiler }}
         
     - name: Build
-      run: cmake --build build -j 4
+      run: |
+        ls build/vcpkg_installed/*/include
+        ls build/vcpkg_installed/*/share
+        
+        cmake --build build -j 4
 
     - name: Unit Test
       run: cmake --build build -t test
@@ -65,7 +68,8 @@ jobs:
 
     - name: Package
       if: startsWith(github.ref, 'refs/tags/')
-      run: cmake --build build -t package
+      run: |
+        cmake --build build -t package
 
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/')

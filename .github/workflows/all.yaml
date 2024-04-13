@@ -34,6 +34,9 @@ jobs:
             cxx_compiler: em++
             cmake: "emmake cmake"
 
+    env:
+      VCPKG_ENABLE_METRICS: 0
+
     steps:
     - uses: actions/checkout@v4
     
@@ -49,8 +52,14 @@ jobs:
     - name: Cache Packages
       uses: actions/cache@v4
       with:
-        path: ${{ env.VCPKG_INSTALLATION_ROOT }}
+        path: ${{ github.workspace }}/vcpkg
         key: ${{ runner.os }}-${{ hashFiles('vcpkg.json') }}-${{ matrix.c_compiler }}
+
+    - name: Install vcpkg
+      if: matrix.c_compiler != 'emcc'
+      uses: lukka/run-vcpkg@v11
+      with:
+        doNotCache: false
 
     - name: Install Emscripten
       if: matrix.c_compiler == 'emcc'
@@ -62,7 +71,7 @@ jobs:
     - name: Configure
       run: >
         ${{ matrix.cmake }} 
-        --toolchain=${VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake
+        --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake
         -B build
         -DWASM=${{ matrix.c_compiler == 'emcc' }}
         -S .

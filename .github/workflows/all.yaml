@@ -64,12 +64,12 @@ jobs:
         ${{ matrix.cmake }} 
         --toolchain=${VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake
         -B build
+        -DWASM=${{ matrix.c_compiler == 'emcc' }}
         -S .
       env:
         CMAKE_BUILD_TYPE: Release
         CC: ${{ matrix.c_compiler }}
         CXX: ${{ matrix.cxx_compiler }}
-        WASM: ${{ matrix.c_compiler == 'emcc' }}
         
     - name: Build
       run: |

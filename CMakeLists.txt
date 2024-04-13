@@ -13,15 +13,19 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Project settings
 project(latebit VERSION ${VERSION} LANGUAGES C CXX)
 
-include_directories(${CMAKE_SOURCE_DIR}/src)
-file(GLOB SRC_FILES "${CMAKE_SOURCE_DIR}/src/core/**/*.cpp" "${CMAKE_SOURCE_DIR}/src/core/*.cpp")
-file(GLOB TEST_LIB_FILES "${CMAKE_SOURCE_DIR}/test/lib/*.cpp")
-file(GLOB TEST_SUITE_FILES "${CMAKE_SOURCE_DIR}/test/suites/*.cpp")
-file(GLOB INCLUDE_FILES "${CMAKE_SOURCE_DIR}/src/core/**/*.h" "${CMAKE_SOURCE_DIR}/src/core/*.h")
+set(SRC ${CMAKE_SOURCE_DIR}/src)
+set(TEST ${CMAKE_SOURCE_DIR}/test)
+
+include_directories(${SRC})
+file(GLOB SRC_FILES "${SRC}/core/**/*.cpp" "${SRC}/core/*.cpp")
+file(GLOB TEST_LIB_FILES "${TEST}/lib/*.cpp")
+file(GLOB TEST_SUITE_FILES "${TEST}/suites/*.cpp")
+file(GLOB INCLUDE_FILES "${SRC}/core/**/*.h" "${SRC}/core/*.h")
 
 if (WASM)
     include(cmake/WebAssembly.cmake)

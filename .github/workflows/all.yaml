@@ -29,11 +29,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    
+    - name: Set VCPKG_INSTALLATION_ROOT
+      run: echo "VCPKG_INSTALLATION_ROOT=${VCPKG_INSTALLATION_ROOT}" >> $GITHUB_ENV
 
     - name: Cache Packages
       uses: actions/cache@v4
       with:
-        path: ${{ github.workspace }}/vcpkg
+        path: ${{ env.VCPKG_INSTALLATION_ROOT }}
         key: ${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
 
     - name: "Extract version from tag"

@@ -16,7 +16,7 @@ jobs:
         os: [ubuntu-22.04, macos-13]
         c_compiler: [clang-15, clang, emcc]
         cxx_compiler: [clang++-15, clang++, em++]
-        cmake: [cmake, emmake]
+        cmake: [cmake, "emmake cmake"]
         exclude:
           - os: ubuntu-22.04
           - os: macos-13
@@ -32,7 +32,7 @@ jobs:
           - os: ubuntu-22.04
             c_compiler: emcc
             cxx_compiler: em++
-            cmake: emmake
+            cmake: "emmake cmake"
 
     steps:
     - uses: actions/checkout@v4

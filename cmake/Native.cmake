@@ -16,7 +16,7 @@ target_link_libraries(${PROJECT_NAME}
 add_executable(test.out test/main.cpp ${TEST_LIB_FILES})
 target_link_libraries(test.out PRIVATE ${PROJECT_NAME})
 add_custom_target(test
-    COMMAND $<TARGET_FILE:test.out>
+    COMMAND LSAN_OPTIONS=suppressions=asan.supp $<TARGET_FILE:test.out>
     DEPENDS test
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )

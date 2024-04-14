@@ -1,7 +1,7 @@
-#include "Music.h"
+#include "core/audio/Music.h"
 
 #include "../lib/test.h"
-#include "AudioManager.h"
+#include "core/audio/AudioManager.h"
 
 void Music_test() {
   AM.startUp();
@@ -23,6 +23,7 @@ void Music_test() {
               music.loadMusic("test/fixtures/sound.wav"));
     assert_fail("fails with invalid file",
                 music.loadMusic("invalid_sound.wav"));
+    // music.loadMusic(string filename)
   });
 
   AM.shutDown();

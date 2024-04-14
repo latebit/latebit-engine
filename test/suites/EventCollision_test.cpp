@@ -1,4 +1,4 @@
-#include "EventCollision.h"
+#include "core/events/EventCollision.h"
 
 #include "../lib/test.h"
 

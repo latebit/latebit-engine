@@ -1,7 +1,7 @@
-#include "ObjectListIterator.h"
+#include "core/objects/ObjectListIterator.h"
 
 #include "../lib/test.h"
-#include "Object.h"
+#include "core/objects/Object.h"
 
 void ObjectListIterator_iteration_test() {
   ObjectList list;

@@ -1,4 +1,4 @@
-#include "Configuration.h"
+#include "core/configuration/Configuration.h"
 
 #include "../lib/test.h"
 

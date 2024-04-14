@@ -1,7 +1,7 @@
-#include "Sound.h"
+#include "core/audio/Sound.h"
 
 #include "../lib/test.h"
-#include "AudioManager.h"
+#include "core/audio/AudioManager.h"
 
 void Sound_test() {
   AM.startUp();

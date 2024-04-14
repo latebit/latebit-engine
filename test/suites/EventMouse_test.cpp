@@ -1,4 +1,4 @@
-#include "EventMouse.h"
+#include "core/events/EventMouse.h"
 
 #include "../lib/test.h"
 

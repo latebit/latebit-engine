@@ -1,12 +1,12 @@
-#include "WorldManager.h"
+#include "core/objects/WorldManager.h"
 
 #include <array>
 
 #include "../lib/test.h"
-#include "Box.h"
-#include "EventOut.h"
-#include "Object.h"
-#include "Vector.h"
+#include "core/events/EventOut.h"
+#include "core/geometry/Box.h"
+#include "core/geometry/Vector.h"
+#include "core/objects/Object.h"
 
 using namespace std;
 using namespace lb;
@@ -287,10 +287,10 @@ void WorldManager_objectManagement_test() {
   WM.startUp();
   array<Object*, 5> objects;
 
-  // This will generate a known memory leak, but it's fine for testing
-  // We need this type of behaviour to test the shutdown method below
   for (int i = 0; i < 5; i++) objects[i] = new Object;
 
+  objects[0]->setType("lol");
+  objects[1]->setType("asd");
   objects[2]->setType("type");
   objects[3]->setType("type");
   objects[4]->setType("type");
@@ -298,23 +298,29 @@ void WorldManager_objectManagement_test() {
 
   WM.update();
 
-  assert_int("has all the objects", WM.getAllObjects().getCount(), 4);
-  assert_int("has all the objects (with inactive)",
-             WM.getAllObjects(true).getCount(), 5);
-  assert_int("filters objects by type", WM.objectsOfType("type").getCount(), 2);
-  assert_int("filters objects by type (with inactive)",
-             WM.objectsOfType("type", true).getCount(), 3);
+  auto activeObjects = WM.getAllObjects();
+  assert_int("has active objects", activeObjects.getCount(), 4);
+  auto allObjects = WM.getAllObjects(true);
+  assert_int("has all the objects", allObjects.getCount(), 5);
+  auto activeTypeObjects = WM.objectsOfType("type");
+  assert_int("filters active objects by type", activeTypeObjects.getCount(), 2);
+  auto allTypeObjects = WM.objectsOfType("type", true);
+  assert_int("filters all objects by type", allTypeObjects.getCount(), 3);
 
   WM.markForDelete(objects[0]);
   WM.update();
-  assert_int("has one less object", WM.getAllObjects().getCount(), 3);
+  activeObjects = WM.getAllObjects();
+  assert_int("has one less object", activeObjects.getCount(), 3);
 
   WM.removeObject(objects[1]);
   WM.update();
-  assert_int("removes an object", WM.getAllObjects().getCount(), 2);
+  activeObjects = WM.getAllObjects();
+  assert_int("removes an object", activeObjects.getCount(), 2);
+  delete (objects[1]);
 
   WM.shutDown();
-  assert_int("removes everything", WM.getAllObjects().getCount(), 0);
+  activeObjects = WM.getAllObjects();
+  assert_int("removes everything", activeObjects.getCount(), 0);
 }
 
 void WorldManager_setters_test() {

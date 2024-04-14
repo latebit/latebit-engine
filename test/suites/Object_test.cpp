@@ -1,22 +1,21 @@
-#include "Object.h"
+#include "core/objects/Object.h"
 
 #include <string>
 #include <unordered_map>
 
 #include "../lib/test.h"
-#include "Animation.h"
-#include "Event.h"
-#include "EventCollision.h"
-#include "EventKeyboard.h"
-#include "EventMouse.h"
-#include "EventOut.h"
-#include "EventStep.h"
-#include "GameManager.h"
-#include "InputManager.h"
-#include "ObjectList.h"
-#include "ObjectListIterator.h"
-#include "ResourceManager.h"
-#include "WorldManager.h"
+#include "core/GameManager.h"
+#include "core/ResourceManager.h"
+#include "core/events/Event.h"
+#include "core/events/EventCollision.h"
+#include "core/events/EventKeyboard.h"
+#include "core/events/EventOut.h"
+#include "core/events/EventStep.h"
+#include "core/graphics/Animation.h"
+#include "core/input/InputManager.h"
+#include "core/objects/ObjectList.h"
+#include "core/objects/ObjectListIterator.h"
+#include "core/objects/WorldManager.h"
 
 void Object_altitude_test() {
   Object subject;
@@ -86,6 +85,7 @@ void Object_boundingBox_test() {
              Box(Vector(1, 1), 3, 4));
   assert_box("gets bounding box in world coordinates relative to (2, 2)",
              subject.getWorldBox(Vector(2, 2)), Box(Vector(2, 2), 3, 4));
+  RM.unloadSprite("sprite");
 }
 
 unordered_map<string, int> Object_eventSubscription_test_emittedCount = {};
@@ -252,6 +252,7 @@ void Object_test() {
     RM.loadTextSprite("test/fixtures/correct.txt", "sprite");
     assert_ok("sets valid sprite", subject.setSprite("sprite"));
     assert_fail("does not set invalid sprite", subject.setSprite("invalid"));
+    RM.unloadSprite("sprite");
 
     auto position = Vector(1, 2);
     subject.setPosition(position);

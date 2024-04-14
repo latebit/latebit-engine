@@ -5,8 +5,8 @@ wasm:
 
 native:
   # Creates a native build
-  cmake --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake -B build .
-  cmake --build build -j 4 --verbose
+  cmake --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release -B build .
+  cmake --build build -j 4
 
 debug:
   # Creates a debug build

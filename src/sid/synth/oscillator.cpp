@@ -79,8 +79,6 @@ Oscillator::Oscillator(float frequency) {
   this->stepSize = frequency / SAMPLE_RATE * WAVE_TABLE_SIZE;
 }
 
-Oscillator::~Oscillator() {}
-
 auto Oscillator::oscillate() -> float {
   this->currentStep += this->effect.processFrequency(this->stepSize);
 
@@ -128,6 +126,12 @@ auto Oscillator::getEffectType() -> EffectType { return this->effect.type; }
 auto Oscillator::getVolume() -> float { return this->volume; }
 auto Oscillator::getCurrentStep() -> float { return this->currentStep; }
 auto Oscillator::getStepSize() -> float { return this->stepSize; }
+auto Oscillator::reset() -> void {
+  this->currentStep = 0;
+  this->effect = NONE_EFFECT;
+  this->volume = 0.5;
+  this->waveType = TRIANGLE;
+}
 
 const Effect DROP_EFFECT = Effect(DROP, 0.9999, 1);
 const Effect SLIDE_EFFECT = Effect(SLIDE, 1.00005, 1);

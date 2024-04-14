@@ -44,10 +44,13 @@ extern const Effect NONE_EFFECT;
 class Oscillator {
  public:
   Oscillator(float frequency);
-  ~Oscillator();
+  ~Oscillator() = default;
 
   // Advances the oscillator by one step returning the current sample
   auto oscillate() -> float;
+
+  // Resets the oscillator to the initial state
+  void reset();
 
   // Sets the pitch of the oscillator
   void setPitch(sid_byte note);

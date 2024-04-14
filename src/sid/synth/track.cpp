@@ -29,4 +29,9 @@ auto Note::isEqual(Note other) -> bool {
 }
 auto Note::isInvalid() -> bool { return this->id == -2; }
 
+auto Note::getPitch() -> sid_byte { return this->pitch; }
+auto Note::getVolume() -> float { return this->volume / 16.0; }
+auto Note::getWave() -> WaveType { return this->wave; }
+auto Note::getEffect() -> EffectType { return this->effect; }
+
 }  // namespace sid

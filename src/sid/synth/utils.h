@@ -13,9 +13,6 @@ namespace sid {
 // Clamp a float between a minimum and maximum
 auto clamp(float value, float min, float max) -> float;
 
-// Retuns the maximum of two integers
-auto max(int a, int b) -> int;
-
 };  // namespace sid
 
 #endif

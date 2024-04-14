@@ -29,6 +29,15 @@ class Note {
   // Checks if the given note is invalid
   auto isInvalid() -> bool;
 
+  // Returns the pitch of the note
+  auto getPitch() -> sid_byte;
+  // Returns the volume of the note in the range [0, 1]
+  auto getVolume() -> float;
+  // Returns the wave type of the note
+  auto getWave() -> WaveType;
+  // Returns the effect type of the note
+  auto getEffect() -> EffectType;
+
  private:
   // A number between 0 and 96 describing a note from C0 to B7
   sid_byte pitch = 0;

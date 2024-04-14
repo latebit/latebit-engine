@@ -18,6 +18,7 @@ auto assert(const string name, bool assertion,
 auto assert_string(string name, string want, string got) -> int;
 auto assert_regex(string name, string want, string pattern) -> int;
 auto assert_float(string name, float got, float want) -> int;
+auto assert_lt(string name, float got, float want) -> int;
 auto assert_int(string name, int got, int want) -> int;
 auto assert_ok(string name, int got) -> int;
 auto assert_fail(string name, int got) -> int;

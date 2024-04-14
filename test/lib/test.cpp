@@ -63,6 +63,12 @@ auto assert_float(string name, float got, float want) -> int {
   return assert(name, equals(got, want), message);
 }
 
+auto assert_lt(string name, float got, float want) -> int {
+  string message = "wanted " + to_string(want) + " < " + to_string(got);
+
+  return assert(name, got < want, message);
+}
+
 auto assert_int(string name, int got, int want) -> int {
   string message =
     "wanted '" + to_string(want) + "' got '" + to_string(got) + "'";

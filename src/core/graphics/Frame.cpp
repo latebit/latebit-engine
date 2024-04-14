@@ -30,6 +30,11 @@ auto Frame::draw(Vector position) const -> int {
     return 0;
   }
 
+  if (this->width * this->height != this->content.size()) {
+    Log.error("Frame::draw(): Frame content size doesn't match frame size");
+    return -1;
+  }
+
   return DM.drawFrame(position, this);
 }
 

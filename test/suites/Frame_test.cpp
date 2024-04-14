@@ -27,7 +27,7 @@ void Frame_test() {
 
   test("draw", []() {
     vector<Color> content = {Color::RED, Color::GREEN, Color::BLUE};
-    Frame frame(3, 2, content);
+    Frame frame(3, 1, content);
     assert_ok("draws the frame", frame.draw(Vector()));
 
     Frame empty;
@@ -37,9 +37,9 @@ void Frame_test() {
   test("equals (==)", []() {
     vector<Color> content = {Color::RED, Color::GREEN, Color::BLUE};
     vector<Color> otherContent = {Color::RED, Color::GREEN, Color::RED};
-    Frame frame1(3, 2, content);
-    Frame frame2(3, 2, content);
-    Frame frame3(3, 2, otherContent);
+    Frame frame1(3, 1, content);
+    Frame frame2(3, 1, content);
+    Frame frame3(3, 1, otherContent);
     assert("equals itself", frame1 == frame1);
     assert("equals another frame", frame1 == frame2);
     assert("not equals different frame", !(frame1 == frame3));

@@ -31,6 +31,11 @@ auto Sound::getLabel() const -> string { return this->label; }
 auto Sound::setLabel(string l) -> void { this->label = l; }
 
 auto Sound::loadSound(string filename) -> int {
+  if (this->sound != nullptr) {
+    Mix_FreeChunk(this->sound);
+    this->sound = nullptr;
+  }
+
   this->sound = Mix_LoadWAV(filename.c_str());
 
   if (this->sound == nullptr) {

@@ -33,7 +33,9 @@ void WorldManager::shutDown() {
   for (iterator.first(); !iterator.isDone(); iterator.next()) {
     // This is not leaving a danglig null reference!
     // In the destructor of Object, we also remove it from the world
-    delete iterator.currentObject();
+    auto current = iterator.currentObject();
+    delete current;
+    current = nullptr;
   }
 
   Manager::shutDown();
@@ -167,7 +169,9 @@ void WorldManager::update() {
   for (deletions.first(); !deletions.isDone(); deletions.next()) {
     // This is not leaving a danglig null reference!
     // In the destructor of Object, we also remove it from the world
-    delete deletions.currentObject();
+    auto current = deletions.currentObject();
+    delete current;
+    current = nullptr;
   }
   this->deletions.clear();
 

@@ -27,6 +27,11 @@ auto Music::getLabel() const -> string { return this->label; }
 auto Music::setLabel(string l) -> void { this->label = l; }
 
 auto Music::loadMusic(string filename) -> int {
+  if (this->music != nullptr) {
+    Mix_FreeMusic(this->music);
+    this->music = nullptr;
+  }
+
   this->music = Mix_LoadMUS(filename.c_str());
 
   if (this->music == nullptr) {

@@ -85,6 +85,7 @@ void Object_boundingBox_test() {
              Box(Vector(1, 1), 3, 4));
   assert_box("gets bounding box in world coordinates relative to (2, 2)",
              subject.getWorldBox(Vector(2, 2)), Box(Vector(2, 2), 3, 4));
+  RM.unloadSprite("sprite");
 }
 
 unordered_map<string, int> Object_eventSubscription_test_emittedCount = {};
@@ -251,6 +252,7 @@ void Object_test() {
     RM.loadTextSprite("test/fixtures/correct.txt", "sprite");
     assert_ok("sets valid sprite", subject.setSprite("sprite"));
     assert_fail("does not set invalid sprite", subject.setSprite("invalid"));
+    RM.unloadSprite("sprite");
 
     auto position = Vector(1, 2);
     subject.setPosition(position);

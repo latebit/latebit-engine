@@ -46,7 +46,9 @@ class WorldManager : public Manager {
   // Adds an objects to the list of active objects
   auto insertObject(Object *o) -> int;
 
-  // Removes on object from the list of active objects
+  // Removes on object from the list of active objects.
+  // This DOES NOT delete the object nor free associated resources.
+  // If you need to delete an object, use markForDelete() instead.
   auto removeObject(Object *o) -> int;
 
   // Returns all active objects

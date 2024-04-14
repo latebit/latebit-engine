@@ -23,6 +23,7 @@ void Music_test() {
               music.loadMusic("test/fixtures/sound.wav"));
     assert_fail("fails with invalid file",
                 music.loadMusic("invalid_sound.wav"));
+    // music.loadMusic(string filename)
   });
 
   AM.shutDown();

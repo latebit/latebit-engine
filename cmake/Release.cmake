@@ -6,8 +6,9 @@ endif()
 
 # Install target (needed by CPack)
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
-install(FILES ${INCLUDE_FILES} DESTINATION include/${PROJECT_NAME})
 install(DIRECTORY ${SDL2_INCLUDE_DIR} DESTINATION include)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/ DESTINATION include/${PROJECT_NAME}
+        FILES_MATCHING PATTERN "*.h")
 
 # Package with CPack
 set(CPACK_PACKAGE_VENDOR "Manuel Spagnolo")

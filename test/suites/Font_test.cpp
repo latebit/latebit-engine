@@ -24,13 +24,13 @@ void Font_test() {
     GlyphList glyphs = {};
     Font font = Font(glyphs, 2, 3, 1);
     assert("font is created", font.getGlyphs() == glyphs);
-    assert_int("glyph width is set", font.getGlyphWidth(), 2);
-    assert_int("glyph height is set", font.getGlyphHeight(), 3);
-    assert_int("horizontal spacing is set", font.getHorizontalSpacing(), 1);
+    assertEq("glyph width is set", font.getGlyphWidth(), 2);
+    assertEq("glyph height is set", font.getGlyphHeight(), 3);
+    assertEq("horizontal spacing is set", font.getHorizontalSpacing(), 1);
 
     font = Font(glyphs, 10, -1, -10);
-    assert_int("glyph width is clamped to 8", font.getGlyphWidth(), 8);
-    assert_int("glyph height is clamped to 1", font.getGlyphHeight(), 1);
-    assert_int("spacing is clamped to 1", font.getHorizontalSpacing(), 1);
+    assertEq("glyph width is clamped to 8", font.getGlyphWidth(), 8);
+    assertEq("glyph height is clamped to 1", font.getGlyphHeight(), 1);
+    assertEq("spacing is clamped to 1", font.getHorizontalSpacing(), 1);
   });
 }

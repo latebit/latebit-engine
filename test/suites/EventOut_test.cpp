@@ -6,5 +6,5 @@ using namespace lb;
 
 void EventOut_test() {
   EventOut event_out;
-  assert_string("is initialised with type", event_out.getType(), OUT_EVENT);
+  assertEq("is initialised with type", event_out.getType(), OUT_EVENT);
 };

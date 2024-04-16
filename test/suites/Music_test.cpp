@@ -19,10 +19,9 @@ void Music_test() {
 
   test("loadMusic", []() {
     Music music;
-    assert_ok("succeeds with valid file",
-              music.loadMusic("test/fixtures/sound.wav"));
-    assert_fail("fails with invalid file",
-                music.loadMusic("invalid_sound.wav"));
+    assertOk("succeeds with valid file",
+             music.loadMusic("test/fixtures/sound.wav"));
+    assertFail("fails with invalid file", music.loadMusic("invalid_sound.wav"));
     // music.loadMusic(string filename)
   });
 

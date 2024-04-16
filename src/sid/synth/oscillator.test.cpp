@@ -10,31 +10,31 @@ using namespace sid;
 
 void init() {
   auto o = Oscillator(440);
-  assert_int("waveType should be TRIANGLE", o.getWaveType(), TRIANGLE);
-  assert_int("effect should be NONE", o.getEffectType(), NONE);
-  assert_float("step should be 0", o.getCurrentStep(), 0);
-  assert_float("stepSize should be 0", o.getStepSize(), 40.867119);
+  assertEq("waveType should be TRIANGLE", o.getWaveType(), TRIANGLE);
+  assertEq("effect should be NONE", o.getEffectType(), NONE);
+  assertEq("step should be 0", o.getCurrentStep(), 0);
+  assertEq("stepSize should be 0", o.getStepSize(), 40.867119);
 }
 
 void pitch() {
   auto o = Oscillator(100);
   o.setPitch(69);
-  assert_int("reset step to 0", o.getCurrentStep(), 0);
-  assert_float("sets correct stepSize", o.getStepSize(), 81.734240);
+  assertEq("reset step to 0", o.getCurrentStep(), 0);
+  assertEq("sets correct stepSize", o.getStepSize(), 81.734240);
 }
 
 void effect() {
   auto o = Oscillator(100);
   o.setEffect(DROP);
-  assert_int("sets effect type to DROP", o.getEffectType(), DROP);
+  assertEq("sets effect type to DROP", o.getEffectType(), DROP);
   o.setEffect(SLIDE);
-  assert_int("sets effect type to SLIDE", o.getEffectType(), SLIDE);
+  assertEq("sets effect type to SLIDE", o.getEffectType(), SLIDE);
   o.setEffect(FADEIN);
-  assert_int("sets effect type to FADEIN", o.getEffectType(), FADEIN);
+  assertEq("sets effect type to FADEIN", o.getEffectType(), FADEIN);
   o.setEffect(FADEOUT);
-  assert_int("sets effect type to FADEOUT", o.getEffectType(), FADEOUT);
+  assertEq("sets effect type to FADEOUT", o.getEffectType(), FADEOUT);
   o.setEffect(NONE);
-  assert_int("sets effect type to NONE", o.getEffectType(), NONE);
+  assertEq("sets effect type to NONE", o.getEffectType(), NONE);
 }
 
 void frequency() {
@@ -44,40 +44,40 @@ void frequency() {
   e.processFrequency(100);
   result[0] = e.processFrequency(100);
   result[1] = e.processFrequency(100);
-  assert_lt("reduces the frequency", result[0], 100);
-  assert_lt("reduces the frequency", result[1], result[0]);
+  assertLessThan("reduces the frequency", result[0], 100);
+  assertLessThan("reduces the frequency", result[1], result[0]);
 
   e = SLIDE_EFFECT;
   // Applying one more time due to float precision
   e.processFrequency(100);
   result[0] = e.processFrequency(100);
   result[1] = e.processFrequency(100);
-  assert_lt("increases the frequency", 100, result[0]);
-  assert_lt("increases the frequency", result[0], result[1]);
+  assertLessThan("increases the frequency", 100, result[0]);
+  assertLessThan("increases the frequency", result[0], result[1]);
 
   e = FADEIN_EFFECT;
   // Applying one more time due to float precision
   e.processFrequency(100);
   result[0] = e.processFrequency(100);
   result[1] = e.processFrequency(100);
-  assert_float("doesn't change the frequency", result[0], 100);
-  assert_float("doesn't change the frequency", result[1], result[0]);
+  assertEq("doesn't change the frequency", result[0], 100);
+  assertEq("doesn't change the frequency", result[1], result[0]);
 
   e = FADEOUT_EFFECT;
   // Applying one more time due to float precision
   e.processFrequency(100);
   result[0] = e.processFrequency(100);
   result[1] = e.processFrequency(100);
-  assert_float("doesn't change the frequency", result[0], 100);
-  assert_float("doesn't change the frequency", result[1], result[0]);
+  assertEq("doesn't change the frequency", result[0], 100);
+  assertEq("doesn't change the frequency", result[1], result[0]);
 
   e = NONE_EFFECT;
   // Applying one more time due to float precision
   e.processFrequency(100);
   result[0] = e.processFrequency(100);
   result[1] = e.processFrequency(100);
-  assert_float("doesn't change the frequency", result[0], 100);
-  assert_float("doesn't change the frequency", result[1], result[0]);
+  assertEq("doesn't change the frequency", result[0], 100);
+  assertEq("doesn't change the frequency", result[1], result[0]);
 }
 
 void volume() {
@@ -88,40 +88,40 @@ void volume() {
   result[0] = e.processVolume(0.5);
   result[1] = e.processVolume(0.5);
   result[2] = e.processVolume(0.5);
-  assert_lt("increases the volume", result[0], result[1]);
-  assert_lt("increases the volume", result[1], result[2]);
+  assertLessThan("increases the volume", result[0], result[1]);
+  assertLessThan("increases the volume", result[1], result[2]);
 
   e = FADEOUT_EFFECT;
   // Applying one more time due to float precision
   result[0] = e.processVolume(0.5);
   result[1] = e.processVolume(0.5);
   result[2] = e.processVolume(0.5);
-  assert_lt("decreases the volume", result[1], result[0]);
-  assert_lt("decreases the volume", result[2], result[1]);
+  assertLessThan("decreases the volume", result[1], result[0]);
+  assertLessThan("decreases the volume", result[2], result[1]);
 
   e = DROP_EFFECT;
   // Applying one more time due to float precision
   result[0] = e.processVolume(0.5);
   result[1] = e.processVolume(0.5);
   result[2] = e.processVolume(0.5);
-  assert_float("doesn't change the volume", result[1], 0.5);
-  assert_float("doesn't change the volume", result[2], result[1]);
+  assertEq("doesn't change the volume", result[1], 0.5);
+  assertEq("doesn't change the volume", result[2], result[1]);
 
   e = NONE_EFFECT;
   // Applying one more time due to float precision
   result[0] = e.processVolume(0.5);
   result[1] = e.processVolume(0.5);
   result[2] = e.processVolume(0.5);
-  assert_float("doesn't change the volume", result[1], 0.5);
-  assert_float("doesn't change the volume", result[2], result[1]);
+  assertEq("doesn't change the volume", result[1], 0.5);
+  assertEq("doesn't change the volume", result[2], result[1]);
 
   e = SLIDE_EFFECT;
   // Applying one more time due to float precision
   result[0] = e.processVolume(0.5);
   result[1] = e.processVolume(0.5);
   result[2] = e.processVolume(0.5);
-  assert_float("doesn't change the volume", result[1], 0.5);
-  assert_float("doesn't change the volume", result[2], result[1]);
+  assertEq("doesn't change the volume", result[1], 0.5);
+  assertEq("doesn't change the volume", result[2], result[1]);
 }
 
 void oscillations() {
@@ -136,7 +136,7 @@ void oscillations() {
     o1.oscillate();
     o2.oscillate();
   }
-  assert_lt("applies effect to frequency", o1.oscillate(), o2.oscillate());
+  assertLessThan("applies effect to frequency", o1.oscillate(), o2.oscillate());
 
   o1 = Oscillator(FREQUENCY);
   o2 = Oscillator(FREQUENCY);
@@ -147,7 +147,7 @@ void oscillations() {
     o2.oscillate();
   }
 
-  assert_lt("applies effect to volume", o1.oscillate(), o2.oscillate());
+  assertLessThan("applies effect to volume", o1.oscillate(), o2.oscillate());
 }
 
 auto main() -> int {

@@ -32,13 +32,13 @@ void Manager_test() {
 
   test("constructor", []() {
     TestManager manager;
-    assert_string("sets correct type", manager.getType(), "TestType");
+    assertEq("sets correct type", manager.getType(), "TestType");
     assert("isStarted() returns false by default", !manager.isStarted());
   });
 
   test("startUp/shutDown", []() {
     TestManager manager;
-    assert_ok("starts up", manager.startUp());
+    assertOk("starts up", manager.startUp());
     assert("sets isStarted", manager.isStarted());
 
     manager.shutDown();
@@ -49,30 +49,30 @@ void Manager_test() {
     TestManager manager;
     TestObject obj;
 
-    assert_ok("subscribes to TestEvent",
-              manager.subscribe(&obj, Manager_test_evt));
-    assert_fail("cannot subscribe to another event",
-                manager.subscribe(&obj, Manager_test_wrongEvt));
+    assertOk("subscribes to TestEvent",
+             manager.subscribe(&obj, Manager_test_evt));
+    assertFail("cannot subscribe to another event",
+               manager.subscribe(&obj, Manager_test_wrongEvt));
 
-    assert_ok("unsubscribes from TestEvent",
-              manager.unsubscribe(&obj, Manager_test_evt));
+    assertOk("unsubscribes from TestEvent",
+             manager.unsubscribe(&obj, Manager_test_evt));
 
     auto event = Event();
 
     manager.subscribe(&obj, Manager_test_evt);
     manager.onEvent(&event);
-    assert_int("does not trigger for wrong type", Manager_test_emittedCount, 0);
+    assertEq("does not trigger for wrong type", Manager_test_emittedCount, 0);
 
     event.setType(Manager_test_evt);
 
     obj.setActive(false);
     manager.onEvent(&event);
-    assert_int("does not trigger if object is inactive",
-               Manager_test_emittedCount, 0);
+    assertEq("does not trigger if object is inactive",
+             Manager_test_emittedCount, 0);
 
     obj.setActive(true);
     manager.onEvent(&event);
-    assert_int("triggers for correct type", Manager_test_emittedCount, 1);
+    assertEq("triggers for correct type", Manager_test_emittedCount, 1);
 
     assert("returns true for valid events", manager.isValid(Manager_test_evt));
     assert("returns false for wrong events",

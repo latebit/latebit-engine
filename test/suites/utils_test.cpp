@@ -79,17 +79,17 @@ void utils_worldToView_test() {
   auto initialView = WM.getView();
   WM.setView(Box(Vector(5, 5), 10, 10));
 
-  assert_vector("converts world position to view position",
-                worldToView(Vector(5, 5)), Vector(0, 0));
-  assert_vector("converts world position to view position (origin)",
-                worldToView(Vector(0, 0)), Vector(-5, -5));
+  assertEq("converts world position to view position",
+           worldToView(Vector(5, 5)), Vector(0, 0));
+  assertEq("converts world position to view position (origin)",
+           worldToView(Vector(0, 0)), Vector(-5, -5));
   WM.setView(initialView);
 }
 
 auto utils_test() -> void {
-  test("getTimeString", []() -> int {
-    return assert_regex("returns date in correct format", getTimeString(),
-                        "[0-9]{2}:[0-9]{2}:[0-9]{2}");
+  test("getTimeString", []() {
+    assertMatch("returns date in correct format", getTimeString(),
+                "[0-9]{2}:[0-9]{2}:[0-9]{2}");
   });
   test("match", utils_match_test);
   test("intersects", utils_intersects_test);

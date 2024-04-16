@@ -18,26 +18,26 @@ void setSprite_test() {
   animation.setSprite(sprite);
 
   assert("sets sprite", animation.getSprite() == sprite);
-  assert_int("resets index", animation.getIndex(), 0);
-  assert_int("resets slowdown count", animation.getSlowdownCount(), 0);
+  assertEq("resets index", animation.getIndex(), 0);
+  assertEq("resets slowdown count", animation.getSlowdownCount(), 0);
 }
 
 void setName_test() {
   Animation animation;
   animation.setName("animation");
-  assert_string("sets name", animation.getName(), "animation");
+  assertEq("sets name", animation.getName(), "animation");
 }
 
 void setIndex_test() {
   Animation animation;
   animation.setIndex(5);
-  assert_int("sets index", animation.getIndex(), 5);
+  assertEq("sets index", animation.getIndex(), 5);
 }
 
 void setSlowdownCount_test() {
   Animation animation;
   animation.setSlowdownCount(3);
-  assert_int("sets slowdown count", animation.getSlowdownCount(), 3);
+  assertEq("sets slowdown count", animation.getSlowdownCount(), 3);
 }
 
 void draw_test() {
@@ -50,19 +50,19 @@ void draw_test() {
   Animation animation;
   animation.setSprite(sprite);
 
-  assert_ok("draws the frame", animation.draw(Vector()));
-  assert_int("does't update index before slowdown", animation.getIndex(), 0);
-  assert_int("slowdown count is updated", animation.getSlowdownCount(), 1);
-  assert_ok("draws the frame", animation.draw(Vector()));
-  assert_int("index is updated", animation.getIndex(), 1);
-  assert_int("slowdown is updated", animation.getSlowdownCount(), 0);
+  assertOk("draws the frame", animation.draw(Vector()));
+  assertEq("does't update index before slowdown", animation.getIndex(), 0);
+  assertEq("slowdown count is updated", animation.getSlowdownCount(), 1);
+  assertOk("draws the frame", animation.draw(Vector()));
+  assertEq("index is updated", animation.getIndex(), 1);
+  assertEq("slowdown is updated", animation.getSlowdownCount(), 0);
 
   // Test animation slowdown
   animation.setSlowdownCount(STOP_ANIMATION_SLOWDOWN);
-  assert_ok("draws the frame", animation.draw(Vector()));
-  assert_int("index is not updated", animation.getIndex(), 1);
-  assert_int("slowdown is not updated", animation.getSlowdownCount(),
-             STOP_ANIMATION_SLOWDOWN);
+  assertOk("draws the frame", animation.draw(Vector()));
+  assertEq("index is not updated", animation.getIndex(), 1);
+  assertEq("slowdown is not updated", animation.getSlowdownCount(),
+           STOP_ANIMATION_SLOWDOWN);
 
   RM.shutDown();
   RM.startUp();
@@ -71,7 +71,7 @@ void draw_test() {
 void getBox_test() {
   auto animation = Animation();
   auto unitBox = Box(Vector(), 1.0, 1.0);
-  assert_box("returns unit box", animation.getBox(), unitBox);
+  assertEq("returns unit box", animation.getBox(), unitBox);
 
   auto filename = "test/fixtures/correct.txt";
   auto label = "label";
@@ -81,7 +81,7 @@ void getBox_test() {
 
   auto want = Box(Vector(), 3.0, 4.0);
   auto animBox = animation.getBox();
-  assert_box("returns correct box", animBox, want);
+  assertEq("returns correct box", animBox, want);
 }
 
 void Animation_test() {

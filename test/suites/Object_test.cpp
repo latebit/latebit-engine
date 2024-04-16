@@ -22,7 +22,7 @@ void Object_altitude_test() {
 
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
     subject.setAltitude(i);
-    assert_int("updates altitude", subject.getAltitude(), i);
+    assertEq("updates altitude", subject.getAltitude(), i);
   }
 
   subject.setAltitude(1);
@@ -32,37 +32,37 @@ void Object_altitude_test() {
   auto initialAltitude = subject.getAltitude();
 
   subject.setAltitude(10);
-  assert_int("prevents out of bounds (max)", subject.getAltitude(),
-             initialAltitude);
+  assertEq("prevents out of bounds (max)", subject.getAltitude(),
+           initialAltitude);
   subject.setAltitude(-1);
-  assert_int("prevents out of bounds (min)", subject.getAltitude(),
-             initialAltitude);
+  assertEq("prevents out of bounds (min)", subject.getAltitude(),
+           initialAltitude);
 }
 
 void Object_kinematics_test() {
   Object subject;
 
   subject.setSpeed(1);
-  assert_float("updates speed", subject.getSpeed(), 1);
+  assertEq("updates speed", subject.getSpeed(), 1.0);
 
   subject.setDirection(Vector(1, 1));
-  assert_vector("updates direction", subject.getDirection(), Vector(1, 1));
+  assertEq("updates direction", subject.getDirection(), Vector(1, 1));
 
   subject.setVelocity(Vector(1, 2));
 
-  assert_vector("updates velocity", subject.getVelocity(), Vector(1, 2));
+  assertEq("updates velocity", subject.getVelocity(), Vector(1, 2));
 
   subject.setSpeed(2);
   subject.setDirection(Vector(1, 0));
 
-  assert_vector("updates velocity", subject.getVelocity(), Vector(2, 0));
+  assertEq("updates velocity", subject.getVelocity(), Vector(2, 0));
 }
 
 void Object_solidness_test() {
   Object subject;
 
   subject.setSolidness(SOFT);
-  assert_int("updates solidness", subject.getSolidness(), SOFT);
+  assertEq("updates solidness", subject.getSolidness(), SOFT);
   assert("updates current scene",
          WM.getSceneGraph().getSolidObjects().find(&subject) > -1);
 
@@ -80,11 +80,11 @@ void Object_boundingBox_test() {
 
   subject.setSprite("sprite");
 
-  assert_box("sets bounding box", subject.getBox(), Box(Vector(), 3, 4));
-  assert_box("gets bounding box in world coordinates", subject.getWorldBox(),
-             Box(Vector(1, 1), 3, 4));
-  assert_box("gets bounding box in world coordinates relative to (2, 2)",
-             subject.getWorldBox(Vector(2, 2)), Box(Vector(2, 2), 3, 4));
+  assertEq("sets bounding box", subject.getBox(), Box(Vector(), 3, 4));
+  assertEq("gets bounding box in world coordinates", subject.getWorldBox(),
+           Box(Vector(1, 1), 3, 4));
+  assertEq("gets bounding box in world coordinates relative to (2, 2)",
+           subject.getWorldBox(Vector(2, 2)), Box(Vector(2, 2), 3, 4));
   RM.unloadSprite("sprite");
 }
 
@@ -103,73 +103,73 @@ void Object_eventSubscription_test() {
 
   TestObject obj;
 
-  assert_ok("subscribes to Collision", obj.subscribe(COLLISION_EVENT));
-  assert_ok("subscribes to Out", obj.subscribe(OUT_EVENT));
-  assert_ok("subscribes to Step", obj.subscribe(STEP_EVENT));
-  assert_ok("subscribes to Keyboard", obj.subscribe(KEYBOARD_EVENT));
-  assert_ok("subscribes to Mouse", obj.subscribe(MSE_EVENT));
-  assert_ok("subscribes to custom", obj.subscribe("custom"));
+  assertOk("subscribes to Collision", obj.subscribe(COLLISION_EVENT));
+  assertOk("subscribes to Out", obj.subscribe(OUT_EVENT));
+  assertOk("subscribes to Step", obj.subscribe(STEP_EVENT));
+  assertOk("subscribes to Keyboard", obj.subscribe(KEYBOARD_EVENT));
+  assertOk("subscribes to Mouse", obj.subscribe(MSE_EVENT));
+  assertOk("subscribes to custom", obj.subscribe("custom"));
 
   EventCollision collision;
   WM.onEvent(&collision);
-  assert_int("responds to Collision",
-             Object_eventSubscription_test_emittedCount[COLLISION_EVENT], 1);
+  assertEq("responds to Collision",
+           Object_eventSubscription_test_emittedCount[COLLISION_EVENT], 1);
   EventOut out;
   WM.onEvent(&out);
-  assert_int("responds to Out",
-             Object_eventSubscription_test_emittedCount[OUT_EVENT], 1);
+  assertEq("responds to Out",
+           Object_eventSubscription_test_emittedCount[OUT_EVENT], 1);
 
   EventStep step;
   GM.onEvent(&step);
-  assert_int("responds to Step",
-             Object_eventSubscription_test_emittedCount[STEP_EVENT], 1);
+  assertEq("responds to Step",
+           Object_eventSubscription_test_emittedCount[STEP_EVENT], 1);
 
   EventKeyboard keyboard;
   IM.onEvent(&keyboard);
-  assert_int("responds to Keyboard",
-             Object_eventSubscription_test_emittedCount[KEYBOARD_EVENT], 1);
+  assertEq("responds to Keyboard",
+           Object_eventSubscription_test_emittedCount[KEYBOARD_EVENT], 1);
 
   EventMouse mouse;
   IM.onEvent(&mouse);
-  assert_int("responds to Mouse",
-             Object_eventSubscription_test_emittedCount[MSE_EVENT], 1);
+  assertEq("responds to Mouse",
+           Object_eventSubscription_test_emittedCount[MSE_EVENT], 1);
 
   Event customEvent;
   customEvent.setType("custom");
   WM.onEvent(&customEvent);
-  assert_int("responds to custom event",
-             Object_eventSubscription_test_emittedCount["custom"], 1);
+  assertEq("responds to custom event",
+           Object_eventSubscription_test_emittedCount["custom"], 1);
 
-  assert_ok("unsubscribes to Collision", obj.unsubscribe(COLLISION_EVENT));
-  assert_ok("unsubscribes to Out", obj.unsubscribe(OUT_EVENT));
-  assert_ok("unsubscribes to Step", obj.unsubscribe(STEP_EVENT));
-  assert_ok("unsubscribes to Keyboard", obj.unsubscribe(KEYBOARD_EVENT));
-  assert_ok("unsubscribes to Mouse", obj.unsubscribe(MSE_EVENT));
-  assert_ok("unsubscribes to custom", obj.unsubscribe("custom"));
+  assertOk("unsubscribes to Collision", obj.unsubscribe(COLLISION_EVENT));
+  assertOk("unsubscribes to Out", obj.unsubscribe(OUT_EVENT));
+  assertOk("unsubscribes to Step", obj.unsubscribe(STEP_EVENT));
+  assertOk("unsubscribes to Keyboard", obj.unsubscribe(KEYBOARD_EVENT));
+  assertOk("unsubscribes to Mouse", obj.unsubscribe(MSE_EVENT));
+  assertOk("unsubscribes to custom", obj.unsubscribe("custom"));
 
   WM.onEvent(&collision);
-  assert_int("does not respond to Collision",
-             Object_eventSubscription_test_emittedCount[COLLISION_EVENT], 1);
+  assertEq("does not respond to Collision",
+           Object_eventSubscription_test_emittedCount[COLLISION_EVENT], 1);
 
   WM.onEvent(&out);
-  assert_int("does not respond to Out",
-             Object_eventSubscription_test_emittedCount[OUT_EVENT], 1);
+  assertEq("does not respond to Out",
+           Object_eventSubscription_test_emittedCount[OUT_EVENT], 1);
 
   GM.onEvent(&step);
-  assert_int("does not respond to Step",
-             Object_eventSubscription_test_emittedCount[STEP_EVENT], 1);
+  assertEq("does not respond to Step",
+           Object_eventSubscription_test_emittedCount[STEP_EVENT], 1);
 
   IM.onEvent(&keyboard);
-  assert_int("does not respond to Keyboard",
-             Object_eventSubscription_test_emittedCount[KEYBOARD_EVENT], 1);
+  assertEq("does not respond to Keyboard",
+           Object_eventSubscription_test_emittedCount[KEYBOARD_EVENT], 1);
 
   IM.onEvent(&mouse);
-  assert_int("does not respond to Mouse",
-             Object_eventSubscription_test_emittedCount[MSE_EVENT], 1);
+  assertEq("does not respond to Mouse",
+           Object_eventSubscription_test_emittedCount[MSE_EVENT], 1);
 
   WM.onEvent(&customEvent);
-  assert_int("does not respond to custom event",
-             Object_eventSubscription_test_emittedCount["custom"], 1);
+  assertEq("does not respond to custom event",
+           Object_eventSubscription_test_emittedCount["custom"], 1);
 }
 
 void Object_visible_test() {
@@ -202,8 +202,8 @@ void Object_active_test() {
 
   subject.setActive(false);
   assert("sets active to false", !subject.isActive());
-  assert_int("does not appear in active objects",
-             WM.getSceneGraph().getActiveObjects().find(&subject), -1);
+  assertEq("does not appear in active objects",
+           WM.getSceneGraph().getActiveObjects().find(&subject), -1);
   assert("appears in inactive objects",
          WM.getSceneGraph().getInactiveObjects().find(&subject) > -1);
 
@@ -219,14 +219,14 @@ void Object_test() {
   test("constructor", []() {
     Object subject;
     // test constructor
-    assert_string("sets a type", subject.getType(), "Object");
+    assertEq("sets a type", subject.getType(), "Object");
 
-    assert_vector("sets a position", subject.getPosition(), Vector());
-    assert_int("sets an altitude", subject.getAltitude(), 0);
+    assertEq("sets a position", subject.getPosition(), Vector());
+    assertEq("sets an altitude", subject.getAltitude(), 0);
 
-    assert_vector("sets a direction", subject.getDirection(), Vector());
-    assert_float("sets a speed", subject.getSpeed(), 0.0);
-    assert_int("sets a solidness", subject.getSolidness(), HARD);
+    assertEq("sets a direction", subject.getDirection(), Vector());
+    assertEq("sets a speed", subject.getSpeed(), 0.0);
+    assertEq("sets a solidness", subject.getSolidness(), HARD);
     assert("sets a bounding box", subject.getBox() == Box(Vector(), 1, 1));
 
     assert("sets an animation", subject.getAnimation() == Animation());
@@ -236,13 +236,13 @@ void Object_test() {
     Object subject;
     int lastId = subject.getId();
     subject = Object();
-    assert_int("increments id", subject.getId(), lastId + 1);
+    assertEq("increments id", subject.getId(), lastId + 1);
   });
 
   test("setters", []() {
     Object subject;
     subject.setType("type");
-    assert_string("updates type", subject.getType(), "type");
+    assertEq("updates type", subject.getType(), "type");
 
     auto animation = Animation();
     animation.setName("sprite");
@@ -250,14 +250,14 @@ void Object_test() {
     assert("updates animation", subject.getAnimation() == animation);
 
     RM.loadTextSprite("test/fixtures/correct.txt", "sprite");
-    assert_ok("sets valid sprite", subject.setSprite("sprite"));
-    assert_fail("does not set invalid sprite", subject.setSprite("invalid"));
+    assertOk("sets valid sprite", subject.setSprite("sprite"));
+    assertFail("does not set invalid sprite", subject.setSprite("invalid"));
     RM.unloadSprite("sprite");
 
     auto position = Vector(1, 2);
     subject.setPosition(position);
     auto got = subject.getPosition();
-    assert_vector("updates position", got, position);
+    assertEq("updates position", got, position);
 
     auto box = Box(Vector(), 1, 1);
     subject.setBox(box);

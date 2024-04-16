@@ -12,23 +12,23 @@ void envelope() {
   auto e = Envelope();
 
   e.attack();
-  assert_float("starts at 0", e.getValue(), 0);
-  assert_int("starts in attack", e.getState(), ATTACK);
+  assertEq("starts at 0", e.getValue(), 0);
+  assertEq("starts in attack", e.getState(), ATTACK);
 
   for (int i = 0; i <= 100; i++) e.process();
-  assert_float("attack completes", e.getValue(), 1);
-  assert_int("moves to decay", e.getState(), DECAY);
+  assertEq("attack completes", e.getValue(), 1);
+  assertEq("moves to decay", e.getState(), DECAY);
 
   for (int i = 0; i <= 500; i++) e.process();
-  assert_float("decay completes", e.getValue(), e.getSustainLevel());
-  assert_int("moves to sustain", e.getState(), SUSTAIN);
+  assertEq("decay completes", e.getValue(), e.getSustainLevel());
+  assertEq("moves to sustain", e.getState(), SUSTAIN);
 
   e.release();
-  assert_int("moves to release", e.getState(), RELEASE);
+  assertEq("moves to release", e.getState(), RELEASE);
 
   for (int i = 0; i <= 500; i++) e.process();
-  assert_float("release completes", e.getValue(), 0);
-  assert_int("done", e.getState(), DONE);
+  assertEq("release completes", e.getValue(), 0);
+  assertEq("done", e.getState(), DONE);
 }
 
 void getSamples() {
@@ -56,11 +56,11 @@ void getSamples() {
   s.play();
 
   s.getNextSample();
-  assert_int("advances sample", s.getCurrentSampleIndex(), 2);
+  assertEq("advances sample", s.getCurrentSampleIndex(), 2);
 
-  assert_int("does not advance note (0)", s.getCurrentNoteIndex(0), 0);
-  assert_int("does not advance note (1)", s.getCurrentNoteIndex(1), 0);
-  assert_int("does not advance note (2)", s.getCurrentNoteIndex(2), 0);
+  assertEq("does not advance note (0)", s.getCurrentNoteIndex(0), 0);
+  assertEq("does not advance note (1)", s.getCurrentNoteIndex(1), 0);
+  assertEq("does not advance note (2)", s.getCurrentNoteIndex(2), 0);
 
   // advance until the envelope starts closing
   for (int i = 2; i < s.getSamplesPerTick() - ENVELOPE_RELEASE_SAMPLES; i++) {
@@ -69,9 +69,9 @@ void getSamples() {
 
   // close the envelope
   s.getNextSample();
-  assert_int("releases envelope (0)", s.getEnvelope(0)->getState(), RELEASE);
-  assert_int("releases envelope (1)", s.getEnvelope(1)->getState(), RELEASE);
-  assert_int("releases envelope (2)", s.getEnvelope(2)->getState(), RELEASE);
+  assertEq("releases envelope (0)", s.getEnvelope(0)->getState(), RELEASE);
+  assertEq("releases envelope (1)", s.getEnvelope(1)->getState(), RELEASE);
+  assertEq("releases envelope (2)", s.getEnvelope(2)->getState(), RELEASE);
 
   // advance until the end of the tick
   for (int i = s.getSamplesPerTick() - ENVELOPE_RELEASE_SAMPLES + 1;
@@ -82,8 +82,8 @@ void getSamples() {
   // start the next note
   s.getNextSample();
   for (int i = 0; i < 3; i++) {
-    assert_int("advances notes", s.getCurrentNoteIndex(i), 1);
-    assert_int("resets envelope", s.getEnvelope(i)->getState(), ATTACK);
+    assertEq("advances notes", s.getCurrentNoteIndex(i), 1);
+    assertEq("resets envelope", s.getEnvelope(i)->getState(), ATTACK);
   }
 }
 

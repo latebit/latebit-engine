@@ -8,14 +8,14 @@ void EventCollision_test() {
   EventCollision subject;
   assert("sets default object1", subject.getFirstObject() == nullptr);
   assert("sets default object2", subject.getSecondObject() == nullptr);
-  assert_vector("sets default position", subject.getPos(), Vector());
+  assertEq("sets default position", subject.getPos(), Vector());
 
   Object obj1, obj2;
   Vector pos(1, 1);
   subject = EventCollision(&obj1, &obj2, pos);
   assert("sets correct object1", subject.getFirstObject() == &obj1);
   assert("sets correct object2", subject.getSecondObject() == &obj2);
-  assert_vector("sets correct position", subject.getPos(), pos);
+  assertEq("sets correct position", subject.getPos(), pos);
 
   Object obj3;
   subject.setFirstObject(&obj3);
@@ -27,5 +27,5 @@ void EventCollision_test() {
 
   Vector pos2(2, 2);
   subject.setPosition(pos2);
-  assert_vector("sets correct position", subject.getPos(), pos2);
+  assertEq("sets correct position", subject.getPos(), pos2);
 }

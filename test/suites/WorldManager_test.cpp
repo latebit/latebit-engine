@@ -36,7 +36,7 @@ void WorldManager_draw_test() {
 
   WM.draw();
   for (int i : WorldManager_draw_test_drawCount) {
-    assert_int("draws all objects", i, 1);
+    assertEq("draws all objects", i, 1);
   }
 
   WM.shutDown();
@@ -44,8 +44,8 @@ void WorldManager_draw_test() {
 
   new TestObject(0, Vector(-2, -2));
   WM.draw();
-  assert_int("does not draw out of bounds", WorldManager_draw_test_drawCount[0],
-             1);
+  assertEq("does not draw out of bounds", WorldManager_draw_test_drawCount[0],
+           1);
 
   WM.shutDown();
 }
@@ -117,89 +117,87 @@ void WorldManager_moveObject_test() {
 
   Vector destination = softObject->getPosition();
 
-  assert_ok("moves HARD over SOFT", WM.moveObject(subject, destination));
+  assertOk("moves HARD over SOFT", WM.moveObject(subject, destination));
 
-  assert_vector("updates position", subject->getPosition(), destination);
+  assertEq("updates position", subject->getPosition(), destination);
 
   destination = spectralObject->getPosition();
 
-  assert_ok("moves HARD over SPECTRAL", WM.moveObject(subject, destination));
+  assertOk("moves HARD over SPECTRAL", WM.moveObject(subject, destination));
 
-  assert_vector("updates position", subject->getPosition(), destination);
+  assertEq("updates position", subject->getPosition(), destination);
 
   auto previousPosition = subject->getPosition();
   destination = hardObject->getPosition();
-  assert_fail("does not move HARD over HARD",
-              WM.moveObject(subject, destination));
-  assert_vector("does not update position", subject->getPosition(),
-                previousPosition);
+  assertFail("does not move HARD over HARD",
+             WM.moveObject(subject, destination));
+  assertEq("does not update position", subject->getPosition(),
+           previousPosition);
 
   destination = Vector(0, 0);
 
-  assert_ok("moves HARD on empty spot", WM.moveObject(subject, destination));
+  assertOk("moves HARD on empty spot", WM.moveObject(subject, destination));
 
-  assert_vector("updates position", subject->getPosition(), destination);
+  assertEq("updates position", subject->getPosition(), destination);
 
   subject->setSolidness(SPECTRAL);
   subject->setPosition(Vector(0, 0));
 
   destination = softObject->getPosition();
 
-  assert_ok("moves SPECTRAL over SOFT", WM.moveObject(subject, destination));
+  assertOk("moves SPECTRAL over SOFT", WM.moveObject(subject, destination));
 
-  assert_vector("updates position", subject->getPosition(), destination);
+  assertEq("updates position", subject->getPosition(), destination);
 
   destination = spectralObject->getPosition();
-  assert_ok("moves SPECTRAL over SPECTRAL",
-            WM.moveObject(subject, destination));
+  assertOk("moves SPECTRAL over SPECTRAL", WM.moveObject(subject, destination));
 
-  assert_vector("updates position", subject->getPosition(), destination);
+  assertEq("updates position", subject->getPosition(), destination);
 
   destination = hardObject->getPosition();
 
-  assert_ok("moves SPECTRAL over HARD", WM.moveObject(subject, destination));
+  assertOk("moves SPECTRAL over HARD", WM.moveObject(subject, destination));
 
-  assert_vector("updates position", subject->getPosition(), destination);
+  assertEq("updates position", subject->getPosition(), destination);
 
   destination = Vector(0, 0);
-  assert_ok("moves SPECTRAL on empty spot",
-            WM.moveObject(subject, destination));
+  assertOk("moves SPECTRAL on empty spot", WM.moveObject(subject, destination));
 
-  assert_vector("updates position", subject->getPosition(), destination);
+  assertEq("updates position", subject->getPosition(), destination);
 
   subject->setSolidness(SOFT);
   subject->setPosition(Vector(0, 0));
 
   destination = softObject->getPosition();
 
-  assert_ok("moves SOFT over SOFT", WM.moveObject(subject, destination));
+  assertOk("moves SOFT over SOFT", WM.moveObject(subject, destination));
 
-  assert_vector("updates position", subject->getPosition(), destination);
+  assertEq("updates position", subject->getPosition(), destination);
 
   destination = spectralObject->getPosition();
 
-  assert_ok("moves SOFT over SPECTRAL", WM.moveObject(subject, destination));
+  assertOk("moves SOFT over SPECTRAL", WM.moveObject(subject, destination));
 
-  assert_vector("updates position", subject->getPosition(), destination);
+  assertEq("updates position", subject->getPosition(), destination);
 
   destination = hardObject->getPosition();
 
-  assert_ok("moves SOFT over HARD", WM.moveObject(subject, destination));
+  assertOk("moves SOFT over HARD", WM.moveObject(subject, destination));
 
-  assert_vector("updates position", subject->getPosition(), destination);
+  assertEq("updates position", subject->getPosition(), destination);
 
   destination = Vector(0, 0);
 
-  assert_ok("moves SOFT on empty spot", WM.moveObject(subject, destination));
+  assertOk("moves SOFT on empty spot", WM.moveObject(subject, destination));
 
-  assert_vector("updates position", subject->getPosition(), destination);
+  assertEq("updates position", subject->getPosition(), destination);
 
   subject->setSolidness(HARD);
   subject->setBox(Box(Vector(), 1.5, 1.5));
   // Almost on hard, but with part of the bounding box colliding
   destination = hardObject->getPosition() - Vector(1, 1);
-  assert_fail("does not move HARD over HARD (larger bounding boxes)",
-              WM.moveObject(subject, destination));
+  assertFail("does not move HARD over HARD (larger bounding boxes)",
+             WM.moveObject(subject, destination));
 
   // Clean up test objects
   WM.markForDelete(subject);
@@ -222,31 +220,31 @@ void WorldManager_viewFollowing_test() {
 
   WM.setViewFollowing(subject);
   WM.moveObject(subject, Vector(10, 10));
-  assert_box("does not update view", WM.getView(), initialView);
+  assertEq("does not update view", WM.getView(), initialView);
   WM.moveObject(subject, Vector(11, 11));
 
-  assert_box("updates the view", WM.getView(), Box(Vector(6, 6), 10, 10));
+  assertEq("updates the view", WM.getView(), Box(Vector(6, 6), 10, 10));
 
   WM.moveObject(subject, Vector(11, 5));
-  assert_box("updates the view (vertical lower bound)", WM.getView(),
-             Box(Vector(6, 0), 10, 10));
+  assertEq("updates the view (vertical lower bound)", WM.getView(),
+           Box(Vector(6, 0), 10, 10));
 
   WM.moveObject(subject, Vector(11, 15));
-  assert_box("updates the view (vertical upper bound)", WM.getView(),
-             Box(Vector(6, 10), 10, 10));
+  assertEq("updates the view (vertical upper bound)", WM.getView(),
+           Box(Vector(6, 10), 10, 10));
 
   WM.moveObject(subject, Vector(5, 11));
-  assert_box("updates the view (horizontal lower bound)", WM.getView(),
-             Box(Vector(0, 6), 10, 10));
+  assertEq("updates the view (horizontal lower bound)", WM.getView(),
+           Box(Vector(0, 6), 10, 10));
 
   WM.moveObject(subject, Vector(15, 11));
-  assert_box("updates the view (horizontal upper bound)", WM.getView(),
-             Box(Vector(10, 6), 10, 10));
+  assertEq("updates the view (horizontal upper bound)", WM.getView(),
+           Box(Vector(10, 6), 10, 10));
 
   WM.setViewDeadZone(Box(WM.getView().getCorner(), 5, 5));
   WM.moveObject(subject, Vector(12, 10));
-  assert_box("does not update the view within dead zone", WM.getView(),
-             Box(Vector(10, 6), 10, 10));
+  assertEq("does not update the view within dead zone", WM.getView(),
+           Box(Vector(10, 6), 10, 10));
 
   WM.shutDown();
 }
@@ -299,43 +297,43 @@ void WorldManager_objectManagement_test() {
   WM.update();
 
   auto activeObjects = WM.getAllObjects();
-  assert_int("has active objects", activeObjects.getCount(), 4);
+  assertEq("has active objects", activeObjects.getCount(), 4);
   auto allObjects = WM.getAllObjects(true);
-  assert_int("has all the objects", allObjects.getCount(), 5);
+  assertEq("has all the objects", allObjects.getCount(), 5);
   auto activeTypeObjects = WM.objectsOfType("type");
-  assert_int("filters active objects by type", activeTypeObjects.getCount(), 2);
+  assertEq("filters active objects by type", activeTypeObjects.getCount(), 2);
   auto allTypeObjects = WM.objectsOfType("type", true);
-  assert_int("filters all objects by type", allTypeObjects.getCount(), 3);
+  assertEq("filters all objects by type", allTypeObjects.getCount(), 3);
 
   WM.markForDelete(objects[0]);
   WM.update();
   activeObjects = WM.getAllObjects();
-  assert_int("has one less object", activeObjects.getCount(), 3);
+  assertEq("has one less object", activeObjects.getCount(), 3);
 
   WM.removeObject(objects[1]);
   WM.update();
   activeObjects = WM.getAllObjects();
-  assert_int("removes an object", activeObjects.getCount(), 2);
+  assertEq("removes an object", activeObjects.getCount(), 2);
   delete (objects[1]);
 
   WM.shutDown();
   activeObjects = WM.getAllObjects();
-  assert_int("removes everything", activeObjects.getCount(), 0);
+  assertEq("removes everything", activeObjects.getCount(), 0);
 }
 
 void WorldManager_setters_test() {
   WM.setView(Box(Vector(0, 0), 10, 10));
-  assert_box("sets view", WM.getView(), Box(Vector(0, 0), 10, 10));
+  assertEq("sets view", WM.getView(), Box(Vector(0, 0), 10, 10));
 
   WM.setBoundary(Box(Vector(0, 0), 10, 10));
-  assert_box("sets boundary", WM.getBoundary(), Box(Vector(0, 0), 10, 10));
+  assertEq("sets boundary", WM.getBoundary(), Box(Vector(0, 0), 10, 10));
 
   WM.setViewDeadZone(Box(Vector(0, 0), 10, 10));
-  assert_box("sets view dead zone", WM.getViewDeadZone(),
-             Box(Vector(0, 0), 10, 10));
+  assertEq("sets view dead zone", WM.getViewDeadZone(),
+           Box(Vector(0, 0), 10, 10));
 
   WM.setView(Box(Vector(0, 0), 10, 10));
-  assert_box("sets view", WM.getView(), Box(Vector(0, 0), 10, 10));
+  assertEq("sets view", WM.getView(), Box(Vector(0, 0), 10, 10));
 }
 
 void WorldManager_test() {

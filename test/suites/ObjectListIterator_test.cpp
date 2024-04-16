@@ -17,21 +17,21 @@ void ObjectListIterator_iteration_test() {
 
   int id = obj0.getId();
   for (subject.first(); !subject.isDone(); subject.next()) {
-    assert_int("gets object", subject.currentObject()->getId(), id);
+    assertEq("gets object", subject.currentObject()->getId(), id);
     id++;
   }
   assert("is done", subject.isDone());
   assert("returns null pointer", subject.currentObject() == nullptr);
 
   list.insert(&obj1);
-  assert_int("retrieves object after starting iteration",
-             subject.currentObject()->getId(), obj1.getId());
+  assertEq("retrieves object after starting iteration",
+           subject.currentObject()->getId(), obj1.getId());
   list.remove(&obj2);
   assert("returns null pointer", subject.currentObject() == nullptr);
 
   subject.first();
-  assert_int("returns to first item", subject.currentObject()->getId(),
-             obj0.getId());
+  assertEq("returns to first item", subject.currentObject()->getId(),
+           obj0.getId());
 }
 
 void ObjectListIterator_emptyList_test() {

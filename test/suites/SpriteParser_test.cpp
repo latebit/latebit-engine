@@ -17,11 +17,11 @@ void SpriteParser_test() {
     Sprite sprite =
       SpriteParser::parseTextSprite("test/fixtures/correct.txt", "test_sprite");
 
-    assert_string("label is correct", sprite.getLabel(), "test_sprite");
-    assert_int("frame count is correct", sprite.getFrameCount(), 2);
-    assert_int("width is correct", sprite.getWidth(), 3);
-    assert_int("height is correct", sprite.getHeight(), 4);
-    assert_int("slowdown is correct", sprite.getSlowdown(), 2);
+    assertEq("label is correct", sprite.getLabel(), "test_sprite");
+    assertEq("frame count is correct", sprite.getFrameCount(), 2);
+    assertEq("width is correct", sprite.getWidth(), 3);
+    assertEq("height is correct", sprite.getHeight(), 4);
+    assertEq("slowdown is correct", sprite.getSlowdown(), 2);
     assert(
       "content of first frame is correct",
       sprite.getFrame(0).getContent() ==
@@ -57,22 +57,22 @@ void SpriteParser_test() {
              "2\r\n3\r\n4\r\n2\r\n012\r\n012\r\n012\r\n012\r\nFFF\r\nFFF"
              "\r\nFFF\r\nFFF");
     auto sprite = SpriteParser::parseTextSprite("carriage.txt", "test_sprite");
-    assert_string("label is correct", sprite.getLabel(), "test_sprite");
-    assert_int("frame count is correct", sprite.getFrameCount(), 2);
-    assert_int("width is correct", sprite.getWidth(), 3);
-    assert_int("height is correct", sprite.getHeight(), 4);
-    assert_int("slowdown is correct", sprite.getSlowdown(), 2);
+    assertEq("label is correct", sprite.getLabel(), "test_sprite");
+    assertEq("frame count is correct", sprite.getFrameCount(), 2);
+    assertEq("width is correct", sprite.getWidth(), 3);
+    assertEq("height is correct", sprite.getHeight(), 4);
+    assertEq("slowdown is correct", sprite.getSlowdown(), 2);
     remove("carriage.txt");
   });
 
   test("parseImageSprite/single frame", []() {
     auto sprite = SpriteParser::parseImageSprite("test/fixtures/correct.png",
                                                  "correct", 1, 1);
-    assert_string("label is correct", sprite.getLabel(), "correct");
-    assert_int("frame count is correct", sprite.getFrameCount(), 1);
-    assert_int("width is correct", sprite.getWidth(), 2);
-    assert_int("height is correct", sprite.getHeight(), 2);
-    assert_int("slowdown is correct", sprite.getSlowdown(), 1);
+    assertEq("label is correct", sprite.getLabel(), "correct");
+    assertEq("frame count is correct", sprite.getFrameCount(), 1);
+    assertEq("width is correct", sprite.getWidth(), 2);
+    assertEq("height is correct", sprite.getHeight(), 2);
+    assertEq("slowdown is correct", sprite.getSlowdown(), 1);
     assert("content of first frame is correct",
            sprite.getFrame(0).getContent() ==
              vector<Color>({DARK_BLUE, DARK_PURPLE, DARK_GREEN, BROWN}));
@@ -90,7 +90,7 @@ void SpriteParser_test() {
   test("parseImageSprite/sprite sheet", []() {
     auto sprite =
       SpriteParser::parseImageSprite("test/fixtures/sheet.png", "sheet", 4, 1);
-    assert_int("frame count is correct", sprite.getFrameCount(), 4);
+    assertEq("frame count is correct", sprite.getFrameCount(), 4);
     assert("content of first frame is correct",
            sprite.getFrame(0).getContent() == vector<Color>({YELLOW}));
     assert("content of second frame is correct",

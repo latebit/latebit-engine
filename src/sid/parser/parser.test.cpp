@@ -17,27 +17,27 @@ void simplest() {
   unique_ptr<Tune> t = TuneParser::fromString(&stream);
 
   assert("parses tune", t != nullptr);
-  assert_int("parses bpm", t->getBpm(), 90);
-  assert_int("parses ticks per beat", t->getTicksPerBeat(), 1);
-  assert_int("parses beats", t->getBeatsCount(), 2);
-  assert_int("parses tracks count", t->getTracksCount(), 3);
+  assertEq("parses bpm", t->getBpm(), 90);
+  assertEq("parses ticks per beat", t->getTicksPerBeat(), 1);
+  assertEq("parses beats", t->getBeatsCount(), 2);
+  assertEq("parses tracks count", t->getTracksCount(), 3);
 
   auto track = t->getTrack(0);
-  assert_int("track 0 has correct track length", track->size(), 2);
+  assertEq("track 0 has correct track length", track->size(), 2);
   assert("reads note correctly",
          track->at(0).isEqual(Note(48, 8, TRIANGLE, NONE)));
   assert("reads note correctly",
          track->at(1).isEqual(Note(60, 8, TRIANGLE, NONE)));
 
   track = t->getTrack(1);
-  assert_int("track 1 has correct track length", track->size(), 2);
+  assertEq("track 1 has correct track length", track->size(), 2);
   assert("reads note correctly",
          track->at(0).isEqual(Note(50, 8, TRIANGLE, NONE)));
   assert("reads note correctly",
          track->at(1).isEqual(Note(50, 8, TRIANGLE, NONE)));
 
   track = t->getTrack(2);
-  assert_int("track 2 has correct track length", track->size(), 2);
+  assertEq("track 2 has correct track length", track->size(), 2);
   assert("reads note correctly", track->at(0).isEqual(Note::rest()));
   assert("reads note correctly", track->at(1).isEqual(Note::rest()));
 }
@@ -57,9 +57,9 @@ void differentLengths() {
   unique_ptr<Tune> t = TuneParser::fromString(&stream);
 
   assert("parses tune", t != nullptr);
-  assert_int("has correct track length (0)", t->getTrack(0)->size(), 3);
-  assert_int("has correct track length (1)", t->getTrack(1)->size(), 1);
-  assert_int("has correct track length (2)", t->getTrack(2)->size(), 2);
+  assertEq("has correct track length (0)", t->getTrack(0)->size(), 3);
+  assertEq("has correct track length (1)", t->getTrack(1)->size(), 1);
+  assertEq("has correct track length (2)", t->getTrack(2)->size(), 2);
   assert("reads correct note (0,0)",
          t->getTrack(0)->at(0).isEqual(Note(48, 8, TRIANGLE, NONE)));
   assert("reads correct note (0,1)",
@@ -87,7 +87,7 @@ void rests() {
   assert("parses tune", t != nullptr);
 
   auto track = t->getTrack(0);
-  assert_int("track 0 has correct track length", track->size(), 3);
+  assertEq("track 0 has correct track length", track->size(), 3);
   assert("reads note correctly",
          track->at(0).isEqual(Note(48, 8, TRIANGLE, NONE)));
 
@@ -114,7 +114,7 @@ void continues() {
   assert("parses tune", t != nullptr);
 
   auto track = t->getTrack(0);
-  assert_int("track 0 has correct track length", track->size(), 3);
+  assertEq("track 0 has correct track length", track->size(), 3);
   assert("has correct first note",
          track->at(0).isEqual(Note(48, 8, TRIANGLE, NONE)));
   assert("keeps correct note",
@@ -134,7 +134,7 @@ void continues() {
   t = TuneParser::fromString(&stream2);
 
   track = t->getTrack(0);
-  assert_int("track 0 has correct track length", track->size(), 2);
+  assertEq("track 0 has correct track length", track->size(), 2);
   assert("registers pause", track->at(0).isEqual(Note::rest()));
   assert("keeps the pause", track->at(1).isEqual(Note::rest()));
 }

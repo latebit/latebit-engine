@@ -6,11 +6,11 @@ using namespace lb;
 
 void EventStep_test() {
   EventStep subject;
-  assert_string("is initialised with type", subject.getType(), STEP_EVENT);
+  assertEq("is initialised with type", subject.getType(), STEP_EVENT);
 
   subject = EventStep(10);
-  assert_int("is initialised with count", subject.getStepCount(), 10);
+  assertEq("is initialised with count", subject.getStepCount(), 10);
 
   subject.setStepCount(2);
-  assert_int("has correct count", subject.getStepCount(), 2);
+  assertEq("has correct count", subject.getStepCount(), 2);
 }

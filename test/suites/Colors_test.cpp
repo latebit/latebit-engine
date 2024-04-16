@@ -21,15 +21,15 @@ void Colors_fromHex_test() {
     Color expectedColor = expectedColors[i];
     Color actualColor = fromHex(validColors[i]);
     auto msg = "returns correct color for " + string(1, validColors[i]);
-    assert_int(msg, actualColor, expectedColor);
+    assertEq(msg, actualColor, expectedColor);
   }
 
   array<char, 2> invalidColors = {'$', 'K'};
   Color undefinedColor = UNDEFINED_COLOR;
   for (auto& invalidColor : invalidColors) {
     Color actualColor = fromHex(invalidColor);
-    assert_int("returns UNDEFINED_COLOR for invalid string", actualColor,
-               undefinedColor);
+    assertEq("returns UNDEFINED_COLOR for invalid string", actualColor,
+             undefinedColor);
   }
 }
 

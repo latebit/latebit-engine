@@ -92,12 +92,13 @@ auto Sequencer::loadTune(shared_ptr<Tune> tune) -> int {
     this->currentNoteIndex[i] = 0;
     this->envelopes[i] = make_unique<Envelope>();
     this->oscillators[i] = make_unique<Oscillator>(0);
-    maxTrackLength = max(maxTrackLength, (int)t->getTrack(i).size());
+    shared_ptr<Track> track = t->getTrack(i);
+    maxTrackLength = max(maxTrackLength, (int)track->size());
 
     // This is used to allow the first note of each track to be executed
     // else the first note will be skipped until there is a change note event
     try {
-      Note firstNote = t->getTrack(i).at(0);
+      Note firstNote = track->at(0);
       this->setNoteForTrack(firstNote, i);
     } catch (const out_of_range& e) {
       // Do nothing
@@ -168,15 +169,15 @@ auto Sequencer::getNextSample() -> float {
 
   // Plays the current sample in every channel
   for (int channel = 0; channel < this->tune->getTracksCount(); channel++) {
-    auto track = this->tune->getTrack(channel);
+    shared_ptr<Track> track = this->tune->getTrack(channel);
     auto envelope = this->envelopes[channel].get();
     auto oscillator = this->oscillators[channel].get();
 
     int currentNoteIndex = this->currentNoteIndex[channel];
-    int newNoteIndex = (currentNoteIndex + 1) % track.size();
+    int newNoteIndex = (currentNoteIndex + 1) % track->size();
 
-    Note current = track.at(currentNoteIndex);
-    Note next = track.at(newNoteIndex);
+    Note current = track->at(currentNoteIndex);
+    Note next = track->at(newNoteIndex);
     bool isChangingNotes = next.isSame(current);
 
     if (shouldStopEnvelope && isChangingNotes) {

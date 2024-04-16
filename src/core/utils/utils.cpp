@@ -2,9 +2,9 @@
 
 #include <cmath>
 #include <ctime>
-#include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <istream>
 #include <sstream>
 #include <thread>
 
@@ -95,7 +95,7 @@ auto contains(Box container, Box content) -> bool {
          containerTop <= contentTop && contentBottom <= containerBottom;
 }
 
-auto getLine(ifstream* file) -> string {
+auto getLine(istream* file) -> string {
   string line;
 
   getline(*file, line);

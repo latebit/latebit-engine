@@ -46,9 +46,9 @@ void getSamples() {
     Note(49, 8, TRIANGLE, NONE),
     Note(50, 8, TRIANGLE, NONE),
   };
-  t->setTrack(0, one);
-  t->setTrack(1, two);
-  t->setTrack(2, three);
+  t->getTrack(0)->insert(t->getTrack(0)->end(), one.begin(), one.end());
+  t->getTrack(1)->insert(t->getTrack(1)->end(), two.begin(), two.end());
+  t->getTrack(2)->insert(t->getTrack(2)->end(), three.begin(), three.end());
   t->setBeatsCount(2);
 
   Sequencer s;

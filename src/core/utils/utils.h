@@ -36,6 +36,6 @@ auto clamp(int value, int min, int max) -> int;
 // Return true if container contains content
 auto contains(Box container, Box content) -> bool;
 
-// Reads an ifstream line by line and returns a string
+// Reads a stream line by line and returns a string
 // accounting for different line endings
-auto getLine(ifstream* file) -> string;
+auto getLine(istream* file) -> string;

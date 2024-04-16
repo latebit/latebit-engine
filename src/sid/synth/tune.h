@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "track.h"
@@ -21,7 +22,7 @@ class Tune {
   // How many beats in the tune
   int beatsCount;
   // The tracks in the tune
-  vector<Track> tracks;
+  vector<shared_ptr<Track>> tracks;
 
  public:
   // Creates a new tune with the given number of tracks
@@ -48,8 +49,6 @@ class Tune {
   auto getTracksCount() -> int;
 
   // Returns the track at the given index
-  auto getTrack(int index) -> Track;
-  // Sets the track at the given index
-  void setTrack(int index, Track track);
+  auto getTrack(int index) -> shared_ptr<Track>;
 };
 }  // namespace sid

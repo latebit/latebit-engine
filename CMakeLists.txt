@@ -23,16 +23,16 @@ project(latebit VERSION ${VERSION} LANGUAGES C CXX)
 
 # Project files
 set(SRC ${CMAKE_SOURCE_DIR}/src)
-file(GLOB SRC_FILES "${SRC}/core/**/*.cpp" "${SRC}/core/*.cpp" "${SRC}/sid/synth/utils.cpp" "${SRC}/sid/synth/tune.cpp" "${SRC}/sid/synth/track.cpp" "${SRC}/sid/synth/oscillator.cpp")
-list(FILTER SRC_FILES EXCLUDE REGEX ".test.c$")
-file(GLOB INCLUDE_FILES "${SRC}/core/**/*.h" "${SRC}/core/*.h" "${SRC}/sid/synth/utils.h" "${SRC}/sid/synth/tune.h" "${SRC}/sid/synth/track.h" "${SRC}/sid/synth/oscillator.h")
+file(GLOB SRC_FILES "${SRC}/core/**/*.cpp" "${SRC}/core/*.cpp" "${SRC}/sid/synth/*.cpp" "${SRC}/sid/parser/*.cpp")
+list(FILTER SRC_FILES EXCLUDE REGEX ".test.cpp$")
+file(GLOB INCLUDE_FILES "${SRC}/core/**/*.h" "${SRC}/core/*.h" "${SRC}/sid/synth/*.h" "${SRC}/sid/parser/*.h")
 
 set(TEST ${CMAKE_SOURCE_DIR}/test)
 file(GLOB TEST_LIB_FILES "${TEST}/lib/*.cpp")
 file(GLOB TEST_SUITE_FILES "${TEST}/suites/*.cpp")
 
 enable_testing()
-file(GLOB TEST_FILES "${SRC}/sid/synth/*.test.cpp")
+file(GLOB TEST_FILES "${SRC}/sid/**/*.test.cpp")
 foreach(test_file ${TEST_FILES})
   get_filename_component(test_name ${test_file} NAME_WE)
   add_executable(${test_name} ${test_file} ${TEST_LIB_FILES})

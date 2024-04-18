@@ -42,6 +42,45 @@ void simplest() {
   assert("reads note correctly", track->at(1).isEqual(Note::rest()));
 }
 
+void withComments() {
+  string str =
+    "#v0.1#\n"
+    "90 # BPM\n"
+    "# Ticks per beat\n"
+    "1\n"
+    "2\n"
+    "3\n"
+    "C-4---|D-4---|------\n"
+    "C-5---|......|------\n";
+  istringstream stream(str);
+  unique_ptr<Tune> t = TuneParser::fromString(&stream);
+
+  assert("parses tune", t != nullptr);
+  assertEq("parses bpm", t->getBpm(), 90);
+  assertEq("parses ticks per beat", t->getTicksPerBeat(), 1);
+  assertEq("parses beats", t->getBeatsCount(), 2);
+  assertEq("parses tracks count", t->getTracksCount(), 3);
+
+  auto track = t->getTrack(0);
+  assertEq("track 0 has correct track length", track->size(), 2);
+  assert("reads note correctly",
+         track->at(0).isEqual(Note(48, 8, TRIANGLE, NONE)));
+  assert("reads note correctly",
+         track->at(1).isEqual(Note(60, 8, TRIANGLE, NONE)));
+
+  track = t->getTrack(1);
+  assertEq("track 1 has correct track length", track->size(), 2);
+  assert("reads note correctly",
+         track->at(0).isEqual(Note(50, 8, TRIANGLE, NONE)));
+  assert("reads note correctly",
+         track->at(1).isEqual(Note(50, 8, TRIANGLE, NONE)));
+
+  track = t->getTrack(2);
+  assertEq("track 2 has correct track length", track->size(), 2);
+  assert("reads note correctly", track->at(0).isEqual(Note::rest()));
+  assert("reads note correctly", track->at(1).isEqual(Note::rest()));
+}
+
 void differentLengths() {
   string str =
     "#v0.1#\n"
@@ -332,6 +371,7 @@ auto main() -> int {
   Log.setDestination(lb::STDOUT);
   return run([]() {
     test("simplest", simplest);
+    test("withComments", withComments);
     test("differentLengths", differentLengths);
     test("rests", rests);
     test("continues", continues);

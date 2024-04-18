@@ -11,3 +11,16 @@ auto getLine(istream* file) -> string {
 
   return line;
 }
+
+auto getNonCommentedLine(istream* stream, char commentChar) -> string {
+  string line = getLine(stream);
+
+  while (!line.empty()) {
+    if (line[0] != commentChar) {
+      return line;
+    }
+    line = getLine(stream);
+  }
+
+  return "";
+}

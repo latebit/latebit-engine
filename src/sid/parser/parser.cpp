@@ -13,22 +13,8 @@
 using namespace std;
 
 namespace sid {
-// Gets lines skipping comment lines
-auto getCommentedLine(istream *stream, char commentChar = '#') -> string {
-  string line = getLine(stream);
-
-  while (!line.empty()) {
-    if (line[0] != commentChar) {
-      return line;
-    }
-    line = getLine(stream);
-  }
-
-  return "";
-}
-
 auto getNumber(istream *stream, char commentChar = '#') -> int {
-  string line = getCommentedLine(stream);
+  string line = getNonCommentedLine(stream);
   if (line.empty()) {
     return -1;
   }
@@ -102,7 +88,7 @@ auto TuneParser::fromString(istream *stream) -> unique_ptr<Tune> {
   }
 
   for (int i = 0; i < maxTrackLength; i++) {
-    auto line = getCommentedLine(stream);
+    auto line = getNonCommentedLine(stream);
     if (line.empty()) {
       Log.error("Unexpected end of file");
       return nullptr;

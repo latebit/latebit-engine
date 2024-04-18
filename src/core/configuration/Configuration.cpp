@@ -60,10 +60,7 @@ auto Configuration::fromFile(string filename) -> int {
 
   string line;
   while (!file.eof()) {
-    line = getLine(&file);
-
-    // Ignore empty lines and comments
-    if (line.empty() || line.at(0) == '#') continue;
+    line = getNonCommentedLine(&file);
 
     string key = trim(line.substr(0, line.find('=')));
     string value = trim(line.substr(line.find('=') + 1));

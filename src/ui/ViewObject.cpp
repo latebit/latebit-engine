@@ -6,7 +6,7 @@
 #include "core/graphics/DisplayManager.h"
 #include "core/objects/SceneGraph.h"
 #include "core/objects/WorldManager.h"
-#include "core/utils/utils.h"
+#include "utils/Math.h"
 
 namespace lb {
 
@@ -86,7 +86,7 @@ auto ViewObject::refresh() -> void {
   x = clamp(x, 0.0f, viewWidth - textWidth);
   y = clamp(y, 0.0f, viewHeight - textHeight);
 
-  auto position = viewToWorld(Vector(x, y));
+  auto position = WorldManager::viewToWorld(Vector(x, y));
   setPosition(position);
 }
 

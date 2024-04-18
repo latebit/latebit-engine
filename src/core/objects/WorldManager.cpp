@@ -3,12 +3,23 @@
 #include "ObjectListIterator.h"
 #include "core/events/EventCollision.h"
 #include "core/events/EventOut.h"
-#include "core/utils/Logger.h"
 #include "core/utils/utils.h"
+#include "utils/Logger.h"
+#include "utils/Math.h"
 
 #define WM lb::WorldManager::getInstance()
 
 namespace lb {
+
+auto WorldManager::worldToView(Vector worldPosition) -> Vector {
+  auto viewOrigin = WM.getView().getCorner();
+  return worldPosition - viewOrigin;
+}
+
+auto WorldManager::viewToWorld(Vector viewPosition) -> Vector {
+  auto viewOrigin = WM.getView().getCorner();
+  return viewPosition + viewOrigin;
+}
 
 WorldManager::WorldManager() {
   setType("WorldManager");
@@ -65,8 +76,8 @@ auto WorldManager::getAllObjects(bool includeInactive) const -> ObjectList {
   return this->sceneGraph.getActiveObjects();
 }
 
-auto WorldManager::objectsOfType(std::string type, bool includeInactive) const
-  -> ObjectList {
+auto WorldManager::objectsOfType(std::string type,
+                                 bool includeInactive) const -> ObjectList {
   ObjectList result;
   auto solid = this->getAllObjects(includeInactive);
   auto iterator = ObjectListIterator(&solid);

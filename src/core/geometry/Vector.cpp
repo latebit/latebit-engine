@@ -3,7 +3,7 @@
 #include <cmath>
 #include <string>
 
-#include "core/utils/utils.h"
+#include "utils/Math.h"
 
 namespace lb {
 Vector::Vector(float x, float y) {

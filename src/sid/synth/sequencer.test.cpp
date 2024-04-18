@@ -12,11 +12,11 @@ void envelope() {
   auto e = Envelope();
 
   e.attack();
-  assertEq("starts at 0", e.getValue(), 0);
+  assertEq("starts at 0", e.getValue(), 0.0);
   assertEq("starts in attack", e.getState(), ATTACK);
 
   for (int i = 0; i <= 100; i++) e.process();
-  assertEq("attack completes", e.getValue(), 1);
+  assertEq("attack completes", e.getValue(), 1.0);
   assertEq("moves to decay", e.getState(), DECAY);
 
   for (int i = 0; i <= 500; i++) e.process();
@@ -27,7 +27,7 @@ void envelope() {
   assertEq("moves to release", e.getState(), RELEASE);
 
   for (int i = 0; i <= 500; i++) e.process();
-  assertEq("release completes", e.getValue(), 0);
+  assertEq("release completes", e.getValue(), 0.0);
   assertEq("done", e.getState(), DONE);
 }
 

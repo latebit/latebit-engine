@@ -10,7 +10,7 @@
 #include "core/events/EventKeyboard.h"
 #include "core/events/EventMouse.h"
 #include "core/graphics/DisplayManager.h"
-#include "core/utils/Logger.h"
+#include "utils/Logger.h"
 
 namespace lb {
 

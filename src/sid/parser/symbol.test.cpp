@@ -73,7 +73,7 @@ void waves() {
 
 void volume() {
   Note n = toNote("C#51F0");
-  assertEq("parses volume 15", n.getVolume(), 1);
+  assertEq("parses volume 15", n.getVolume(), 1.0);
 
   n = toNote("C#51E1");
   assertEq("parses volume 14", n.getVolume(), 0.933333);
@@ -124,7 +124,7 @@ auto main() -> int {
       Note n = toNote("C#51F1");
       assertEq("correct pitch", n.getPitch(), 61);
       assertEq("correct wave", n.getWave(), WaveType::SAWTOOTH);
-      assertEq("correct volume", n.getVolume(), 1);
+      assertEq("correct volume", n.getVolume(), 1.0);
       assertEq("correct effect", n.getEffect(), EffectType::DROP);
 
       test("default values", defaultValues);

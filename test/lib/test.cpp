@@ -6,8 +6,8 @@
 #include "colors.h"
 #include "core/geometry/Vector.h"
 #include "core/utils/Clock.h"
-#include "core/utils/utils.h"
 #include "test.h"
+#include "utils/Math.h"
 
 using namespace std;
 using namespace lb;

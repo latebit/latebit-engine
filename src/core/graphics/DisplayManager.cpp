@@ -13,8 +13,9 @@
 #include "Frame.h"
 #include "core/configuration/Configuration.h"
 #include "core/geometry/Vector.h"
-#include "core/utils/Logger.h"
-#include "core/utils/utils.h"
+#include "core/objects/WorldManager.h"
+#include "utils/Logger.h"
+#include "utils/Math.h"
 
 namespace lb {
 
@@ -92,7 +93,7 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame,
   }
 
   scaling = clamp(scaling, 1, 10);
-  auto viewPosition = worldToView(position);
+  auto viewPosition = WorldManager::worldToView(position);
   auto pixelPosition = cellsToPixels(viewPosition);
   auto content = frame->getContent();
   auto cellSize = CELL_SIZE * scaling;
@@ -153,11 +154,11 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame,
 }
 
 auto DisplayManager::drawRectangle(Position position, int width, int height,
-                                   Color borderColor, Color fillColor) const
-  -> int {
+                                   Color borderColor,
+                                   Color fillColor) const -> int {
   if (this->window == nullptr) return -1;
 
-  auto viewPosition = worldToView(position);
+  auto viewPosition = WorldManager::worldToView(position);
   auto pixelPosition = cellsToPixels(viewPosition);
 
   SDL_Rect rectangle = {(int)pixelPosition.getX(), (int)pixelPosition.getY(),
@@ -187,7 +188,7 @@ auto DisplayManager::drawString(Position position, string string,
                                 TextSize size, Font font) const -> int {
   if (this->window == nullptr) return -1;
 
-  Position viewPosition = worldToView(position);
+  Position viewPosition = WorldManager::worldToView(position);
   int len = string.size();
   int gWidth = font.getGlyphWidth();
   int gHeight = font.getGlyphHeight();

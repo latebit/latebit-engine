@@ -56,9 +56,8 @@ class WorldManager : public Manager {
     -> ObjectList;
 
   // Returns a list of all active objects of a given type
-  [[nodiscard]] auto objectsOfType(string type,
-                                   bool includeInactive = false) const
-    -> ObjectList;
+  [[nodiscard]] auto objectsOfType(
+    string type, bool includeInactive = false) const -> ObjectList;
 
   // Returns a list of object colliding with the object at a given position
   auto getCollisions(Object *o, Vector where) const -> ObjectList;
@@ -102,5 +101,11 @@ class WorldManager : public Manager {
 
   // Returns the current SceneGraph
   [[nodiscard]] auto getSceneGraph() -> SceneGraph &;
+
+  // Convert world coordinates to view coordinates
+  auto static worldToView(Vector worldPosition) -> Vector;
+
+  // Convert view coordinates to world coordinates
+  auto static viewToWorld(Vector viewPosition) -> Vector;
 };
 }  // namespace lb

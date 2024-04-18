@@ -10,8 +10,8 @@
 #include "Colors.h"
 #include "Frame.h"
 #include "Sprite.h"
-#include "core/utils/Logger.h"
-#include "core/utils/utils.h"
+#include "utils/Logger.h"
+#include "utils/Parser.h"
 
 using namespace std;
 

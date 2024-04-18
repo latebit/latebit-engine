@@ -1,4 +1,3 @@
-#include "core/utils/Logger.h"
 #include "lib/run.h"
 #include "lib/test.h"
 #include "suites/Animation_test.cpp"
@@ -26,6 +25,7 @@
 #include "suites/Vector_test.cpp"
 #include "suites/WorldManager_test.cpp"
 #include "suites/utils_test.cpp"
+#include "utils/Logger.h"
 
 auto main() -> int {
   Log.setLevel(lb::DEBUG);

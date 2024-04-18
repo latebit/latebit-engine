@@ -3,7 +3,7 @@
 #include <string>
 
 #include "core/geometry/Vector.h"
-#include "core/utils/Logger.h"
+#include "utils/Logger.h"
 
 using namespace std;
 

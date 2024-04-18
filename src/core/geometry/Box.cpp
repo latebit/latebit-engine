@@ -3,7 +3,7 @@
 #include <string>
 
 #include "Vector.h"
-#include "core/utils/utils.h"
+#include "utils/Math.h"
 
 namespace lb {
 Box::Box() {

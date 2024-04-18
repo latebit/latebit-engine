@@ -2,7 +2,7 @@
 
 #include "Object.h"
 #include "ObjectList.h"
-#include "core/utils/Logger.h"
+#include "utils/Logger.h"
 
 namespace lb {
 SceneGraph::SceneGraph() = default;

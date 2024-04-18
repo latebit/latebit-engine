@@ -3,7 +3,7 @@
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_mixer.h>
 
-#include "core/utils/Logger.h"
+#include "utils/Logger.h"
 
 using namespace std;
 

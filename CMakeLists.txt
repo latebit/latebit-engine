@@ -23,22 +23,22 @@ project(latebit VERSION ${VERSION} LANGUAGES C CXX)
 
 # Project files
 set(SRC ${CMAKE_SOURCE_DIR}/src)
-file(GLOB SRC_FILES "${SRC}/core/**/*.cpp" "${SRC}/core/*.cpp" "${SRC}/sid/synth/*.cpp" "${SRC}/sid/parser/*.cpp")
+file(GLOB SRC_FILES "${SRC}/core/**/*.cpp" "${SRC}/core/*.cpp" "${SRC}/sid/**/*.cpp" "${SRC}/utils/*.cpp")
 list(FILTER SRC_FILES EXCLUDE REGEX ".test.cpp$")
-file(GLOB INCLUDE_FILES "${SRC}/core/**/*.h" "${SRC}/core/*.h" "${SRC}/sid/synth/*.h" "${SRC}/sid/parser/*.h")
+file(GLOB INCLUDE_FILES "${SRC}/core/**/*.h" "${SRC}/core/*.h" "${SRC}/sid/**/*.h" "${SRC}/utils/*.h")
 
 set(TEST ${CMAKE_SOURCE_DIR}/test)
 file(GLOB TEST_LIB_FILES "${TEST}/lib/*.cpp")
 file(GLOB TEST_SUITE_FILES "${TEST}/suites/*.cpp")
 
 # enable_testing()
-# file(GLOB TEST_FILES "${SRC}/sid/**/*.test.cpp")
-# foreach(test_file ${TEST_FILES})
-#   get_filename_component(test_name ${test_file} NAME_WE)
-#   add_executable(${test_name} ${test_file} ${TEST_LIB_FILES})
-#   target_link_libraries(${test_name} ${PROJECT_NAME})
-#   add_test(NAME ${test_name} COMMAND ${test_name})
-# endforeach()
+file(GLOB TEST_FILES "${SRC}/sid/**/*.test.cpp")
+foreach(test_file ${TEST_FILES})
+  get_filename_component(test_name ${test_file} NAME_WE)
+  add_executable(${test_name} ${test_file} ${TEST_LIB_FILES})
+  target_link_libraries(${test_name} ${PROJECT_NAME})
+  add_test(NAME ${test_name} COMMAND ${test_name})
+endforeach()
 
 
 set(ALL_FILES ${SRC_FILES} ${TEST_LIB_FILES} ${TEST_SUITE_FILES} ${INCLUDE_FILES})

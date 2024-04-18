@@ -10,7 +10,7 @@
 #include "core/graphics/Colors.h"
 #include "core/graphics/DisplayManager.h"
 #include "core/input/InputManager.h"
-#include "core/utils/Logger.h"
+#include "utils/Logger.h"
 
 using namespace std;
 

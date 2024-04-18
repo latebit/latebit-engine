@@ -4,6 +4,7 @@
 #include <cstdlib>
 
 #include "utils.h"
+#include "utils/Math.h"
 
 using namespace std;
 
@@ -99,7 +100,9 @@ void Oscillator::setPitch(sid_byte note) {
   this->setFrequency(NOTE_TO_FREQUENCY[note]);
 }
 
-void Oscillator::setVolume(float volume) { this->volume = clamp(volume, 0, 1); }
+void Oscillator::setVolume(float volume) {
+  this->volume = clamp(volume, 0.0, 1.0);
+}
 void Oscillator::setWave(WaveType wave) { this->waveType = wave; }
 void Oscillator::setEffect(EffectType effect) {
   switch (effect) {
@@ -153,7 +156,7 @@ auto Effect::processFrequency(float step) -> float {
 auto Effect::processVolume(float sample) -> float {
   if (this->type == FADEIN || this->type == FADEOUT) {
     sample *= this->previous;
-    this->previous = clamp(this->previous + this->amount, 0, 1);
+    this->previous = clamp(this->previous + this->amount, 0.0, 1.0);
   }
   return sample;
 }

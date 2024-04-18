@@ -11,6 +11,28 @@
 using namespace std;
 using namespace lb;
 
+void WorldManager_worldToView_test() {
+  auto initialView = WM.getView();
+  WM.setView(Box(Vector(5, 5), 10, 10));
+
+  assertEq("converts world position to view position",
+           WorldManager::worldToView(Vector(5, 5)), Vector(0, 0));
+  assertEq("converts world position to view position (origin)",
+           WorldManager::worldToView(Vector(0, 0)), Vector(-5, -5));
+  WM.setView(initialView);
+}
+
+void WorldManager_viewToWorld_test() {
+  auto initialView = WM.getView();
+  WM.setView(Box(Vector(5, 5), 10, 10));
+
+  assertEq("converts view position to world position",
+           WorldManager::viewToWorld(Vector(0, 0)), Vector(5, 5));
+  assertEq("converts view position to world position (origin)",
+           WorldManager::worldToView(Vector(-5, -5)), Vector(0, 0));
+  WM.setView(initialView);
+}
+
 array<int, 5> WorldManager_draw_test_drawCount;
 void WorldManager_draw_test() {
   WM.startUp();
@@ -344,4 +366,6 @@ void WorldManager_test() {
   test("outOfBounds", WorldManager_outOfBounds_test);
   test("draw", WorldManager_draw_test);
   test("viewFollowing", WorldManager_viewFollowing_test);
+  test("worldToView", WorldManager_worldToView_test);
+  test("viewToWorld", WorldManager_worldToView_test);
 }

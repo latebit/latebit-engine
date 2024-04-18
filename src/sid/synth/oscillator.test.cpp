@@ -12,14 +12,14 @@ void init() {
   auto o = Oscillator(440);
   assertEq("waveType should be TRIANGLE", o.getWaveType(), TRIANGLE);
   assertEq("effect should be NONE", o.getEffectType(), NONE);
-  assertEq("step should be 0", o.getCurrentStep(), 0);
+  assertEq("step should be 0", o.getCurrentStep(), 0.0);
   assertEq("stepSize should be 0", o.getStepSize(), 40.867119);
 }
 
 void pitch() {
   auto o = Oscillator(100);
   o.setPitch(69);
-  assertEq("reset step to 0", o.getCurrentStep(), 0);
+  assertEq("reset step to 0", o.getCurrentStep(), 0.0);
   assertEq("sets correct stepSize", o.getStepSize(), 81.734240);
 }
 
@@ -60,7 +60,7 @@ void frequency() {
   e.processFrequency(100);
   result[0] = e.processFrequency(100);
   result[1] = e.processFrequency(100);
-  assertEq("doesn't change the frequency", result[0], 100);
+  assertEq("doesn't change the frequency", result[0], 100.0);
   assertEq("doesn't change the frequency", result[1], result[0]);
 
   e = FADEOUT_EFFECT;
@@ -68,7 +68,7 @@ void frequency() {
   e.processFrequency(100);
   result[0] = e.processFrequency(100);
   result[1] = e.processFrequency(100);
-  assertEq("doesn't change the frequency", result[0], 100);
+  assertEq("doesn't change the frequency", result[0], 100.0);
   assertEq("doesn't change the frequency", result[1], result[0]);
 
   e = NONE_EFFECT;
@@ -76,7 +76,7 @@ void frequency() {
   e.processFrequency(100);
   result[0] = e.processFrequency(100);
   result[1] = e.processFrequency(100);
-  assertEq("doesn't change the frequency", result[0], 100);
+  assertEq("doesn't change the frequency", result[0], 100.0);
   assertEq("doesn't change the frequency", result[1], result[0]);
 }
 

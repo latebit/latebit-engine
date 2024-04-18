@@ -2,14 +2,26 @@
 
 #include <unistd.h>
 
+#include <iomanip>
 #include <iostream>
-
-#include "utils.h"
 
 using namespace std;
 
 namespace lb {
 using std::make_unique;
+
+// Returns current time as a string
+auto getTimeString() -> string {
+  time_t now = time(nullptr);
+  tm* lt = localtime(&now);
+
+  ostringstream stream;
+  stream << setfill('0') << setw(2) << lt->tm_hour << ":" << setfill('0')
+         << setw(2) << lt->tm_min << ":" << setfill('0') << setw(2)
+         << lt->tm_sec;
+
+  return stream.str();
+}
 
 Logger::Logger() = default;
 Logger::~Logger() = default;

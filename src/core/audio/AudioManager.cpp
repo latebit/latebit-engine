@@ -6,8 +6,8 @@
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_timer.h>
 
-#include "core/utils/Logger.h"
 #include "core/utils/Manager.h"
+#include "utils/Logger.h"
 
 namespace lb {
 AudioManager::AudioManager() {

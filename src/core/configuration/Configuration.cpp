@@ -4,8 +4,8 @@
 #include <fstream>
 #include <string>
 
-#include "core/utils/Logger.h"
-#include "core/utils/utils.h"
+#include "utils/Logger.h"
+#include "utils/Parser.h"
 
 // Trims whitespace from both ends
 auto trim(const string &str) -> string {
@@ -41,6 +41,7 @@ auto join(array<string, T> array) -> string {
   return result.substr(0, result.size() - 2);
 }
 
+namespace lb {
 int Configuration::frameRate = DEFAULT_FRAME_RATE;
 string Configuration::title = DEFAULT_TITLE;
 
@@ -94,3 +95,4 @@ auto Configuration::reset() -> int {
   title = DEFAULT_TITLE;
   return 0;
 }
+}  // namespace lb

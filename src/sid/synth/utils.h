@@ -8,11 +8,4 @@
 using sid_byte = unsigned char;
 using sid_hex = sid_byte;
 
-namespace sid {
-
-// Clamp a float between a minimum and maximum
-auto clamp(float value, float min, float max) -> float;
-
-};  // namespace sid
-
 #endif

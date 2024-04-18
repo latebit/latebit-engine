@@ -5,10 +5,10 @@
 #include <regex>
 #include <string>
 
-#include "core/utils/Logger.h"
-#include "core/utils/utils.h"
 #include "sid/synth/tune.h"
 #include "symbol.h"
+#include "utils/Logger.h"
+#include "utils/Parser.h"
 
 using namespace std;
 
@@ -42,8 +42,8 @@ auto getNumber(istream *stream, char commentChar = '#') -> int {
   }
 }
 
-auto getSymbolsFromLine(const string &line, char delimiter = '|')
-  -> vector<string> {
+auto getSymbolsFromLine(const string &line,
+                        char delimiter = '|') -> vector<string> {
   vector<string> result;
   stringstream ss(line);
   string item;

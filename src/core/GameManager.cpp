@@ -1,19 +1,25 @@
 #include "core/GameManager.h"
 
+#include <thread>
+
 #include "core/audio/AudioManager.h"
 #include "core/configuration/Configuration.h"
 #include "core/events/EventStep.h"
 #include "core/graphics/DisplayManager.h"
 #include "core/input/InputManager.h"
 #include "core/objects/WorldManager.h"
-#include "core/utils/Logger.h"
-#include "core/utils/utils.h"
+#include "utils/Logger.h"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
 
 namespace lb {
+
+// Sleep for a given number of microseconds
+void sleep(long int microseconds) {
+  this_thread::sleep_for(chrono::microseconds(microseconds));
+}
 
 GameManager::GameManager() {
   setType("GameManager");

@@ -5,8 +5,8 @@
 
 #include "../../../test/lib/run.h"
 #include "../../../test/lib/test.h"
-#include "core/utils/Logger.h"
 #include "sid/synth/oscillator.h"
+#include "utils/Logger.h"
 
 using namespace sid;
 

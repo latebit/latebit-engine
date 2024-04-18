@@ -1,8 +1,8 @@
 #include "symbol.h"
 
-#include "core/utils/Logger.h"
 #include "sid/synth/oscillator.h"
 #include "sid/synth/track.h"
+#include "utils/Logger.h"
 
 const char NULL_CHAR = '-';
 const int SYMBOL_SIZE = 6;

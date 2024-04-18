@@ -3,7 +3,8 @@
 #include <vector>
 
 #include "oscillator.h"
-#include "utils.h"
+
+using namespace std;
 
 namespace sid {
 // A Note is a musical symbol that represents a sound. It has a pitch, a volume,
@@ -14,7 +15,7 @@ namespace sid {
 // and it is used to report errors.
 class Note {
  public:
-  Note(sid_byte pitch, sid_hex volume, WaveType wave, EffectType effect);
+  Note(int pitch, int volume, WaveType wave, EffectType effect);
   // Creates a new rest note
   static auto rest() -> Note;
   // Creates a new invalid note
@@ -30,7 +31,7 @@ class Note {
   auto isInvalid() -> bool;
 
   // Returns the pitch of the note
-  auto getPitch() -> sid_byte;
+  auto getPitch() -> int;
   // Returns the volume of the note in the range [0, 1]
   auto getVolume() -> float;
   // Returns the wave type of the note
@@ -40,9 +41,9 @@ class Note {
 
  private:
   // A number between 0 and 96 describing a note from C0 to B7
-  sid_byte pitch = 0;
+  int pitch = 0;
   // A number between 0 and 15 describing the volume of the note
-  sid_hex volume = 0;
+  int volume = 0;
   // The type of wave associated with the note
   WaveType wave = TRIANGLE;
   // The type of effect associated with the note

@@ -3,10 +3,10 @@
 #include <algorithm>
 #include <memory>
 
+#include "config.h"
 #include "oscillator.h"
 #include "track.h"
 #include "tune.h"
-#include "utils.h"
 
 using namespace std;
 

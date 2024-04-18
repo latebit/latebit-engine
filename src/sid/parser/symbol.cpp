@@ -73,8 +73,8 @@ auto toNote(const Symbol &str) -> Note {
     return Note::invalid();
   }
 
-  sid_byte note = 0;
-  sid_byte volume = 0;
+  int note = 0;
+  int volume = 0;
   EffectType effect = NONE;
   WaveType wave = TRIANGLE;
 

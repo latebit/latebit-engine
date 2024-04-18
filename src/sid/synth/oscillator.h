@@ -1,5 +1,4 @@
 #pragma once
-#include "utils.h"
 
 namespace sid {
 
@@ -53,7 +52,7 @@ class Oscillator {
   void reset();
 
   // Sets the pitch of the oscillator
-  void setPitch(sid_byte note);
+  void setPitch(int note);
   // Sets the volume of the oscillator
   void setVolume(float volume);
   // Sets the wave of the oscillator

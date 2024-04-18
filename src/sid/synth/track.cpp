@@ -4,7 +4,7 @@ namespace sid {
 
 int id = 1;
 
-Note::Note(sid_byte pitch, sid_hex volume, WaveType wave, EffectType effect)
+Note::Note(int pitch, int volume, WaveType wave, EffectType effect)
   : pitch(pitch), volume(volume), wave(wave), effect(effect) {
   this->id = id++;
 }
@@ -29,7 +29,7 @@ auto Note::isEqual(Note other) -> bool {
 }
 auto Note::isInvalid() -> bool { return this->id == -2; }
 
-auto Note::getPitch() -> sid_byte { return this->pitch; }
+auto Note::getPitch() -> int { return this->pitch; }
 auto Note::getVolume() -> float { return this->volume / 15.0; }
 auto Note::getWave() -> WaveType { return this->wave; }
 auto Note::getEffect() -> EffectType { return this->effect; }

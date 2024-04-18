@@ -3,7 +3,7 @@
 #include <array>
 #include <cstdlib>
 
-#include "utils.h"
+#include "sid/synth/config.h"
 #include "utils/Math.h"
 
 using namespace std;
@@ -96,7 +96,7 @@ void Oscillator::setFrequency(float frequency) {
   this->currentStep = 0;
 }
 
-void Oscillator::setPitch(sid_byte note) {
+void Oscillator::setPitch(int note) {
   this->setFrequency(NOTE_TO_FREQUENCY[note]);
 }
 

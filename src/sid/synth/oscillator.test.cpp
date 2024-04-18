@@ -4,7 +4,7 @@
 
 #include "../../../test/lib/run.h"
 #include "../../../test/lib/test.h"
-#include "utils.h"
+#include "sid/synth/config.h"
 
 using namespace sid;
 
@@ -128,8 +128,8 @@ void oscillations() {
   // Purposely chosing a slow frequency so that we don't have to deal with
   // periodicity
   const int FREQUENCY = 100;
-  Oscillator o1 = Oscillator(FREQUENCY);
-  Oscillator o2 = Oscillator(FREQUENCY);
+  auto o1 = Oscillator(FREQUENCY);
+  auto o2 = Oscillator(FREQUENCY);
   o1.setEffect(SLIDE);
 
   for (int i = 0; i < BUFFER_SIZE; i++) {

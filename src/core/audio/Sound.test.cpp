@@ -3,7 +3,7 @@
 #include "../../../test/lib/test.h"
 #include "core/audio/AudioManager.h"
 
-void Sound_test() {
+auto main() -> int {
   AM.startUp();
   test("constructor", []() {
     Sound sound;
@@ -18,10 +18,10 @@ void Sound_test() {
 
   test("loadSound", []() {
     Sound sound;
-    assertOk("loads valid file", sound.loadSound("test/fixtures/sound.wav"));
+    assertOk("loads valid file", sound.loadSound("../test/fixtures/sound.wav"));
     assertFail("doesn't load invalid file",
                sound.loadSound("invalid_sound.wav"));
   });
   AM.shutDown();
-  AM.startUp();
+  return report();
 }

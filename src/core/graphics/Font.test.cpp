@@ -4,7 +4,7 @@
 
 using namespace lb;
 
-void Font_test() {
+auto main() -> int {
   test("getGlyph", []() {
     Font font = DEFAULT_FONT;
 
@@ -33,4 +33,6 @@ void Font_test() {
     assertEq("glyph height is clamped to 1", font.getGlyphHeight(), 1);
     assertEq("spacing is clamped to 1", font.getHorizontalSpacing(), 1);
   });
+
+  return report();
 }

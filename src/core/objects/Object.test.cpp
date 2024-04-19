@@ -17,7 +17,7 @@
 #include "core/objects/ObjectListIterator.h"
 #include "core/objects/WorldManager.h"
 
-void Object_altitude_test() {
+void altitude() {
   Object subject;
 
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
@@ -39,7 +39,7 @@ void Object_altitude_test() {
            initialAltitude);
 }
 
-void Object_kinematics_test() {
+void kinematics() {
   Object subject;
 
   subject.setSpeed(1);
@@ -58,7 +58,7 @@ void Object_kinematics_test() {
   assertEq("updates velocity", subject.getVelocity(), Vector(2, 0));
 }
 
-void Object_solidness_test() {
+void solidness() {
   Object subject;
 
   subject.setSolidness(SOFT);
@@ -73,10 +73,10 @@ void Object_solidness_test() {
   assert("SPECTRAL is not solid", !subject.isSolid());
 }
 
-void Object_boundingBox_test() {
+void boundingBox() {
   Object subject;
   subject.setPosition(Vector(1, 1));
-  RM.loadTextSprite("test/fixtures/correct.txt", "sprite");
+  RM.loadTextSprite("../test/fixtures/correct.txt", "sprite");
 
   subject.setSprite("sprite");
 
@@ -89,7 +89,7 @@ void Object_boundingBox_test() {
 }
 
 unordered_map<string, int> Object_eventSubscription_test_emittedCount = {};
-void Object_eventSubscription_test() {
+void eventSubscription() {
   Object subject;
 
   class TestObject : public Object {
@@ -172,7 +172,7 @@ void Object_eventSubscription_test() {
            Object_eventSubscription_test_emittedCount["custom"], 1);
 }
 
-void Object_visible_test() {
+void visible() {
   Object subject;
 
   subject.setVisible(false);
@@ -197,7 +197,7 @@ void Object_visible_test() {
   }
 }
 
-void Object_active_test() {
+void active() {
   Object subject;
 
   subject.setActive(false);
@@ -215,7 +215,7 @@ void Object_active_test() {
          WM.getSceneGraph().getActiveObjects().find(&subject) > -1);
 }
 
-void Object_test() {
+auto main() -> int {
   test("constructor", []() {
     Object subject;
     // test constructor
@@ -249,7 +249,7 @@ void Object_test() {
     subject.setAnimation(animation);
     assert("updates animation", subject.getAnimation() == animation);
 
-    RM.loadTextSprite("test/fixtures/correct.txt", "sprite");
+    RM.loadTextSprite("../test/fixtures/correct.txt", "sprite");
     assertOk("sets valid sprite", subject.setSprite("sprite"));
     assertFail("does not set invalid sprite", subject.setSprite("invalid"));
     RM.unloadSprite("sprite");
@@ -267,11 +267,13 @@ void Object_test() {
     assert("updates debug", subject.getDebug());
   });
 
-  test("altitude", Object_altitude_test);
-  test("kinematics", Object_kinematics_test);
-  test("solidness", Object_solidness_test);
-  test("boundingBox", Object_boundingBox_test);
-  test("eventSubscription", Object_eventSubscription_test);
-  test("visible", Object_visible_test);
-  test("active", Object_active_test);
+  test("altitude", altitude);
+  test("kinematics", kinematics);
+  test("solidness", solidness);
+  test("boundingBox", boundingBox);
+  test("eventSubscription", eventSubscription);
+  test("visible", visible);
+  test("active", active);
+
+  return report();
 }

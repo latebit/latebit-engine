@@ -74,7 +74,9 @@ void utils_intersects_test() {
          !intersects(subject, nonIntersecting));
 }
 
-auto utils_test() -> void {
+auto main() -> int {
   test("match", utils_match_test);
   test("intersects", utils_intersects_test);
+
+  return report();
 }

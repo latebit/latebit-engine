@@ -11,7 +11,7 @@
 using namespace std;
 using namespace lb;
 
-void WorldManager_worldToView_test() {
+void worldToView() {
   auto initialView = WM.getView();
   WM.setView(Box(Vector(5, 5), 10, 10));
 
@@ -22,7 +22,7 @@ void WorldManager_worldToView_test() {
   WM.setView(initialView);
 }
 
-void WorldManager_viewToWorld_test() {
+void viewToWorld() {
   auto initialView = WM.getView();
   WM.setView(Box(Vector(5, 5), 10, 10));
 
@@ -33,8 +33,8 @@ void WorldManager_viewToWorld_test() {
   WM.setView(initialView);
 }
 
-array<int, 5> WorldManager_draw_test_drawCount;
-void WorldManager_draw_test() {
+array<int, 5> draw_drawCount;
+void draw() {
   WM.startUp();
 
   class TestObject : public Object {
@@ -45,19 +45,19 @@ void WorldManager_draw_test() {
     }
     auto draw() -> int override {
       // Count the number of drawings per altitude
-      WorldManager_draw_test_drawCount[getAltitude()]++;
+      draw_drawCount[getAltitude()]++;
       return Object::draw();
     }
   };
 
   // Initialize objects and results array
   for (int i = 0; i < 5; i++) {
-    WorldManager_draw_test_drawCount[i] = 0;
+    draw_drawCount[i] = 0;
     new TestObject(i);
   };
 
   WM.draw();
-  for (int i : WorldManager_draw_test_drawCount) {
+  for (int i : draw_drawCount) {
     assertEq("draws all objects", i, 1);
   }
 
@@ -66,13 +66,12 @@ void WorldManager_draw_test() {
 
   new TestObject(0, Vector(-2, -2));
   WM.draw();
-  assertEq("does not draw out of bounds", WorldManager_draw_test_drawCount[0],
-           1);
+  assertEq("does not draw out of bounds", draw_drawCount[0], 1);
 
   WM.shutDown();
 }
 
-void WorldManager_getCollisions_test() {
+void getCollisions() {
   WM.startUp();
 
   // Create test objects
@@ -111,7 +110,7 @@ void WorldManager_getCollisions_test() {
   WM.shutDown();
 }
 
-void WorldManager_moveObject_test() {
+void moveObject() {
   WM.startUp();
 
   // Create test objects
@@ -230,7 +229,7 @@ void WorldManager_moveObject_test() {
   WM.shutDown();
 }
 
-void WorldManager_viewFollowing_test() {
+void viewFollowing() {
   WM.startUp();
 
   auto subject = new Object;
@@ -271,15 +270,15 @@ void WorldManager_viewFollowing_test() {
   WM.shutDown();
 }
 
-bool WorldManager_outOfBounds_test_emitted = false;
-void WorldManager_outOfBounds_test() {
+bool outOfBounds_emitted = false;
+void outOfBounds() {
   WM.startUp();
 
   class TestObject : public Object {
    public:
     auto eventHandler(const Event* e) -> int override {
       if (e->getType() == OUT_EVENT) {
-        WorldManager_outOfBounds_test_emitted = true;
+        outOfBounds_emitted = true;
         return 1;
       }
       return 0;
@@ -293,17 +292,16 @@ void WorldManager_outOfBounds_test() {
 
   WM.moveObject(obj1, Vector(-2, 0));
 
-  assert("emits out of bounds event", WorldManager_outOfBounds_test_emitted);
+  assert("emits out of bounds event", outOfBounds_emitted);
 
-  WorldManager_outOfBounds_test_emitted = false;
+  outOfBounds_emitted = false;
   WM.moveObject(obj1, Vector(-3, 0));
-  assert("does not emit out of bounds if already out",
-         !WorldManager_outOfBounds_test_emitted);
+  assert("does not emit out of bounds if already out", !outOfBounds_emitted);
 
   WM.shutDown();
 }
 
-void WorldManager_objectManagement_test() {
+void objectManagement() {
   WM.startUp();
   array<Object*, 5> objects;
 
@@ -343,7 +341,7 @@ void WorldManager_objectManagement_test() {
   assertEq("removes everything", activeObjects.getCount(), 0);
 }
 
-void WorldManager_setters_test() {
+void setters() {
   WM.setView(Box(Vector(0, 0), 10, 10));
   assertEq("sets view", WM.getView(), Box(Vector(0, 0), 10, 10));
 
@@ -358,14 +356,15 @@ void WorldManager_setters_test() {
   assertEq("sets view", WM.getView(), Box(Vector(0, 0), 10, 10));
 }
 
-void WorldManager_test() {
-  test("setters", WorldManager_setters_test);
-  test("object management", WorldManager_objectManagement_test);
-  test("getCollisions", WorldManager_getCollisions_test);
-  test("moveObject", WorldManager_moveObject_test);
-  test("outOfBounds", WorldManager_outOfBounds_test);
-  test("draw", WorldManager_draw_test);
-  test("viewFollowing", WorldManager_viewFollowing_test);
-  test("worldToView", WorldManager_worldToView_test);
-  test("viewToWorld", WorldManager_worldToView_test);
+auto main() -> int {
+  test("setters", setters);
+  test("object management", objectManagement);
+  test("getCollisions", getCollisions);
+  test("moveObject", moveObject);
+  test("outOfBounds", outOfBounds);
+  test("draw", draw);
+  test("viewFollowing", viewFollowing);
+  test("worldToView", worldToView);
+  test("viewToWorld", worldToView);
+  return report();
 }

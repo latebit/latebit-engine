@@ -4,7 +4,7 @@
 
 using namespace lb;
 
-void ObjectList_fullList_test() {
+void fullList() {
   ObjectList subject;
   Object item;
 
@@ -18,7 +18,7 @@ void ObjectList_fullList_test() {
   assertFail("errors upon adding", subject.insert(&item));
 }
 
-void ObjectList_manyItems_test() {
+void manyItems() {
   ObjectList subject;
   Object item, item2, item3;
   subject.insert(&item);
@@ -34,7 +34,7 @@ void ObjectList_manyItems_test() {
   assert("is empty", subject.isEmpty());
 }
 
-void ObjectList_oneItem_test() {
+void oneItem() {
   ObjectList subject;
   Object o;
 
@@ -44,7 +44,7 @@ void ObjectList_oneItem_test() {
   assert("is not full", !subject.isFull());
 }
 
-void ObjectList_emptyList_test() {
+void emptyList() {
   ObjectList subject;
   Object o;
 
@@ -54,7 +54,7 @@ void ObjectList_emptyList_test() {
   assertFail("errors upon removing", subject.remove(&o));
 }
 
-void ObjectList_find_test() {
+void find() {
   ObjectList subject;
   Object item, item2;
   subject.insert(&item);
@@ -62,7 +62,7 @@ void ObjectList_find_test() {
   assertEq("does not find item", subject.find(&item2), -1);
 }
 
-void ObjectList_concat_test() {
+void concat() {
   ObjectList subject;
   ObjectList other;
   Object item, item2, item3;
@@ -76,11 +76,13 @@ void ObjectList_concat_test() {
   assertEq("finds item3", result.find(&item3), 2);
 }
 
-void ObjectList_test() {
-  test("empty list", ObjectList_emptyList_test);
-  test("one item", ObjectList_oneItem_test);
-  test("many items", ObjectList_manyItems_test);
-  test("full list", ObjectList_fullList_test);
-  test("find", ObjectList_find_test);
-  test("concat (+)", ObjectList_concat_test);
+auto main() -> int {
+  test("empty list", emptyList);
+  test("one item", oneItem);
+  test("many items", manyItems);
+  test("full list", fullList);
+  test("find", find);
+  test("concat (+)", concat);
+
+  return report();
 }

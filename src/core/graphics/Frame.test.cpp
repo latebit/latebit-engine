@@ -7,7 +7,7 @@
 
 using namespace lb;
 
-void Frame_test() {
+auto main() -> int {
   DM.startUp();
 
   test("constructor", []() {
@@ -48,4 +48,6 @@ void Frame_test() {
 
   DM.shutDown();
   DM.startUp();
+
+  return report();
 }

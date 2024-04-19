@@ -2,7 +2,6 @@
 
 #include <array>
 
-#include "../../../test/lib/run.h"
 #include "../../../test/lib/test.h"
 #include "sid/synth/config.h"
 
@@ -151,17 +150,15 @@ void oscillations() {
 }
 
 auto main() -> int {
-  return run([]() -> void {
-    suite("Oscillator", []() {
-      test("init", init);
-      test("pitch", pitch);
-      test("effect", effect);
-      test("oscillations", oscillations);
-    });
+  suite("Oscillator", []() {
+    test("init", init);
+    test("pitch", pitch);
+    test("effect", effect);
+    test("oscillations", oscillations);
+  });
 
-    suite("Effect", []() {
-      test("frequency", frequency);
-      test("volume", volume);
-    });
+  suite("Effect", []() {
+    test("frequency", frequency);
+    test("volume", volume);
   });
 }

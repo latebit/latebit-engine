@@ -4,7 +4,7 @@
 
 #include "../../../test/lib/test.h"
 
-void Vector_getMagnitude_test() {
+void getMagnitude() {
   Vector null;
   Vector unary(1);
   Vector another(1, 1);
@@ -14,7 +14,7 @@ void Vector_getMagnitude_test() {
   assertEq("has correct magnitude", another.getMagnitude(), std::sqrt(2));
 };
 
-void Vector_scale_test() {
+void scale() {
   Vector subject;
   subject.scale(10);
   assertEq("scales nothing", subject.getMagnitude(), 0.0);
@@ -25,7 +25,7 @@ void Vector_scale_test() {
   assertEq("scales correctly", subject.getMagnitude(), std::sqrt(8));
 }
 
-void Vector_distance_test() {
+void distance() {
   Vector a;
   Vector b(1, 0);
   assertEq("vertical distance", a.distance(&b), 1.0);
@@ -35,7 +35,7 @@ void Vector_distance_test() {
   assertEq("other distance", a.distance(&b), std::sqrt(2));
 }
 
-void Vector_normalize_test() {
+void normalize() {
   Vector subject;
   subject.normalize();
 
@@ -46,7 +46,7 @@ void Vector_normalize_test() {
   assertEq("has length 1", subject.getMagnitude(), 1.0);
 }
 
-void Vector_eq_test() {
+void eq() {
   Vector a, b;
   assert("compares same vector", a == b, "wanted true got false");
 
@@ -54,7 +54,7 @@ void Vector_eq_test() {
   assert("compares different vectors", !(a == b), "wanted true got false");
 }
 
-void Vector_plus_test() {
+void plusOperator() {
   Vector a, b, got, want;
 
   got = a + b;
@@ -71,7 +71,7 @@ void Vector_plus_test() {
   assertEq("handles any other vector", got, want);
 }
 
-void Vector_not_test() {
+void notOperator() {
   Vector subject;
   assert("zero vector", !subject);
 
@@ -79,12 +79,13 @@ void Vector_not_test() {
   assert("non-zero vector", !!subject);
 }
 
-void Vector_test() {
-  test("getMagnitude", Vector_getMagnitude_test);
-  test("scale", Vector_scale_test);
-  test("distance", Vector_distance_test);
-  test("normalize", Vector_normalize_test);
-  test("equals (==)", Vector_eq_test);
-  test("plus (+)", Vector_plus_test);
-  test("not (!)", Vector_not_test);
+auto main() -> int {
+  test("getMagnitude", getMagnitude);
+  test("scale", scale);
+  test("distance", distance);
+  test("normalize", normalize);
+  test("equals (==)", eq);
+  test("plus (+)", plusOperator);
+  test("not (!)", notOperator);
+  return report();
 }

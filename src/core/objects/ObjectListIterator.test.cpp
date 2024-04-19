@@ -3,7 +3,7 @@
 #include "../../../test/lib/test.h"
 #include "core/objects/Object.h"
 
-void ObjectListIterator_iteration_test() {
+void iteration() {
   ObjectList list;
   Object obj0;
   Object obj1;
@@ -34,7 +34,7 @@ void ObjectListIterator_iteration_test() {
            obj0.getId());
 }
 
-void ObjectListIterator_emptyList_test() {
+void emptyList() {
   ObjectList list;
   ObjectListIterator subject(&list);
 
@@ -44,7 +44,8 @@ void ObjectListIterator_emptyList_test() {
   assert("returns null pointer", subject.currentObject() == nullptr);
 }
 
-void ObjectListIterator_test() {
-  test("iteration", ObjectListIterator_iteration_test);
-  test("empty list", ObjectListIterator_emptyList_test);
+auto main() -> int {
+  test("iteration", iteration);
+  test("empty list", emptyList);
+  return report();
 }

@@ -5,7 +5,7 @@
 
 using namespace lb;
 
-void SceneGraph_insertObject_test() {
+void insertObject() {
   SceneGraph sg;
   Object obj;
   Object nonSolidObj;
@@ -25,7 +25,7 @@ void SceneGraph_insertObject_test() {
            sg.getSolidObjects().getCount(), 1);
 }
 
-void SceneGraph_removeObject_test() {
+void removeObject() {
   SceneGraph sg;
   Object obj;
 
@@ -42,7 +42,7 @@ void SceneGraph_removeObject_test() {
            sg.getVisibleObjects(obj.getAltitude()).getCount(), 0);
 }
 
-void SceneGraph_getActiveObjects_test() {
+void getActiveObjects() {
   SceneGraph sg;
   Object obj1, obj2, obj3, obj4;
   obj2.setActive(false);
@@ -64,7 +64,7 @@ void SceneGraph_getActiveObjects_test() {
   assert("contains object 4", objects.find(&obj4) > -1);
 }
 
-void SceneGraph_getInactiveObjects_test() {
+void getInactiveObjects() {
   SceneGraph sg;
   Object obj1, obj2, obj3, obj4;
   obj2.setActive(false);
@@ -87,7 +87,7 @@ void SceneGraph_getInactiveObjects_test() {
   assertEq("does not contain object 4", inactiveObjects.find(&obj4), -1);
 }
 
-void SceneGraph_getSolidObjects_test() {
+void getSolidObjects() {
   SceneGraph sg;
   Object obj1, obj2, obj3;
   obj2.setSolidness(SPECTRAL);
@@ -108,7 +108,7 @@ void SceneGraph_getSolidObjects_test() {
   assert("contains solid object 3", solidObjects.find(&obj3) > -1);
 }
 
-void SceneGraph_getVisibleObjects_test() {
+void getVisibleObjects() {
   SceneGraph sg;
   Object obj1, obj2, obj3;
 
@@ -132,7 +132,7 @@ void SceneGraph_getVisibleObjects_test() {
   assert("contains visible object 3", visibleObjects.find(&obj3) > -1);
 }
 
-void SceneGraph_setSolidness_test() {
+void setSolidness() {
   SceneGraph sg;
   Object obj;
 
@@ -156,7 +156,7 @@ void SceneGraph_setSolidness_test() {
            sg.getSolidObjects().getCount(), 0);
 }
 
-void SceneGraph_setAltitude_test() {
+void setAltitude() {
   SceneGraph sg;
   Object obj;
 
@@ -180,7 +180,7 @@ void SceneGraph_setAltitude_test() {
            sg.getVisibleObjects(-1).getCount(), 0);
 }
 
-void SceneGraph_setVisible_test() {
+void setVisible() {
   SceneGraph sg;
   Object obj;
 
@@ -197,7 +197,7 @@ void SceneGraph_setVisible_test() {
            sg.getVisibleObjects(obj.getAltitude()).getCount(), 0);
 }
 
-void SceneGraph_setActive_test() {
+void setActive() {
   SceneGraph sg;
   Object obj;
 
@@ -222,15 +222,17 @@ void SceneGraph_setActive_test() {
            sg.getSolidObjects().find(&obj), -1);
 }
 
-void SceneGraph_test() {
-  test("insertObject", SceneGraph_insertObject_test);
-  test("removeObject", SceneGraph_removeObject_test);
-  test("getActiveObjects", SceneGraph_getActiveObjects_test);
-  test("getInactiveObjects", SceneGraph_getInactiveObjects_test);
-  test("getSolidObjects", SceneGraph_getSolidObjects_test);
-  test("getVisibleObjects", SceneGraph_getVisibleObjects_test);
-  test("setSolidness", SceneGraph_setSolidness_test);
-  test("setAltitude", SceneGraph_setAltitude_test);
-  test("setVisible", SceneGraph_setVisible_test);
-  test("setActive", SceneGraph_setActive_test);
+auto main() -> int {
+  test("insertObject", insertObject);
+  test("removeObject", removeObject);
+  test("getActiveObjects", getActiveObjects);
+  test("getInactiveObjects", getInactiveObjects);
+  test("getSolidObjects", getSolidObjects);
+  test("getVisibleObjects", getVisibleObjects);
+  test("setSolidness", setSolidness);
+  test("setAltitude", setAltitude);
+  test("setVisible", setVisible);
+  test("setActive", setActive);
+
+  return report();
 }

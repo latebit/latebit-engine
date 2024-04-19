@@ -7,7 +7,7 @@
 using namespace lb;
 using namespace std;
 
-void Sprite_constructor_test() {
+void constructor() {
   Sprite sprite;
 
   // Test default values
@@ -25,7 +25,7 @@ void Sprite_constructor_test() {
   assert("clones itself", sprite2 == sprite3);
 }
 
-void Sprite_frame_test() {
+void frame() {
   Sprite sprite("s", 1, 1, 1, 1);
   Frame frame1(1, 1, {Color::RED});
   Frame frame2(1, 1, {Color::BLUE});
@@ -48,7 +48,7 @@ void Sprite_frame_test() {
          Frame() == sprite.getFrame(10));
 }
 
-void Sprite_draw_test() {
+void draw() {
   Sprite sprite("s", 1, 1, 1, 1);
   Frame frame(1, 1, {Color::RED});
 
@@ -63,7 +63,7 @@ void Sprite_draw_test() {
              sprite.draw(10, Vector(0, 0)));
 }
 
-void Sprite_test() {
+auto main() -> int {
   DM.startUp();
   test("setters", []() {
     Sprite sprite("s", 1, 1, 1, 1);
@@ -77,9 +77,9 @@ void Sprite_test() {
     assertEq("setSlowdown sets slowdown", sprite.getSlowdown(), 5);
   });
 
-  test("constructor", Sprite_constructor_test);
-  test("frame", Sprite_frame_test);
-  test("draw", Sprite_draw_test);
+  test("constructor", constructor);
+  test("frame", frame);
+  test("draw", draw);
   test("equals (==)", []() {
     Sprite sprite1("s", 1, 1, 1, 1);
     Sprite sprite2("s", 1, 1, 1, 1);
@@ -97,5 +97,5 @@ void Sprite_test() {
     assert("not equals empty sprite", !(sprite1 == Sprite()));
   });
   DM.shutDown();
-  DM.startUp();
+  return report();
 }

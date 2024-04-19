@@ -1,6 +1,5 @@
 #include "track.h"
 
-#include "../../../test/lib/run.h"
 #include "../../../test/lib/test.h"
 #include "sid/synth/oscillator.h"
 
@@ -32,5 +31,6 @@ void notes() {
 }
 
 auto main() -> int {
-  return run([]() { test("sid/synth/track", notes); });
+  test("sid/synth/track", notes);
+  return report();
 }

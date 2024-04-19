@@ -9,7 +9,7 @@ const string Manager_test_evt = "TestEvent";
 const string Manager_test_wrongEvt = "TestEvent2";
 
 int Manager_test_emittedCount = 0;
-void Manager_test() {
+auto main() -> int {
   class TestManager : public Manager {
    public:
     TestManager() { this->setType("TestType"); };
@@ -78,4 +78,6 @@ void Manager_test() {
     assert("returns false for wrong events",
            !manager.isValid(Manager_test_wrongEvt));
   });
+
+  return report();
 }

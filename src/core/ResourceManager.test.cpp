@@ -1,6 +1,6 @@
 #include "core/ResourceManager.h"
 
-#include "../../../test/lib/test.h"
+#include "../../test/lib/test.h"
 #include "core/audio/AudioManager.h"
 #include "core/audio/Music.h"
 #include "core/audio/Sound.h"
@@ -8,7 +8,7 @@
 using namespace lb;
 using namespace std;
 
-void ResourceManager_test() {
+auto main() -> int {
   AM.startUp();
   RM.startUp();
 
@@ -143,5 +143,5 @@ void ResourceManager_test() {
     assert("returns null sound shutDown", sound == nullptr);
   });
 
-  AM.shutDown();
+  return report();
 }

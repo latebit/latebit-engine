@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "../../../test/lib/run.h"
 #include "../../../test/lib/test.h"
 #include "sid/synth/tune.h"
 
@@ -88,8 +87,7 @@ void getSamples() {
 }
 
 auto main() -> int {
-  return run([]() {
-    test("envelope", envelope);
-    test("getSamples", getSamples);
-  });
+  test("envelope", envelope);
+  test("getSamples", getSamples);
+  return report();
 }

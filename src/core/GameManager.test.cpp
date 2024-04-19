@@ -2,13 +2,13 @@
 
 #include <cstdio>
 
-#include "../../../test/lib/test.h"
+#include "../../test/lib/test.h"
 #include "core/graphics/DisplayManager.h"
 #include "core/objects/WorldManager.h"
 
 using namespace lb;
 
-void GameManager_test() {
+auto main() -> int {
   GM.startUp();
   assert("starts up", GM.isStarted());
 
@@ -24,4 +24,6 @@ void GameManager_test() {
   });
 
   GM.shutDown();
+
+  return report();
 }

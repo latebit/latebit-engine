@@ -1,6 +1,6 @@
 #include "core/graphics/Animation.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 #include "core/ResourceManager.h"
 #include "core/geometry/Box.h"
 #include "core/geometry/Vector.h"
@@ -9,9 +9,9 @@
 
 using namespace std;
 
-void setSprite_test() {
+void setSprite() {
   Animation animation;
-  RM.loadTextSprite("test/fixtures/correct.txt", "sprite");
+  RM.loadTextSprite("../test/fixtures/correct.txt", "sprite");
   Sprite *sprite = RM.getSprite("sprite");
   animation.setIndex(1);
   animation.setSlowdownCount(1);
@@ -22,26 +22,26 @@ void setSprite_test() {
   assertEq("resets slowdown count", animation.getSlowdownCount(), 0);
 }
 
-void setName_test() {
+void setName() {
   Animation animation;
   animation.setName("animation");
   assertEq("sets name", animation.getName(), "animation");
 }
 
-void setIndex_test() {
+void setIndex() {
   Animation animation;
   animation.setIndex(5);
   assertEq("sets index", animation.getIndex(), 5);
 }
 
-void setSlowdownCount_test() {
+void setSlowdownCount() {
   Animation animation;
   animation.setSlowdownCount(3);
   assertEq("sets slowdown count", animation.getSlowdownCount(), 3);
 }
 
-void draw_test() {
-  auto filename = "test/fixtures/correct.txt";
+void draw() {
+  auto filename = "../test/fixtures/correct.txt";
   auto label = "sprite";
 
   RM.loadTextSprite(filename, label);
@@ -68,12 +68,12 @@ void draw_test() {
   RM.startUp();
 }
 
-void getBox_test() {
+void getBox() {
   auto animation = Animation();
   auto unitBox = Box(Vector(), 1.0, 1.0);
   assertEq("returns unit box", animation.getBox(), unitBox);
 
-  auto filename = "test/fixtures/correct.txt";
+  auto filename = "../test/fixtures/correct.txt";
   auto label = "label";
   RM.loadTextSprite(filename, label);
   Sprite *sprite = RM.getSprite(label);
@@ -84,17 +84,21 @@ void getBox_test() {
   assertEq("returns correct box", animBox, want);
 }
 
-void Animation_test() {
+auto main() -> int {
   DM.startUp();
   RM.startUp();
-  test("setSprite", setSprite_test);
-  test("setName", setName_test);
-  test("setIndex", setIndex_test);
-  test("setSlowdownCount", setSlowdownCount_test);
-  test("draw", draw_test);
-  test("getBox", getBox_test);
+
+  spec(setSprite);
+  spec(setName);
+  spec(setIndex);
+  spec(setSlowdownCount);
+  spec(draw);
+  spec(getBox);
+
   RM.shutDown();
   RM.startUp();
   DM.shutDown();
   DM.startUp();
+
+  return report();
 }

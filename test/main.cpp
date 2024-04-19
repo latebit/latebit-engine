@@ -1,6 +1,6 @@
 #include "lib/run.h"
 #include "lib/test.h"
-#include "suites/Animation_test.cpp"
+// #include "suites/Animation_test.cpp"
 #include "suites/Box_test.cpp"
 #include "suites/Colors_test.cpp"
 #include "suites/Configuration_test.cpp"
@@ -30,7 +30,7 @@
 auto main() -> int {
   Log.setLevel(lb::DEBUG);
   return run([]() -> void {
-    suite("Animation", Animation_test);
+    // suite("Animation", Animation_test);
     suite("Box", Box_test);
     suite("Colors", Colors_test);
     suite("Configuration", Configuration_test);

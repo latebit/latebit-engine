@@ -2,7 +2,6 @@
 
 #include <sstream>
 
-#include "../../../test/lib/run.h"
 #include "../../../test/lib/test.h"
 #include "sid/synth/track.h"
 
@@ -119,21 +118,19 @@ void invalid() {
 }
 
 auto main() -> int {
-  return run([]() {
-    suite("Symbol Parser", []() {
-      Note n = toNote("C#51F1");
-      assertEq("correct pitch", n.getPitch(), 61);
-      assertEq("correct wave", n.getWave(), WaveType::SAWTOOTH);
-      assertEq("correct volume", n.getVolume(), 1.0);
-      assertEq("correct effect", n.getEffect(), EffectType::DROP);
+  Note n = toNote("C#51F1");
+  assertEq("correct pitch", n.getPitch(), 61);
+  assertEq("correct wave", n.getWave(), WaveType::SAWTOOTH);
+  assertEq("correct volume", n.getVolume(), 1.0);
+  assertEq("correct effect", n.getEffect(), EffectType::DROP);
 
-      test("default values", defaultValues);
-      test("alterations", alterations);
-      test("octaves", octaves);
-      test("waves", waves);
-      test("volume", volume);
-      test("effects", effects);
-      test("invalid", invalid);
-    });
-  });
+  test("default values", defaultValues);
+  test("alterations", alterations);
+  test("octaves", octaves);
+  test("waves", waves);
+  test("volume", volume);
+  test("effects", effects);
+  test("invalid", invalid);
+
+  return report();
 }

@@ -3,10 +3,8 @@
 #include <memory>
 #include <sstream>
 
-#include "../../../test/lib/run.h"
 #include "../../../test/lib/test.h"
 #include "sid/synth/oscillator.h"
-#include "utils/Logger.h"
 
 using namespace sid;
 
@@ -368,8 +366,7 @@ void header() {
 }
 
 auto main() -> int {
-  Log.setDestination(lb::STDOUT);
-  return run([]() {
+  suite("TuneParser", []() {
     test("simplest", simplest);
     test("withComments", withComments);
     test("differentLengths", differentLengths);
@@ -378,4 +375,6 @@ auto main() -> int {
     test("brokenHeader", brokenHeader);
     test("header", header);
   });
+
+  return report();
 }

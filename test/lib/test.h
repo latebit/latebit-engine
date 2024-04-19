@@ -35,9 +35,3 @@ auto test(string name, void (*test)()) -> void;
 // It returns the number of failed tests and can therefore be used as status
 // code at the end of an execution to, for example, fail CI
 auto report() -> int;
-
-#define spec(func)           \
-  do {                       \
-    printf("  %s\n", #func); \
-    func();                  \
-  } while (0)

@@ -88,12 +88,12 @@ auto main() -> int {
   DM.startUp();
   RM.startUp();
 
-  spec(setSprite);
-  spec(setName);
-  spec(setIndex);
-  spec(setSlowdownCount);
-  spec(draw);
-  spec(getBox);
+  test("setSprite", setSprite);
+  test("setName", setName);
+  test("setIndex", setIndex);
+  test("setSlowdownCount", setSlowdownCount);
+  test("draw", draw);
+  test("getBox", getBox);
 
   RM.shutDown();
   RM.startUp();

@@ -1,6 +1,6 @@
 #include "core/audio/Music.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 #include "core/audio/AudioManager.h"
 
 void Music_test() {

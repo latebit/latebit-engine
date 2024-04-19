@@ -1,6 +1,6 @@
 #include "core/graphics/SpriteParser.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 #include "core/graphics/Colors.h"
 
 using namespace lb;

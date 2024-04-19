@@ -1,6 +1,6 @@
 #include "core/ResourceManager.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 #include "core/audio/AudioManager.h"
 #include "core/audio/Music.h"
 #include "core/audio/Sound.h"

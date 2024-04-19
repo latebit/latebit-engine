@@ -1,10 +1,10 @@
 #include "core/events/EventMouse.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 
 using namespace lb;
 
-void EventMouse_test() {
+auto main() -> int {
   test("constructor", []() {
     EventMouse event;
 
@@ -36,4 +36,6 @@ void EventMouse_test() {
     assertEq("sets correct mouse position", event.getMousePosition(),
              Vector(3, 4));
   });
+
+  return report();
 }

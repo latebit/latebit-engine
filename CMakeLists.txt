@@ -50,7 +50,6 @@ foreach(test_file ${TEST_FILES})
   add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 endforeach()
 
-
 set(ALL_FILES ${SRC_FILES} ${TEST_LIB_FILES} ${TEST_SUITE_FILES} ${INCLUDE_FILES})
 
 # This allows clean includes (such as "core/graphics/..." instead of "../src/core/...")

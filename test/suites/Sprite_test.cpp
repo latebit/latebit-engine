@@ -1,6 +1,6 @@
 #include "core/graphics/Sprite.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 #include "core/graphics/Colors.h"
 #include "core/graphics/DisplayManager.h"
 

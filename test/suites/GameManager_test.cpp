@@ -2,7 +2,7 @@
 
 #include <cstdio>
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 #include "core/graphics/DisplayManager.h"
 #include "core/objects/WorldManager.h"
 

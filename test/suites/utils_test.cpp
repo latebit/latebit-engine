@@ -1,6 +1,6 @@
 #include "core/utils/utils.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 
 void utils_match_test() {
   Vector v1(1, 2);

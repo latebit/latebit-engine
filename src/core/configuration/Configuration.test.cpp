@@ -1,8 +1,8 @@
 #include "core/configuration/Configuration.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 
-void Configuration_test() {
+auto main() -> int {
   test("has default values", []() -> void {
     assertEq("parses max_frame_rate", Configuration::getMaxFrameRate(), 60);
 
@@ -12,7 +12,7 @@ void Configuration_test() {
 
   test("parses a broken file without changing values", []() -> void {
     assertOk("does not fail",
-             Configuration::fromFile("test/fixtures/broken.cfg"));
+             Configuration::fromFile("../test/fixtures/broken.cfg"));
 
     assertEq("parses max_frame_rate", Configuration::getMaxFrameRate(), 60);
 
@@ -21,7 +21,7 @@ void Configuration_test() {
   });
 
   test("parses a correct configuration file", []() -> void {
-    Configuration::fromFile("test/fixtures/latebit.cfg");
+    Configuration::fromFile("../test/fixtures/latebit.cfg");
 
     assertEq("parses max_frame_rate", Configuration::getMaxFrameRate(), 30);
 
@@ -29,5 +29,5 @@ void Configuration_test() {
              Configuration::getInitialWindowTitle(), "My Game");
   });
 
-  Configuration::reset();
+  return report();
 }

@@ -1,8 +1,8 @@
 #include "core/events/EventKeyboard.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 
-void EventKeyboard_test() {
+auto main() -> int {
   test("constructor", []() {
     EventKeyboard event;
     assertEq("sets default key", event.getKey(), Keyboard::UNDEFINED_KEY);
@@ -28,4 +28,6 @@ void EventKeyboard_test() {
     assertEq("sets correct keyboard action", event.getKeyboardAction(),
              KEY_PRESSED);
   });
+
+  return report();
 }

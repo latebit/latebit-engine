@@ -366,15 +366,13 @@ void header() {
 }
 
 auto main() -> int {
-  suite("TuneParser", []() {
-    test("simplest", simplest);
-    test("withComments", withComments);
-    test("differentLengths", differentLengths);
-    test("rests", rests);
-    test("continues", continues);
-    test("brokenHeader", brokenHeader);
-    test("header", header);
-  });
+  test("simplest", simplest);
+  test("withComments", withComments);
+  test("differentLengths", differentLengths);
+  test("rests", rests);
+  test("continues", continues);
+  test("brokenHeader", brokenHeader);
+  test("header", header);
 
   return report();
 }

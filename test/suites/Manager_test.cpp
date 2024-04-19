@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 #include "core/objects/Object.h"
 
 const string Manager_test_evt = "TestEvent";

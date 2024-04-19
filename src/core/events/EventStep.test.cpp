@@ -1,10 +1,10 @@
 #include "core/events/EventStep.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 
 using namespace lb;
 
-void EventStep_test() {
+auto main() -> int {
   EventStep subject;
   assertEq("is initialised with type", subject.getType(), STEP_EVENT);
 
@@ -13,4 +13,5 @@ void EventStep_test() {
 
   subject.setStepCount(2);
   assertEq("has correct count", subject.getStepCount(), 2);
+  return report();
 }

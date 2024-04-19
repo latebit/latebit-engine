@@ -1,12 +1,13 @@
 #include "core/events/Event.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 
 using namespace lb;
 
-void Event_test() {
+auto main() -> int {
   Event subject;
 
   subject.setType("type");
   assertEq("updates type", subject.getType(), "type");
+  return report();
 }

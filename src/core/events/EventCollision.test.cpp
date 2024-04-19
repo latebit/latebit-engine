@@ -1,10 +1,10 @@
 #include "core/events/EventCollision.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 
 using namespace lb;
 
-void EventCollision_test() {
+auto main() -> int {
   EventCollision subject;
   assert("sets default object1", subject.getFirstObject() == nullptr);
   assert("sets default object2", subject.getSecondObject() == nullptr);
@@ -28,4 +28,6 @@ void EventCollision_test() {
   Vector pos2(2, 2);
   subject.setPosition(pos2);
   assertEq("sets correct position", subject.getPos(), pos2);
+
+  return report();
 }

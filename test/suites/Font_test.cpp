@@ -1,6 +1,6 @@
 #include "core/graphics/Font.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 
 using namespace lb;
 

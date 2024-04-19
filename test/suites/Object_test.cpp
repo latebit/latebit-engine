@@ -3,7 +3,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 #include "core/GameManager.h"
 #include "core/ResourceManager.h"
 #include "core/events/Event.h"

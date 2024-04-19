@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 
 void Vector_getMagnitude_test() {
   Vector null;

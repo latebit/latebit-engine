@@ -1,6 +1,6 @@
 #include "core/objects/SceneGraph.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 #include "core/objects/Object.h"
 
 using namespace lb;

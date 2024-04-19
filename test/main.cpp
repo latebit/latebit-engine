@@ -30,15 +30,6 @@
 auto main() -> int {
   Log.setLevel(lb::DEBUG);
   return run([]() -> void {
-    // suite("Animation", Animation_test);
-    suite("Box", Box_test);
-    suite("Colors", Colors_test);
-    suite("Configuration", Configuration_test);
-    suite("Event", Event_test);
-    suite("EventCollision", EventCollision_test);
-    suite("EventKeyboard", EventKeyboard_test);
-    suite("EventOut", EventOut_test);
-    suite("EventStep", EventStep_test);
     suite("Font", Font_test);
     suite("Frame", Frame_test);
     suite("GameManager", GameManager_test);

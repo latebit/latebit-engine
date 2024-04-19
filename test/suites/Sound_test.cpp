@@ -1,6 +1,6 @@
 #include "core/audio/Sound.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 #include "core/audio/AudioManager.h"
 
 void Sound_test() {

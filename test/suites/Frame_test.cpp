@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 #include "core/graphics/DisplayManager.h"
 
 using namespace lb;

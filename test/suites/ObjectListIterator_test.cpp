@@ -1,6 +1,6 @@
 #include "core/objects/ObjectListIterator.h"
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 #include "core/objects/Object.h"
 
 void ObjectListIterator_iteration_test() {

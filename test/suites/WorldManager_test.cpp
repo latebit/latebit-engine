@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "../lib/test.h"
+#include "../../../test/lib/test.h"
 #include "core/events/EventOut.h"
 #include "core/geometry/Box.h"
 #include "core/geometry/Vector.h"

@@ -112,3 +112,18 @@ auto test(std::string name, void (*test)()) -> void {
   std::cout << "  " + name + "\n";
   test();
 }
+
+auto report() -> int {
+  auto failed = getFailedAssertions();
+  auto total = getAssertions();
+
+  if (failed == 0) {
+    std::cout << std::endl << "Success! All " + total + " assertions passed.";
+  } else {
+    std::cout << std::endl
+              << "Failure. " + std::to_string(failed) + " failed tests."
+              << std::endl;
+  }
+
+  return failed;
+}

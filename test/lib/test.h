@@ -30,3 +30,14 @@ auto assertFail(string name, int got) -> int;
 auto suite(string name, void (*test)()) -> void;
 
 auto test(string name, void (*test)()) -> void;
+
+// Report test stats at the end of a run
+// It returns the number of failed tests and can therefore be used as status
+// code at the end of an execution to, for example, fail CI
+auto report() -> int;
+
+#define spec(func)           \
+  do {                       \
+    printf("  %s\n", #func); \
+    func();                  \
+  } while (0)

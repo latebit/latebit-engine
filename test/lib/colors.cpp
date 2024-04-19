@@ -1,12 +1,20 @@
 #include "colors.h"
 
-#include <iostream>
+auto supportsEscapeSequences() -> bool {
+  const char* term = std::getenv("TERM");
+  if (term == nullptr) {
+    return false;
+  }
 
-bool supportsEscapeSequences =
-  (std::cout << "\033[31m\033[0m", std::cout.flush(), true);
+  std::string termStr(term);
+  return termStr == "xterm" || termStr == "xterm-256color" ||
+         termStr == "screen" || termStr == "screen-256color" ||
+         termStr == "tmux" || termStr == "tmux-256color" || termStr == "rxvt" ||
+         termStr == "rxvt-unicode" || termStr == "rxvt-unicode-256color";
+}
 
 auto color(std::string color, std::string s) -> std::string {
-  if (supportsEscapeSequences) {
+  if (supportsEscapeSequences()) {
     return "\033[" + color + "m" + s + "\033[0m";
   }
 

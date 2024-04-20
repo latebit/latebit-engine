@@ -16,8 +16,8 @@ file(GLOB SRC ${CMAKE_SOURCE_DIR}/src)
 include_directories(${SRC})
 
 add_subdirectory(src/utils)
-add_subdirectory(src/core)
 add_subdirectory(src/sid)
+add_subdirectory(src/core)
 
 add_custom_target(format
 	COMMAND clang-format -n --Werror -ferror-limit=1 ${ALL_FILES}

@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.28.1)
 
 # Project settings
 project(latebit VERSION ${VERSION} LANGUAGES C CXX)
-
 add_package(core)
 add_package(utils)
 

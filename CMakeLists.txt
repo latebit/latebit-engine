@@ -6,18 +6,15 @@ include(cmake/Testing.cmake)
 include(cmake/Utils.cmake)
 include(cmake/Package.cmake)
 
-
-set(SRC ${CMAKE_SOURCE_DIR}/src)
+set(SRC ${CMAKE_SOURCE_DIR}/latebit)
 file(GLOB_RECURSE ALL_FILES "${SRC}/*")
 
-file(GLOB SRC ${CMAKE_SOURCE_DIR}/src)
 # This allows clean includes (such as "core/graphics/..." instead of "../src/core/...")
-# TODO: this also causes _all_ the headers to be part of each package
-include_directories(${SRC})
+include_directories(${CMAKE_SOURCE_DIR})
 
-add_subdirectory(src/utils)
-add_subdirectory(src/sid)
-add_subdirectory(src/core)
+add_subdirectory(latebit/utils)
+add_subdirectory(latebit/sid)
+add_subdirectory(latebit/core)
 
 add_custom_target(format
 	COMMAND clang-format -n --Werror -ferror-limit=1 ${ALL_FILES}

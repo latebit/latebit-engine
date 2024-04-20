@@ -4,10 +4,10 @@
 #include <regex>
 
 #include "colors.h"
-#include "core/geometry/Vector.h"
-#include "core/utils/Clock.h"
+#include "latebit/core/geometry/Vector.h"
+#include "latebit/core/utils/Clock.h"
+#include "latebit/utils/Math.h"
 #include "test.h"
-#include "utils/Math.h"
 
 using namespace std;
 using namespace lb;

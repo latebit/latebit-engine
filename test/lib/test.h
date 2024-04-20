@@ -9,6 +9,8 @@
 using namespace lb;
 using namespace std;
 
+const string FIXTURES_FOLDER = "../../../test/fixtures";
+
 auto getAssertions() -> string;
 auto getFailedAssertions() -> int;
 auto getClock() -> Clock;

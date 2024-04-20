@@ -61,8 +61,8 @@ auto Envelope::getState() const -> EnvelopeState { return this->state; }
 auto Envelope::getSustainLevel() const -> float { return this->sustainLevel; }
 
 void Sequencer::setNoteForTrack(Note n, int track) {
-  auto o = oscillators.at(track).get();
-  auto e = envelopes.at(track).get();
+  auto& o = oscillators.at(track);
+  auto& e = envelopes.at(track);
 
   o->setPitch(n.getPitch());
   o->setVolume(n.getVolume());
@@ -170,15 +170,15 @@ auto Sequencer::getNextSample() -> float {
   // Plays the current sample in every channel
   for (int channel = 0; channel < this->tune->getTracksCount(); channel++) {
     shared_ptr<Track> track = this->tune->getTrack(channel);
-    auto envelope = this->envelopes[channel].get();
-    auto oscillator = this->oscillators[channel].get();
+    auto& envelope = this->envelopes[channel];
+    auto& oscillator = this->oscillators[channel];
 
     int currentNoteIndex = this->currentNoteIndex[channel];
     int newNoteIndex = (currentNoteIndex + 1) % track->size();
 
     Note current = track->at(currentNoteIndex);
     Note next = track->at(newNoteIndex);
-    bool isChangingNotes = next.isSame(current);
+    bool isChangingNotes = !next.isSame(current);
 
     if (shouldStopEnvelope && isChangingNotes) {
       envelope->release();
@@ -190,8 +190,6 @@ auto Sequencer::getNextSample() -> float {
       if (isChangingNotes) {
         this->setNoteForTrack(next, channel);
       }
-
-      current = next;
     }
 
     result += oscillator->oscillate() * envelope->process();
@@ -219,8 +217,12 @@ auto Sequencer::getCurrentNoteIndex(int trackIndex) const -> int {
 auto Sequencer::getSamplesPerTick() const -> int {
   return this->samplesPerTick;
 }
-auto Sequencer::getEnvelope(int trackIndex) const -> const Envelope* {
-  return this->envelopes[trackIndex].get();
+auto Sequencer::getEnvelope(int trackIndex) const
+  -> const unique_ptr<Envelope>& {
+  return this->envelopes[trackIndex];
 }
+
+auto Sequencer::setLoop(bool loop) -> void { this->loop = loop; }
+auto Sequencer::isLooping() const -> bool { return this->loop; }
 
 }  // namespace sid

@@ -17,7 +17,7 @@ auto main() -> int {
 
   test("sprites", []() {
     string label = "test_sprite";
-    string filename = "test/fixtures/correct.txt";
+    string filename = FIXTURES_FOLDER + "/correct.txt";
 
     assertOk("loads sprite successfully", RM.loadTextSprite(filename, label));
     assertFail("does not load same label", RM.loadTextSprite(filename, label));
@@ -36,7 +36,7 @@ auto main() -> int {
     assertFail("does not load missing file",
                RM.loadTextSprite("does-not-exist", label));
 
-    string anotherFile = "test/fixtures/missing-frame.txt";
+    string anotherFile = FIXTURES_FOLDER + "/missing-frame.txt";
     assertFail("does not load on invalid file",
                RM.loadTextSprite(anotherFile, label));
 
@@ -56,7 +56,7 @@ auto main() -> int {
 
   test("music", []() {
     string label = "test_music";
-    string filename = "test/fixtures/sound.wav";
+    string filename = FIXTURES_FOLDER + "/sound.wav";
 
     assertOk("loads music successfully", RM.loadMusic(filename, label));
     assertFail("does not load same label", RM.loadMusic(filename, label));
@@ -75,7 +75,7 @@ auto main() -> int {
     assertFail("does not load missing file",
                RM.loadMusic("does-not-exist", label));
 
-    string anotherFile = "test/fixtures/missing-frame.txt";
+    string anotherFile = FIXTURES_FOLDER + "/missing-frame.txt";
     assertFail("does not load on invalid file",
                RM.loadMusic(anotherFile, label));
 
@@ -95,7 +95,7 @@ auto main() -> int {
 
   test("sound", []() {
     string label = "test_sound";
-    string filename = "test/fixtures/sound.wav";
+    string filename = FIXTURES_FOLDER + "/sound.wav";
 
     assertOk("loads sound successfully", RM.loadSound(filename, label));
     assertFail("does not load same label", RM.loadSound(filename, label));
@@ -114,7 +114,7 @@ auto main() -> int {
     assertFail("does not load missing file",
                RM.loadSound("does-not-exist", label));
 
-    string anotherFile = "test/fixtures/missing-frame.txt";
+    string anotherFile = FIXTURES_FOLDER + "/missing-frame.txt";
     assertFail("does not load on invalid file",
                RM.loadSound(anotherFile, label));
 

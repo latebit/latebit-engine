@@ -131,11 +131,18 @@ class Sequencer {
   // Returns the number of samples per tick
   [[nodiscard]] auto getSamplesPerTick() const -> int;
 
+  // Sets the loop flag to the given value
+  void setLoop(bool loop);
+
+  // Returns the loop flag
+  [[nodiscard]] auto isLooping() const -> bool;
+
   // Returns the index of the current sample being played.
   // Exposed for testing purposes.
   [[nodiscard]] auto getCurrentSampleIndex() const -> int;
 
   // Returns the envelope for the given track
-  [[nodiscard]] auto getEnvelope(int trackIndex) const -> const Envelope*;
+  [[nodiscard]] auto getEnvelope(int trackIndex) const
+    -> const unique_ptr<Envelope>&;
 };
 }  // namespace sid

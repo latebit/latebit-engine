@@ -38,6 +38,8 @@ class Note {
   auto getWave() -> WaveType;
   // Returns the effect type of the note
   auto getEffect() -> EffectType;
+  // Returns the unique identifier of the note
+  auto getId() -> long unsigned int;
 
  private:
   // A number between 0 and 96 describing a note from C0 to B7

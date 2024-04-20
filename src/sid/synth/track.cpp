@@ -2,10 +2,9 @@
 
 namespace sid {
 
-int id = 1;
-
 Note::Note(int pitch, int volume, WaveType wave, EffectType effect)
   : pitch(pitch), volume(volume), wave(wave), effect(effect) {
+  static int id = 0;
   this->id = id++;
 }
 
@@ -33,5 +32,6 @@ auto Note::getPitch() -> int { return this->pitch; }
 auto Note::getVolume() -> float { return this->volume / 15.0; }
 auto Note::getWave() -> WaveType { return this->wave; }
 auto Note::getEffect() -> EffectType { return this->effect; }
+auto Note::getId() -> long unsigned int { return this->id; }
 
 }  // namespace sid

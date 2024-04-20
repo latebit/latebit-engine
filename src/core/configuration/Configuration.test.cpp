@@ -12,7 +12,7 @@ auto main() -> int {
 
   test("parses a broken file without changing values", []() -> void {
     assertOk("does not fail",
-             Configuration::fromFile("../test/fixtures/broken.cfg"));
+             Configuration::fromFile(FIXTURES_FOLDER + "/broken.cfg"));
 
     assertEq("parses max_frame_rate", Configuration::getMaxFrameRate(), 60);
 
@@ -21,7 +21,7 @@ auto main() -> int {
   });
 
   test("parses a correct configuration file", []() -> void {
-    Configuration::fromFile("../test/fixtures/latebit.cfg");
+    Configuration::fromFile(FIXTURES_FOLDER + "/latebit.cfg");
 
     assertEq("parses max_frame_rate", Configuration::getMaxFrameRate(), 30);
 

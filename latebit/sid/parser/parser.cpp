@@ -3,6 +3,7 @@
 #include <istream>
 #include <memory>
 #include <regex>
+#include <sstream>
 #include <string>
 
 #include "latebit/sid/synth/tune.h"

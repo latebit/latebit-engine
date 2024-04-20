@@ -5,9 +5,9 @@ project(sid VERSION ${VERSION} LANGUAGES C CXX)
 get_package_files(sid)
 get_package_files(utils)
 
-if (WASM)
+if (CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
   # Build the library
-  add_library(sid ${sid_SRC_FILES})
+  add_library(sid ${sid_SRC_FILES} ${utils_SRC_FILES})
   set_target_properties(sid PROPERTIES COMPILE_FLAGS "-O3")
 else()
   add_library(sid STATIC ${sid_SRC_FILES} ${utils_SRC_FILES})

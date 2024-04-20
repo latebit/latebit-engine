@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.28.1)
 # It is not meant to be built on its own
 project(utils VERSION ${VERSION} LANGUAGES C CXX)
 
-if (WASM)
+if (CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
 else()
   generate_tests("${PROJECT_NAME}")
 endif()

@@ -110,10 +110,7 @@ jobs:
 
     - name: Configure
       run: >
-        emmake cmake
-        -B build
-        -DWASM=ON
-        -S .
+        emcmake cmake -B build
       env:
         CMAKE_BUILD_TYPE: Release
 

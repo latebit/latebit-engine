@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.28.1)
 
 # Project settings
 project(latebit VERSION ${VERSION} LANGUAGES C CXX)
-add_package(core)
-add_package(utils)
+get_package_files(core)
+get_package_files(utils)
 
 if (WASM)
   # Build the library
-  add_library(latebit ${core_SRC})
+  add_library(latebit ${core_SRC_FILES})
   set_target_properties(latebit PROPERTIES COMPILE_FLAGS "-s USE_LIBPNG=1 -s USE_SDL=2 -s USE_SDL_MIXER=2 -O3")
 else()
   # Declare dependencies
@@ -16,7 +16,7 @@ else()
   find_package(PNG REQUIRED)
 
   # Create shared library
-  add_library(latebit SHARED ${core_SRC} ${utils_SRC})
+  add_library(latebit SHARED ${core_SRC_FILES} ${utils_SRC_FILES})
   target_link_libraries(latebit 
       PUBLIC
       $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>

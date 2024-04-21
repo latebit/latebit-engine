@@ -113,6 +113,7 @@ auto Sequencer::loadTune(shared_ptr<Tune> tune) -> int {
 auto Sequencer::unloadTune() -> int {
   if (!this->tune) return -1;
 
+  this->tune.reset();
   this->tune = nullptr;
   this->currentSample = 0;
   this->samplesPerTick = 0;

@@ -20,7 +20,7 @@ auto main() -> int {
   test("loadMusic", []() {
     Music music;
     assertOk("succeeds with valid file",
-             music.loadMusic(FIXTURES_FOLDER + "/sound.wav"));
+             music.loadMusic(FIXTURES_FOLDER + "/sound"));
     assertFail("fails with invalid file", music.loadMusic("invalid_sound.wav"));
   });
 

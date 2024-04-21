@@ -56,7 +56,7 @@ auto main() -> int {
 
   test("music", []() {
     string label = "test_music";
-    string filename = FIXTURES_FOLDER + "/sound.wav";
+    string filename = FIXTURES_FOLDER + "/sound";
 
     assertOk("loads music successfully", RM.loadMusic(filename, label));
     assertFail("does not load same label", RM.loadMusic(filename, label));
@@ -95,7 +95,7 @@ auto main() -> int {
 
   test("sound", []() {
     string label = "test_sound";
-    string filename = FIXTURES_FOLDER + "/sound.wav";
+    string filename = FIXTURES_FOLDER + "/sound";
 
     assertOk("loads sound successfully", RM.loadSound(filename, label));
     assertFail("does not load same label", RM.loadSound(filename, label));

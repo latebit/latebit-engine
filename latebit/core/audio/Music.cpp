@@ -34,7 +34,7 @@ auto Music::loadMusic(string filename) -> int {
   this->music = sid::TuneParser::fromFile(filename);
 
   if (this->music == nullptr) {
-    Log.error("Music::loadMusic(): Unable to load music. %s");
+    Log.error("Music::loadMusic(): Unable to load music.");
     return -1;
   }
 

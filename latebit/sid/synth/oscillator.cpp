@@ -4,7 +4,7 @@
 #include <cstdlib>
 
 #include "latebit/sid/synth/configuration.h"
-#include "latebit/sid/synth/wavetable.cpp"
+#include "latebit/sid/synth/wavetable.h"
 #include "latebit/utils/Math.h"
 
 using namespace std;

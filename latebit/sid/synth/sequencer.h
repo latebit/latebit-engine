@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "latebit/sid/synth/configuration.h"
 #include "oscillator.h"
 #include "tune.h"
 
@@ -88,7 +89,7 @@ class Sequencer {
 
  public:
   // Creates a new sequencer
-  Sequencer() = default;
+  Sequencer(int bufferSize = Configuration::getBufferSize());
   // Frees the memory associated with sequencer
   ~Sequencer();
 
@@ -119,8 +120,8 @@ class Sequencer {
   // won't do anything. It returns -1 if the tune hasn't been loaded yet.
   auto pause() -> int;
 
-  // Returns the next sample for the given sequencer or 0 if the tune is not
-  // playing. It gets the next sample from all the tracks, processes the
+  // Returns the next float32 sample for the given sequencer or 0 if the tune is
+  // not playing. It gets the next sample from all the tracks, processes the
   // envelopes and returns the average of all the samples (i.e., the tracks are
   // mixed equally)
   auto getNextSample() -> float;

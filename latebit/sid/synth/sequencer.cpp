@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <memory>
 
-#include "config.h"
+#include "configuration.h"
 #include "oscillator.h"
 #include "track.h"
 #include "tune.h"
@@ -11,7 +11,7 @@
 using namespace std;
 
 namespace sid {
-const int ENVELOPE_RELEASE_SAMPLES = SAMPLE_RATE / 100;
+const int ENVELOPE_RELEASE_SAMPLES = Configuration::getSampleRate() / 100;
 
 void Envelope::attack() {
   state = ATTACK;
@@ -82,7 +82,7 @@ auto Sequencer::loadTune(shared_ptr<Tune> tune) -> int {
   // getNextSampleForChannel)
   this->currentSample = 1;
   this->samplesPerTick =
-    SAMPLE_RATE / (t->getBpm() * t->getTicksPerBeat()) * 60;
+    Configuration::getSampleRate() / (t->getBpm() * t->getTicksPerBeat()) * 60;
   this->currentNoteIndex.resize(t->getTracksCount());
   this->oscillators.resize(t->getTracksCount());
   this->envelopes.resize(t->getTracksCount());
@@ -148,6 +148,10 @@ auto Sequencer::stop() -> int {
   }
 
   return 0;
+}
+
+Sequencer::Sequencer(int bufferSize) {
+  Configuration::setBufferSize(bufferSize);
 }
 
 Sequencer::~Sequencer() {

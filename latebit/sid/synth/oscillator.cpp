@@ -1,15 +1,15 @@
 #include "oscillator.h"
 
-#include <array>
+#include <cstdio>
 #include <cstdlib>
 
-#include "latebit/sid/synth/config.h"
+#include "latebit/sid/synth/configuration.h"
+#include "latebit/sid/synth/wavetable.cpp"
 #include "latebit/utils/Math.h"
 
 using namespace std;
+using namespace sid;
 
-const int WAVE_TABLE_SIZE = BUFFER_SIZE;
-array<array<float, BUFFER_SIZE>, WAVES> waveTable;
 array<float, 96> NOTE_TO_FREQUENCY = {
   16.35,   17.32,   18.35,   19.45,   20.60,   21.83,
   23.12,   24.50,   25.96,   27.50,   29.14,   30.87,
@@ -37,62 +37,25 @@ array<float, 96> NOTE_TO_FREQUENCY = {
 
 namespace sid {
 
-bool initialized = false;
-void initialize() {
-  // Sine wave
-  for (int i = 0; i < WAVE_TABLE_SIZE; i++) {
-    float x = (float)i / WAVE_TABLE_SIZE;
-    if (x < 0.25f) {
-      waveTable[TRIANGLE][i] = 4.0f * x;
-    } else if (x < 0.75f) {
-      waveTable[TRIANGLE][i] = 2.0f - 4.0f * x;
-    } else {
-      waveTable[TRIANGLE][i] = 4.0f * x - 4.0f;
-    }
-  }
-
-  // Square wave
-  for (int i = 0; i < WAVE_TABLE_SIZE; i++) {
-    if (i < BUFFER_SIZE / 2) {
-      waveTable[SQUARE][i] = 1.0f;
-    } else {
-      waveTable[SQUARE][i] = -1.0f;
-    }
-  }
-
-  // Sawtooth wave
-  for (int i = 0; i < WAVE_TABLE_SIZE; i++) {
-    waveTable[SAWTOOTH][i] = 2.0f * ((float)i / WAVE_TABLE_SIZE) - 1.0f;
-  }
-
-  // Noise wave
-  for (int i = 0; i < WAVE_TABLE_SIZE; i++) {
-    waveTable[NOISE][i] = 2.0f * (rand() / (float)RAND_MAX) - 1.0f;
-  }
-}
-
 Oscillator::Oscillator(float frequency) {
-  if (!initialized) {
-    initialize();
-    initialized = true;
-  }
-
-  this->stepSize = frequency / SAMPLE_RATE * WAVE_TABLE_SIZE;
+  this->stepSize =
+    frequency / Configuration::getSampleRate() * Configuration::getBufferSize();
 }
 
 auto Oscillator::oscillate() -> float {
   this->currentStep += this->effect.processFrequency(this->stepSize);
 
-  if (this->currentStep >= BUFFER_SIZE) {
-    this->currentStep -= BUFFER_SIZE;
+  if (this->currentStep >= Configuration::getBufferSize()) {
+    this->currentStep -= Configuration::getBufferSize();
   }
 
-  float sample = waveTable[this->waveType][(int)this->currentStep];
+  float sample = WaveTable::get(this->waveType, this->currentStep);
   return this->effect.processVolume(sample) * this->volume;
 }
 
 void Oscillator::setFrequency(float frequency) {
-  this->stepSize = frequency / SAMPLE_RATE * WAVE_TABLE_SIZE;
+  this->stepSize =
+    frequency / Configuration::getSampleRate() * Configuration::getBufferSize();
   this->currentStep = 0;
 }
 

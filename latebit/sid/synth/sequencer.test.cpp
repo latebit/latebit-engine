@@ -2,7 +2,10 @@
 
 #include <memory>
 
+#include "latebit/sid/synth/configuration.h"
+#include "latebit/sid/synth/oscillator.h"
 #include "latebit/sid/synth/tune.h"
+#include "latebit/sid/synth/wavetable.h"
 #include "test/lib/test.h"
 
 using namespace sid;
@@ -89,5 +92,11 @@ void getSamples() {
 auto main() -> int {
   test("envelope", envelope);
   test("getSamples", getSamples);
+  test("initializes the wavetable", []() {
+    auto s = Sequencer();
+    assertEq("initializes the wavetable", WaveTable::getSize(),
+             Configuration::getBufferSize());
+  });
+
   return report();
 }

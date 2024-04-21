@@ -1,10 +1,6 @@
 #pragma once
 
 namespace sid {
-
-// This is used to initialize the wave table
-#define WAVES 4
-
 // Waves supported by the oscillator
 enum WaveType { TRIANGLE, SQUARE, SAWTOOTH, NOISE };
 // Effects supported by the oscillator

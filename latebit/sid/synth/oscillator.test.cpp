@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "latebit/sid/synth/config.h"
+#include "latebit/sid/synth/configuration.h"
 #include "test/lib/test.h"
 
 using namespace sid;
@@ -131,7 +131,7 @@ void oscillations() {
   auto o2 = Oscillator(FREQUENCY);
   o1.setEffect(SLIDE);
 
-  for (int i = 0; i < BUFFER_SIZE; i++) {
+  for (int i = 0; i < Configuration::getBufferSize(); i++) {
     o1.oscillate();
     o2.oscillate();
   }
@@ -141,7 +141,7 @@ void oscillations() {
   o2 = Oscillator(FREQUENCY);
   o1.setEffect(FADEIN);
 
-  for (int i = 0; i < BUFFER_SIZE; i++) {
+  for (int i = 0; i < Configuration::getBufferSize(); i++) {
     o1.oscillate();
     o2.oscillate();
   }
@@ -150,6 +150,8 @@ void oscillations() {
 }
 
 auto main() -> int {
+  Configuration::setBufferSize(4096);
+
   suite("Oscillator", []() {
     test("init", init);
     test("pitch", pitch);

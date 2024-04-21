@@ -2,7 +2,11 @@
 
 #include <SDL2/SDL_audio.h>
 
+#include <memory>
+
 #include "latebit/core/utils/Manager.h"
+#include "latebit/sid/synth/sequencer.h"
+#include "latebit/sid/synth/tune.h"
 
 using namespace std;
 
@@ -20,6 +24,18 @@ class AudioManager : public Manager {
 
   // Frees the audio device chosen in startUp.
   void shutDown() override;
+
+  void playMusic(shared_ptr<sid::Tune> tune, bool loop);
+  void stopMusic();
+  void pauseMusic();
+
+  void playSound(shared_ptr<sid::Tune> tune);
+  void stopSound();
+  void pauseSound();
+
+  // todo: make private
+  unique_ptr<sid::Sequencer> musicSequencer;
+  unique_ptr<sid::Sequencer> sfxSequencer;
 
  private:
   // Singleton

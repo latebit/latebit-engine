@@ -1,9 +1,10 @@
 #include "Music.h"
 
 #include <SDL2/SDL_audio.h>
-#include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_stdinc.h>
 
+#include "latebit/core/audio/AudioManager.h"
+#include "latebit/sid/parser/parser.h"
 #include "latebit/utils/Logger.h"
 
 using namespace std;
@@ -13,29 +14,27 @@ namespace lb {
 Music::Music() = default;
 
 Music::~Music() {
-  Mix_FreeMusic(this->music);
+  this->music.reset();
   this->music = nullptr;
 }
 
-auto Music::play(bool loop) -> void {
-  Mix_PlayMusic(this->music, loop ? -1 : 0);
-}
-auto Music::pause() -> void { Mix_PauseMusic(); }
-auto Music::stop() -> void { Mix_HaltMusic(); }
+auto Music::play(bool loop) -> void { AM.playMusic(this->music, loop); }
+auto Music::pause() -> void { AM.pauseMusic(); }
+auto Music::stop() -> void { AM.stopMusic(); }
 
 auto Music::getLabel() const -> string { return this->label; }
 auto Music::setLabel(string l) -> void { this->label = l; }
 
 auto Music::loadMusic(string filename) -> int {
   if (this->music != nullptr) {
-    Mix_FreeMusic(this->music);
+    this->music.reset();
     this->music = nullptr;
   }
 
-  this->music = Mix_LoadMUS(filename.c_str());
+  this->music = sid::TuneParser::fromFile(filename);
 
   if (this->music == nullptr) {
-    Log.error("Music::loadMusic(): Unable to load music. %s", Mix_GetError());
+    Log.error("Music::loadMusic(): Unable to load music. %s");
     return -1;
   }
 

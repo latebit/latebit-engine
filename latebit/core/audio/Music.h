@@ -1,10 +1,12 @@
 #pragma once
 
 #include <SDL2/SDL_audio.h>
-#include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_stdinc.h>
 
+#include <memory>
 #include <string>
+
+#include "latebit/sid/synth/tune.h"
 
 using namespace std;
 
@@ -35,7 +37,7 @@ class Music {
 
  private:
   // Pointer to the music resource in SDL_mixer representation.
-  Mix_Music *music = nullptr;
+  shared_ptr<sid::Tune> music = nullptr;
   // Label associated with sound. Used to retrieve the resource.
   string label = "";
 };

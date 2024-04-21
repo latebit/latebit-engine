@@ -1,10 +1,12 @@
 #pragma once
 
 #include <SDL2/SDL_audio.h>
-#include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_stdinc.h>
 
+#include <memory>
 #include <string>
+
+#include "latebit/sid/synth/tune.h"
 
 using namespace std;
 
@@ -26,21 +28,13 @@ class Sound {
   [[nodiscard]] auto getLabel() const -> string;
 
   // Play sound.
-  void play(bool loop = false);
-
-  // Stop sound.
+  void play();
   void stop();
-
-  // Pause sound.
   void pause();
 
  private:
   // Pointer to the chunk resource in SDL_mixer representation.
-  Mix_Chunk* sound = nullptr;
-
-  // Channel on which the current sound will be playing.
-  // It will be chosen upon the first `play` call.
-  int channel = UNINITIALIZED_CHANNEL;
+  shared_ptr<sid::Tune> sound = nullptr;
 
   // Label associated with sound. Used to retrieve the resource.
   string label = "";

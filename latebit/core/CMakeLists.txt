@@ -24,7 +24,6 @@ else()
       SDL2::SDL2-static)
 
   generate_tests(core)
-  
   # TODO: for some reason SDL2_INCLUDE_DIR is wrong in CI, we override it manually before packaging
   set(SDL2_INCLUDE_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed/${VCPKG_TARGET_TRIPLET}/include/SDL2")
 endif()

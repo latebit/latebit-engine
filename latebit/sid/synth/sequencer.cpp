@@ -229,5 +229,7 @@ auto Sequencer::getEnvelope(int trackIndex) const
 
 auto Sequencer::setLoop(bool loop) -> void { this->loop = loop; }
 auto Sequencer::isLooping() const -> bool { return this->loop; }
-
+auto Sequencer::getCurrentTune() const -> shared_ptr<Tune> {
+  return this->tune;
+}
 }  // namespace sid

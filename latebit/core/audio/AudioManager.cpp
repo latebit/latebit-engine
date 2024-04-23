@@ -15,18 +15,29 @@
 #include "latebit/utils/Logger.h"
 
 namespace lb {
-void callback(void *userdata, Uint8 *stream, int len) {
+unique_ptr<sid::Sequencer> AudioManager::musicSequencer = nullptr;
+unique_ptr<sid::Sequencer> AudioManager::sfxSequencer = nullptr;
+
+// Simple mixing function: when both sound and music are playing, average
+// the volume, otherwise chose just one of them
+auto mix(float a, float b) -> float {
+  return (a == 0.0f) ? b : (b == 0.0f ? a : (a + b) / 2.0f);
+}
+
+void AudioManager::callback(void *userdata, Uint8 *stream, int len) {
   int samples = len / sizeof(float);
 
   for (int i = 0; i < samples; i++) {
-    float a = AM.musicSequencer->getNextSample();
-    float b = AM.sfxSequencer->getNextSample();
-    ((float *)stream)[i] = (a == 0.0f) ? b : (b == 0.0f ? a : (a + b) / 2.0f);
+    float a = AudioManager::musicSequencer->getNextSample();
+    float b = AudioManager::sfxSequencer->getNextSample();
+    ((float *)stream)[i] = mix(a, b);
   }
 }
 
 AudioManager::AudioManager() {
   setType("AudioManager");
+  AudioManager::musicSequencer = make_unique<sid::Sequencer>();
+  AudioManager::sfxSequencer = make_unique<sid::Sequencer>();
   Log.debug("AudioManager::AudioManager(): Created AudioManager");
 }
 
@@ -36,25 +47,30 @@ auto AudioManager::getInstance() -> AudioManager & {
 }
 
 auto AudioManager::startUp() -> int {
-  this->musicSequencer = make_unique<sid::Sequencer>();
-  this->sfxSequencer = make_unique<sid::Sequencer>();
-
   SDL_AudioSpec obtained,
     spec = {.freq = sid::Configuration::getSampleRate(),
             .format = AUDIO_F32,
             .channels = 1,
             .samples = (uint16_t)sid::Configuration::getBufferSize(),
-            .callback = callback};
+            .callback = AudioManager::callback};
 
-  unsigned int d = SDL_OpenAudioDevice(nullptr, 0, &spec, &obtained, 1);
+  this->device = SDL_OpenAudioDevice(nullptr, 0, &spec, &obtained, 1);
+  if (this->device == 0) {
+    Log.error("AudioManager::startUp(): Cannot open audio device. %s",
+              SDL_GetError());
+    return -1;
+  }
+
   sid::Configuration::setSampleRate(obtained.freq);
-  SDL_PauseAudioDevice(d, 0);
+  SDL_PauseAudioDevice(this->device, 0);
 
   Log.info("AudioManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
 auto AudioManager::shutDown() -> void {
+  SDL_CloseAudioDevice(this->device);
+  this->device = 0;
   Manager::shutDown();
   Log.info("AudioManager::shutDown(): Shut down successfully");
 }
@@ -62,8 +78,16 @@ auto AudioManager::shutDown() -> void {
 void AudioManager::playMusic(shared_ptr<sid::Tune> tune, bool loop) {
   this->musicSequencer->setLoop(loop);
   this->musicSequencer->stop();
-  this->musicSequencer->unloadTune();
-  this->musicSequencer->loadTune(tune);
+
+  // If the tune is already loaded, just play it
+  if (this->musicSequencer->getCurrentTune() != tune) {
+    this->musicSequencer->unloadTune();
+    if (this->musicSequencer->loadTune(tune) == -1) {
+      Log.error("AudioManager::playMusic(): Failed to load tune.");
+      return;
+    }
+  }
+
   this->musicSequencer->play();
 }
 
@@ -71,8 +95,17 @@ void AudioManager::stopMusic() { this->musicSequencer->stop(); }
 void AudioManager::pauseMusic() { this->musicSequencer->pause(); }
 
 void AudioManager::playSound(shared_ptr<sid::Tune> tune) {
-  this->sfxSequencer->unloadTune();
-  this->sfxSequencer->loadTune(tune);
+  this->sfxSequencer->stop();
+
+  // If the tune is already loaded, just play it
+  if (this->sfxSequencer->getCurrentTune() != tune) {
+    this->sfxSequencer->unloadTune();
+    if (this->sfxSequencer->loadTune(tune) == -1) {
+      Log.error("AudioManager::playSound(): Failed to load tune.");
+      return;
+    }
+  }
+
   this->sfxSequencer->play();
 }
 

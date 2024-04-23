@@ -138,6 +138,9 @@ class Sequencer {
   // Returns the loop flag
   [[nodiscard]] auto isLooping() const -> bool;
 
+  // Returns the currently loaded tune
+  [[nodiscard]] auto getCurrentTune() const -> shared_ptr<Tune>;
+
   // Returns the index of the current sample being played.
   // Exposed for testing purposes.
   [[nodiscard]] auto getCurrentSampleIndex() const -> int;

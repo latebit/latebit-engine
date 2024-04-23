@@ -25,20 +25,34 @@ class AudioManager : public Manager {
   // Frees the audio device chosen in startUp.
   void shutDown() override;
 
+  // Loads and plays a music tune. It plays indefinitely with loop=true
   void playMusic(shared_ptr<sid::Tune> tune, bool loop);
+  // Stops the music sequencer
   void stopMusic();
+  // Pauses the music sequencer
   void pauseMusic();
 
+  // Loads and play a sound effect
   void playSound(shared_ptr<sid::Tune> tune);
+  // Stops the sound sequencer
   void stopSound();
+  // Pauses the sound sequencer
   void pauseSound();
-
-  // todo: make private
-  unique_ptr<sid::Sequencer> musicSequencer;
-  unique_ptr<sid::Sequencer> sfxSequencer;
 
  private:
   // Singleton
   AudioManager();
+
+  // The sequencer used for music
+  static unique_ptr<sid::Sequencer> musicSequencer;
+
+  // The sequencer used for sound effects
+  static unique_ptr<sid::Sequencer> sfxSequencer;
+
+  // The device used by SDL
+  unsigned int device = 0;
+
+  // The SDL audio callback used to play the sounds
+  static void callback(void *userdata, Uint8 *stream, int len);
 };
 }  // namespace lb

@@ -12,7 +12,6 @@ auto main() -> int {
   DM.startUp();
 
   test("initialization", []() {
-    AM.startUp();
     assertOk("starts up", AM.startUp());
     assert("configures the sample rate",
            sid::Configuration::getSampleRate() != 0);

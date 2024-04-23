@@ -38,12 +38,6 @@ At this point you should be good to go. If your editor makes use of `clangd`, yo
 # Run all the tests
 shmux test # i.e. `cmake --build build -t test`
 
-# Run only a suite (e.g., Sprite)
-FOCUS=Sprite shmux test # i.e. `FOCUS=Sprite cmake --build build -t test`
-
-# Show only failed tests
-FAILED_ONLY=1 shmux test # i.e. `FOCUS=Sprite cmake --build build -t test`
-
 # Run headless
 SDL_AUDIODRIVER=dummy SDL_VIDEODRIVER=dummy shmux test
 ```
@@ -58,10 +52,9 @@ shmux debug
 
 # To debug
 gdb ./build/test.out
-
-# To check memory
-valgrind --leak-check=full ./build/test.out
 ```
+
+Debug builds are instrumented with Address Sanitizer, which should help with memory leaks detection.
 
 ### Linting and formatting code
 

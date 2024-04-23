@@ -1,0 +1,15 @@
+enable_testing()
+set(TEST ${CMAKE_SOURCE_DIR}/test)
+file(GLOB TEST_LIB_FILES "${TEST}/lib/*.cpp")
+add_library(latebit-test ${TEST_LIB_FILES})
+target_link_libraries(latebit-test "latebit")
+
+# Generate test executable
+function(generate_tests PACKAGE_NAME)
+  foreach(test_file ${${PACKAGE_NAME}_TEST_FILES})
+    get_filename_component(FILE_NAME ${test_file} NAME_WE)
+    add_executable(${FILE_NAME}.test ${test_file})
+    target_link_libraries(${FILE_NAME}.test latebit latebit-test)
+    add_test(NAME "${PACKAGE_NAME}/${FILE_NAME}" COMMAND ${FILE_NAME}.test)
+  endforeach()
+endfunction()

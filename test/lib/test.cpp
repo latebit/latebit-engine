@@ -4,9 +4,9 @@
 #include <regex>
 
 #include "colors.h"
-#include "core/geometry/Vector.h"
-#include "core/utils/Clock.h"
-#include "core/utils/utils.h"
+#include "latebit/core/geometry/Vector.h"
+#include "latebit/core/utils/Clock.h"
+#include "latebit/utils/Math.h"
 #include "test.h"
 
 using namespace std;
@@ -38,7 +38,7 @@ auto assert(const string name, bool assertion, const string message) -> int {
   return 0;
 }
 
-auto assert_string(string name, string got, string want) -> int {
+auto assertEq(string name, string got, string want) -> int {
   const bool assertion = got.compare(want) == 0;
 
   string message = "wanted '" + want + "' got '" + got + "'";
@@ -46,7 +46,7 @@ auto assert_string(string name, string got, string want) -> int {
   return assert(name, assertion, message);
 }
 
-auto assert_regex(string name, string want, string pattern) -> int {
+auto assertMatch(string name, string want, string pattern) -> int {
   regex expression(pattern);
   const bool assertion = regex_match(want, expression);
 
@@ -56,31 +56,35 @@ auto assert_regex(string name, string want, string pattern) -> int {
   return assert(name, assertion, message);
 }
 
-auto assert_float(string name, float got, float want) -> int {
+auto assertEq(string name, float got, float want) -> int {
   string message =
     "wanted '" + to_string(want) + "' got '" + to_string(got) + "'";
 
   return assert(name, equals(got, want), message);
 }
 
-auto assert_int(string name, int got, int want) -> int {
+auto assertLessThan(string name, float got, float want) -> int {
+  string message = "wanted " + to_string(want) + " < " + to_string(got);
+
+  return assert(name, got < want, message);
+}
+
+auto assertEq(string name, int got, int want) -> int {
   string message =
     "wanted '" + to_string(want) + "' got '" + to_string(got) + "'";
 
   return assert(name, got == want, message);
 }
 
-auto assert_ok(string name, int got) -> int { return assert_int(name, got, 0); }
-auto assert_fail(string name, int got) -> int {
-  return assert_int(name, got, -1);
-}
+auto assertOk(string name, int got) -> int { return assertEq(name, got, 0); }
+auto assertFail(string name, int got) -> int { return assertEq(name, got, -1); }
 
-auto assert_vector(string name, Vector got, Vector want) -> int {
+auto assertEq(string name, Vector got, Vector want) -> int {
   return assert(name, got == want,
                 "wanted " + want.toString() + " got " + got.toString());
 }
 
-auto assert_box(string name, Box got, Box want) -> int {
+auto assertEq(string name, Box got, Box want) -> int {
   return assert(name, got == want,
                 "wanted " + want.toString() + " got " + got.toString());
 }
@@ -91,21 +95,6 @@ void timing(float delta) {
   } else {
     printf("      Duration: %.2fμs\n", delta);
   }
-}
-
-auto suite(std::string name, int (*test)()) -> int {
-  if (!FOCUS.empty() && FOCUS != name) {
-    std::cout << yellow(name + " (skip)\n");
-    return 0;
-  }
-
-  static int result = 0;
-
-  std::cout << yellow("\n" + name + "\n");
-  result += test();
-  timing(c.delta());
-
-  return result;
 }
 
 auto suite(std::string name, void (*test)()) -> void {
@@ -124,11 +113,17 @@ auto test(std::string name, void (*test)()) -> void {
   test();
 }
 
-auto test(std::string name, int (*test)()) -> int {
-  int result = 0;
+auto report() -> int {
+  auto failed = getFailedAssertions();
+  auto total = getAssertions();
 
-  std::cout << "  " + name + "\n";
-  result += test();
+  if (failed == 0) {
+    std::cout << std::endl << "Success! All " + total + " assertions passed.";
+  } else {
+    std::cout << std::endl
+              << "Failure. " + std::to_string(failed) + " failed tests."
+              << std::endl;
+  }
 
-  return result;
+  return failed;
 }

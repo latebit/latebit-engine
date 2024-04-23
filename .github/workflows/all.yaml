@@ -71,7 +71,8 @@ jobs:
 
     - name: Unit Test
       if: matrix.c_compiler != 'emcc'
-      run: cmake --build build -t test
+      working-directory: build
+      run: ctest -j10 --output-on-failure
       env:
         SDL_AUDIODRIVER: dummy
         SDL_VIDEODRIVER: dummy
@@ -110,10 +111,7 @@ jobs:
 
     - name: Configure
       run: >
-        emmake cmake
-        -B build
-        -DWASM=ON
-        -S .
+        emcmake cmake -B build
       env:
         CMAKE_BUILD_TYPE: Release
 

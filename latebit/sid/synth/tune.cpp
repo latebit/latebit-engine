@@ -19,21 +19,21 @@ Tune::Tune(int tracksCount) {
 
 Tune::~Tune() { this->tracks.clear(); }
 
-auto Tune::getBpm() -> int { return this->bpm; }
+auto Tune::getBpm() const -> int { return this->bpm; }
 void Tune::setBpm(int bpm) { this->bpm = bpm; }
 
-auto Tune::getTicksPerBeat() -> int { return this->ticksPerBeat; }
+auto Tune::getTicksPerBeat() const -> int { return this->ticksPerBeat; }
 void Tune::setTicksPerBeat(int ticksPerBeat) {
   this->ticksPerBeat = ticksPerBeat;
 }
-auto Tune::getBeatsCount() -> int { return this->beatsCount; }
+auto Tune::getBeatsCount() const -> int { return this->beatsCount; }
 auto Tune::setBeatsCount(int beatsCount) -> void {
   this->beatsCount = beatsCount;
 }
 
-auto Tune::getTracksCount() -> int { return this->tracks.size(); }
+auto Tune::getTracksCount() const -> int { return this->tracks.size(); }
 
-auto Tune::getTrack(int index) -> shared_ptr<Track> {
+auto Tune::getTrack(int index) const -> shared_ptr<Track> {
   return this->tracks.at(index);
 }
 

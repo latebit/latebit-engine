@@ -51,8 +51,13 @@ auto TuneParser::fromString(istream *stream) -> unique_ptr<Tune> {
   }
 
   int bpm = getNumber(stream);
+<<<<<<< Updated upstream
   if (bpm <= 10 || bpm >= 300) {
     Log.error("Invalid bpm. Expected a number 10-300, got %d", bpm);
+=======
+  if (bpm < 10 || bpm > 400) {
+    Log.error("Invalid bpm. Expected a number 10-400, got %d", bpm);
+>>>>>>> Stashed changes
     return nullptr;
   }
   int ticksPerBeat = getNumber(stream);

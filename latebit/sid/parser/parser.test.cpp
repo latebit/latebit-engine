@@ -3,7 +3,11 @@
 #include <memory>
 #include <sstream>
 
+<<<<<<< Updated upstream
 #include "latebit/sid/synth/oscillator.h"
+=======
+#include "latebit/utils/Logger.h"
+>>>>>>> Stashed changes
 #include "test/lib/test.h"
 
 using namespace sid;
@@ -255,7 +259,7 @@ void header() {
 
   str =
     "#v0.1#\n"
-    "400\n"
+    "401\n"
     "1\n"
     "3\n"
     "1\n"
@@ -363,6 +367,51 @@ void header() {
 
   assert("does not parse the tune with invalid tracks count (too big)",
          t == nullptr);
+
+  str =
+    "#v0.1#\n"
+    "10\n"
+    "1\n"
+    "1\n"
+    "1\n"
+    "C-4---\n";
+  t = TuneParser::fromString(str);
+
+  assert("parses tune", t != nullptr);
+  assertEq("parses bpm", t->getBpm(), 10);
+  assertEq("parses ticks per beat", t->getTicksPerBeat(), 1);
+  assertEq("parses beats", t->getBeatsCount(), 1);
+  assertEq("parses tracks count", t->getTracksCount(), 1);
+
+  Log.setDestination(lb::STDOUT);
+
+  str = "#v0.1#\n400\n1\n1\n1\nC-4---\n";
+  t = TuneParser::fromString(str);
+  assert("parses tune", t != nullptr);
+
+  str =
+    "#v0.1#\n400\n16\n1\n1\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-"
+    "4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4-"
+    "--\n";
+  t = TuneParser::fromString(str);
+  assert("parses tune", t != nullptr);
+
+  str =
+    "#v0.1#\n400\n1\n64\n1\n"
+    "C-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-"
+    "4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\n"
+    "C-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-"
+    "4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\n"
+    "C-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-"
+    "4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\n"
+    "C-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-"
+    "4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\n";
+  t = TuneParser::fromString(str);
+  assert("parses tune", t != nullptr);
+
+  str = "#v0.1#\n400\n1\n1\n3\nC-4---|C-4---|C-4---\n";
+  t = TuneParser::fromString(str);
+  assert("parses tune", t != nullptr);
 }
 
 auto main() -> int {

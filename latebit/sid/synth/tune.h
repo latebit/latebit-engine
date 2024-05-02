@@ -31,24 +31,24 @@ class Tune {
   ~Tune();
 
   // Returns the number of beats per minute
-  auto getBpm() -> int;
+  [[nodiscard]] auto getBpm() const -> int;
   // Sets the number of beats per minute
   auto setBpm(int bpm) -> void;
 
   // Returns the number of ticks per beat
-  auto getTicksPerBeat() -> int;
+  [[nodiscard]] auto getTicksPerBeat() const -> int;
   // Sets the number of ticks per beat
   auto setTicksPerBeat(int ticksPerBeat) -> void;
 
   // Returns the number of beats in the tune
-  auto getBeatsCount() -> int;
+  [[nodiscard]] auto getBeatsCount() const -> int;
   // Sets the number of beats in the tune
   auto setBeatsCount(int beatsCount) -> void;
 
   // Returns the number of tracks in the tune
-  auto getTracksCount() -> int;
+  [[nodiscard]] auto getTracksCount() const -> int;
 
   // Returns the track at the given index
-  auto getTrack(int index) -> shared_ptr<Track>;
+  [[nodiscard]] auto getTrack(int index) const -> shared_ptr<Track>;
 };
 }  // namespace sid

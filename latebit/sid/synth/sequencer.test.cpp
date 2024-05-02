@@ -3,7 +3,6 @@
 #include <memory>
 
 #include "latebit/sid/synth/configuration.h"
-#include "latebit/sid/synth/oscillator.h"
 #include "latebit/sid/synth/tune.h"
 #include "latebit/sid/synth/wavetable.h"
 #include "test/lib/test.h"
@@ -36,17 +35,17 @@ void envelope() {
 void getSamples() {
   shared_ptr<Tune> t(new Tune(3));
   Track one = {
-    Note(48, 8, TRIANGLE, NONE),
-    Note(49, 8, TRIANGLE, NONE),
+    Note::fromSymbol("C-4---"),
+    Note::fromSymbol("C#4---"),
   };
   Track two = {
-    Note(48, 8, TRIANGLE, NONE),
-    Note(49, 8, TRIANGLE, NONE),
+    Note::fromSymbol("C-4---"),
+    Note::fromSymbol("C#4---"),
   };
   Track three = {
-    Note(48, 8, TRIANGLE, NONE),
-    Note(49, 8, TRIANGLE, NONE),
-    Note(50, 8, TRIANGLE, NONE),
+    Note::fromSymbol("C-4---"),
+    Note::fromSymbol("C#4---"),
+    Note::fromSymbol("D-4---"),
   };
   t->getTrack(0)->insert(t->getTrack(0)->end(), one.begin(), one.end());
   t->getTrack(1)->insert(t->getTrack(1)->end(), two.begin(), two.end());
@@ -60,9 +59,9 @@ void getSamples() {
   s.getNextSample();
   assertEq("advances sample", s.getCurrentSampleIndex(), 2);
 
-  assertEq("does not advance note (0)", s.getCurrentNoteIndex(0), 0);
-  assertEq("does not advance note (1)", s.getCurrentNoteIndex(1), 0);
-  assertEq("does not advance note (2)", s.getCurrentNoteIndex(2), 0);
+  assertEq("does not advance note (0)", s.getCurrentTick(0), 0);
+  assertEq("does not advance note (1)", s.getCurrentTick(1), 0);
+  assertEq("does not advance note (2)", s.getCurrentTick(2), 0);
 
   // advance until the envelope starts closing
   for (int i = 2; i < s.getSamplesPerTick() - ENVELOPE_RELEASE_SAMPLES; i++) {
@@ -84,7 +83,7 @@ void getSamples() {
   // start the next note
   s.getNextSample();
   for (int i = 0; i < 3; i++) {
-    assertEq("advances notes", s.getCurrentNoteIndex(i), 1);
+    assertEq("advances notes", s.getCurrentTick(i), 1);
     assertEq("resets envelope", s.getEnvelope(i)->getState(), ATTACK);
   }
 }

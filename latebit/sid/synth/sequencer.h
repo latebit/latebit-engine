@@ -58,7 +58,7 @@ class Sequencer {
   int currentSample = 0;
 
   // Keeps track of the index of the current note for each track
-  vector<int> currentNoteIndex = {};
+  vector<int> currentTick = {};
 
   // How many samples are there in a single tick
   int samplesPerTick = 0;
@@ -126,8 +126,8 @@ class Sequencer {
   // mixed equally)
   auto getNextSample() -> float;
 
-  // Returns the index of the current note being played for the given track
-  [[nodiscard]] auto getCurrentNoteIndex(int trackIndex) const -> int;
+  // Returns the tick being played for the given channel
+  [[nodiscard]] auto getCurrentTick(int channel) const -> int;
 
   // Returns the number of samples per tick
   [[nodiscard]] auto getSamplesPerTick() const -> int;
@@ -138,15 +138,18 @@ class Sequencer {
   // Returns the loop flag
   [[nodiscard]] auto isLooping() const -> bool;
 
+  // Returns the play flag
+  [[nodiscard]] auto isPlaying() const -> bool;
+
   // Returns the currently loaded tune
-  [[nodiscard]] auto getCurrentTune() const -> shared_ptr<Tune>;
+  [[nodiscard]] auto getCurrentTune() const -> const shared_ptr<Tune>&;
 
   // Returns the index of the current sample being played.
   // Exposed for testing purposes.
   [[nodiscard]] auto getCurrentSampleIndex() const -> int;
 
   // Returns the envelope for the given track
-  [[nodiscard]] auto getEnvelope(int trackIndex) const
+  [[nodiscard]] auto getEnvelope(int channel) const
     -> const unique_ptr<Envelope>&;
 };
 }  // namespace sid

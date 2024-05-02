@@ -83,13 +83,13 @@ auto Sequencer::loadTune(shared_ptr<Tune> tune) -> int {
   this->currentSample = 1;
   this->samplesPerTick =
     Configuration::getSampleRate() / (t->getBpm() * t->getTicksPerBeat()) * 60;
-  this->currentNoteIndex.resize(t->getTracksCount());
+  this->currentTick.resize(t->getTracksCount());
   this->oscillators.resize(t->getTracksCount());
   this->envelopes.resize(t->getTracksCount());
 
   int maxTrackLength = 0;
   for (int i = 0; i < t->getTracksCount(); i++) {
-    this->currentNoteIndex[i] = 0;
+    this->currentTick[i] = 0;
     this->envelopes[i] = make_unique<Envelope>();
     this->oscillators[i] = make_unique<Oscillator>(0);
     shared_ptr<Track> track = t->getTrack(i);
@@ -115,10 +115,10 @@ auto Sequencer::unloadTune() -> int {
 
   this->tune.reset();
   this->tune = nullptr;
-  this->currentSample = 0;
+  this->currentSample = 1;
   this->samplesPerTick = 0;
   this->totalSamples = 0;
-  this->currentNoteIndex.clear();
+  this->currentTick.clear();
   this->oscillators.clear();
   this->envelopes.clear();
 
@@ -127,6 +127,28 @@ auto Sequencer::unloadTune() -> int {
 
 auto Sequencer::play() -> int {
   if (!this->tune) return -1;
+
+  // Make sure the last note is set as the current note, else the first note is
+  // skipped when you resume playing and you have paused just after the tick
+  for (int i = 0; i < this->tune->getTracksCount(); i++) {
+    auto track = this->tune->getTrack(i);
+    Note lastNote = track->at(this->getCurrentTick(i));
+    this->setNoteForTrack(lastNote, i);
+  }
+
+  // Update samples per tick in case the bpm or the ticks per beat has changed
+  this->samplesPerTick =
+    Configuration::getSampleRate() /
+    (this->tune->getBpm() * this->tune->getTicksPerBeat()) * 60;
+
+  // Consequently, update also the total samples
+  int maxTrackLength = 0;
+  for (int i = 0; i < this->tune->getTracksCount(); i++) {
+    shared_ptr<Track> track = this->tune->getTrack(i);
+    maxTrackLength = max(maxTrackLength, (int)track->size());
+  }
+  this->totalSamples = maxTrackLength * this->samplesPerTick;
+
   this->playing = true;
   return 0;
 }
@@ -140,10 +162,10 @@ auto Sequencer::pause() -> int {
 auto Sequencer::stop() -> int {
   if (!this->tune) return -1;
   this->playing = false;
-  this->loop = false;
 
+  this->currentSample = 1;
   for (int i = 0; i < this->tune->getTracksCount(); i++) {
-    this->currentNoteIndex[i] = 0;
+    this->currentTick[i] = 0;
     this->envelopes[i]->done();
     this->oscillators[i]->reset();
   }
@@ -178,19 +200,18 @@ auto Sequencer::getNextSample() -> float {
     auto& envelope = this->envelopes[channel];
     auto& oscillator = this->oscillators[channel];
 
-    int currentNoteIndex = this->currentNoteIndex[channel];
-    int newNoteIndex = (currentNoteIndex + 1) % track->size();
+    int currentTick = this->currentTick[channel];
+    int nextTick = (currentTick + 1) % track->size();
 
-    Note current = track->at(currentNoteIndex);
-    Note next = track->at(newNoteIndex);
-    bool isChangingNotes = !next.isSame(current);
+    Note next = track->at(nextTick);
+    bool isChangingNotes = !next.isContinue();
 
     if (shouldStopEnvelope && isChangingNotes) {
       envelope->release();
     }
 
     if (shouldMoveToNextNote) {
-      this->currentNoteIndex[channel] = newNoteIndex;
+      this->currentTick[channel] = nextTick;
 
       if (isChangingNotes) {
         this->setNoteForTrack(next, channel);
@@ -200,8 +221,6 @@ auto Sequencer::getNextSample() -> float {
     result += oscillator->oscillate() * envelope->process();
   }
 
-  this->currentSample++;
-
   if (this->currentSample >= this->totalSamples) {
     this->currentSample = 0;
     if (!this->loop) {
@@ -209,27 +228,30 @@ auto Sequencer::getNextSample() -> float {
     }
   }
 
+  this->currentSample++;
+
   return result / this->tune->getTracksCount();
 }
 
 auto Sequencer::getCurrentSampleIndex() const -> int {
   return this->currentSample;
 }
-auto Sequencer::getCurrentNoteIndex(int trackIndex) const -> int {
-  return this->currentNoteIndex[trackIndex];
+auto Sequencer::getCurrentTick(int channel) const -> int {
+  return this->currentTick.at(channel);
 }
 
 auto Sequencer::getSamplesPerTick() const -> int {
   return this->samplesPerTick;
 }
-auto Sequencer::getEnvelope(int trackIndex) const
-  -> const unique_ptr<Envelope>& {
-  return this->envelopes[trackIndex];
+
+auto Sequencer::getEnvelope(int channel) const -> const unique_ptr<Envelope>& {
+  return this->envelopes.at(channel);
 }
 
 auto Sequencer::setLoop(bool loop) -> void { this->loop = loop; }
 auto Sequencer::isLooping() const -> bool { return this->loop; }
-auto Sequencer::getCurrentTune() const -> shared_ptr<Tune> {
+auto Sequencer::isPlaying() const -> bool { return this->playing; }
+auto Sequencer::getCurrentTune() const -> const shared_ptr<Tune>& {
   return this->tune;
 }
 }  // namespace sid

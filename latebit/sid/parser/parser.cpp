@@ -6,10 +6,10 @@
 #include <sstream>
 #include <string>
 
+#include "latebit/sid/synth/track.h"
 #include "latebit/sid/synth/tune.h"
 #include "latebit/utils/Logger.h"
 #include "latebit/utils/Parser.h"
-#include "symbol.h"
 
 using namespace std;
 
@@ -43,7 +43,7 @@ auto getSymbolsFromLine(const string &line,
   return result;
 }
 
-auto TuneParser::fromString(istream *stream) -> unique_ptr<Tune> {
+auto TuneParser::fromStream(istream *stream) -> unique_ptr<Tune> {
   string version = getLine(stream);
   if (version != "#v0.1#") {
     Log.error("Invalid header. Unsupported version %s", version.c_str());
@@ -51,8 +51,8 @@ auto TuneParser::fromString(istream *stream) -> unique_ptr<Tune> {
   }
 
   int bpm = getNumber(stream);
-  if (bpm <= 10 || bpm >= 300) {
-    Log.error("Invalid bpm. Expected a number 10-300, got %d", bpm);
+  if (bpm <= 10 || bpm >= 400) {
+    Log.error("Invalid bpm. Expected a number 10-400, got %d", bpm);
     return nullptr;
   }
   int ticksPerBeat = getNumber(stream);
@@ -106,24 +106,24 @@ auto TuneParser::fromString(istream *stream) -> unique_ptr<Tune> {
       if (trackEnded.at(j)) continue;
 
       auto symbol = symbols[j];
-      if (isEndOfTrack(symbol)) {
+      if (symbol == END_OF_TRACK_SYMBOL) {
         trackEnded[j] = true;
         continue;
       }
 
       auto track = t->getTrack(j);
-      if (isRest(symbol)) {
-        track->push_back(Note::rest());
-      } else if (isContinue(symbol)) {
+      if (symbol == REST_SYMBOL) {
+        track->push_back(Note::makeRest());
+      } else if (symbol == CONTINUE_SYMBOL) {
         if (i == 0) {
           Log.error("First symbol of a track cannot be a continue symbol");
           return nullptr;
         }
 
-        auto last = track->at(track->size() - 1);
-        track->push_back(last);
+        track->push_back(Note::makeContinue());
       } else {
-        auto note = toNote(symbol);
+        auto note = Note::fromSymbol(symbol);
+
         if (note.isInvalid()) {
           // error is already printed in the symbol parser
           return nullptr;
@@ -144,7 +144,40 @@ auto TuneParser::fromFile(const string filename) -> unique_ptr<Tune> {
     return nullptr;
   }
 
-  return fromString(&file);
+  return fromStream(&file);
+}
+
+auto TuneParser::fromString(string str) -> unique_ptr<Tune> {
+  istringstream stream(str);
+  return fromStream(&stream);
+}
+
+auto TuneParser::toString(const Tune &tune) -> string {
+  stringstream ss;
+  ss << "#v0.1#\n";
+  ss << tune.getBpm() << "\n";
+  ss << tune.getTicksPerBeat() << "\n";
+  ss << tune.getBeatsCount() << "\n";
+  ss << tune.getTracksCount() << "\n";
+
+  int maxTrackLength = tune.getBeatsCount() * tune.getTicksPerBeat();
+  for (int i = 0; i < maxTrackLength; i++) {
+    for (int j = 0; j < tune.getTracksCount(); j++) {
+      auto track = tune.getTrack(j);
+      if (i >= track->size()) {
+        ss << "      ";
+      } else {
+        ss << track->at(i).getSymbol();
+      }
+
+      if (j < tune.getTracksCount() - 1) {
+        ss << "|";
+      }
+    }
+    ss << "\n";
+  }
+
+  return ss.str();
 }
 
 }  // namespace sid

@@ -10,6 +10,7 @@ native:
 
 debug:
   # Creates a debug build
+  export LSAN_OPTIONS="suppressions=asan.supp"
   cmake --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Debug -B build .
   cmake --build build
 

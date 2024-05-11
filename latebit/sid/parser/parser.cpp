@@ -51,7 +51,7 @@ auto TuneParser::fromStream(istream *stream) -> unique_ptr<Tune> {
   }
 
   int bpm = getNumber(stream);
-  if (bpm <= 10 || bpm >= 400) {
+  if (bpm < 10 || bpm > 400) {
     Log.error("Invalid bpm. Expected a number 10-400, got %d", bpm);
     return nullptr;
   }
@@ -96,7 +96,7 @@ auto TuneParser::fromStream(istream *stream) -> unique_ptr<Tune> {
     }
 
     auto symbols = getSymbolsFromLine(line);
-    if (symbols.size() != tracksCount) {
+    if ((int)symbols.size() != tracksCount) {
       Log.error("Invalid number of symbols in line %d. Expected %d, got %d", i,
                 tracksCount, symbols.size());
       return nullptr;
@@ -164,7 +164,7 @@ auto TuneParser::toString(const Tune &tune) -> string {
   for (int i = 0; i < maxTrackLength; i++) {
     for (int j = 0; j < tune.getTracksCount(); j++) {
       auto track = tune.getTrack(j);
-      if (i >= track->size()) {
+      if (i >= (int)track->size()) {
         ss << "      ";
       } else {
         ss << track->at(i).getSymbol();

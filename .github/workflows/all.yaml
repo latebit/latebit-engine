@@ -48,11 +48,21 @@ jobs:
         path: ${{ github.workspace }}/vcpkg
         key: ${{ runner.os }}-${{ hashFiles('vcpkg.json') }}-${{ matrix.c_compiler }}
 
+    - name: Install System Dependencies (Linux)
+      if: matrix.os == 'ubuntu-22.04'
+      run: |
+        sudo apt update
+        sudo apt-get install build-essential git make \
+          pkg-config cmake ninja-build gnome-desktop-testing libasound2-dev libpulse-dev \
+          libaudio-dev libjack-dev libsndio-dev libx11-dev libxext-dev \
+          libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev \
+          libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \
+          libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev fcitx-libs-dev \
+          libpipewire-0.3-dev libwayland-dev libdecor-0-dev -y
+
     - name: Install vcpkg
       if: matrix.c_compiler != 'emcc'
       uses: lukka/run-vcpkg@v11
-      with:
-        doNotCache: false
 
     - name: Configure
       run: >
@@ -67,12 +77,12 @@ jobs:
         
     - name: Build
       run: |
-        cmake --build build -j 4
+        cmake --build build -j8
 
     - name: Unit Test
       if: matrix.c_compiler != 'emcc'
       working-directory: build
-      run: ctest -j10 --output-on-failure
+      run: ctest -j8 --output-on-failure
       env:
         SDL_AUDIODRIVER: dummy
         SDL_VIDEODRIVER: dummy
@@ -80,7 +90,7 @@ jobs:
     - name: Package
       if: startsWith(github.ref, 'refs/tags/')
       run: |
-        cmake --build build -t package
+        cmake --build build -j8 -t package
 
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/')
@@ -116,7 +126,7 @@ jobs:
         CMAKE_BUILD_TYPE: Release
 
     - name: Package
-      run: emmake cmake --build build -j 4 -t package
+      run: emmake cmake --build build -j8 -t package
 
     - name: Create Release
       uses: softprops/action-gh-release@v2

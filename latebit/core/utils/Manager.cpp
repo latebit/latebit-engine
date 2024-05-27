@@ -94,6 +94,8 @@ auto Manager::onEvent(const Event* event) const -> int {
   return count;
 }
 
-auto Manager::isValid(string eventType) const -> bool { return false; }
+auto Manager::isValid([[maybe_unused]] string eventType) const -> bool {
+  return false;
+}
 
 }  // namespace lb

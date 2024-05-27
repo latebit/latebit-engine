@@ -53,7 +53,7 @@ void WorldManager::shutDown() {
   Log.info("WorldManager::shutDown(): Shut down successfully");
 }
 
-auto WorldManager::isValid(string eventType) const -> bool {
+auto WorldManager::isValid([[maybe_unused]] string eventType) const -> bool {
   // World Manager needs to accept all the events because it is the Manager
   // responsible for registering custom events
   return true;

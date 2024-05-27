@@ -32,7 +32,8 @@ auto mix(float a, float b) -> float {
   return mixed;
 }
 
-void AudioManager::callback(void *userdata, Uint8 *stream, int len) {
+void AudioManager::callback([[maybe_unused]] void *userdata, Uint8 *stream,
+                            int len) {
   int samples = len / sizeof(float);
 
   for (int i = 0; i < samples; i++) {

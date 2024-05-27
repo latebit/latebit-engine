@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 3.28.1)
 
-# Project settings
-project(test LANGUAGES C CXX)
+project(integration_test LANGUAGES C CXX)
 
-# Create a test library to link against in all the tests
-add_library(test ${TEST_LIB_FILES})
-target_link_libraries(test "${TEST}/lib/*.cpp")
+file(GLOB_RECURSE INTEGRATION_TESTS_FILES "${CMAKE_SOURCE_DIR}/test/integration/*")
+
+foreach(test_file ${INTEGRATION_TESTS_FILES})
+  get_filename_component(FILE_NAME ${test_file} NAME_WE)
+  add_executable(${FILE_NAME}.test ${test_file})
+  target_link_libraries(${FILE_NAME}.test latebit latebit-test)
+  # Note: not adding the test to ctest, as these tests are meant to be run manually
+endforeach()

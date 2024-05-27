@@ -108,8 +108,8 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame,
     return -1;
   }
 
-  for (int i = 0; i < frame->getHeight(); i++) {
-    for (int j = 0; j < frame->getWidth(); j++) {
+  for (uint8_t i = 0; i < frame->getHeight(); i++) {
+    for (uint8_t j = 0; j < frame->getWidth(); j++) {
       auto index = i * frame->getWidth() + j;
       auto color = toSDLColor(content[index]);
 
@@ -143,8 +143,8 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame,
   }
 
   SDL_Rect rectangle = {(int)pixelPosition.getX(), (int)pixelPosition.getY(),
-                        frame->getWidth() * cellSize,
-                        frame->getHeight() * cellSize};
+                        (int)frame->getWidth() * cellSize,
+                        (int)frame->getHeight() * cellSize};
 
   SDL_RenderCopy(this->renderer, texture, nullptr, &rectangle);
   SDL_FreeSurface(surface);

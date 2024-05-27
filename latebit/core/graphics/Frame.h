@@ -11,8 +11,8 @@ namespace lb {
 
 class Frame {
  private:
-  int width = 0;
-  int height = 0;
+  uint8_t width = 0;
+  uint8_t height = 0;
   vector<Color> content = {};
 
  public:
@@ -21,13 +21,13 @@ class Frame {
   Frame();
   // Frames are used to render a given frame of a sprite animation.
   // Creates a new frame with the given width, height, and content.
-  Frame(int w, int h, vector<Color> content);
+  Frame(uint8_t w, uint8_t h, vector<Color> content);
 
   // Get the width of the frame
-  [[nodiscard]] auto getWidth() const -> int;
+  [[nodiscard]] auto getWidth() const -> uint8_t;
 
   // Get the height of the frame
-  [[nodiscard]] auto getHeight() const -> int;
+  [[nodiscard]] auto getHeight() const -> uint8_t;
 
   // Get the content of the frame
   [[nodiscard]] auto getContent() const -> vector<Color>;

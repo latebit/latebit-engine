@@ -12,15 +12,15 @@ using namespace std;
 namespace lb {
 Frame::Frame() = default;
 
-Frame::Frame(int w, int h, vector<Color> content) {
+Frame::Frame(uint8_t w, uint8_t h, vector<Color> content) {
   this->width = w;
   this->height = h;
   this->content = content;
 }
 
-auto Frame::getWidth() const -> int { return this->width; }
+auto Frame::getWidth() const -> uint8_t { return this->width; }
 
-auto Frame::getHeight() const -> int { return this->height; }
+auto Frame::getHeight() const -> uint8_t { return this->height; }
 
 auto Frame::getContent() const -> vector<Color> { return this->content; }
 

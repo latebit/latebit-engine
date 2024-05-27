@@ -104,10 +104,10 @@ auto SpriteParser::parseTextSprite(string filename, string label) -> Sprite {
   }
 
   // Order of these lines matters! Do not change!
-  int frames = stoi(getLine(&file));
-  int width = stoi(getLine(&file));
-  int height = stoi(getLine(&file));
-  int slowdown = stoi(getLine(&file));
+  uint8_t frames = stoi(getLine(&file));
+  uint8_t width = stoi(getLine(&file));
+  uint8_t height = stoi(getLine(&file));
+  uint8_t slowdown = stoi(getLine(&file));
 
   Sprite sprite(label, width, height, slowdown, frames);
 

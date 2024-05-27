@@ -18,10 +18,18 @@ namespace lb {
 unique_ptr<sid::Sequencer> AudioManager::musicSequencer = nullptr;
 unique_ptr<sid::Sequencer> AudioManager::sfxSequencer = nullptr;
 
-// Simple mixing function: when both sound and music are playing, average
-// the volume, otherwise chose just one of them
 auto mix(float a, float b) -> float {
-  return (a == 0.0f) ? b : (b == 0.0f ? a : (a + b) / 2.0f);
+  constexpr float THRESHOLD = 0.8f;
+  constexpr float LIMIT_FACTOR = 0.4f;
+  double mixed = a + b;
+
+  // Simple soft limiting
+  if (mixed > THRESHOLD)
+    mixed = THRESHOLD + (mixed - THRESHOLD) * LIMIT_FACTOR;
+  else if (mixed < -THRESHOLD)
+    mixed = -THRESHOLD + (mixed + THRESHOLD) * LIMIT_FACTOR;
+
+  return mixed;
 }
 
 void AudioManager::callback(void *userdata, Uint8 *stream, int len) {

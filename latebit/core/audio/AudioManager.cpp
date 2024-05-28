@@ -21,7 +21,7 @@ unique_ptr<sid::Sequencer> AudioManager::sfxSequencer = nullptr;
 auto mix(float a, float b) -> float {
   constexpr float THRESHOLD = 0.8f;
   constexpr float LIMIT_FACTOR = 0.4f;
-  double mixed = a + b;
+  float mixed = a + b;
 
   // Simple soft limiting
   if (mixed > THRESHOLD)
@@ -34,9 +34,9 @@ auto mix(float a, float b) -> float {
 
 void AudioManager::callback([[maybe_unused]] void *userdata, Uint8 *stream,
                             int len) {
-  int samples = len / sizeof(float);
+  size_t samples = (size_t)len / sizeof(float);
 
-  for (int i = 0; i < samples; i++) {
+  for (size_t i = 0; i < samples; i++) {
     float a = AudioManager::musicSequencer->getNextSample();
     float b = AudioManager::sfxSequencer->getNextSample();
     ((float *)stream)[i] = mix(a, b);

@@ -88,6 +88,23 @@ void getSamples() {
   }
 }
 
+void emptyTracks() {
+  Sequencer s;
+  shared_ptr<Tune> t(new Tune(3));
+  Track one = {
+    Note::fromSymbol("C-4---"),
+    Note::fromSymbol("C#4---"),
+  };
+  t->getTrack(0)->insert(t->getTrack(0)->end(), one.begin(), one.end());
+  s.loadTune(t);
+  s.play();
+  for (int i = 0; i < 100; i++) {
+    s.getNextSample();
+  }
+
+  assertEq("does not crash", true, true);
+}
+
 auto main() -> int {
   test("envelope", envelope);
   test("getSamples", getSamples);
@@ -96,6 +113,7 @@ auto main() -> int {
     assertEq("initializes the wavetable", WaveTable::getSize(),
              Configuration::getBufferSize());
   });
+  test("can handle empty tracks", emptyTracks);
 
   return report();
 }

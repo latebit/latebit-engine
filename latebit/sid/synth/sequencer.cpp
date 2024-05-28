@@ -132,6 +132,8 @@ auto Sequencer::play() -> int {
   // skipped when you resume playing and you have paused just after the tick
   for (int i = 0; i < this->tune->getTracksCount(); i++) {
     auto track = this->tune->getTrack(i);
+    if (track->empty()) continue;
+
     Note lastNote = track->at(this->getCurrentTick(i));
     this->setNoteForTrack(lastNote, i);
   }
@@ -197,6 +199,8 @@ auto Sequencer::getNextSample() -> float {
   // Plays the current sample in every channel
   for (int channel = 0; channel < this->tune->getTracksCount(); channel++) {
     shared_ptr<Track> track = this->tune->getTrack(channel);
+    if (track->empty()) continue;
+
     auto& envelope = this->envelopes[channel];
     auto& oscillator = this->oscillators[channel];
 

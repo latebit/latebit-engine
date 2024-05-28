@@ -28,7 +28,7 @@ class Sound {
   [[nodiscard]] auto getLabel() const -> string;
 
   // Play sound.
-  void play();
+  void play(bool loop);
   void stop();
   void pause();
 

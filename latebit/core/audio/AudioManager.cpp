@@ -103,7 +103,8 @@ void AudioManager::playMusic(shared_ptr<sid::Tune> tune, bool loop) {
 void AudioManager::stopMusic() { this->musicSequencer->stop(); }
 void AudioManager::pauseMusic() { this->musicSequencer->pause(); }
 
-void AudioManager::playSound(shared_ptr<sid::Tune> tune) {
+void AudioManager::playSound(shared_ptr<sid::Tune> tune, bool loop) {
+  this->sfxSequencer->setLoop(loop);
   this->sfxSequencer->stop();
 
   // If the tune is already loaded, just play it

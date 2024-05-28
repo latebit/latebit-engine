@@ -32,8 +32,8 @@ class AudioManager : public Manager {
   // Pauses the music sequencer
   void pauseMusic();
 
-  // Loads and play a sound effect
-  void playSound(shared_ptr<sid::Tune> tune);
+  // Loads and play a sound effect. It plays indefinitely with loop=true
+  void playSound(shared_ptr<sid::Tune> tune, bool loop);
   // Stops the sound sequencer
   void stopSound();
   // Pauses the sound sequencer

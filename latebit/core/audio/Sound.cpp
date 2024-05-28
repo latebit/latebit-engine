@@ -18,7 +18,7 @@ Sound::~Sound() {
   this->sound = nullptr;
 }
 
-auto Sound::play() -> void { AM.playSound(this->sound); }
+auto Sound::play(bool loop) -> void { AM.playSound(this->sound, loop); }
 auto Sound::pause() -> void { AM.pauseSound(); }
 auto Sound::stop() -> void { AM.stopSound(); }
 

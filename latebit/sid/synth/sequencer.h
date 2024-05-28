@@ -43,13 +43,13 @@ class Envelope {
   // The current value of the envelope
   float value = 0;
   // How much volume to increase per sample in the attack phase
-  float attackPerSample = 0.01;
+  float attackPerSample = 0.01f;
   // How much volume to decrease per sample in the decay phase
-  float decayPerSample = 0.001;
+  float decayPerSample = 0.001f;
   // The level of volume to sustain after the decay phase
-  float sustainLevel = 0.5;
-  // How much volume to decrease per sample in the release phase
-  float releasePerSample = 0.001;
+  float sustainLevel = 0.5f;
+  // How much volume to decrease per sample in the release phase1
+  float releasePerSample = 0.01f;
 };
 
 class Sequencer {

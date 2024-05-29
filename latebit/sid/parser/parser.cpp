@@ -15,16 +15,21 @@ using namespace std;
 
 namespace sid {
 auto getNumber(istream *stream, char commentChar = '#') -> int {
-  string line = getNonCommentedLine(stream);
-  if (line.empty()) {
-    return -1;
-  }
-  smatch match;
-  std::regex numberWithComments("^\\d+\\s*" + string(1, commentChar) + "*.*$");
-  if (std::regex_search(line, match, numberWithComments)) {
-    // TODO: handle exceptions
-    return stoi(match.str());
-  } else {
+  try {
+    string line = getNextNonCommentLine(stream, commentChar);
+    if (line.empty()) {
+      return -1;
+    }
+    smatch match;
+    std::regex numberWithComments("^\\d+\\s*" + string(1, commentChar) +
+                                  "*.*$");
+    if (std::regex_search(line, match, numberWithComments)) {
+      auto result = match.str();
+      return stoi(result);
+    } else {
+      return -1;
+    }
+  } catch (...) {
     return -1;
   }
 }
@@ -32,12 +37,12 @@ auto getNumber(istream *stream, char commentChar = '#') -> int {
 auto getSymbolsFromLine(const string &line,
                         char delimiter = '|') -> vector<string> {
   vector<string> result;
-  stringstream ss(line);
-  string item;
+  istringstream ss(line);
+  string item = getLine(&ss, delimiter);
 
-  // TODO: use getLine instead of getline
-  while (getline(ss, item, delimiter)) {
+  while (!item.empty()) {
     result.push_back(item);
+    item = getLine(&ss, delimiter);
   }
 
   return result;
@@ -89,7 +94,7 @@ auto TuneParser::fromStream(istream *stream) -> unique_ptr<Tune> {
   }
 
   for (int i = 0; i < maxTrackLength; i++) {
-    auto line = getNonCommentedLine(stream);
+    auto line = getNextNonCommentLine(stream);
     if (line.empty()) {
       Log.error("Unexpected end of file");
       return nullptr;

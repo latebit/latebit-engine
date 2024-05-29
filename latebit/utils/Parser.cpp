@@ -1,9 +1,9 @@
 #include "Parser.h"
 
-auto getLine(istream* file) -> string {
+auto getLine(istream* file, char delimiter) -> string {
   string line;
 
-  getline(*file, line);
+  getline(*file, line, delimiter);
 
   if (!line.empty() && line.back() == '\r') {
     line.pop_back();
@@ -12,8 +12,9 @@ auto getLine(istream* file) -> string {
   return line;
 }
 
-auto getNonCommentedLine(istream* stream, char commentChar) -> string {
-  string line = getLine(stream);
+auto getNextNonCommentLine(istream* stream, char commentChar,
+                           char delimiter) -> string {
+  string line = getLine(stream, delimiter);
 
   while (!line.empty()) {
     if (line[0] != commentChar) {

@@ -1,9 +1,9 @@
-#include "tune.h"
+#include "Tune.h"
 
 #include <memory>
 #include <vector>
 
-#include "track.h"
+#include "Note.h"
 
 using namespace std;
 

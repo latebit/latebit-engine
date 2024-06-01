@@ -3,7 +3,7 @@
 #include <istream>
 #include <memory>
 
-#include "latebit/sid/synth/tune.h"
+#include "latebit/sid/synth/Tune.h"
 
 using namespace std;
 

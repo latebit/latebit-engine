@@ -1,10 +1,10 @@
-#include "sequencer.h"
+#include "Sequencer.h"
 
 #include <memory>
 
-#include "latebit/sid/synth/configuration.h"
-#include "latebit/sid/synth/tune.h"
-#include "latebit/sid/synth/wavetable.h"
+#include "latebit/sid/synth/Configuration.h"
+#include "latebit/sid/synth/Tune.h"
+#include "latebit/sid/synth/Wavetable.h"
 #include "test/lib/test.h"
 
 using namespace sid;

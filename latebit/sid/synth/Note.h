@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "oscillator.h"
+#include "Oscillator.h"
 
 using namespace std;
 

@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "TuneParser.h"
 
 #include <istream>
 #include <memory>
@@ -6,8 +6,8 @@
 #include <sstream>
 #include <string>
 
-#include "latebit/sid/synth/track.h"
-#include "latebit/sid/synth/tune.h"
+#include "../synth/Note.h"
+#include "../synth/Tune.h"
 #include "latebit/utils/Logger.h"
 #include "latebit/utils/Parser.h"
 

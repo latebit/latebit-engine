@@ -3,55 +3,18 @@
 #include <memory>
 #include <vector>
 
-#include "latebit/sid/synth/configuration.h"
-#include "oscillator.h"
-#include "tune.h"
+#include "Configuration.h"
+#include "Envelope.h"
+#include "Oscillator.h"
+#include "Tune.h"
 
 namespace sid {
-// How many samples before the end of the note should the envelope start
-// releasing. This number is very arbitrary and based on what "sounds good".
-// Exported for testing purposes.
 extern const int ENVELOPE_RELEASE_SAMPLES;
 
-enum EnvelopeState { ATTACK, DECAY, SUSTAIN, RELEASE, DONE };
-
-// Defines a volume envelope. Its value is between 0 and 1 where 0 is
-// silence and 1 is full volume associated with the Note being played
-class Envelope {
- public:
-  Envelope() = default;
-  ~Envelope() = default;
-  // Starts the envelope
-  void attack();
-  // Initiates the release phase of the envelope
-  void release();
-  // Resets the envelope to the done state
-  void done();
-  // Processes the envelope for the next sample and returns the value of the
-  // envelope
-  auto process() -> float;
-  // Returns the current value of the envelope
-  [[nodiscard]] auto getValue() const -> float;
-  // Returns the current state of the envelope
-  [[nodiscard]] auto getState() const -> EnvelopeState;
-  // Returns the level of volume to sustain after the decay phase
-  [[nodiscard]] auto getSustainLevel() const -> float;
-
- private:
-  // The current state of the envelope
-  EnvelopeState state = DONE;
-  // The current value of the envelope
-  float value = 0;
-  // How much volume to increase per sample in the attack phase
-  float attackPerSample = 0.01f;
-  // How much volume to decrease per sample in the decay phase
-  float decayPerSample = 0.001f;
-  // The level of volume to sustain after the decay phase
-  float sustainLevel = 0.5f;
-  // How much volume to decrease per sample in the release phase1
-  float releasePerSample = 0.01f;
-};
-
+// The sequencer is responsible for playing a tune. It has a set of oscillators
+// and envelopes that are used to play the notes in the tune. It keeps track of
+// the current note being played and the current tick for each track. It also
+// keeps track of the current sample being played within a single tick.
 class Sequencer {
  private:
   // Keeps track of the current sample being played within a single tick

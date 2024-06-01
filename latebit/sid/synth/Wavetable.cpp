@@ -1,4 +1,4 @@
-#include "wavetable.h"
+#include "Wavetable.h"
 
 #include <array>
 #include <cstdlib>

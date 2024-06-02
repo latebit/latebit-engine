@@ -51,11 +51,19 @@ class GameManager : public Manager {
   // Define random starting seed. Better to be called before startUp().
   void setRandomSeed(int seed = time(nullptr));
 
-  // Pause the game loop
+  // Pause the game loop.
+  // When the game is paused all the updates in the WorldManager are suspended
+  // and animations are stopped. Everything else keeps working as normal.
+  // It can be resumed with resume().
   void pause();
-  // Resume the game loop
+
+  // Resume the game loop from a paused state.
+  // It can be paused again with pause().
+  // See pause() for more information.
   void resume();
-  // Get pause status
+
+  // Returns true when the game loop is paused.
+  // See pause() for more information.
   [[nodiscard]] auto isPaused() const -> bool;
 
 #ifdef __EMSCRIPTEN__

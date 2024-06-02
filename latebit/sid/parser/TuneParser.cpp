@@ -1,5 +1,6 @@
 #include "TuneParser.h"
 
+#include <format>
 #include <istream>
 #include <memory>
 #include <regex>
@@ -48,7 +49,14 @@ auto getSymbolsFromLine(const string &line,
   return result;
 }
 
-auto TuneParser::fromStream(istream *stream) -> unique_ptr<Tune> {
+auto makeRangeValidationMessage(int value, int max, int min = 1) -> string {
+  return max == min
+           ? format("Expected {}, got {}", min, value)
+           : format("Expected a number {}-{}, got {}", min, max, value);
+}
+
+auto TuneParser::fromStream(istream *stream,
+                            const ParserOptions *opts) -> unique_ptr<Tune> {
   string version = getLine(stream);
   if (version != "#v0.1#") {
     Log.error("Invalid header. Unsupported version %s", version.c_str());
@@ -57,25 +65,32 @@ auto TuneParser::fromStream(istream *stream) -> unique_ptr<Tune> {
 
   int bpm = getNumber(stream);
   if (bpm < 10 || bpm > 400) {
-    Log.error("Invalid bpm. Expected a number 10-400, got %d", bpm);
+    Log.error("Invalid bpm. %s",
+              makeRangeValidationMessage(bpm, 400, 10).c_str());
     return nullptr;
   }
+
   int ticksPerBeat = getNumber(stream);
-  if (ticksPerBeat <= 0 || ticksPerBeat > 16) {
-    Log.error("Invalid ticks per beat. Expected a number 1-16, got %d",
-              ticksPerBeat);
+  if (ticksPerBeat < 1 || ticksPerBeat > opts->maxTicksPerBeat) {
+    Log.error(
+      "Invalid ticks per beat. %s",
+      makeRangeValidationMessage(ticksPerBeat, opts->maxTicksPerBeat).c_str());
     return nullptr;
   }
+
   int beatsCount = getNumber(stream);
   if (beatsCount <= 0 || beatsCount > 64) {
-    Log.error("Invalid beats count. Expected a number 1-64, got %d",
-              beatsCount);
+    Log.error(
+      "Invalid beats count. %s",
+      makeRangeValidationMessage(beatsCount, opts->maxBeatsCount).c_str());
     return nullptr;
   }
+
   int tracksCount = getNumber(stream);
-  if (tracksCount <= 0 || tracksCount > 3) {
-    Log.error("Invalid tracks count. Expected a number 1-3, got %d",
-              tracksCount);
+  if (tracksCount <= 0 || tracksCount > opts->maxTracksCount) {
+    Log.error(
+      "Invalid tracks count. %s",
+      makeRangeValidationMessage(tracksCount, opts->maxTracksCount).c_str());
     return nullptr;
   }
 
@@ -142,19 +157,21 @@ auto TuneParser::fromStream(istream *stream) -> unique_ptr<Tune> {
   return t;
 }
 
-auto TuneParser::fromFile(const string filename) -> unique_ptr<Tune> {
+auto TuneParser::fromFile(const string filename,
+                          const ParserOptions *opts) -> unique_ptr<Tune> {
   ifstream file(filename);
   if (!file.is_open()) {
     Log.error("Could not open file %s", filename.c_str());
     return nullptr;
   }
 
-  return fromStream(&file);
+  return fromStream(&file, opts);
 }
 
-auto TuneParser::fromString(string str) -> unique_ptr<Tune> {
+auto TuneParser::fromString(string str,
+                            const ParserOptions *opts) -> unique_ptr<Tune> {
   istringstream stream(str);
-  return fromStream(&stream);
+  return fromStream(&stream, opts);
 }
 
 auto TuneParser::toString(const Tune &tune) -> string {

@@ -6,10 +6,13 @@
 
 using namespace sid;
 
+const ParserOptions DEFAULT_PARSER_OPTIONS = {
+  .maxTracksCount = 3, .maxBeatsCount = 64, .maxTicksPerBeat = 16};
+
 void simplest() {
   string str =
     "#v0.1#\n90\n1\n2\n3\nC-4---|D-4---|------\nC-5---|......|------\n";
-  unique_ptr<Tune> t = TuneParser::fromString(str);
+  unique_ptr<Tune> t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("parses tune", t != nullptr);
   assertEq("parses bpm", t->getBpm(), 90);
@@ -46,7 +49,7 @@ void withComments() {
     "3\n"
     "C-4---|D-4---|------\n"
     "C-5---|......|------\n";
-  unique_ptr<Tune> t = TuneParser::fromString(str);
+  unique_ptr<Tune> t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("parses tune", t != nullptr);
   assertEq("parses bpm", t->getBpm(), 90);
@@ -83,7 +86,7 @@ void differentLengths() {
     "C-4---|C-4---|B-4---\n"
     "G-4---|      |C-4---\n"
     "E-4---|      |      \n";
-  unique_ptr<Tune> t = TuneParser::fromString(str);
+  unique_ptr<Tune> t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("parses tune", t != nullptr);
   assertEq("has correct track length (0)", t->getTrack(0)->size(), 3);
@@ -110,7 +113,7 @@ void rests() {
     "------\n"
     "E-4---\n";
 
-  unique_ptr<Tune> t = TuneParser::fromString(str);
+  unique_ptr<Tune> t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("parses tune", t != nullptr);
 
@@ -136,7 +139,7 @@ void continues() {
     "......\n"
     "------\n";
 
-  unique_ptr<Tune> t = TuneParser::fromString(str);
+  unique_ptr<Tune> t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("parses tune", t != nullptr);
 
@@ -156,7 +159,7 @@ void continues() {
     "------\n"
     "......\n";
 
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   track = t->getTrack(0);
   assertEq("track 0 has correct track length", track->size(), 2);
@@ -174,7 +177,7 @@ void brokenHeader() {
     "......\n"
     "------\n";
 
-  unique_ptr<Tune> t = TuneParser::fromString(str);
+  unique_ptr<Tune> t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("does not parse with missing data", t == nullptr);
 
@@ -188,7 +191,7 @@ void brokenHeader() {
     "......\n"
     "------\n";
 
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("does not parse with invalid version", t == nullptr);
 
@@ -201,7 +204,7 @@ void brokenHeader() {
     "C-4---\n"
     "......\n"
     "......\n";
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("does not parse with invalid numbers", t == nullptr);
 }
@@ -217,7 +220,7 @@ void header() {
     "......\n"
     "------\n";
 
-  unique_ptr<Tune> t = TuneParser::fromString(str);
+  unique_ptr<Tune> t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("does not parse the tune with invalid version", t == nullptr);
 
@@ -231,7 +234,7 @@ void header() {
     "......\n"
     "------\n";
 
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("does not parse the tune with invalid bpm (too small)", t == nullptr);
 
@@ -245,7 +248,7 @@ void header() {
     "......\n"
     "------\n";
 
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("does not parse the tune with invalid bpm (too big)", t == nullptr);
 
@@ -259,7 +262,7 @@ void header() {
     "......\n"
     "------\n";
 
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("does not parse the tune with invalid ticks per beat (too small)",
          t == nullptr);
@@ -274,7 +277,7 @@ void header() {
     "......\n"
     "------\n";
 
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("does not parse the tune with invalid ticks per beat (too big)",
          t == nullptr);
@@ -289,7 +292,7 @@ void header() {
     "......\n"
     "------\n";
 
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("does not parse the tune with invalid beats count (too small)",
          t == nullptr);
@@ -304,7 +307,7 @@ void header() {
     "......\n"
     "------\n";
 
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("does not parse the tune with invalid beats count (too big)",
          t == nullptr);
@@ -319,7 +322,7 @@ void header() {
     "......\n"
     "------\n";
 
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("does not parse the tune with invalid tracks count (too small)",
          t == nullptr);
@@ -334,7 +337,7 @@ void header() {
     "......\n"
     "------\n";
 
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("does not parse the tune with invalid tracks count (too big)",
          t == nullptr);
@@ -346,7 +349,7 @@ void header() {
     "1\n"
     "1\n"
     "C-4---\n";
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("parses tune", t != nullptr);
   assertEq("parses bpm", t->getBpm(), 10);
@@ -355,14 +358,14 @@ void header() {
   assertEq("parses tracks count", t->getTracksCount(), 1);
 
   str = "#v0.1#\n400\n1\n1\n1\nC-4---\n";
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
   assert("parses tune", t != nullptr);
 
   str =
     "#v0.1#\n400\n16\n1\n1\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-"
     "4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4-"
     "--\n";
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
   assert("parses tune", t != nullptr);
 
   str =
@@ -375,11 +378,11 @@ void header() {
     "4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\n"
     "C-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-"
     "4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\nC-4---\n";
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
   assert("parses tune", t != nullptr);
 
   str = "#v0.1#\n400\n1\n1\n3\nC-4---|C-4---|C-4---\n";
-  t = TuneParser::fromString(str);
+  t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
   assert("parses tune", t != nullptr);
 }
 
@@ -394,7 +397,7 @@ void consistency() {
     "......\n"
     "------\n";
 
-  unique_ptr<Tune> t = TuneParser::fromString(str);
+  unique_ptr<Tune> t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
   assert("parses tune", t != nullptr);
   string out = TuneParser::toString(*t);
@@ -410,7 +413,7 @@ void consistency() {
     "......\n"
     "------\n";
 
-  t = TuneParser::fromString(strWithComments);
+  t = TuneParser::fromString(strWithComments, &DEFAULT_PARSER_OPTIONS);
   assert("parses tune", t != nullptr);
   out = TuneParser::toString(*t);
   assertEq("strips out comments", out, str);
@@ -500,15 +503,45 @@ void specialSymbols() {
   assertEq("returns expected output", TuneParser::toString(tune), expected);
 }
 
+void withDifferentOptions() {
+  ParserOptions opts = {
+    .maxTracksCount = 1, .maxBeatsCount = 2, .maxTicksPerBeat = 1};
+
+  string valid =
+    "#v0.1#\n"
+    "90\n"
+    "1\n"
+    "2\n"
+    "1\n"
+    "C-4---\n"
+    "D-4---\n";
+
+  assert("does not fail with valid input",
+         TuneParser::fromString(valid, &opts) != nullptr);
+
+  string validButNotCompliant =
+    "#v0.1#\n"
+    "90\n"
+    "1\n"
+    "2\n"
+    "2\n"
+    "C-4---|C-4---\n"
+    "D-4---|C-4---\n";
+
+  assert("fails with non compliant input",
+         TuneParser::fromString(validButNotCompliant, &opts) == nullptr);
+}
+
 auto main() -> int {
   suite("fromString", []() {
-    test("simplest", simplest);
-    test("withComments", withComments);
-    test("differentLengths", differentLengths);
-    test("rests", rests);
-    test("continues", continues);
-    test("brokenHeader", brokenHeader);
-    test("header", header);
+    test("with simplest input", simplest);
+    test("with comments", withComments);
+    test("with different lengths", differentLengths);
+    test("with rests", rests);
+    test("with continues", continues);
+    test("with broken header", brokenHeader);
+    test("with valid header", header);
+    test("with parsing options", withDifferentOptions);
   });
 
   suite("toString", []() {

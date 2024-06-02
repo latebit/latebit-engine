@@ -1,12 +1,9 @@
 #include "Animation.h"
 
+#include "latebit/core/GameManager.h"
+
 namespace lb {
-Animation::Animation() {
-  this->sprite = nullptr;
-  this->name = "";
-  this->index = 0;
-  this->slowdownCount = 0;
-}
+Animation::Animation() = default;
 
 void Animation::setSprite(Sprite* s) {
   this->sprite = s;
@@ -36,6 +33,9 @@ auto Animation::draw(Vector position) -> int {
 
   int slowdown = getSlowdownCount();
   if (slowdown == STOP_ANIMATION_SLOWDOWN) return 0;
+
+  // Do not update the animation if the game is paused
+  if (GM.isPaused()) return result;
 
   slowdown++;
 

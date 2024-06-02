@@ -20,6 +20,8 @@ class GameManager : public Manager {
   bool gameOver = false;
   // Duration of a frame in microseconds
   int frameTime = FRAME_TIME_DEFAULT;
+  // Set to true when the game loop is paused
+  bool paused = false;
 
   // A reference to the game loop clock
   Clock *clock = new Clock;
@@ -48,6 +50,13 @@ class GameManager : public Manager {
 
   // Define random starting seed. Better to be called before startUp().
   void setRandomSeed(int seed = time(nullptr));
+
+  // Pause the game loop
+  void pause();
+  // Resume the game loop
+  void resume();
+  // Get pause status
+  [[nodiscard]] auto isPaused() const -> bool;
 
 #ifdef __EMSCRIPTEN__
   static void loop(void *arg);

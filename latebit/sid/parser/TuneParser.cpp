@@ -1,6 +1,5 @@
 #include "TuneParser.h"
 
-#include <format>
 #include <istream>
 #include <memory>
 #include <regex>
@@ -50,9 +49,13 @@ auto getSymbolsFromLine(const string &line,
 }
 
 auto makeRangeValidationMessage(int value, int max, int min = 1) -> string {
-  return max == min
-           ? format("Expected {}, got {}", min, value)
-           : format("Expected a number {}-{}, got {}", min, max, value);
+  std::ostringstream oss;
+  if (max == min) {
+    oss << "Expected " << min << ", got " << value;
+  } else {
+    oss << "Expected a number " << min << "-" << max << ", got " << value;
+  }
+  return oss.str();
 }
 
 auto TuneParser::fromStream(istream *stream,

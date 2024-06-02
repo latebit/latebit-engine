@@ -49,7 +49,7 @@ class Music {
 
  private:
   // Pointer to the underlying sid::Tune resource.
-  shared_ptr<Tune> music = nullptr;
+  unique_ptr<Tune> music = nullptr;
 
   // Label associated with the music. Used to retrieve the resource.
   string label = "";

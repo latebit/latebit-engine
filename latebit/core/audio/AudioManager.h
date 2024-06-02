@@ -34,18 +34,18 @@ class AudioManager : public Manager {
   void shutDown() override;
 
   // Loads and plays a music tune. It plays indefinitely with loop=true
-  void playMusic(shared_ptr<sid::Tune> tune, bool loop);
+  void playMusic(sid::Tune *tune, bool loop);
   // Stops the music sequencer
   void stopMusic();
   // Pauses the music sequencer
   void pauseMusic();
 
   // Loads and play a sound effect. It plays indefinitely with loop=true
-  void playSound(shared_ptr<sid::Tune> tune, bool loop);
+  void playSound(sid::Tune *tune, bool loop);
   // Stops the sound sequencer with the given tune
-  void stopSound(shared_ptr<sid::Tune> tune);
+  void stopSound(sid::Tune *tune);
   // Pauses the sound sequencer with the given tune
-  void pauseSound(shared_ptr<sid::Tune> tune);
+  void pauseSound(sid::Tune *tune);
 
  private:
   // Singleton

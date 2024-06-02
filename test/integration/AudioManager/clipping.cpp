@@ -27,7 +27,7 @@ int main() {
     return 1;
   }
 
-  if (RM.loadSound("../../test/fixtures/sfx.lbtune", "sound") != 0) {
+  if (RM.loadSound("../../test/fixtures/sfx.lbsfx", "sound") != 0) {
     return 1;
   }
 

@@ -31,7 +31,7 @@ class Sequencer {
   int totalSamples = 0;
 
   // The tune to be played
-  shared_ptr<Tune> tune = nullptr;
+  Tune* tune = nullptr;
 
   // The oscillators for each track
   vector<unique_ptr<Oscillator>> oscillators = {};
@@ -59,7 +59,7 @@ class Sequencer {
   // Loads the given tune in the sequencer, allocating all the necessary
   // envelopes and oscillators. If a tune has been loaded before, you need to
   // call unloadTune first. Returns -1 for failure.
-  auto loadTune(shared_ptr<Tune> t) -> int;
+  auto loadTune(Tune* t) -> int;
 
   // Unloads the current tune and frees the resources associated with it. It
   // doesn't change oscillators and envelopes though, as they will be
@@ -105,7 +105,7 @@ class Sequencer {
   [[nodiscard]] auto isPlaying() const -> bool;
 
   // Returns the currently loaded tune
-  [[nodiscard]] auto getCurrentTune() const -> const shared_ptr<Tune>&;
+  [[nodiscard]] auto getCurrentTune() const -> const Tune*;
 
   // Returns the index of the current sample being played.
   // Exposed for testing purposes.

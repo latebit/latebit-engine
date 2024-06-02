@@ -420,14 +420,14 @@ void consistency() {
 }
 
 void correctOutput() {
-  Tune tune(2);
-  tune.setBpm(90);
-  tune.setTicksPerBeat(1);
-  tune.setBeatsCount(2);
-  tune.getTrack(0)->push_back(Note::fromSymbol("C-4---"));
-  tune.getTrack(0)->push_back(Note::fromSymbol("D-4---"));
-  tune.getTrack(1)->push_back(Note::fromSymbol("E-4---"));
-  tune.getTrack(1)->push_back(Note::fromSymbol("F-4---"));
+  vector<unique_ptr<Track>> tracks;
+  tracks.push_back(make_unique<Track>());
+  tracks.back()->push_back(Note::fromSymbol("C-4---"));
+  tracks.back()->push_back(Note::fromSymbol("D-4---"));
+  tracks.push_back(make_unique<Track>());
+  tracks.back()->push_back(Note::fromSymbol("E-4---"));
+  tracks.back()->push_back(Note::fromSymbol("F-4---"));
+  Tune tune(90, 1, 2, std::move(tracks));
 
   string expected =
     "#v0.1#\n"
@@ -442,12 +442,12 @@ void correctOutput() {
 }
 
 void emptyTrack() {
-  Tune tune(2);
-  tune.setBpm(90);
-  tune.setTicksPerBeat(1);
-  tune.setBeatsCount(2);
-  tune.getTrack(0)->push_back(Note::fromSymbol("C-4---"));
-  tune.getTrack(0)->push_back(Note::fromSymbol("D-4---"));
+  vector<unique_ptr<Track>> tracks;
+  tracks.push_back(make_unique<Track>());
+  tracks.back()->push_back(Note::fromSymbol("C-4---"));
+  tracks.back()->push_back(Note::fromSymbol("D-4---"));
+  tracks.push_back(make_unique<Track>());
+  Tune tune(90, 1, 2, std::move(tracks));
 
   string expected =
     "#v0.1#\n"
@@ -462,13 +462,13 @@ void emptyTrack() {
 }
 
 void unequalLengths() {
-  Tune tune(2);
-  tune.setBpm(90);
-  tune.setTicksPerBeat(1);
-  tune.setBeatsCount(2);
-  tune.getTrack(0)->push_back(Note::fromSymbol("C-4---"));
-  tune.getTrack(0)->push_back(Note::fromSymbol("D-4---"));
-  tune.getTrack(1)->push_back(Note::fromSymbol("E-4---"));
+  vector<unique_ptr<Track>> tracks;
+  tracks.push_back(make_unique<Track>());
+  tracks.back()->push_back(Note::fromSymbol("C-4---"));
+  tracks.back()->push_back(Note::fromSymbol("D-4---"));
+  tracks.push_back(make_unique<Track>());
+  tracks.back()->push_back(Note::fromSymbol("E-4---"));
+  Tune tune(90, 1, 2, std::move(tracks));
 
   string expected =
     "#v0.1#\n"
@@ -483,13 +483,13 @@ void unequalLengths() {
 }
 
 void specialSymbols() {
-  Tune tune(2);
-  tune.setBpm(90);
-  tune.setTicksPerBeat(1);
-  tune.setBeatsCount(2);
-  tune.getTrack(0)->push_back(Note::fromSymbol("C-4---"));
-  tune.getTrack(0)->push_back(Note::makeContinue());
-  tune.getTrack(1)->push_back(Note::makeRest());
+  vector<unique_ptr<Track>> tracks;
+  tracks.push_back(make_unique<Track>());
+  tracks.back()->push_back(Note::fromSymbol("C-4---"));
+  tracks.back()->push_back(Note::makeContinue());
+  tracks.push_back(make_unique<Track>());
+  tracks.back()->push_back(Note::makeRest());
+  Tune tune(90, 1, 2, std::move(tracks));
 
   string expected =
     "#v0.1#\n"

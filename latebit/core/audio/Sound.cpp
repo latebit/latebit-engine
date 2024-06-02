@@ -12,31 +12,24 @@ using namespace sid;
 
 namespace lb {
 Sound::Sound() = default;
+Sound::~Sound() = default;
 
-Sound::~Sound() {
-  this->sound.reset();
-  this->sound = nullptr;
-}
-
-auto Sound::play(bool loop) -> void { AM.playSound(this->sound, loop); }
-auto Sound::pause() -> void { AM.pauseSound(this->sound); }
-auto Sound::stop() -> void { AM.stopSound(this->sound); }
+auto Sound::play(bool loop) -> void { AM.playSound(this->sound.get(), loop); }
+auto Sound::pause() -> void { AM.pauseSound(this->sound.get()); }
+auto Sound::stop() -> void { AM.stopSound(this->sound.get()); }
 
 auto Sound::getLabel() const -> string { return this->label; }
 auto Sound::setLabel(string l) -> void { this->label = l; }
 
 auto Sound::loadSound(string filename) -> int {
-  if (this->sound != nullptr) {
-    this->sound.reset();
-    this->sound = nullptr;
-  }
+  auto tune = TuneParser::fromFile(filename, &SOUND_PARSER_OPTIONS);
 
-  this->sound = TuneParser::fromFile(filename, &SOUND_PARSER_OPTIONS);
-
-  if (this->sound == nullptr) {
+  if (tune == nullptr) {
     Log.error("Sound::loadSound(): Unable to load sound.");
     return -1;
   }
+
+  this->sound = std::move(tune);
 
   return 0;
 }

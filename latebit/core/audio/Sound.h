@@ -48,8 +48,8 @@ class Sound {
   void pause();
 
  private:
-  // Pointer to the underlying sid::Tune resource.
-  shared_ptr<sid::Tune> sound = nullptr;
+  // Pointer to the underlying Tune resource.
+  unique_ptr<Tune> sound = nullptr;
 
   // Label associated with the sound. Used to retrieve the resource.
   string label = "";

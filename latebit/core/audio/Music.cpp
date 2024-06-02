@@ -12,13 +12,9 @@ using namespace sid;
 
 namespace lb {
 Music::Music() = default;
+Music::~Music() = default;
 
-Music::~Music() {
-  this->music.reset();
-  this->music = nullptr;
-}
-
-auto Music::play(bool loop) -> void { AM.playMusic(this->music, loop); }
+auto Music::play(bool loop) -> void { AM.playMusic(this->music.get(), loop); }
 auto Music::pause() -> void { AM.pauseMusic(); }
 auto Music::stop() -> void { AM.stopMusic(); }
 
@@ -26,17 +22,14 @@ auto Music::getLabel() const -> string { return this->label; }
 auto Music::setLabel(string l) -> void { this->label = l; }
 
 auto Music::loadMusic(string filename) -> int {
-  if (this->music != nullptr) {
-    this->music.reset();
-    this->music = nullptr;
-  }
+  auto tune = TuneParser::fromFile(filename, &MUSIC_PARSER_OPTIONS);
 
-  this->music = TuneParser::fromFile(filename, &MUSIC_PARSER_OPTIONS);
-
-  if (this->music == nullptr) {
+  if (tune == nullptr) {
     Log.error("Music::loadMusic(): Unable to load music.");
     return -1;
   }
+
+  this->music = std::move(tune);
 
   return 0;
 }

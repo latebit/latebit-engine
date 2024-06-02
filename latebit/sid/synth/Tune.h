@@ -16,39 +16,39 @@ namespace sid {
 class Tune {
  private:
   // The number of beats per minute
-  int bpm;
+  const int bpm;
   // The smallest number of notes that can be played per beat
-  int ticksPerBeat;
+  const int ticksPerBeat;
   // How many beats in the tune
-  int beatsCount;
+  const int beatsCount;
   // The tracks in the tune
-  vector<shared_ptr<Track>> tracks;
+  const vector<unique_ptr<Track>> tracks;
 
  public:
   // Creates a new tune with the given number of tracks
-  Tune(int tracksCount);
+  Tune(int bpm, int ticksPerBeat, int beatsCount,
+       vector<unique_ptr<Track>>&& tracks)
+    : bpm(bpm),
+      ticksPerBeat(ticksPerBeat),
+      beatsCount(beatsCount),
+      tracks(std::move(tracks)) {}
+
   // Frees the memory associated with the tune
-  ~Tune();
+  ~Tune() = default;
 
   // Returns the number of beats per minute
   [[nodiscard]] auto getBpm() const -> int;
-  // Sets the number of beats per minute
-  auto setBpm(int bpm) -> void;
 
   // Returns the number of ticks per beat
   [[nodiscard]] auto getTicksPerBeat() const -> int;
-  // Sets the number of ticks per beat
-  auto setTicksPerBeat(int ticksPerBeat) -> void;
 
   // Returns the number of beats in the tune
   [[nodiscard]] auto getBeatsCount() const -> int;
-  // Sets the number of beats in the tune
-  auto setBeatsCount(int beatsCount) -> void;
 
   // Returns the number of tracks in the tune
   [[nodiscard]] auto getTracksCount() const -> int;
 
   // Returns the track at the given index
-  [[nodiscard]] auto getTrack(int index) const -> shared_ptr<Track>;
+  [[nodiscard]] auto getTrack(int index) const -> const Track*;
 };
 }  // namespace sid

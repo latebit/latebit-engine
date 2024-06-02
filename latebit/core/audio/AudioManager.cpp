@@ -15,10 +15,11 @@
 #include "latebit/utils/Logger.h"
 
 using namespace std;
+using namespace sid;
 
 namespace lb {
-unique_ptr<sid::Sequencer> AudioManager::musicSequencer = nullptr;
-array<unique_ptr<sid::Sequencer>, 4> AudioManager::sfxSequencers = {
+unique_ptr<Sequencer> AudioManager::musicSequencer = nullptr;
+array<unique_ptr<Sequencer>, 4> AudioManager::sfxSequencers = {
   nullptr, nullptr, nullptr, nullptr};
 
 auto softLimit(float mixed) -> float {
@@ -50,9 +51,9 @@ void AudioManager::callback([[maybe_unused]] void *userdata, Uint8 *stream,
 
 AudioManager::AudioManager() {
   setType("AudioManager");
-  AudioManager::musicSequencer = make_unique<sid::Sequencer>();
+  AudioManager::musicSequencer = make_unique<Sequencer>();
   for (auto &sequencer : AudioManager::sfxSequencers)
-    sequencer = make_unique<sid::Sequencer>();
+    sequencer = make_unique<Sequencer>();
 
   Log.debug("AudioManager::AudioManager(): Created AudioManager");
 }
@@ -64,10 +65,10 @@ auto AudioManager::getInstance() -> AudioManager & {
 
 auto AudioManager::startUp() -> int {
   SDL_AudioSpec obtained,
-    spec = {.freq = sid::Configuration::getSampleRate(),
+    spec = {.freq = Configuration::getSampleRate(),
             .format = AUDIO_F32,
             .channels = 1,
-            .samples = (uint16_t)sid::Configuration::getBufferSize(),
+            .samples = (uint16_t)Configuration::getBufferSize(),
             .callback = AudioManager::callback};
 
   this->device = SDL_OpenAudioDevice(nullptr, 0, &spec, &obtained, 1);
@@ -77,7 +78,7 @@ auto AudioManager::startUp() -> int {
     return -1;
   }
 
-  sid::Configuration::setSampleRate(obtained.freq);
+  Configuration::setSampleRate(obtained.freq);
   SDL_PauseAudioDevice(this->device, 0);
 
   Log.info("AudioManager::startUp(): Started successfully");
@@ -91,7 +92,7 @@ auto AudioManager::shutDown() -> void {
   Log.info("AudioManager::shutDown(): Shut down successfully");
 }
 
-void AudioManager::playMusic(shared_ptr<sid::Tune> tune, bool loop) {
+void AudioManager::playMusic(Tune *tune, bool loop) {
   this->musicSequencer->setLoop(loop);
 
   // If the tune is already loaded, just play it
@@ -110,8 +111,8 @@ void AudioManager::stopMusic() { this->musicSequencer->stop(); }
 
 void AudioManager::pauseMusic() { this->musicSequencer->pause(); }
 
-void AudioManager::playSound(shared_ptr<sid::Tune> tune, bool loop) {
-  sid::Sequencer *sequencer = nullptr;
+void AudioManager::playSound(Tune *tune, bool loop) {
+  Sequencer *sequencer = nullptr;
   // Find a sequencer that is not playing or is playing the same tune
   for (auto &s : this->sfxSequencers) {
     if (!s->isPlaying() || s->getCurrentTune() == tune) {
@@ -141,8 +142,8 @@ void AudioManager::playSound(shared_ptr<sid::Tune> tune, bool loop) {
   sequencer->play();
 }
 
-void AudioManager::stopSound(shared_ptr<sid::Tune> tune) {
-  sid::Sequencer *sequencer = nullptr;
+void AudioManager::stopSound(Tune *tune) {
+  Sequencer *sequencer = nullptr;
   // Find a sequencer that is playing the same tune
   for (auto &s : this->sfxSequencers) {
     if (s->getCurrentTune() == tune) {
@@ -161,8 +162,8 @@ void AudioManager::stopSound(shared_ptr<sid::Tune> tune) {
   sequencer->stop();
 }
 
-void AudioManager::pauseSound(shared_ptr<sid::Tune> tune) {
-  sid::Sequencer *sequencer = nullptr;
+void AudioManager::pauseSound(Tune *tune) {
+  Sequencer *sequencer = nullptr;
   // Find a sequencer that is playing the same tune
   for (auto &s : this->sfxSequencers) {
     if (s->getCurrentTune() == tune) {

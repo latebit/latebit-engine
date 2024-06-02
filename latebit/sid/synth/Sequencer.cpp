@@ -29,11 +29,10 @@ void Sequencer::setNoteForTrack(Note n, int track) {
   e->attack();
 }
 
-auto Sequencer::loadTune(shared_ptr<Tune> tune) -> int {
+auto Sequencer::loadTune(Tune* t) -> int {
   if (this->tune) return -1;
 
-  this->tune = tune;
-  Tune* t = tune.get();
+  this->tune = t;
   // Start currentSample at one else the first note will be skipped because the
   // currentSample is used to determine when to move to the next note.
   // Using zero means we will move to the next note on the first sample (see
@@ -50,7 +49,7 @@ auto Sequencer::loadTune(shared_ptr<Tune> tune) -> int {
     this->currentTick[i] = 0;
     this->envelopes[i] = make_unique<Envelope>();
     this->oscillators[i] = make_unique<Oscillator>(0);
-    shared_ptr<Track> track = t->getTrack(i);
+    const Track* track = t->getTrack(i);
     maxTrackLength = max(maxTrackLength, (int)track->size());
 
     // This is used to allow the first note of each track to be executed
@@ -71,7 +70,6 @@ auto Sequencer::loadTune(shared_ptr<Tune> tune) -> int {
 auto Sequencer::unloadTune() -> int {
   if (!this->tune) return -1;
 
-  this->tune.reset();
   this->tune = nullptr;
   this->currentSample = 1;
   this->samplesPerTick = 0;
@@ -104,7 +102,7 @@ auto Sequencer::play() -> int {
   // Consequently, update also the total samples
   int maxTrackLength = 0;
   for (int i = 0; i < this->tune->getTracksCount(); i++) {
-    shared_ptr<Track> track = this->tune->getTrack(i);
+    const Track* track = this->tune->getTrack(i);
     maxTrackLength = max(maxTrackLength, (int)track->size());
   }
   this->totalSamples = maxTrackLength * this->samplesPerTick;
@@ -157,7 +155,7 @@ auto Sequencer::getNextSample() -> float {
 
   // Plays the current sample in every track
   for (int trackIndex = 0; trackIndex < tracks; trackIndex++) {
-    shared_ptr<Track> track = this->tune->getTrack(trackIndex);
+    const Track* track = this->tune->getTrack(trackIndex);
     if (track->empty()) continue;
 
     auto& envelope = this->envelopes[trackIndex];
@@ -214,7 +212,5 @@ auto Sequencer::getEnvelope(int channel) const -> const unique_ptr<Envelope>& {
 auto Sequencer::setLoop(bool loop) -> void { this->loop = loop; }
 auto Sequencer::isLooping() const -> bool { return this->loop; }
 auto Sequencer::isPlaying() const -> bool { return this->playing; }
-auto Sequencer::getCurrentTune() const -> const shared_ptr<Tune>& {
-  return this->tune;
-}
+auto Sequencer::getCurrentTune() const -> const Tune* { return this->tune; }
 }  // namespace sid

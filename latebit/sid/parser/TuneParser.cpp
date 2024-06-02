@@ -94,18 +94,15 @@ auto TuneParser::fromStream(istream *stream,
     return nullptr;
   }
 
-  auto t = make_unique<Tune>(tracksCount);
-  t->setBpm(bpm);
-  t->setTicksPerBeat(ticksPerBeat);
-  t->setBeatsCount(beatsCount);
-
   int maxTrackLength = beatsCount * ticksPerBeat;
 
   // Flags used to stop collection of symbols for a track when the end of track
   // symbol is found
   vector<bool> trackEnded = {};
+  vector<unique_ptr<Track>> tracks = {};
   for (int i = 0; i < tracksCount; i++) {
     trackEnded.push_back(false);
+    tracks.push_back(make_unique<Track>());
   }
 
   for (int i = 0; i < maxTrackLength; i++) {
@@ -131,7 +128,7 @@ auto TuneParser::fromStream(istream *stream,
         continue;
       }
 
-      auto track = t->getTrack(j);
+      auto track = tracks.at(j).get();
       if (symbol == REST_SYMBOL) {
         track->push_back(Note::makeRest());
       } else if (symbol == CONTINUE_SYMBOL) {
@@ -154,7 +151,7 @@ auto TuneParser::fromStream(istream *stream,
     }
   }
 
-  return t;
+  return make_unique<Tune>(bpm, ticksPerBeat, beatsCount, std::move(tracks));
 }
 
 auto TuneParser::fromFile(const string filename,

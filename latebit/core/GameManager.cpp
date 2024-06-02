@@ -136,6 +136,7 @@ struct EmscriptenLoopArgs {
   EventStep* step = 0;
   Clock* clock = 0;
   int frameTime = 0;
+  bool* paused = 0;
 };
 
 void GameManager::loop(void* a) {
@@ -144,7 +145,7 @@ void GameManager::loop(void* a) {
   GM.onEvent(args->step);
 
   IM.getInput();
-  if (!paused) {
+  if (!*args->paused) {
     WM.update();
   }
   WM.draw();
@@ -157,8 +158,8 @@ void GameManager::run() {
   long int steps = 0;
   EventStep step(0);
 
-  EmscriptenLoopArgs args = {&adjustTime, &loopTime, &steps,
-                             &step,       clock,     frameTime};
+  EmscriptenLoopArgs args = {&adjustTime, &loopTime, &steps,       &step,
+                             clock,       frameTime, &this->paused};
 
   emscripten_set_main_loop_arg(loop, &args, 0, 1);
   emscripten_set_main_loop_timing(EM_TIMING_RAF, 33);
@@ -169,6 +170,11 @@ void GameManager::setGameOver(bool gameOver) {
     emscripten_cancel_main_loop();
   }
 }
+void GameManager::pause() { this->paused = true; }
+
+void GameManager::resume() { this->paused = false; }
+
+auto GameManager::isPaused() const -> bool { return this->paused; }
 #endif
 
 auto GameManager::getGameOver() const -> bool { return this->gameOver; }

@@ -101,7 +101,7 @@ auto Object::getWorldBox(Vector center) const -> Box {
   return {corner, boundingBox.getWidth(), boundingBox.getHeight()};
 }
 
-auto Object::eventHandler(const Event* e) -> int { return 0; }
+auto Object::eventHandler([[maybe_unused]] const Event* e) -> int { return 0; }
 
 auto Object::draw() -> int {
   Vector p = getPosition();

@@ -3,55 +3,18 @@
 #include <memory>
 #include <vector>
 
-#include "latebit/sid/synth/configuration.h"
-#include "oscillator.h"
-#include "tune.h"
+#include "Configuration.h"
+#include "Envelope.h"
+#include "Oscillator.h"
+#include "Tune.h"
 
 namespace sid {
-// How many samples before the end of the note should the envelope start
-// releasing. This number is very arbitrary and based on what "sounds good".
-// Exported for testing purposes.
 extern const int ENVELOPE_RELEASE_SAMPLES;
 
-enum EnvelopeState { ATTACK, DECAY, SUSTAIN, RELEASE, DONE };
-
-// Defines a volume envelope. Its value is between 0 and 1 where 0 is
-// silence and 1 is full volume associated with the Note being played
-class Envelope {
- public:
-  Envelope() = default;
-  ~Envelope() = default;
-  // Starts the envelope
-  void attack();
-  // Initiates the release phase of the envelope
-  void release();
-  // Resets the envelope to the done state
-  void done();
-  // Processes the envelope for the next sample and returns the value of the
-  // envelope
-  auto process() -> float;
-  // Returns the current value of the envelope
-  [[nodiscard]] auto getValue() const -> float;
-  // Returns the current state of the envelope
-  [[nodiscard]] auto getState() const -> EnvelopeState;
-  // Returns the level of volume to sustain after the decay phase
-  [[nodiscard]] auto getSustainLevel() const -> float;
-
- private:
-  // The current state of the envelope
-  EnvelopeState state = DONE;
-  // The current value of the envelope
-  float value = 0;
-  // How much volume to increase per sample in the attack phase
-  float attackPerSample = 0.01;
-  // How much volume to decrease per sample in the decay phase
-  float decayPerSample = 0.001;
-  // The level of volume to sustain after the decay phase
-  float sustainLevel = 0.5;
-  // How much volume to decrease per sample in the release phase
-  float releasePerSample = 0.001;
-};
-
+// The sequencer is responsible for playing a tune. It has a set of oscillators
+// and envelopes that are used to play the notes in the tune. It keeps track of
+// the current note being played and the current tick for each track. It also
+// keeps track of the current sample being played within a single tick.
 class Sequencer {
  private:
   // Keeps track of the current sample being played within a single tick
@@ -68,7 +31,7 @@ class Sequencer {
   int totalSamples = 0;
 
   // The tune to be played
-  shared_ptr<Tune> tune = nullptr;
+  Tune* tune = nullptr;
 
   // The oscillators for each track
   vector<unique_ptr<Oscillator>> oscillators = {};
@@ -96,7 +59,7 @@ class Sequencer {
   // Loads the given tune in the sequencer, allocating all the necessary
   // envelopes and oscillators. If a tune has been loaded before, you need to
   // call unloadTune first. Returns -1 for failure.
-  auto loadTune(shared_ptr<Tune> t) -> int;
+  auto loadTune(Tune* t) -> int;
 
   // Unloads the current tune and frees the resources associated with it. It
   // doesn't change oscillators and envelopes though, as they will be
@@ -142,7 +105,7 @@ class Sequencer {
   [[nodiscard]] auto isPlaying() const -> bool;
 
   // Returns the currently loaded tune
-  [[nodiscard]] auto getCurrentTune() const -> const shared_ptr<Tune>&;
+  [[nodiscard]] auto getCurrentTune() const -> const Tune*;
 
   // Returns the index of the current sample being played.
   // Exposed for testing purposes.

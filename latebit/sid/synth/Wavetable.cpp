@@ -1,4 +1,4 @@
-#include "wavetable.h"
+#include "Wavetable.h"
 
 #include <array>
 #include <cstdlib>
@@ -39,8 +39,13 @@ void WaveTable::createWaveTable(int size) {
     WAVE_TABLE[SAWTOOTH].push_back(2.0f * ((float)i / size) - 1.0f);
   }
 
+  unsigned lfsr = 0xAFE1u;
+  unsigned bit;
+
   for (int i = 0; i < size; i++) {
-    WAVE_TABLE[NOISE].push_back(2.0f * (rand() / (float)RAND_MAX) - 1.0f);
+    bit = ((lfsr >> 0) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 5)) & 1;
+    lfsr = (lfsr >> 1) | (bit << 15);
+    WAVE_TABLE[NOISE].push_back(2.0f * (lfsr / (float)0xFFFF) - 1.0f);
   }
 }
 

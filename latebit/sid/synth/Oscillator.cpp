@@ -1,39 +1,36 @@
-#include "oscillator.h"
+#include "Oscillator.h"
 
 #include <cstdio>
 #include <cstdlib>
 
-#include "latebit/sid/synth/configuration.h"
-#include "latebit/sid/synth/wavetable.h"
+#include "latebit/sid/synth/Configuration.h"
+#include "latebit/sid/synth/Wavetable.h"
 #include "latebit/utils/Math.h"
 
 using namespace std;
 using namespace sid;
 
 array<float, 96> NOTE_TO_FREQUENCY = {
-  16.35,   17.32,   18.35,   19.45,   20.60,   21.83,
-  23.12,   24.50,   25.96,   27.50,   29.14,   30.87,
-
-  32.7,    34.65,   36.71,   38.89,   41.20,   43.65,
-  46.25,   49,      51.91,   55,      58.27,   61.74,
-
-  65.41,   69.23,   73.42,   77.78,   82.41,   87.31,
-  92.5,    98,      103.83,  110,     116.54,  123.47,
-
-  130.81,  138.59,  146.83,  155.56,  164.81,  174.61,
-  185,     196,     207.65,  220,     233.08,  246.94,
-
-  261.63,  277.18,  293.66,  311.12,  329.63,  349.23,
-  369.99,  392,     415.30,  440,     466.16,  493.88,
-
-  523.25,  554.37,  587.33,  622.25,  659.25,  698.46,
-  734,     783.99,  830.61,  880,     932.33,  987.77,
-
-  1046.50, 1108.73, 1174.66, 1244.51, 1318.51, 1396.91,
-  1471,    1567.98, 1661.22, 1760,    1864.66, 1975.53,
-
-  2093,    2217.46, 2349.32, 2489.02, 2637.02, 2793.83,
-  2959,    3135.96, 3322.44, 3520,    3729.31, 3951.07};
+  16.351598f,   17.323914f,   18.354048f,   19.445436f,   20.601722f,
+  21.826764f,   23.124651f,   24.499715f,   25.956544f,   27.5f,
+  29.135235f,   30.867706f,   32.703196f,   34.647829f,   36.708096f,
+  38.890873f,   41.203445f,   43.653529f,   46.249303f,   48.999429f,
+  51.913087f,   55.0f,        58.27047f,    61.735413f,   65.406391f,
+  69.295658f,   73.416192f,   77.781746f,   82.406889f,   87.307058f,
+  92.498606f,   97.998859f,   103.826174f,  110.0f,       116.54094f,
+  123.470825f,  130.812783f,  138.591315f,  146.832384f,  155.563492f,
+  164.813778f,  174.614116f,  184.997211f,  195.997718f,  207.652349f,
+  220.0f,       233.081881f,  246.941651f,  261.625565f,  277.182631f,
+  293.664768f,  311.126984f,  329.627557f,  349.228231f,  369.994423f,
+  391.995436f,  415.304698f,  440.0f,       466.163762f,  493.883301f,
+  523.251131f,  554.365262f,  587.329536f,  622.253967f,  659.255114f,
+  698.456463f,  739.988845f,  783.990872f,  830.609395f,  880.0f,
+  932.327523f,  987.766603f,  1046.502261f, 1108.730524f, 1174.659072f,
+  1244.507935f, 1318.510228f, 1396.912926f, 1479.977691f, 1567.981744f,
+  1661.21879f,  1760.0f,      1864.655046f, 1975.533205f, 2093.004522f,
+  2217.461048f, 2349.318143f, 2489.01587f,  2637.020455f, 2793.825851f,
+  2959.955382f, 3135.963488f, 3322.437581f, 3520.0f,      3729.310092f,
+  3951.06641f};
 
 namespace sid {
 
@@ -97,31 +94,6 @@ auto Oscillator::reset() -> void {
   this->effect = NONE_EFFECT;
   this->volume = 0.5;
   this->waveType = TRIANGLE;
-}
-
-const Effect DROP_EFFECT = Effect(DROP, 0.9999, 1);
-const Effect SLIDE_EFFECT = Effect(SLIDE, 1.00005, 1);
-const Effect FADEIN_EFFECT = Effect(FADEIN, 0.0001, 0);
-const Effect FADEOUT_EFFECT = Effect(FADEOUT, -0.0001, 1);
-const Effect NONE_EFFECT = Effect(NONE, 0, 0);
-
-Effect::Effect(EffectType type, float amount, float previous)
-  : amount(amount), previous(previous), type(type) {}
-
-auto Effect::processFrequency(float step) -> float {
-  if (this->type == DROP || this->type == SLIDE) {
-    step *= this->previous;
-    this->previous *= this->amount;
-  }
-  return step;
-}
-
-auto Effect::processVolume(float sample) -> float {
-  if (this->type == FADEIN || this->type == FADEOUT) {
-    sample *= this->previous;
-    this->previous = clamp(this->previous + this->amount, 0.0, 1.0);
-  }
-  return sample;
 }
 
 }  // namespace sid

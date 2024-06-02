@@ -53,7 +53,7 @@ void WorldManager::shutDown() {
   Log.info("WorldManager::shutDown(): Shut down successfully");
 }
 
-auto WorldManager::isValid(string eventType) const -> bool {
+auto WorldManager::isValid([[maybe_unused]] string eventType) const -> bool {
   // World Manager needs to accept all the events because it is the Manager
   // responsible for registering custom events
   return true;
@@ -178,6 +178,8 @@ void WorldManager::update() {
 
   auto deletions = ObjectListIterator(&this->deletions);
   for (deletions.first(); !deletions.isDone(); deletions.next()) {
+    Log.debug("WorldManager::update(): Deleting object %s",
+              deletions.currentObject()->toString().c_str());
     // This is not leaving a danglig null reference!
     // In the destructor of Object, we also remove it from the world
     auto current = deletions.currentObject();

@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <vector>
 
-#include "latebit/sid/synth/oscillator.h"
+#include "Oscillator.h"
 
 using namespace std;
 

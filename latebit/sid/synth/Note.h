@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "oscillator.h"
+#include "Oscillator.h"
 
 using namespace std;
 
@@ -25,11 +25,15 @@ const string END_OF_TRACK_SYMBOL = "      ";
 // and it is used to report errors.
 class Note {
  public:
-  // Creates a new rest note
+  // Creates a new rest note. This note is used to signal that the note
+  // should be silent.
   static auto makeRest() -> Note;
-  // Creates a new invalid note
+  // Creates a new invalid note. This state exists to report errors
+  // instead of doing exception handling. It is used to avoid throwing
+  // exceptions when parsing a tune.
   static auto makeInvalid() -> Note;
-  // Creates a new continue note
+  // Creates a new continue note. This note is used to signal that the
+  // note should continue playing the previous note.
   static auto makeContinue() -> Note;
   // Creates a new note from a symbol
   static auto fromSymbol(const Symbol& str) -> Note;

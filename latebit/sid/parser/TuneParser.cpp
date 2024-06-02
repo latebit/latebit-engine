@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "TuneParser.h"
 
 #include <istream>
 #include <memory>
@@ -6,8 +6,8 @@
 #include <sstream>
 #include <string>
 
-#include "latebit/sid/synth/track.h"
-#include "latebit/sid/synth/tune.h"
+#include "../synth/Note.h"
+#include "../synth/Tune.h"
 #include "latebit/utils/Logger.h"
 #include "latebit/utils/Parser.h"
 
@@ -15,16 +15,21 @@ using namespace std;
 
 namespace sid {
 auto getNumber(istream *stream, char commentChar = '#') -> int {
-  string line = getNonCommentedLine(stream);
-  if (line.empty()) {
-    return -1;
-  }
-  smatch match;
-  std::regex numberWithComments("^\\d+\\s*" + string(1, commentChar) + "*.*$");
-  if (std::regex_search(line, match, numberWithComments)) {
-    // TODO: handle exceptions
-    return stoi(match.str());
-  } else {
+  try {
+    string line = getNextNonCommentLine(stream, commentChar);
+    if (line.empty()) {
+      return -1;
+    }
+    smatch match;
+    std::regex numberWithComments("^\\d+\\s*" + string(1, commentChar) +
+                                  "*.*$");
+    if (std::regex_search(line, match, numberWithComments)) {
+      auto result = match.str();
+      return stoi(result);
+    } else {
+      return -1;
+    }
+  } catch (...) {
     return -1;
   }
 }
@@ -32,18 +37,29 @@ auto getNumber(istream *stream, char commentChar = '#') -> int {
 auto getSymbolsFromLine(const string &line,
                         char delimiter = '|') -> vector<string> {
   vector<string> result;
-  stringstream ss(line);
-  string item;
+  istringstream ss(line);
+  string item = getLine(&ss, delimiter);
 
-  // TODO: use getLine instead of getline
-  while (getline(ss, item, delimiter)) {
+  while (!item.empty()) {
     result.push_back(item);
+    item = getLine(&ss, delimiter);
   }
 
   return result;
 }
 
-auto TuneParser::fromStream(istream *stream) -> unique_ptr<Tune> {
+auto makeRangeValidationMessage(int value, int max, int min = 1) -> string {
+  std::ostringstream oss;
+  if (max == min) {
+    oss << "Expected " << min << ", got " << value;
+  } else {
+    oss << "Expected a number " << min << "-" << max << ", got " << value;
+  }
+  return oss.str();
+}
+
+auto TuneParser::fromStream(istream *stream,
+                            const ParserOptions *opts) -> unique_ptr<Tune> {
   string version = getLine(stream);
   if (version != "#v0.1#") {
     Log.error("Invalid header. Unsupported version %s", version.c_str());
@@ -52,44 +68,48 @@ auto TuneParser::fromStream(istream *stream) -> unique_ptr<Tune> {
 
   int bpm = getNumber(stream);
   if (bpm < 10 || bpm > 400) {
-    Log.error("Invalid bpm. Expected a number 10-400, got %d", bpm);
-    return nullptr;
-  }
-  int ticksPerBeat = getNumber(stream);
-  if (ticksPerBeat <= 0 || ticksPerBeat > 16) {
-    Log.error("Invalid ticks per beat. Expected a number 1-16, got %d",
-              ticksPerBeat);
-    return nullptr;
-  }
-  int beatsCount = getNumber(stream);
-  if (beatsCount <= 0 || beatsCount > 64) {
-    Log.error("Invalid beats count. Expected a number 1-64, got %d",
-              beatsCount);
-    return nullptr;
-  }
-  int tracksCount = getNumber(stream);
-  if (tracksCount <= 0 || tracksCount > 3) {
-    Log.error("Invalid tracks count. Expected a number 1-3, got %d",
-              tracksCount);
+    Log.error("Invalid bpm. %s",
+              makeRangeValidationMessage(bpm, 400, 10).c_str());
     return nullptr;
   }
 
-  auto t = make_unique<Tune>(tracksCount);
-  t->setBpm(bpm);
-  t->setTicksPerBeat(ticksPerBeat);
-  t->setBeatsCount(beatsCount);
+  int ticksPerBeat = getNumber(stream);
+  if (ticksPerBeat < 1 || ticksPerBeat > opts->maxTicksPerBeat) {
+    Log.error(
+      "Invalid ticks per beat. %s",
+      makeRangeValidationMessage(ticksPerBeat, opts->maxTicksPerBeat).c_str());
+    return nullptr;
+  }
+
+  int beatsCount = getNumber(stream);
+  if (beatsCount <= 0 || beatsCount > 64) {
+    Log.error(
+      "Invalid beats count. %s",
+      makeRangeValidationMessage(beatsCount, opts->maxBeatsCount).c_str());
+    return nullptr;
+  }
+
+  int tracksCount = getNumber(stream);
+  if (tracksCount <= 0 || tracksCount > opts->maxTracksCount) {
+    Log.error(
+      "Invalid tracks count. %s",
+      makeRangeValidationMessage(tracksCount, opts->maxTracksCount).c_str());
+    return nullptr;
+  }
 
   int maxTrackLength = beatsCount * ticksPerBeat;
 
   // Flags used to stop collection of symbols for a track when the end of track
   // symbol is found
   vector<bool> trackEnded = {};
+  vector<unique_ptr<Track>> tracks = {};
   for (int i = 0; i < tracksCount; i++) {
     trackEnded.push_back(false);
+    tracks.push_back(make_unique<Track>());
   }
 
   for (int i = 0; i < maxTrackLength; i++) {
-    auto line = getNonCommentedLine(stream);
+    auto line = getNextNonCommentLine(stream);
     if (line.empty()) {
       Log.error("Unexpected end of file");
       return nullptr;
@@ -111,7 +131,7 @@ auto TuneParser::fromStream(istream *stream) -> unique_ptr<Tune> {
         continue;
       }
 
-      auto track = t->getTrack(j);
+      auto track = tracks.at(j).get();
       if (symbol == REST_SYMBOL) {
         track->push_back(Note::makeRest());
       } else if (symbol == CONTINUE_SYMBOL) {
@@ -134,22 +154,24 @@ auto TuneParser::fromStream(istream *stream) -> unique_ptr<Tune> {
     }
   }
 
-  return t;
+  return make_unique<Tune>(bpm, ticksPerBeat, beatsCount, std::move(tracks));
 }
 
-auto TuneParser::fromFile(const string filename) -> unique_ptr<Tune> {
+auto TuneParser::fromFile(const string filename,
+                          const ParserOptions *opts) -> unique_ptr<Tune> {
   ifstream file(filename);
   if (!file.is_open()) {
     Log.error("Could not open file %s", filename.c_str());
     return nullptr;
   }
 
-  return fromStream(&file);
+  return fromStream(&file, opts);
 }
 
-auto TuneParser::fromString(string str) -> unique_ptr<Tune> {
+auto TuneParser::fromString(string str,
+                            const ParserOptions *opts) -> unique_ptr<Tune> {
   istringstream stream(str);
-  return fromStream(&stream);
+  return fromStream(&stream, opts);
 }
 
 auto TuneParser::toString(const Tune &tune) -> string {

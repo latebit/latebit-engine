@@ -25,8 +25,10 @@ class PNGDecoder {
   // Reads the header of the file and check if it's really a PNG
   auto isPNGFile() -> bool {
     array<char, 8> header;
-    std::fread(header.data(), 1, 8, file);
-    return !png_sig_cmp(reinterpret_cast<png_const_bytep>(header.data()), 0, 8);
+    size_t size = fread(header.data(), 1, 8, file);
+    if (size != 8) return false;
+    return !png_sig_cmp(reinterpret_cast<png_const_bytep>(header.data()), 0,
+                        size);
   }
 
   // Returns false if memory for this PNG could not be allocated

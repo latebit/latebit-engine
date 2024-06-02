@@ -1,10 +1,10 @@
-#include "sequencer.h"
+#include "Sequencer.h"
 
 #include <memory>
 
-#include "latebit/sid/synth/configuration.h"
-#include "latebit/sid/synth/tune.h"
-#include "latebit/sid/synth/wavetable.h"
+#include "latebit/sid/synth/Configuration.h"
+#include "latebit/sid/synth/Tune.h"
+#include "latebit/sid/synth/Wavetable.h"
 #include "test/lib/test.h"
 
 using namespace sid;
@@ -33,27 +33,21 @@ void envelope() {
 }
 
 void getSamples() {
-  shared_ptr<Tune> t(new Tune(3));
-  Track one = {
-    Note::fromSymbol("C-4---"),
-    Note::fromSymbol("C#4---"),
-  };
-  Track two = {
-    Note::fromSymbol("C-4---"),
-    Note::fromSymbol("C#4---"),
-  };
-  Track three = {
-    Note::fromSymbol("C-4---"),
-    Note::fromSymbol("C#4---"),
-    Note::fromSymbol("D-4---"),
-  };
-  t->getTrack(0)->insert(t->getTrack(0)->end(), one.begin(), one.end());
-  t->getTrack(1)->insert(t->getTrack(1)->end(), two.begin(), two.end());
-  t->getTrack(2)->insert(t->getTrack(2)->end(), three.begin(), three.end());
-  t->setBeatsCount(2);
+  vector<unique_ptr<Track>> tracks;
+  tracks.push_back(make_unique<Track>());
+  tracks.back()->push_back(Note::fromSymbol("C-4---"));
+  tracks.back()->push_back(Note::fromSymbol("C#4---"));
+  tracks.push_back(make_unique<Track>());
+  tracks.back()->push_back(Note::fromSymbol("C-4---"));
+  tracks.back()->push_back(Note::fromSymbol("C#4---"));
+  tracks.push_back(make_unique<Track>());
+  tracks.back()->push_back(Note::fromSymbol("C-4---"));
+  tracks.back()->push_back(Note::fromSymbol("C#4---"));
+  tracks.back()->push_back(Note::fromSymbol("D-4---"));
+  Tune tune(10, 4, 2, std::move(tracks));
 
   Sequencer s;
-  s.loadTune(t);
+  s.loadTune(&tune);
   s.play();
 
   s.getNextSample();
@@ -88,6 +82,23 @@ void getSamples() {
   }
 }
 
+void emptyTracks() {
+  Sequencer s;
+  vector<unique_ptr<Track>> tracks;
+  tracks.push_back(make_unique<Track>());
+  tracks.back()->push_back(Note::fromSymbol("C-4---"));
+  tracks.back()->push_back(Note::fromSymbol("C#4---"));
+  tracks.push_back(make_unique<Track>());
+  Tune tune(10, 4, 2, std::move(tracks));
+  s.loadTune(&tune);
+  s.play();
+  for (int i = 0; i < 100; i++) {
+    s.getNextSample();
+  }
+
+  assertEq("does not crash", true, true);
+}
+
 auto main() -> int {
   test("envelope", envelope);
   test("getSamples", getSamples);
@@ -96,6 +107,7 @@ auto main() -> int {
     assertEq("initializes the wavetable", WaveTable::getSize(),
              Configuration::getBufferSize());
   });
+  test("can handle empty tracks", emptyTracks);
 
   return report();
 }

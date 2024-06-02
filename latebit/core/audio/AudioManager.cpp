@@ -9,35 +9,52 @@
 #include <memory>
 
 #include "latebit/core/utils/Manager.h"
-#include "latebit/sid/synth/configuration.h"
-#include "latebit/sid/synth/sequencer.h"
-#include "latebit/sid/synth/tune.h"
+#include "latebit/sid/synth/Configuration.h"
+#include "latebit/sid/synth/Sequencer.h"
+#include "latebit/sid/synth/Tune.h"
 #include "latebit/utils/Logger.h"
 
-namespace lb {
-unique_ptr<sid::Sequencer> AudioManager::musicSequencer = nullptr;
-unique_ptr<sid::Sequencer> AudioManager::sfxSequencer = nullptr;
+using namespace std;
+using namespace sid;
 
-// Simple mixing function: when both sound and music are playing, average
-// the volume, otherwise chose just one of them
-auto mix(float a, float b) -> float {
-  return (a == 0.0f) ? b : (b == 0.0f ? a : (a + b) / 2.0f);
+namespace lb {
+unique_ptr<Sequencer> AudioManager::musicSequencer = nullptr;
+array<unique_ptr<Sequencer>, 4> AudioManager::sfxSequencers = {
+  nullptr, nullptr, nullptr, nullptr};
+
+auto softLimit(float mixed) -> float {
+  constexpr float THRESHOLD = 0.8f;
+  constexpr float LIMIT_FACTOR = 0.4f;
+
+  // Simple soft limiting
+  if (mixed > THRESHOLD)
+    mixed = THRESHOLD + (mixed - THRESHOLD) * LIMIT_FACTOR;
+  else if (mixed < -THRESHOLD)
+    mixed = -THRESHOLD + (mixed + THRESHOLD) * LIMIT_FACTOR;
+
+  return mixed;
 }
 
-void AudioManager::callback(void *userdata, Uint8 *stream, int len) {
-  int samples = len / sizeof(float);
+void AudioManager::callback([[maybe_unused]] void *userdata, Uint8 *stream,
+                            int len) {
+  size_t samples = (size_t)len / sizeof(float);
 
-  for (int i = 0; i < samples; i++) {
-    float a = AudioManager::musicSequencer->getNextSample();
-    float b = AudioManager::sfxSequencer->getNextSample();
-    ((float *)stream)[i] = mix(a, b);
+  for (size_t i = 0; i < samples; i++) {
+    float mixed = AudioManager::musicSequencer->getNextSample();
+    for (auto &sequencer : AudioManager::sfxSequencers) {
+      if (sequencer != nullptr) mixed += sequencer->getNextSample();
+    }
+
+    ((float *)stream)[i] = softLimit(mixed);
   }
 }
 
 AudioManager::AudioManager() {
   setType("AudioManager");
-  AudioManager::musicSequencer = make_unique<sid::Sequencer>();
-  AudioManager::sfxSequencer = make_unique<sid::Sequencer>();
+  AudioManager::musicSequencer = make_unique<Sequencer>();
+  for (auto &sequencer : AudioManager::sfxSequencers)
+    sequencer = make_unique<Sequencer>();
+
   Log.debug("AudioManager::AudioManager(): Created AudioManager");
 }
 
@@ -48,10 +65,10 @@ auto AudioManager::getInstance() -> AudioManager & {
 
 auto AudioManager::startUp() -> int {
   SDL_AudioSpec obtained,
-    spec = {.freq = sid::Configuration::getSampleRate(),
+    spec = {.freq = Configuration::getSampleRate(),
             .format = AUDIO_F32,
             .channels = 1,
-            .samples = (uint16_t)sid::Configuration::getBufferSize(),
+            .samples = (uint16_t)Configuration::getBufferSize(),
             .callback = AudioManager::callback};
 
   this->device = SDL_OpenAudioDevice(nullptr, 0, &spec, &obtained, 1);
@@ -61,7 +78,7 @@ auto AudioManager::startUp() -> int {
     return -1;
   }
 
-  sid::Configuration::setSampleRate(obtained.freq);
+  Configuration::setSampleRate(obtained.freq);
   SDL_PauseAudioDevice(this->device, 0);
 
   Log.info("AudioManager::startUp(): Started successfully");
@@ -75,9 +92,8 @@ auto AudioManager::shutDown() -> void {
   Log.info("AudioManager::shutDown(): Shut down successfully");
 }
 
-void AudioManager::playMusic(shared_ptr<sid::Tune> tune, bool loop) {
+void AudioManager::playMusic(Tune *tune, bool loop) {
   this->musicSequencer->setLoop(loop);
-  this->musicSequencer->stop();
 
   // If the tune is already loaded, just play it
   if (this->musicSequencer->getCurrentTune() != tune) {
@@ -92,24 +108,78 @@ void AudioManager::playMusic(shared_ptr<sid::Tune> tune, bool loop) {
 }
 
 void AudioManager::stopMusic() { this->musicSequencer->stop(); }
+
 void AudioManager::pauseMusic() { this->musicSequencer->pause(); }
 
-void AudioManager::playSound(shared_ptr<sid::Tune> tune) {
-  this->sfxSequencer->stop();
+void AudioManager::playSound(Tune *tune, bool loop) {
+  Sequencer *sequencer = nullptr;
+  // Find a sequencer that is not playing or is playing the same tune
+  for (auto &s : this->sfxSequencers) {
+    if (!s->isPlaying() || s->getCurrentTune() == tune) {
+      sequencer = s.get();
+      break;
+    }
+  }
+
+  if (sequencer == nullptr) {
+    Log.error(
+      "AudioManager::playSound(): Cannot play sound. All sfxSequencers are "
+      "already busy.");
+    return;
+  }
+
+  sequencer->setLoop(loop);
 
   // If the tune is already loaded, just play it
-  if (this->sfxSequencer->getCurrentTune() != tune) {
-    this->sfxSequencer->unloadTune();
-    if (this->sfxSequencer->loadTune(tune) == -1) {
+  if (sequencer->getCurrentTune() != tune) {
+    sequencer->unloadTune();
+    if (sequencer->loadTune(tune) == -1) {
       Log.error("AudioManager::playSound(): Failed to load tune.");
       return;
     }
   }
 
-  this->sfxSequencer->play();
+  sequencer->play();
 }
 
-void AudioManager::stopSound() { this->sfxSequencer->stop(); }
-void AudioManager::pauseSound() { this->sfxSequencer->pause(); }
+void AudioManager::stopSound(Tune *tune) {
+  Sequencer *sequencer = nullptr;
+  // Find a sequencer that is playing the same tune
+  for (auto &s : this->sfxSequencers) {
+    if (s->getCurrentTune() == tune) {
+      sequencer = s.get();
+      break;
+    }
+  }
+
+  if (sequencer == nullptr) {
+    Log.error(
+      "AudioManager::stopSound(): Cannot stop sound. Unable to find sequencer "
+      "for given tune");
+    return;
+  }
+
+  sequencer->stop();
+}
+
+void AudioManager::pauseSound(Tune *tune) {
+  Sequencer *sequencer = nullptr;
+  // Find a sequencer that is playing the same tune
+  for (auto &s : this->sfxSequencers) {
+    if (s->getCurrentTune() == tune) {
+      sequencer = s.get();
+      break;
+    }
+  }
+
+  if (sequencer == nullptr) {
+    Log.error(
+      "AudioManager::pauseSound(): Cannot pause sound. Unable to find "
+      "sequencer for given tune");
+    return;
+  }
+
+  sequencer->pause();
+}
 
 }  // namespace lb

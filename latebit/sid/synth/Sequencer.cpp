@@ -1,64 +1,22 @@
-#include "sequencer.h"
+#include "Sequencer.h"
 
 #include <algorithm>
 #include <memory>
+#include <stdexcept>
 
-#include "configuration.h"
-#include "oscillator.h"
-#include "track.h"
-#include "tune.h"
+#include "Configuration.h"
+#include "Envelope.h"
+#include "Note.h"
+#include "Oscillator.h"
+#include "Tune.h"
 
 using namespace std;
 
 namespace sid {
+// How many samples before the end of the note should the envelope start
+// releasing. This number is very arbitrary and based on what "sounds good".
+// Exported for testing purposes.
 const int ENVELOPE_RELEASE_SAMPLES = Configuration::getSampleRate() / 100;
-
-void Envelope::attack() {
-  state = ATTACK;
-  value = 0;
-}
-
-void Envelope::release() { state = RELEASE; }
-
-void Envelope::done() {
-  state = DONE;
-  value = 0;
-}
-
-auto Envelope::process() -> float {
-  switch (this->state) {
-    case ATTACK:
-      this->value += this->attackPerSample;
-      if (this->value >= 1) {
-        this->value = 1;
-        this->state = DECAY;
-      }
-      break;
-    case DECAY:
-      this->value -= this->decayPerSample;
-      if (this->value <= this->sustainLevel) {
-        this->value = this->sustainLevel;
-        this->state = SUSTAIN;
-      }
-      break;
-    default:
-    case SUSTAIN:
-      break;
-    case RELEASE:
-      this->value -= this->releasePerSample;
-      if (this->value <= 0) {
-        this->value = 0;
-        this->state = DONE;
-      }
-      break;
-  }
-
-  return this->value;
-}
-
-auto Envelope::getValue() const -> float { return this->value; }
-auto Envelope::getState() const -> EnvelopeState { return this->state; }
-auto Envelope::getSustainLevel() const -> float { return this->sustainLevel; }
 
 void Sequencer::setNoteForTrack(Note n, int track) {
   auto& o = oscillators.at(track);
@@ -71,11 +29,10 @@ void Sequencer::setNoteForTrack(Note n, int track) {
   e->attack();
 }
 
-auto Sequencer::loadTune(shared_ptr<Tune> tune) -> int {
+auto Sequencer::loadTune(Tune* t) -> int {
   if (this->tune) return -1;
 
-  this->tune = tune;
-  Tune* t = tune.get();
+  this->tune = t;
   // Start currentSample at one else the first note will be skipped because the
   // currentSample is used to determine when to move to the next note.
   // Using zero means we will move to the next note on the first sample (see
@@ -92,7 +49,7 @@ auto Sequencer::loadTune(shared_ptr<Tune> tune) -> int {
     this->currentTick[i] = 0;
     this->envelopes[i] = make_unique<Envelope>();
     this->oscillators[i] = make_unique<Oscillator>(0);
-    shared_ptr<Track> track = t->getTrack(i);
+    const Track* track = t->getTrack(i);
     maxTrackLength = max(maxTrackLength, (int)track->size());
 
     // This is used to allow the first note of each track to be executed
@@ -113,7 +70,6 @@ auto Sequencer::loadTune(shared_ptr<Tune> tune) -> int {
 auto Sequencer::unloadTune() -> int {
   if (!this->tune) return -1;
 
-  this->tune.reset();
   this->tune = nullptr;
   this->currentSample = 1;
   this->samplesPerTick = 0;
@@ -132,6 +88,8 @@ auto Sequencer::play() -> int {
   // skipped when you resume playing and you have paused just after the tick
   for (int i = 0; i < this->tune->getTracksCount(); i++) {
     auto track = this->tune->getTrack(i);
+    if (track->empty()) continue;
+
     Note lastNote = track->at(this->getCurrentTick(i));
     this->setNoteForTrack(lastNote, i);
   }
@@ -144,7 +102,7 @@ auto Sequencer::play() -> int {
   // Consequently, update also the total samples
   int maxTrackLength = 0;
   for (int i = 0; i < this->tune->getTracksCount(); i++) {
-    shared_ptr<Track> track = this->tune->getTrack(i);
+    const Track* track = this->tune->getTrack(i);
     maxTrackLength = max(maxTrackLength, (int)track->size());
   }
   this->totalSamples = maxTrackLength * this->samplesPerTick;
@@ -193,14 +151,17 @@ auto Sequencer::getNextSample() -> float {
     (this->currentSample + ENVELOPE_RELEASE_SAMPLES) % this->samplesPerTick ==
     0;
   float result = 0;
+  const int tracks = this->tune->getTracksCount();
 
-  // Plays the current sample in every channel
-  for (int channel = 0; channel < this->tune->getTracksCount(); channel++) {
-    shared_ptr<Track> track = this->tune->getTrack(channel);
-    auto& envelope = this->envelopes[channel];
-    auto& oscillator = this->oscillators[channel];
+  // Plays the current sample in every track
+  for (int trackIndex = 0; trackIndex < tracks; trackIndex++) {
+    const Track* track = this->tune->getTrack(trackIndex);
+    if (track->empty()) continue;
 
-    int currentTick = this->currentTick[channel];
+    auto& envelope = this->envelopes[trackIndex];
+    auto& oscillator = this->oscillators[trackIndex];
+
+    int currentTick = this->currentTick[trackIndex];
     int nextTick = (currentTick + 1) % track->size();
 
     Note next = track->at(nextTick);
@@ -211,14 +172,14 @@ auto Sequencer::getNextSample() -> float {
     }
 
     if (shouldMoveToNextNote) {
-      this->currentTick[channel] = nextTick;
+      this->currentTick[trackIndex] = nextTick;
 
       if (isChangingNotes) {
-        this->setNoteForTrack(next, channel);
+        this->setNoteForTrack(next, trackIndex);
       }
     }
 
-    result += oscillator->oscillate() * envelope->process();
+    result += oscillator->oscillate() * envelope->process() / (float)tracks;
   }
 
   if (this->currentSample >= this->totalSamples) {
@@ -230,7 +191,7 @@ auto Sequencer::getNextSample() -> float {
 
   this->currentSample++;
 
-  return result / this->tune->getTracksCount();
+  return result;
 }
 
 auto Sequencer::getCurrentSampleIndex() const -> int {
@@ -251,7 +212,5 @@ auto Sequencer::getEnvelope(int channel) const -> const unique_ptr<Envelope>& {
 auto Sequencer::setLoop(bool loop) -> void { this->loop = loop; }
 auto Sequencer::isLooping() const -> bool { return this->loop; }
 auto Sequencer::isPlaying() const -> bool { return this->playing; }
-auto Sequencer::getCurrentTune() const -> const shared_ptr<Tune>& {
-  return this->tune;
-}
+auto Sequencer::getCurrentTune() const -> const Tune* { return this->tune; }
 }  // namespace sid

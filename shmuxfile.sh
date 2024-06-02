@@ -6,13 +6,13 @@ wasm:
 native:
   # Creates a native build
   cmake --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release -B build .
-  cmake --build build -j 4
+  cmake --build build -j8 -t latebit
 
 debug:
   # Creates a debug build
   export LSAN_OPTIONS="suppressions=asan.supp"
   cmake --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Debug -B build .
-  cmake --build build
+  cmake --build build -j8 -t latebit
 
 tidy:
   # Lints the code with clang-tidy

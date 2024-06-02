@@ -1,6 +1,6 @@
-#include "configuration.h"
+#include "Configuration.h"
 
-#include "wavetable.h"
+#include "Wavetable.h"
 
 using namespace sid;
 using namespace std;

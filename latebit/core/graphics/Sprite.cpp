@@ -8,8 +8,8 @@
 using namespace std;
 
 namespace lb {
-Sprite::Sprite(string label, int width, int height, int slowdown,
-               int frameCount) {
+Sprite::Sprite(string label, uint8_t width, uint8_t height, uint8_t slowdown,
+               uint8_t frameCount) {
   this->label = label;
   this->width = width;
   this->height = height;
@@ -49,7 +49,7 @@ auto Sprite::addFrame(Frame frame) -> int {
 }
 
 auto Sprite::getFrame(int frameNumber) const -> Frame {
-  if (frameNumber < 0 || frameNumber >= this->frames.size()) {
+  if (frameNumber < 0 || (size_t)frameNumber >= this->frames.size()) {
     Log.warning("Sprite::getFrame(): Invalid frame number (%d) with %d frames",
                 frameNumber, this->frames.size());
     return {};
@@ -58,22 +58,22 @@ auto Sprite::getFrame(int frameNumber) const -> Frame {
   return this->frames[frameNumber];
 }
 
-auto Sprite::getFrameCount() const -> int { return this->frames.size(); }
+auto Sprite::getFrameCount() const -> uint8_t { return this->frames.size(); }
 
-void Sprite::setWidth(int width) { this->width = width; }
-auto Sprite::getWidth() const -> int { return this->width; }
+void Sprite::setWidth(uint8_t width) { this->width = width; }
+auto Sprite::getWidth() const -> uint8_t { return this->width; }
 
-void Sprite::setHeight(int height) { this->height = height; }
-auto Sprite::getHeight() const -> int { return this->height; }
+void Sprite::setHeight(uint8_t height) { this->height = height; }
+auto Sprite::getHeight() const -> uint8_t { return this->height; }
 
 void Sprite::setLabel(std::string label) { this->label = label; }
 auto Sprite::getLabel() const -> std::string { return this->label; }
 
-void Sprite::setSlowdown(int slowdown) { this->slowdown = slowdown; }
-auto Sprite::getSlowdown() const -> int { return this->slowdown; }
+void Sprite::setSlowdown(uint8_t slowdown) { this->slowdown = slowdown; }
+auto Sprite::getSlowdown() const -> uint8_t { return this->slowdown; }
 
 auto Sprite::draw(int frameNumber, Vector position) const -> int {
-  if (frameNumber < 0 || frameNumber >= this->frames.size()) {
+  if (frameNumber < 0 || (size_t)frameNumber >= this->frames.size()) {
     Log.warning("Sprite::draw(): Invalid frame number (%d) with %d frames",
                 frameNumber, this->frames.size());
     return -1;

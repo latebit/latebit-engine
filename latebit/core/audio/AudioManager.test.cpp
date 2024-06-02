@@ -3,7 +3,7 @@
 #include <SDL_audio.h>
 
 #include "latebit/core/graphics/DisplayManager.h"
-#include "latebit/sid/synth/configuration.h"
+#include "latebit/sid/synth/Configuration.h"
 #include "latebit/utils/Logger.h"
 #include "test/lib/test.h"
 

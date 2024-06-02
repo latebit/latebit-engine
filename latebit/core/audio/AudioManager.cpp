@@ -9,19 +9,21 @@
 #include <memory>
 
 #include "latebit/core/utils/Manager.h"
-#include "latebit/sid/synth/configuration.h"
-#include "latebit/sid/synth/sequencer.h"
-#include "latebit/sid/synth/tune.h"
+#include "latebit/sid/synth/Configuration.h"
+#include "latebit/sid/synth/Sequencer.h"
+#include "latebit/sid/synth/Tune.h"
 #include "latebit/utils/Logger.h"
+
+using namespace std;
 
 namespace lb {
 unique_ptr<sid::Sequencer> AudioManager::musicSequencer = nullptr;
-unique_ptr<sid::Sequencer> AudioManager::sfxSequencer = nullptr;
+array<unique_ptr<sid::Sequencer>, 4> AudioManager::sfxSequencers = {
+  nullptr, nullptr, nullptr, nullptr};
 
-auto mix(float a, float b) -> float {
+auto softLimit(float mixed) -> float {
   constexpr float THRESHOLD = 0.8f;
   constexpr float LIMIT_FACTOR = 0.4f;
-  float mixed = a + b;
 
   // Simple soft limiting
   if (mixed > THRESHOLD)
@@ -37,16 +39,21 @@ void AudioManager::callback([[maybe_unused]] void *userdata, Uint8 *stream,
   size_t samples = (size_t)len / sizeof(float);
 
   for (size_t i = 0; i < samples; i++) {
-    float a = AudioManager::musicSequencer->getNextSample();
-    float b = AudioManager::sfxSequencer->getNextSample();
-    ((float *)stream)[i] = mix(a, b);
+    float mixed = AudioManager::musicSequencer->getNextSample();
+    for (auto &sequencer : AudioManager::sfxSequencers) {
+      if (sequencer != nullptr) mixed += sequencer->getNextSample();
+    }
+
+    ((float *)stream)[i] = softLimit(mixed);
   }
 }
 
 AudioManager::AudioManager() {
   setType("AudioManager");
   AudioManager::musicSequencer = make_unique<sid::Sequencer>();
-  AudioManager::sfxSequencer = make_unique<sid::Sequencer>();
+  for (auto &sequencer : AudioManager::sfxSequencers)
+    sequencer = make_unique<sid::Sequencer>();
+
   Log.debug("AudioManager::AudioManager(): Created AudioManager");
 }
 
@@ -86,7 +93,6 @@ auto AudioManager::shutDown() -> void {
 
 void AudioManager::playMusic(shared_ptr<sid::Tune> tune, bool loop) {
   this->musicSequencer->setLoop(loop);
-  this->musicSequencer->stop();
 
   // If the tune is already loaded, just play it
   if (this->musicSequencer->getCurrentTune() != tune) {
@@ -101,25 +107,78 @@ void AudioManager::playMusic(shared_ptr<sid::Tune> tune, bool loop) {
 }
 
 void AudioManager::stopMusic() { this->musicSequencer->stop(); }
+
 void AudioManager::pauseMusic() { this->musicSequencer->pause(); }
 
 void AudioManager::playSound(shared_ptr<sid::Tune> tune, bool loop) {
-  this->sfxSequencer->setLoop(loop);
-  this->sfxSequencer->stop();
+  sid::Sequencer *sequencer = nullptr;
+  // Find a sequencer that is not playing or is playing the same tune
+  for (auto &s : this->sfxSequencers) {
+    if (!s->isPlaying() || s->getCurrentTune() == tune) {
+      sequencer = s.get();
+      break;
+    }
+  }
+
+  if (sequencer == nullptr) {
+    Log.error(
+      "AudioManager::playSound(): Cannot play sound. All sfxSequencers are "
+      "already busy.");
+    return;
+  }
+
+  sequencer->setLoop(loop);
 
   // If the tune is already loaded, just play it
-  if (this->sfxSequencer->getCurrentTune() != tune) {
-    this->sfxSequencer->unloadTune();
-    if (this->sfxSequencer->loadTune(tune) == -1) {
+  if (sequencer->getCurrentTune() != tune) {
+    sequencer->unloadTune();
+    if (sequencer->loadTune(tune) == -1) {
       Log.error("AudioManager::playSound(): Failed to load tune.");
       return;
     }
   }
 
-  this->sfxSequencer->play();
+  sequencer->play();
 }
 
-void AudioManager::stopSound() { this->sfxSequencer->stop(); }
-void AudioManager::pauseSound() { this->sfxSequencer->pause(); }
+void AudioManager::stopSound(shared_ptr<sid::Tune> tune) {
+  sid::Sequencer *sequencer = nullptr;
+  // Find a sequencer that is playing the same tune
+  for (auto &s : this->sfxSequencers) {
+    if (s->getCurrentTune() == tune) {
+      sequencer = s.get();
+      break;
+    }
+  }
+
+  if (sequencer == nullptr) {
+    Log.error(
+      "AudioManager::stopSound(): Cannot stop sound. Unable to find sequencer "
+      "for given tune");
+    return;
+  }
+
+  sequencer->stop();
+}
+
+void AudioManager::pauseSound(shared_ptr<sid::Tune> tune) {
+  sid::Sequencer *sequencer = nullptr;
+  // Find a sequencer that is playing the same tune
+  for (auto &s : this->sfxSequencers) {
+    if (s->getCurrentTune() == tune) {
+      sequencer = s.get();
+      break;
+    }
+  }
+
+  if (sequencer == nullptr) {
+    Log.error(
+      "AudioManager::pauseSound(): Cannot pause sound. Unable to find "
+      "sequencer for given tune");
+    return;
+  }
+
+  sequencer->pause();
+}
 
 }  // namespace lb

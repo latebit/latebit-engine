@@ -94,8 +94,8 @@ auto main() -> int {
   });
 
   test("sound", []() {
-    string label = "test_sound";
-    string filename = FIXTURES_FOLDER + "/sound";
+    string label = "sfx";
+    string filename = FIXTURES_FOLDER + "/sfx.lbsfx";
 
     assertOk("loads sound successfully", RM.loadSound(filename, label));
     assertFail("does not load same label", RM.loadSound(filename, label));

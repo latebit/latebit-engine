@@ -153,16 +153,17 @@ auto Sequencer::getNextSample() -> float {
     (this->currentSample + ENVELOPE_RELEASE_SAMPLES) % this->samplesPerTick ==
     0;
   float result = 0;
+  const int tracks = this->tune->getTracksCount();
 
-  // Plays the current sample in every channel
-  for (int channel = 0; channel < this->tune->getTracksCount(); channel++) {
-    shared_ptr<Track> track = this->tune->getTrack(channel);
+  // Plays the current sample in every track
+  for (int trackIndex = 0; trackIndex < tracks; trackIndex++) {
+    shared_ptr<Track> track = this->tune->getTrack(trackIndex);
     if (track->empty()) continue;
 
-    auto& envelope = this->envelopes[channel];
-    auto& oscillator = this->oscillators[channel];
+    auto& envelope = this->envelopes[trackIndex];
+    auto& oscillator = this->oscillators[trackIndex];
 
-    int currentTick = this->currentTick[channel];
+    int currentTick = this->currentTick[trackIndex];
     int nextTick = (currentTick + 1) % track->size();
 
     Note next = track->at(nextTick);
@@ -173,14 +174,14 @@ auto Sequencer::getNextSample() -> float {
     }
 
     if (shouldMoveToNextNote) {
-      this->currentTick[channel] = nextTick;
+      this->currentTick[trackIndex] = nextTick;
 
       if (isChangingNotes) {
-        this->setNoteForTrack(next, channel);
+        this->setNoteForTrack(next, trackIndex);
       }
     }
 
-    result += oscillator->oscillate() * envelope->process();
+    result += oscillator->oscillate() * envelope->process() / (float)tracks;
   }
 
   if (this->currentSample >= this->totalSamples) {
@@ -192,7 +193,7 @@ auto Sequencer::getNextSample() -> float {
 
   this->currentSample++;
 
-  return result / this->tune->getTracksCount();
+  return result;
 }
 
 auto Sequencer::getCurrentSampleIndex() const -> int {

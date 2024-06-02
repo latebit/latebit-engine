@@ -18,9 +18,9 @@ auto main() -> int {
 
   test("loadSound", []() {
     Sound sound;
-    assertOk("loads valid file", sound.loadSound(FIXTURES_FOLDER + "/sound"));
-    assertFail("doesn't load invalid file",
-               sound.loadSound("invalid_sound.wav"));
+    assertOk("loads valid file",
+             sound.loadSound(FIXTURES_FOLDER + "/sfx.lbsfx"));
+    assertFail("doesn't load invalid file", sound.loadSound("sound.wav"));
   });
   AM.shutDown();
   return report();

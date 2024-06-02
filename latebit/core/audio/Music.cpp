@@ -4,13 +4,13 @@
 #include <SDL2/SDL_stdinc.h>
 
 #include "latebit/core/audio/AudioManager.h"
-#include "latebit/sid/parser/parser.h"
+#include "latebit/sid/parser/TuneParser.h"
 #include "latebit/utils/Logger.h"
 
 using namespace std;
+using namespace sid;
 
 namespace lb {
-
 Music::Music() = default;
 
 Music::~Music() {
@@ -31,7 +31,7 @@ auto Music::loadMusic(string filename) -> int {
     this->music = nullptr;
   }
 
-  this->music = sid::TuneParser::fromFile(filename);
+  this->music = TuneParser::fromFile(filename, &MUSIC_PARSER_OPTIONS);
 
   if (this->music == nullptr) {
     Log.error("Music::loadMusic(): Unable to load music.");

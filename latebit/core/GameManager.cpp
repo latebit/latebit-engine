@@ -105,7 +105,11 @@ void GameManager::run() {
     onEvent(&step);
 
     IM.getInput();
-    WM.update();
+
+    if (!paused) {
+      WM.update();
+    }
+
     WM.draw();
     DM.swapBuffers();
 
@@ -113,7 +117,15 @@ void GameManager::run() {
     sleep(frameTime - loopTime);
   }
 }
+
 void GameManager::setGameOver(bool gameOver) { this->gameOver = gameOver; }
+
+void GameManager::pause() { this->paused = true; }
+
+void GameManager::resume() { this->paused = false; }
+
+auto GameManager::isPaused() const -> bool { return this->paused; }
+
 #endif
 
 #ifdef __EMSCRIPTEN__
@@ -132,7 +144,9 @@ void GameManager::loop(void* a) {
   GM.onEvent(args->step);
 
   IM.getInput();
-  WM.update();
+  if (!paused) {
+    WM.update();
+  }
   WM.draw();
   DM.swapBuffers();
 };

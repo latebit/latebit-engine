@@ -14,13 +14,13 @@ int const STOP_ANIMATION_SLOWDOWN = -1;
 class Animation {
  private:
   // Sprite to be animated
-  Sprite *sprite;
+  Sprite *sprite = nullptr;
   // Name of the animation
-  string name;
+  string name = "";
   // Index of the current frame
-  int index;
+  int index = 0;
   // Number of frames to wait before changing frame
-  int slowdownCount;
+  int slowdownCount = 0;
 
  public:
   Animation();

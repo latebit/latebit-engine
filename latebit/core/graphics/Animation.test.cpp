@@ -1,6 +1,7 @@
 #include "latebit/core/graphics/Animation.h"
 
 #include "../../../test/lib/test.h"
+#include "latebit/core/GameManager.h"
 #include "latebit/core/ResourceManager.h"
 #include "latebit/core/geometry/Box.h"
 #include "latebit/core/geometry/Vector.h"
@@ -63,6 +64,16 @@ void draw() {
   assertEq("index is not updated", animation.getIndex(), 1);
   assertEq("slowdown is not updated", animation.getSlowdownCount(),
            STOP_ANIMATION_SLOWDOWN);
+
+  animation.setSlowdownCount(0);
+  assertOk("draws the frame", animation.draw(Vector()));
+  assertEq("index is updated", animation.getIndex(), 1);
+  GM.pause();
+  assertOk("draws the frame", animation.draw(Vector()));
+  assertEq("index is not updated", animation.getIndex(), 1);
+  GM.resume();
+  assertOk("draws the frame", animation.draw(Vector()));
+  assertEq("index is updated", animation.getIndex(), 0);
 
   RM.shutDown();
   RM.startUp();

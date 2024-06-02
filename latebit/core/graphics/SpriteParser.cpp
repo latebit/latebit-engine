@@ -1,7 +1,5 @@
 #include "SpriteParser.h"
 
-#include <png.h>
-
 #include <fstream>
 #include <string>
 #include <vector>

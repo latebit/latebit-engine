@@ -1,6 +1,7 @@
 #include "Note.h"
 
-#include <cstdarg>
+#include <array>
+#include <sstream>
 
 #include "latebit/utils/Logger.h"
 
@@ -20,18 +21,45 @@ auto hexToInt(char hexChar) -> int {
 
 auto digitToInt(char c) -> int { return c - '0'; }
 
-auto validate(bool condition, const char* message, ...) -> int {
-  if (!condition) {
-    va_list args;
-    va_start(args, message);
-    Log.error(message, args);
-    va_end(args);
-    return 1;
+namespace sid {
+
+// Highlight the position of the error in the symbol with parentheses
+// This assumes the symbol has size SYMBOL_SIZE
+auto highlightErrorPosition(const Symbol& symbol,
+                            int position) -> const string {
+  string result = "";
+  for (int i = 0; i < SYMBOL_SIZE; i++) {
+    if (i == position) {
+      result += "[";
+    }
+    result += symbol[i];
+    if (i == position) {
+      result += "]";
+    }
   }
-  return 0;
+  return result;
 }
 
-namespace sid {
+template <int T>
+auto validate(const Symbol& symbol, int position, const array<char, T>& allowed,
+              const char* message) -> int {
+  const char c = symbol[position];
+
+  if (c == NULL_CHAR) return 0;
+
+  for (int i = 0; i < allowed.size(); i++) {
+    if (c == allowed[i]) return 0;
+  }
+
+  ostringstream s;
+  s << message << " in symbol \"" << symbol << "\". Got " << c
+    << ", expected one of " << allowed[0] << "-" << allowed[allowed.size() - 1]
+    << " or -. Invalid symbol in brackets: "
+    << highlightErrorPosition(symbol, position);
+
+  Log.error(s.str().c_str());
+  return 1;
+}
 
 Note::Note(int pitch, int volume, WaveType wave, EffectType effect,
            string symbol)
@@ -62,69 +90,60 @@ auto Note::makeContinue() -> Note {
   return note;
 }
 
+const array<char, 7> VALID_NOTES = {'A', 'B', 'C', 'D', 'E', 'F', 'G'};
+const array<char, 2> VALID_ACCIDENTALS = {'#', 'b'};
+const array<char, 8> VALID_OCTAVE = {'0', '1', '2', '3', '4', '5', '6', '7'};
+const array<char, 4> VALID_WAVE = {'0', '1', '2', '3'};
+const array<char, 16> VALID_VOLUME = {'0', '1', '2', '3', '4', '5', '6', '7',
+                                      '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+const array<char, 5> VALID_EFFECT = {'0', '1', '2', '3', '4'};
+
 auto Note::fromSymbol(const Symbol& str) -> Note {
+  if (str.size() != SYMBOL_SIZE) {
+    Log.error("Invalid string size. Got %d, expected %d\n", (int)str.size(),
+              SYMBOL_SIZE);
+    return Note::makeInvalid();
+  }
+
   int invalid = 0;
-  int len = str.size();
-
-  invalid +=
-    validate(len == SYMBOL_SIZE, "Invalid string size. Got %d, expected %d\n",
-             len, SYMBOL_SIZE);
-
-  // Short-circuit to prevent out-of-bounds access
-  if (invalid) {
-    return Note::makeInvalid();
-  }
-
-  invalid +=
-    validate((str[0] >= 'A' && str[0] <= 'G') || str[0] == NULL_CHAR,
-             "Invalid note. Got %c, expected one of A-G or -\n", str[0]);
-  invalid += validate(
-    str[1] == '#' || str[1] == 'b' || str[1] == NULL_CHAR,
-    "Invalid accidental. Got %c, expected one of #, b, or -\n", str[1]);
-  invalid +=
-    validate((str[2] >= '0' && str[2] <= '7') || str[2] == NULL_CHAR,
-             "Invalid octave. Got %c, expected one of 0-7 or -\n", str[2]);
-  invalid +=
-    validate((str[3] >= '0' && str[3] <= '3') || str[3] == NULL_CHAR,
-             "Invalid wave. Got %c, expected one of 0-3 or -\n", str[3]);
-  invalid +=
-    validate((str[4] >= '0' && str[4] <= 'F') || str[4] == NULL_CHAR,
-             "Invalid volume. Got %c, expected one of 0-F or -\n", str[4]);
-  invalid +=
-    validate((str[5] >= '0' && str[5] <= '4') || str[5] == NULL_CHAR,
-             "Invalid effect. Got %c, expected one of 0-4 or -\n", str[5]);
+  invalid += validate<7>(str, 0, VALID_NOTES, "Invalid note");
+  invalid += validate<2>(str, 1, VALID_ACCIDENTALS, "Invalid accidental");
+  invalid += validate<8>(str, 2, VALID_OCTAVE, "Invalid octave");
+  invalid += validate<4>(str, 3, VALID_WAVE, "Invalid wave");
+  invalid += validate<16>(str, 4, VALID_VOLUME, "Invalid volume");
+  invalid += validate<5>(str, 5, VALID_EFFECT, "Invalid effect");
 
   if (invalid) {
     return Note::makeInvalid();
   }
 
-  int note = 0;
+  int pitch = 0;
   int volume = 0;
   EffectType effect = NONE;
   WaveType wave = TRIANGLE;
 
   if (str[0] == 'C') {
-    note = 0;
+    pitch = 0;
   } else if (str[0] == 'D') {
-    note = 2;
+    pitch = 2;
   } else if (str[0] == 'E') {
-    note = 4;
+    pitch = 4;
   } else if (str[0] == 'F') {
-    note = 5;
+    pitch = 5;
   } else if (str[0] == 'G') {
-    note = 7;
+    pitch = 7;
   } else if (str[0] == 'A') {
-    note = 9;
+    pitch = 9;
   } else if (str[0] == 'B') {
-    note = 11;
+    pitch = 11;
   } else if (str[0] == NULL_CHAR) {
     return Note::makeRest();
   }
 
   if (str[1] == '#') {
-    note++;
+    pitch++;
   } else if (str[1] == 'b') {
-    note--;
+    pitch--;
   }
 
   if (str[3] == '0' || str[3] == NULL_CHAR) {
@@ -160,18 +179,18 @@ auto Note::fromSymbol(const Symbol& str) -> Note {
 
   even though the pitch is the same.
   */
-  if (note < 0) {
-    note = 12 + note;
+  if (pitch < 0) {
+    pitch = 12 + pitch;
     octave--;
-  } else if (note > 11) {
-    note = note - 12;
+  } else if (pitch > 11) {
+    pitch = pitch - 12;
     octave++;
   }
-  note += (12 * octave);
+  pitch += (12 * octave);
 
   volume = str[4] == NULL_CHAR ? 8 : hexToInt(str[4]);
 
-  return {note, volume, wave, effect, str};
+  return {pitch, volume, wave, effect, str};
 }
 
 auto Note::isRest() const -> bool { return this->id == -1; }

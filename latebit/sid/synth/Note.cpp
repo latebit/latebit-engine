@@ -1,7 +1,7 @@
 #include "Note.h"
 
+#include <array>
 #include <sstream>
-#include <vector>
 
 #include "latebit/utils/Logger.h"
 

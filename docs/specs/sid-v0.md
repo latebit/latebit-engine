@@ -145,13 +145,13 @@ The meaning of the characters by their zero-based index is the following
 | 3     	| Octave, in Scientific Pitch Notation                                      	| `0-7`                                                          	  | `4`               |
 | 4     	| Waveform, the timbre of the note                                          	| `0` (triangle)<br>`1` (square)<br>`2` (sawtooth)<br>`3` (noise) 	| `0`    	          |
 | 5     	| Volume of the note in hexadecimal where 0 is silent and F maximum volume. 	| `0-F` (hexadecimal)                                            	  | `8`               |
-| 6     	| Effect applied to the note.                                               	| `0` (pitch down)<br>`1` (pitch up)<br>`2` (fade out)<br>`3` (fade in) | No effect     |
+| 6     	| Effect applied to the note.                                               	| `0` (no effect)<br>`1` (drop)<br>`2` (slide)<br>`3` (fade in)<br>`4` (fade out) | `0`     |
 
 The Symbol in the example above means: Eb on octave 3 using a triangle wave, at the maximum volume with a slide effect.
 
 ##### Special Symbols
 
-There are two special symbols:
+There are the following special symbols:
 
 * `------` (6x NULL)
   

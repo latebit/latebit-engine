@@ -64,7 +64,7 @@ auto ResourceManager::loadTextSprite(string filename, string label) -> int {
     return -1;
   }
 
-  auto* sprite = new Sprite(SpriteParser::parseTextSprite(filename, label));
+  auto* sprite = new Sprite(SpriteParser::fromTextFile(filename, label));
 
   this->sprite[this->spriteCount] = sprite;
   this->spriteCount++;
@@ -97,8 +97,8 @@ auto ResourceManager::loadImageSprite(string filename, string label, int frames,
     return -1;
   }
 
-  auto* sprite = new Sprite(
-    SpriteParser::parseImageSprite(filename, label, frames, slowdown));
+  auto* sprite =
+    new Sprite(SpriteParser::fromPNGFile(filename, label, frames, slowdown));
 
   this->sprite[this->spriteCount] = sprite;
   this->spriteCount++;

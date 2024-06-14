@@ -23,7 +23,7 @@ auto main() -> int {
   Log.setDestination(STDOUT);
   suite("parse text sprite", []() {
     test("success", []() {
-      Sprite sprite = SpriteParser::parseTextSprite(
+      Sprite sprite = SpriteParser::fromTextFile(
         FIXTURES_FOLDER + "/correct.txt", "test_sprite");
 
       assertEq("label is correct", sprite.getLabel(), "test_sprite");
@@ -48,16 +48,16 @@ auto main() -> int {
     });
 
     test("validations", []() {
-      auto sprite = SpriteParser::parseTextSprite(
+      auto sprite = SpriteParser::fromTextFile(
         FIXTURES_FOLDER + "/missing-frame.txt", "test_sprite");
       assert("returns null with missing frames", sprite == Sprite());
 
-      sprite = SpriteParser::parseTextSprite(
-        FIXTURES_FOLDER + "/wrong-width.txt", "test_sprite");
+      sprite = SpriteParser::fromTextFile(FIXTURES_FOLDER + "/wrong-width.txt",
+                                          "test_sprite");
       assert("returns null with incorrect width", sprite == Sprite());
 
-      sprite = SpriteParser::parseTextSprite(
-        FIXTURES_FOLDER + "/wrong-height.txt", "test_sprite");
+      sprite = SpriteParser::fromTextFile(FIXTURES_FOLDER + "/wrong-height.txt",
+                                          "test_sprite");
       assert("returns null with incorrect height", sprite == Sprite());
     });
 
@@ -65,8 +65,7 @@ auto main() -> int {
       makeFile("carriage.txt",
                "2\r\n3\r\n4\r\n2\r\n012\r\n012\r\n012\r\n012\r\nFFF\r\nFFF"
                "\r\nFFF\r\nFFF");
-      auto sprite =
-        SpriteParser::parseTextSprite("carriage.txt", "test_sprite");
+      auto sprite = SpriteParser::fromTextFile("carriage.txt", "test_sprite");
       assertEq("label is correct", sprite.getLabel(), "test_sprite");
       assertEq("frame count is correct", sprite.getFrameCount(), 2);
       assertEq("width is correct", sprite.getWidth(), 3);
@@ -78,8 +77,8 @@ auto main() -> int {
 
   suite("parse image sprite", []() {
     test("single frame", []() {
-      auto sprite = SpriteParser::parseImageSprite(
-        FIXTURES_FOLDER + "/correct.png", "correct", 1, 1);
+      auto sprite = SpriteParser::fromPNGFile(FIXTURES_FOLDER + "/correct.png",
+                                              "correct", 1, 1);
       assertEq("label is correct", sprite.getLabel(), "correct");
       assertEq("frame count is correct", sprite.getFrameCount(), 1);
       assertEq("width is correct", sprite.getWidth(), 2);
@@ -91,7 +90,7 @@ auto main() -> int {
     });
 
     test("with transparency", []() {
-      auto sprite = SpriteParser::parseImageSprite(
+      auto sprite = SpriteParser::fromPNGFile(
         FIXTURES_FOLDER + "/correct-transparent.png", "transparent", 1, 1);
       assert(
         "detects transparency correctly",
@@ -100,8 +99,8 @@ auto main() -> int {
     });
 
     test("sprite sheet", []() {
-      auto sprite = SpriteParser::parseImageSprite(
-        FIXTURES_FOLDER + "/sheet.png", "sheet", 4, 1);
+      auto sprite = SpriteParser::fromPNGFile(FIXTURES_FOLDER + "/sheet.png",
+                                              "sheet", 4, 1);
       assertEq("frame count is correct", sprite.getFrameCount(), 4);
       assert("content of first frame is correct",
              sprite.getFrame(0).getContent() == vector<Color>({YELLOW}));
@@ -114,24 +113,24 @@ auto main() -> int {
     });
 
     test("validations", []() {
-      auto sprite = SpriteParser::parseImageSprite(
-        FIXTURES_FOLDER + "/missing.png", "missing", 1, 1);
+      auto sprite = SpriteParser::fromPNGFile(FIXTURES_FOLDER + "/missing.png",
+                                              "missing", 1, 1);
       assert("returns null with missing file", sprite == Sprite());
 
-      sprite = SpriteParser::parseImageSprite(
+      sprite = SpriteParser::fromPNGFile(
         FIXTURES_FOLDER + "/bigger-palette.png", "bigger-palette", 1, 1);
       assert("returns null with bigger palette", sprite == Sprite());
 
-      sprite = SpriteParser::parseImageSprite(
-        FIXTURES_FOLDER + "/not-indexed.png", "not-indexed", 1, 1);
+      sprite = SpriteParser::fromPNGFile(FIXTURES_FOLDER + "/not-indexed.png",
+                                         "not-indexed", 1, 1);
       assert("returns null with not indexed images", sprite == Sprite());
 
-      sprite = SpriteParser::parseImageSprite(FIXTURES_FOLDER + "/correct.txt",
-                                              "correct", 1, 1);
+      sprite = SpriteParser::fromPNGFile(FIXTURES_FOLDER + "/correct.txt",
+                                         "correct", 1, 1);
       assert("returns null with a non PNG file", sprite == Sprite());
 
-      sprite = SpriteParser::parseImageSprite(FIXTURES_FOLDER + "/sheet.png",
-                                              "sheet", 5, 1);
+      sprite = SpriteParser::fromPNGFile(FIXTURES_FOLDER + "/sheet.png",
+                                         "sheet", 5, 1);
       assert("returns null if width cannot be divided by frames",
              sprite == Sprite());
     });

@@ -14,25 +14,25 @@
 using namespace std;
 
 namespace lb {
-auto SpriteParser::parseImageSprite(string filename, string label, int frames,
+auto SpriteParser::fromPNGFile(string filename, string label, int frames,
                                     int slowdown) -> Sprite {
   auto decoder = PNGDecoder(filename);
 
   if (!decoder.canOpenFile()) {
-    Log.error("SpriteParser::parseImageSprite(): Could not open file %s",
+    Log.error("SpriteParser::fromPNGFile(): Could not open file %s",
               filename.c_str());
     return {};
   }
 
   if (!decoder.isPNGFile()) {
-    Log.error("SpriteParser::parseImageSprite(): %s is not a PNG file",
+    Log.error("SpriteParser::fromPNGFile(): %s is not a PNG file",
               filename.c_str());
     return {};
   }
 
   if (!decoder.canAllocateMemory()) {
     Log.error(
-      "SpriteParser::parseImageSprite(): Could load %s. Unable to allocate "
+      "SpriteParser::fromPNGFile(): Could load %s. Unable to allocate "
       "memory",
       filename.c_str());
     return {};
@@ -40,7 +40,7 @@ auto SpriteParser::parseImageSprite(string filename, string label, int frames,
 
   if (decoder.decode() != 0) {
     Log.error(
-      "SpriteParser::parseImageSprite(): Could not decode %s. Invalid PNG "
+      "SpriteParser::fromPNGFile(): Could not decode %s. Invalid PNG "
       "structure",
       filename.c_str());
     return {};
@@ -48,14 +48,14 @@ auto SpriteParser::parseImageSprite(string filename, string label, int frames,
 
   if (!decoder.is16ColorsPNG()) {
     Log.error(
-      "SpriteParser::parseImageSprite(): Image is not palette-based. Only 16 "
+      "SpriteParser::fromPNGFile(): Image is not palette-based. Only 16 "
       "colors PNGs are supported");
     return {};
   }
 
   if (decoder.readImage() != 0) {
     Log.error(
-      "SpriteParser::parseImageSprite(): Could not read image data from %s",
+      "SpriteParser::fromPNGFile(): Could not read image data from %s",
       filename.c_str());
     return {};
   }
@@ -65,7 +65,7 @@ auto SpriteParser::parseImageSprite(string filename, string label, int frames,
 
   if (width % frames != 0) {
     Log.error(
-      "SpriteParser::parseImageSprite(): Image width %d cannot be divided in "
+      "SpriteParser::fromPNGFile(): Image width %d cannot be divided in "
       "%d equal frames",
       width, frames);
     return {};
@@ -92,27 +92,42 @@ auto SpriteParser::parseImageSprite(string filename, string label, int frames,
   return sprite;
 }
 
-auto SpriteParser::parseTextSprite(string filename, string label) -> Sprite {
+auto SpriteParser::fromTextFile(string filename, string label) -> Sprite {
   ifstream file(filename);
 
   if (!file.is_open()) {
-    Log.error("SpriteParser::parseTextSprite(): Could not open file %s",
+    Log.error("SpriteParser::fromTextFile(): Could not open file %s",
               filename.c_str());
     return {};
   }
 
+  return fromStream(&file, label);
+}
+
+auto SpriteParser::fromString(string str, string label) -> Sprite {
+  istringstream stream(str);
+
+  if (!stream.good()) {
+    Log.error("SpriteParser::fromString(): Could not open string");
+    return {};
+  }
+
+  return fromStream(&stream, label);
+}
+
+auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
   // Order of these lines matters! Do not change!
-  uint8_t frames = stoi(getLine(&file));
-  uint8_t width = stoi(getLine(&file));
-  uint8_t height = stoi(getLine(&file));
-  uint8_t slowdown = stoi(getLine(&file));
+  uint8_t frames = stoi(getLine(stream));
+  uint8_t width = stoi(getLine(stream));
+  uint8_t height = stoi(getLine(stream));
+  uint8_t slowdown = stoi(getLine(stream));
 
   Sprite sprite(label, width, height, slowdown, frames);
 
   for (int i = 0; i < frames; i++) {
-    if (!file.good()) {
+    if (!stream->good()) {
       Log.error(
-        "SpriteParser::parseTextSprite(): Unexpected end of file at frame %d",
+        "SpriteParser::fromTextFile(): Unexpected end of file at frame %d",
         i);
       return {};
     }
@@ -121,10 +136,10 @@ auto SpriteParser::parseTextSprite(string filename, string label) -> Sprite {
     content.reserve(width * height);
 
     for (int j = 0; j < height; j++) {
-      auto line = getLine(&file);
+      auto line = getLine(stream);
       if (line.size() != width) {
         Log.error(
-          "SpriteParser::parseTextSprite(): Invalid line length %d for frame "
+          "SpriteParser::fromTextFile(): Invalid line length %d for frame "
           "%d. "
           "Expected %d, got %d",
           i, j, width, line.length());

@@ -104,4 +104,44 @@ auto fromHex(char c) -> Color {
   }
 }
 
+auto toHex(Color c) -> char {
+  switch (c) {
+    case BLACK:
+      return '0';
+    case DARK_BLUE:
+      return '1';
+    case DARK_PURPLE:
+      return '2';
+    case DARK_GREEN:
+      return '3';
+    case BROWN:
+      return '4';
+    case DARK_GRAY:
+      return '5';
+    case LIGHT_GRAY:
+      return '6';
+    case WHITE:
+      return '7';
+    case RED:
+      return '8';
+    case ORANGE:
+      return '9';
+    case YELLOW:
+      return 'A';
+    case GREEN:
+      return 'B';
+    case BLUE:
+      return 'C';
+    case INDIGO:
+      return 'D';
+    case PINK:
+      return 'E';
+    case PEACH:
+      return 'F';
+    case UNDEFINED_COLOR:
+    default:
+      return '-';
+  }
+}
+
 }  // namespace lb

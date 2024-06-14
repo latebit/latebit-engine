@@ -34,5 +34,21 @@ auto main() -> int {
     }
   });
 
+  test("converts colors to hex", []() {
+    array<Color, 16> validColors = {BLACK, DARK_BLUE, DARK_PURPLE, DARK_GREEN,
+                                    BROWN, DARK_GRAY, LIGHT_GRAY,  WHITE,
+                                    RED,   ORANGE,    YELLOW,      GREEN,
+
+                                    BLUE,  INDIGO,    PINK,        PEACH};
+    array<char, 16> expectedHex = {'0', '1', '2', '3', '4', '5', '6', '7',
+                                   '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
+    for (int i = 0; i < 15; i++) {
+      char hex = toHex(validColors[i]);
+      auto msg = "returns correct color for " + string(1, hex);
+      assertEq(msg, expectedHex[i], hex);
+    }
+  });
+
   return report();
 }

@@ -28,6 +28,9 @@ const Color COLOR_DEFAULT = WHITE;
 // Maps an hexadecimal character to a Color
 auto fromHex(char c) -> Color;
 
+// Maps a Color to an hexadecimal character
+auto toHex(Color c) -> char;
+
 // Converts a Color to a SDL Color
 auto toSDLColor(Color c) -> SDL_Color;
 }  // namespace lb

@@ -1,6 +1,7 @@
 #include "Parser.h"
 
 #include <regex>
+#include <sstream>
 
 auto getLine(istream* file, char delimiter) -> string {
   string line;

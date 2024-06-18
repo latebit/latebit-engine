@@ -73,7 +73,7 @@ auto ResourceManager::loadTextSprite(string filename, string label) -> int {
 }
 
 auto ResourceManager::loadImageSprite(string filename, string label, int frames,
-                                      int slowdown) -> int {
+                                      int duration) -> int {
   if (frames < 1) {
     Log.error(
       "ResourceManager::loadImageSprite(): Cannot load sprite. Number of "
@@ -97,8 +97,8 @@ auto ResourceManager::loadImageSprite(string filename, string label, int frames,
     return -1;
   }
 
-  auto* sprite =
-    new Sprite(SpriteParser::fromPNGFile(filename, label, frames, slowdown));
+  auto sprite =
+    new Sprite(SpriteParser::fromPNGFile(filename, label, frames, duration));
 
   this->sprite[this->spriteCount] = sprite;
   this->spriteCount++;

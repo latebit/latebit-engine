@@ -14,26 +14,6 @@
 using namespace std;
 
 namespace sid {
-auto getNumber(istream *stream, char commentChar = '#') -> int {
-  try {
-    string line = getNextNonCommentLine(stream, commentChar);
-    if (line.empty()) {
-      return -1;
-    }
-    smatch match;
-    std::regex numberWithComments("^\\d+\\s*" + string(1, commentChar) +
-                                  "*.*$");
-    if (std::regex_search(line, match, numberWithComments)) {
-      auto result = match.str();
-      return stoi(result);
-    } else {
-      return -1;
-    }
-  } catch (...) {
-    return -1;
-  }
-}
-
 auto getSymbolsFromLine(const string &line,
                         char delimiter = '|') -> vector<string> {
   vector<string> result;
@@ -48,16 +28,6 @@ auto getSymbolsFromLine(const string &line,
   return result;
 }
 
-auto makeRangeValidationMessage(int value, int max, int min = 1) -> string {
-  std::ostringstream oss;
-  if (max == min) {
-    oss << "Expected " << min << ", got " << value;
-  } else {
-    oss << "Expected a number " << min << "-" << max << ", got " << value;
-  }
-  return oss.str();
-}
-
 auto TuneParser::fromStream(istream *stream,
                             const ParserOptions *opts) -> unique_ptr<Tune> {
   string version = getLine(stream);
@@ -66,14 +36,14 @@ auto TuneParser::fromStream(istream *stream,
     return nullptr;
   }
 
-  int bpm = getNumber(stream);
+  int bpm = getNextNumber(stream);
   if (bpm < 10 || bpm > 400) {
     Log.error("Invalid bpm. %s",
               makeRangeValidationMessage(bpm, 400, 10).c_str());
     return nullptr;
   }
 
-  int ticksPerBeat = getNumber(stream);
+  int ticksPerBeat = getNextNumber(stream);
   if (ticksPerBeat < 1 || ticksPerBeat > opts->maxTicksPerBeat) {
     Log.error(
       "Invalid ticks per beat. %s",
@@ -81,7 +51,7 @@ auto TuneParser::fromStream(istream *stream,
     return nullptr;
   }
 
-  int beatsCount = getNumber(stream);
+  int beatsCount = getNextNumber(stream);
   if (beatsCount <= 0 || beatsCount > 64) {
     Log.error(
       "Invalid beats count. %s",
@@ -89,7 +59,7 @@ auto TuneParser::fromStream(istream *stream,
     return nullptr;
   }
 
-  int tracksCount = getNumber(stream);
+  int tracksCount = getNextNumber(stream);
   if (tracksCount <= 0 || tracksCount > opts->maxTracksCount) {
     Log.error(
       "Invalid tracks count. %s",

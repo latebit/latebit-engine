@@ -8,7 +8,7 @@ Animation::Animation() = default;
 void Animation::setSprite(Sprite* s) {
   this->sprite = s;
   // In case the new sprite has a different number of frames, reset the index
-  // and slowdown count to not have blank frames
+  // and duration count to not have blank frames
   // For exmaple, when you try to render index 4, but the new sprite has only 3
   // frames, it will render a blank frame instead of the first one)
   this->index = 0;
@@ -31,22 +31,22 @@ auto Animation::draw(Vector position) -> int {
   int index = getIndex();
   int result = this->sprite->draw(index, position);
 
-  int slowdown = getSlowdownCount();
-  if (slowdown == STOP_ANIMATION_SLOWDOWN) return 0;
+  int duration = getSlowdownCount();
+  if (duration == STOP_ANIMATION_SLOWDOWN) return 0;
 
   // Do not update the animation if the game is paused
   if (GM.isPaused()) return result;
 
-  slowdown++;
+  duration++;
 
-  if (slowdown >= this->sprite->getSlowdown()) {
-    slowdown = 0;
+  if (duration >= this->sprite->getDuration()) {
+    duration = 0;
     // Circularly iterate through frames
     index = (index + 1) % this->sprite->getFrameCount();
     setIndex(index);
   }
 
-  setSlowdownCount(slowdown);
+  setSlowdownCount(duration);
   return result;
 }
 

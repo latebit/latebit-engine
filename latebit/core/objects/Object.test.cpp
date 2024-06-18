@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include "../../../test/lib/test.h"
+#include "../../utils/Logger.h"
 #include "latebit/core/GameManager.h"
 #include "latebit/core/ResourceManager.h"
 #include "latebit/core/events/Event.h"
@@ -76,7 +77,7 @@ void solidness() {
 void boundingBox() {
   Object subject;
   subject.setPosition(Vector(1, 1));
-  RM.loadTextSprite(FIXTURES_FOLDER + "/correct.txt", "sprite");
+  RM.loadTextSprite(FIXTURES_FOLDER + "/correct.lbspr", "sprite");
 
   subject.setSprite("sprite");
 
@@ -249,7 +250,7 @@ auto main() -> int {
     subject.setAnimation(animation);
     assert("updates animation", subject.getAnimation() == animation);
 
-    RM.loadTextSprite(FIXTURES_FOLDER + "/correct.txt", "sprite");
+    RM.loadTextSprite(FIXTURES_FOLDER + "/correct.lbspr", "sprite");
     assertOk("sets valid sprite", subject.setSprite("sprite"));
     assertFail("does not set invalid sprite", subject.setSprite("invalid"));
     RM.unloadSprite("sprite");

@@ -24,7 +24,7 @@ class SpriteParser {
   // The PNG can have multiple frames, in which case we will assume they all are
   // on the same line and divide the image width by the number of frames
   static auto fromPNGFile(string filename, string label, int frames,
-                               int slowdown) -> Sprite;
+                          int duration) -> Sprite;
 
   // Converts a sprite to a string
   static auto toString(const Sprite &sprite) -> string;

@@ -1,6 +1,7 @@
 #include "SpriteParser.h"
 
-#include <fstream>
+#include <istream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -15,7 +16,7 @@ using namespace std;
 
 namespace lb {
 auto SpriteParser::fromPNGFile(string filename, string label, int frames,
-                                    int slowdown) -> Sprite {
+                               int duration) -> Sprite {
   auto decoder = PNGDecoder(filename);
 
   if (!decoder.canOpenFile()) {
@@ -54,9 +55,8 @@ auto SpriteParser::fromPNGFile(string filename, string label, int frames,
   }
 
   if (decoder.readImage() != 0) {
-    Log.error(
-      "SpriteParser::fromPNGFile(): Could not read image data from %s",
-      filename.c_str());
+    Log.error("SpriteParser::fromPNGFile(): Could not read image data from %s",
+              filename.c_str());
     return {};
   }
 
@@ -74,7 +74,7 @@ auto SpriteParser::fromPNGFile(string filename, string label, int frames,
   // We assume the sprite is horizontal
   int spriteWidth = width / frames;
 
-  Sprite sprite(label, spriteWidth, height, slowdown, frames);
+  Sprite sprite(label, spriteWidth, height, duration, frames);
 
   for (int i = 0; i < frames; i++) {
     vector<Color> content;
@@ -117,18 +117,53 @@ auto SpriteParser::fromString(string str, string label) -> Sprite {
 
 auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
   // Order of these lines matters! Do not change!
-  uint8_t frames = stoi(getLine(stream));
-  uint8_t width = stoi(getLine(stream));
-  uint8_t height = stoi(getLine(stream));
-  uint8_t slowdown = stoi(getLine(stream));
+  string version = getLine(stream);
+  if (version != "#v0.1#") {
+    if (version.at(0) == '#') {
+      Log.error("Invalid header. Unsupported version %s", version.c_str());
+      return {};
+    } else {
+      Log.error("Missing version header. Expected #v0.1#, got %s",
+                version.c_str());
+    }
+    return {};
+  }
 
-  Sprite sprite(label, width, height, slowdown, frames);
+  int frames = getNextNumber(stream);
+  if (frames < 1 || frames > 64) {
+    Log.error("Invalid frame count. %s",
+              makeRangeValidationMessage(frames, 64).c_str());
+    return {};
+  }
+
+  int width = getNextNumber(stream);
+  if (width < 1 || width > 64) {
+    Log.error("Invalid width. %s",
+              makeRangeValidationMessage(width, 64).c_str());
+    return {};
+  }
+
+  int height = getNextNumber(stream);
+  if (height < 1 || height > 64) {
+    Log.error("Invalid height. %s",
+              makeRangeValidationMessage(height, 64).c_str());
+    return {};
+  }
+
+  int duration = getNextNumber(stream);
+  if (duration < 0 || duration > 255) {
+    Log.error("Invalid frame duration. %s",
+              makeRangeValidationMessage(height, 255).c_str());
+    return {};
+  }
+
+  Sprite sprite(label, (uint8_t)width, (uint8_t)height, (uint8_t)duration,
+                (uint8_t)frames);
 
   for (int i = 0; i < frames; i++) {
     if (!stream->good()) {
       Log.error(
-        "SpriteParser::fromTextFile(): Unexpected end of file at frame %d",
-        i);
+        "SpriteParser::fromTextFile(): Unexpected end of file at frame %d", i);
       return {};
     }
 
@@ -153,6 +188,30 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
   }
 
   return sprite;
+}
+
+auto SpriteParser::toString(const Sprite &sprite) -> string {
+  ostringstream stream;
+
+  stream << "#v0.1#" << '\n';
+  stream << (int)sprite.getFrameCount() << '\n';
+  stream << (int)sprite.getWidth() << '\n';
+  stream << (int)sprite.getHeight() << '\n';
+  stream << (int)sprite.getDuration() << '\n';
+
+  for (int i = 0; i < sprite.getFrameCount(); i++) {
+    auto frame = sprite.getFrame(i);
+
+    for (int y = 0; y < frame.getHeight(); y++) {
+      for (int x = 0; x < frame.getWidth(); x++) {
+        size_t index = x + y * frame.getWidth();
+        stream << toHex(frame.getContent().at(index));
+      }
+      stream << '\n';
+    }
+  }
+
+  return stream.str();
 }
 
 }  // namespace lb

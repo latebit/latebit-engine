@@ -15,8 +15,7 @@ void constructor() {
   assertEq("height is initialized to 0", sprite.getHeight(), 0);
 
   assertEq("frame count is initialized to 0", sprite.getFrameCount(), 0);
-  assert("slowdown is initialized to NO_SLOWDOWN",
-         sprite.getSlowdown() == NO_SLOWDOWN);
+  assertEq("duration is initialized to 1", sprite.getDuration(), 1);
   assert("label is initialized to an empty string", sprite.getLabel().empty());
 
   Sprite sprite2("s", 1, 1, 1, 1);
@@ -37,12 +36,22 @@ void frame() {
            sprite.getFrameCount(), 1);
   assert("getFrame returns the correct frame", frame1 == sprite.getFrame(0));
 
-  assertFail("fails when maximum frame count is reached",
+  assertFail("won't add when maximum frame count is reached",
              sprite.addFrame(frame2));
   assertEq("frame count remains the same after reaching maximum",
            sprite.getFrameCount(), 1);
 
-  assertFail("fails when frame has incorrect size", sprite.addFrame(frame3));
+  assertFail("won't add when frame has incorrect size",
+             sprite.addFrame(frame3));
+
+  assertOk("replaces frame successfully", sprite.setFrame(0, frame2));
+  assert("getFrame returns the correct frame", frame2 == sprite.getFrame(0));
+  assertEq("frame count remains the same after reaching maximum",
+           sprite.getFrameCount(), 1);
+  assertFail("won't replace when frame number is out of bounds",
+             sprite.setFrame(10, frame1));
+  assertFail("won't replace when frame has incorrect size",
+             sprite.setFrame(0, frame3));
 
   assert("returns empty frame when frame number is invalid",
          Frame() == sprite.getFrame(10));
@@ -65,18 +74,6 @@ void draw() {
 
 auto main() -> int {
   DM.startUp();
-  test("setters", []() {
-    Sprite sprite("s", 1, 1, 1, 1);
-    sprite.setWidth(10);
-    assertEq("setWidth sets width", sprite.getWidth(), 10);
-    sprite.setHeight(20);
-    assertEq("setHeight sets height", sprite.getHeight(), 20);
-    sprite.setLabel("test");
-    assertEq("setLabel sets label", sprite.getLabel(), "test");
-    sprite.setSlowdown(5);
-    assertEq("setSlowdown sets slowdown", sprite.getSlowdown(), 5);
-  });
-
   test("constructor", constructor);
   test("frame", frame);
   test("draw", draw);
@@ -92,7 +89,7 @@ auto main() -> int {
     assert("equals another sprite", sprite1 == sprite2);
     assert("not equals different width", !(sprite1 == sprite3));
     assert("not equals different height", !(sprite1 == sprite4));
-    assert("not equals different slowdown", !(sprite1 == sprite5));
+    assert("not equals different duration", !(sprite1 == sprite5));
     assert("not equals different label", !(sprite1 == sprite6));
     assert("not equals empty sprite", !(sprite1 == Sprite()));
   });

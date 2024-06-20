@@ -160,6 +160,9 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
   Sprite sprite(label, (uint8_t)width, (uint8_t)height, (uint8_t)duration,
                 (uint8_t)frames);
 
+  width = (uint8_t)width;
+  height = (uint8_t)height;
+
   for (int i = 0; i < frames; i++) {
     if (!stream->good()) {
       Log.error(

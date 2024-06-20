@@ -1,4 +1,4 @@
-Checks: '-*,modernize-*'
+Checks: '-*,modernize-*,bugprone-use-after-move'
 HeaderFilterRegex: '.*'
 CheckOptions:
   - { key: modernize-use-override, value: 1 }

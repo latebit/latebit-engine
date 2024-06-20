@@ -114,7 +114,7 @@ auto TuneParser::fromStream(istream *stream,
       } else {
         auto note = Note::fromSymbol(symbol);
 
-        if (note.isInvalid()) {
+        if (note.getType() == NoteType::Invalid) {
           // error is already printed in the symbol parser
           return nullptr;
         }
@@ -155,7 +155,7 @@ auto TuneParser::toString(const Tune &tune) -> string {
   int maxTrackLength = tune.getBeatsCount() * tune.getTicksPerBeat();
   for (int i = 0; i < maxTrackLength; i++) {
     for (int j = 0; j < tune.getTracksCount(); j++) {
-      auto track = tune.getTrack(j);
+      auto &track = tune.getTrack(j);
       if (i >= (int)track->size()) {
         ss << "      ";
       } else {

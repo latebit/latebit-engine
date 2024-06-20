@@ -25,6 +25,13 @@ class Tune {
   const vector<unique_ptr<Track>> tracks;
 
  public:
+  // Creates a null tune
+  Tune()
+    : bpm(0),
+      ticksPerBeat(0),
+      beatsCount(0),
+      tracks(vector<unique_ptr<Track>>{}) {}
+
   // Creates a new tune with the given number of tracks
   Tune(int bpm, int ticksPerBeat, int beatsCount,
        vector<unique_ptr<Track>>&& tracks)
@@ -32,6 +39,9 @@ class Tune {
       ticksPerBeat(ticksPerBeat),
       beatsCount(beatsCount),
       tracks(std::move(tracks)) {}
+
+  // Deep-check for equality, taking ordering into account
+  auto operator==(const Tune& other) const -> bool;
 
   // Frees the memory associated with the tune
   ~Tune() = default;
@@ -49,6 +59,6 @@ class Tune {
   [[nodiscard]] auto getTracksCount() const -> int;
 
   // Returns the track at the given index
-  [[nodiscard]] auto getTrack(int index) const -> const Track*;
+  [[nodiscard]] auto getTrack(int index) const -> const unique_ptr<Track>&;
 };
 }  // namespace sid

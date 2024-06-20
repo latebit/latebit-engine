@@ -49,7 +49,7 @@ auto Sequencer::loadTune(Tune* t) -> int {
     this->currentTick[i] = 0;
     this->envelopes[i] = make_unique<Envelope>();
     this->oscillators[i] = make_unique<Oscillator>(0);
-    const Track* track = t->getTrack(i);
+    auto& track = t->getTrack(i);
     maxTrackLength = max(maxTrackLength, (int)track->size());
 
     // This is used to allow the first note of each track to be executed
@@ -87,7 +87,7 @@ auto Sequencer::play() -> int {
   // Make sure the last note is set as the current note, else the first note is
   // skipped when you resume playing and you have paused just after the tick
   for (int i = 0; i < this->tune->getTracksCount(); i++) {
-    auto track = this->tune->getTrack(i);
+    auto& track = this->tune->getTrack(i);
     if (track->empty()) continue;
 
     Note lastNote = track->at(this->getCurrentTick(i));
@@ -102,7 +102,7 @@ auto Sequencer::play() -> int {
   // Consequently, update also the total samples
   int maxTrackLength = 0;
   for (int i = 0; i < this->tune->getTracksCount(); i++) {
-    const Track* track = this->tune->getTrack(i);
+    auto& track = this->tune->getTrack(i);
     maxTrackLength = max(maxTrackLength, (int)track->size());
   }
   this->totalSamples = maxTrackLength * this->samplesPerTick;
@@ -146,8 +146,9 @@ auto Sequencer::getNextSample() -> float {
     return 0;
   }
 
-  int shouldMoveToNextNote = this->currentSample % this->samplesPerTick == 0;
-  int shouldStopEnvelope =
+  const int shouldMoveToNextNote =
+    this->currentSample % this->samplesPerTick == 0;
+  const int shouldStopEnvelope =
     (this->currentSample + ENVELOPE_RELEASE_SAMPLES) % this->samplesPerTick ==
     0;
   float result = 0;
@@ -155,17 +156,17 @@ auto Sequencer::getNextSample() -> float {
 
   // Plays the current sample in every track
   for (int trackIndex = 0; trackIndex < tracks; trackIndex++) {
-    const Track* track = this->tune->getTrack(trackIndex);
+    auto& track = this->tune->getTrack(trackIndex);
     if (track->empty()) continue;
 
-    auto& envelope = this->envelopes[trackIndex];
-    auto& oscillator = this->oscillators[trackIndex];
+    const auto& envelope = this->envelopes[trackIndex];
+    const auto& oscillator = this->oscillators[trackIndex];
 
-    int currentTick = this->currentTick[trackIndex];
-    int nextTick = (currentTick + 1) % track->size();
+    const int currentTick = this->currentTick[trackIndex];
+    const int nextTick = (currentTick + 1) % track->size();
 
-    Note next = track->at(nextTick);
-    bool isChangingNotes = !next.isContinue();
+    const Note next = track->at(nextTick);
+    const bool isChangingNotes = next.getType() != NoteType::Continue;
 
     if (shouldStopEnvelope && isChangingNotes) {
       envelope->release();

@@ -16,6 +16,16 @@ const string REST_SYMBOL = "------";
 const string CONTINUE_SYMBOL = "......";
 const string END_OF_TRACK_SYMBOL = "      ";
 
+namespace NoteType {
+enum NoteType {
+  Standard,
+  Rest,
+  Invalid,
+  Continue,
+  EndOfTrack,
+};
+};
+
 // A Note is a musical object that represents a sound. It has a pitch, a volume,
 // a wave type and an effect type. It also has a unique identifier that can be
 // used to compare notes. Notes are immutable, which means that once they are
@@ -38,15 +48,6 @@ class Note {
   // Creates a new note from a symbol
   static auto fromSymbol(const Symbol& str) -> Note;
 
-  // Checks if the given note is a rest
-  [[nodiscard]] auto isRest() const -> bool;
-  // Checks if the given notes are equal (i.e., same pitch, volume, wave)
-  [[nodiscard]] auto isEqual(Note other) const -> bool;
-  // Checks if the given note is invalid
-  [[nodiscard]] auto isInvalid() const -> bool;
-  // Checks if the given note is continue
-  [[nodiscard]] auto isContinue() const -> bool;
-
   // Returns the pitch of the note
   [[nodiscard]] auto getPitch() const -> int;
   // Returns the volume of the note in the range [0, 1]
@@ -55,10 +56,15 @@ class Note {
   [[nodiscard]] auto getWave() const -> WaveType;
   // Returns the effect type of the note
   [[nodiscard]] auto getEffect() const -> EffectType;
-  // Returns the unique identifier of the note
-  [[nodiscard]] auto getId() const -> long unsigned int;
   // Returns the symbol from which this note was created
   [[nodiscard]] auto getSymbol() const -> Symbol;
+  // Returns the symbol from which this note was created
+  [[nodiscard]] auto getType() const -> NoteType::NoteType;
+
+  // Checks if the given notes are equal (i.e., same pitch, volume, wave)
+  auto operator==(const Note& other) const -> bool;
+  // Checks if the given notes are not equal
+  auto operator!=(const Note& other) const -> bool;
 
  private:
   Note(int pitch, int volume, WaveType wave, EffectType effect, string symbol);
@@ -70,10 +76,10 @@ class Note {
   WaveType wave = TRIANGLE;
   // The type of effect associated with the note
   EffectType effect = NONE;
-  // The unique identifier of the note, used to compare notes
-  long int id = 0;
   // The symbol associated with the note
   Symbol symbol = END_OF_TRACK_SYMBOL;
+  // The type of the note
+  NoteType::NoteType type = NoteType::EndOfTrack;
 };
 
 using Track = std::vector<Note>;

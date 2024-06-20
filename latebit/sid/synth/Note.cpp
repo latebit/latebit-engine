@@ -47,7 +47,7 @@ auto validate(const Symbol& symbol, int position, const array<char, T>& allowed,
 
   if (c == NULL_CHAR) return 0;
 
-  for (int i = 0; i < allowed.size(); i++) {
+  for (size_t i = 0; i < allowed.size(); i++) {
     if (c == allowed[i]) return 0;
   }
 
@@ -68,25 +68,24 @@ Note::Note(int pitch, int volume, WaveType wave, EffectType effect,
     wave(wave),
     effect(effect),
     symbol(std::move(symbol)) {
-  static int id = 0;
-  this->id = id++;
+  this->type = NoteType::Standard;
 }
 
 auto Note::makeRest() -> Note {
-  auto note = Note(0, 0, TRIANGLE, NONE, "------");
-  note.id = -1;
+  auto note = Note(0, 0, TRIANGLE, NONE, REST_SYMBOL);
+  note.type = NoteType::Rest;
   return note;
 }
 
 auto Note::makeInvalid() -> Note {
-  auto note = Note(0, 0, TRIANGLE, NONE, "      ");
-  note.id = -2;
+  auto note = Note(0, 0, TRIANGLE, NONE, END_OF_TRACK_SYMBOL);
+  note.type = NoteType::Invalid;
   return note;
 }
 
 auto Note::makeContinue() -> Note {
-  auto note = Note(0, 0, TRIANGLE, NONE, "......");
-  note.id = -3;
+  auto note = Note(0, 0, TRIANGLE, NONE, CONTINUE_SYMBOL);
+  note.type = NoteType::Continue;
   return note;
 }
 
@@ -193,19 +192,19 @@ auto Note::fromSymbol(const Symbol& str) -> Note {
   return {pitch, volume, wave, effect, str};
 }
 
-auto Note::isRest() const -> bool { return this->id == -1; }
-auto Note::isInvalid() const -> bool { return this->id == -2; }
-auto Note::isContinue() const -> bool { return this->id == -3; }
-
-auto Note::isEqual(Note other) const -> bool {
-  return this->pitch == other.pitch && this->volume == other.volume &&
+auto Note::operator==(const Note& other) const -> bool {
+  return this->type == other.type && this->symbol == other.symbol &&
+         this->pitch == other.pitch && this->volume == other.volume &&
          this->wave == other.wave && this->effect == other.effect;
+}
+auto Note::operator!=(const Note& other) const -> bool {
+  return !(*this == other);
 }
 auto Note::getPitch() const -> int { return this->pitch; }
 auto Note::getVolume() const -> float { return this->volume / 15.0; }
 auto Note::getWave() const -> WaveType { return this->wave; }
 auto Note::getEffect() const -> EffectType { return this->effect; }
-auto Note::getId() const -> long unsigned int { return this->id; }
 auto Note::getSymbol() const -> string { return this->symbol; }
+auto Note::getType() const -> NoteType::NoteType { return this->type; }
 
 }  // namespace sid

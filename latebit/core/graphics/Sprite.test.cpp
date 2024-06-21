@@ -26,9 +26,9 @@ void constructor() {
 
 void frame() {
   Sprite sprite("s", 1, 1, 1, 1);
-  Frame frame1(1, 1, {Color::RED});
-  Frame frame2(1, 1, {Color::BLUE});
-  Frame frame3(2, 2, {Color::BLUE});
+  Keyframe frame1(1, 1, {Color::RED});
+  Keyframe frame2(1, 1, {Color::BLUE});
+  Keyframe frame3(2, 2, {Color::BLUE});
 
   // Add frames
   assertOk("adds successfully", sprite.addFrame(frame1));
@@ -54,12 +54,12 @@ void frame() {
              sprite.setFrame(0, frame3));
 
   assert("returns empty frame when frame number is invalid",
-         Frame() == sprite.getFrame(10));
+         Keyframe() == sprite.getFrame(10));
 }
 
 void draw() {
   Sprite sprite("s", 1, 1, 1, 1);
-  Frame frame(1, 1, {Color::RED});
+  Keyframe frame(1, 1, {Color::RED});
 
   // Add frame
   sprite.addFrame(frame);

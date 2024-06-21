@@ -76,7 +76,7 @@ class DisplayManager : public Manager {
   void shutDown() override;
 
   // Draws a frame in the given position, scaling it by the given factor
-  [[nodiscard]] auto drawFrame(Position position, const Frame *frame,
+  [[nodiscard]] auto drawFrame(Position position, const Keyframe *frame,
                                int scaling = 1) const -> int;
 
   // Draws a rectangle outline at the given world position (top left cell)

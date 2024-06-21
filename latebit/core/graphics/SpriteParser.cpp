@@ -7,7 +7,7 @@
 
 #include "./PNG.cpp"
 #include "Colors.h"
-#include "Frame.h"
+#include "Keyframe.h"
 #include "Sprite.h"
 #include "latebit/utils/Logger.h"
 #include "latebit/utils/Parser.h"
@@ -86,7 +86,7 @@ auto SpriteParser::fromPNGFile(string filename, string label, int frames,
       }
     }
 
-    sprite.addFrame(Frame(spriteWidth, height, content));
+    sprite.addFrame(Keyframe(spriteWidth, height, content));
   }
 
   return sprite;
@@ -160,9 +160,6 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
   Sprite sprite(label, (uint8_t)width, (uint8_t)height, (uint8_t)duration,
                 (uint8_t)frames);
 
-  width = (uint8_t)width;
-  height = (uint8_t)height;
-
   for (int i = 0; i < frames; i++) {
     if (!stream->good()) {
       Log.error(
@@ -175,7 +172,7 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
 
     for (int j = 0; j < height; j++) {
       auto line = getLine(stream);
-      if (line.size() != width) {
+      if (line.size() != (uint8_t)width) {
         Log.error(
           "SpriteParser::fromTextFile(): Invalid line length %d for frame "
           "%d. "
@@ -187,7 +184,7 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
       for (char c : line) content.push_back(fromHex(c));
     }
 
-    sprite.addFrame(Frame(width, height, content));
+    sprite.addFrame(Keyframe(width, height, content));
   }
 
   return sprite;

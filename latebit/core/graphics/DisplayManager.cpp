@@ -10,7 +10,7 @@
 
 #include "Colors.h"
 #include "Font.h"
-#include "Frame.h"
+#include "Keyframe.h"
 #include "latebit/core/configuration/Configuration.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/objects/WorldManager.h"
@@ -85,7 +85,7 @@ auto DisplayManager::getRendererFlags() const -> int {
            : SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 }
 
-auto DisplayManager::drawFrame(Position position, const Frame* frame,
+auto DisplayManager::drawFrame(Position position, const Keyframe* frame,
                                int scaling) const -> int {
   if (this->window == nullptr) {
     Log.error("DisplayManager::drawFrame(): Window is null");
@@ -208,7 +208,7 @@ auto DisplayManager::drawString(Position position, string string,
       }
     }
 
-    auto frame = Frame(gWidth, gHeight, content);
+    auto frame = Keyframe(gWidth, gHeight, content);
     auto position =
       viewPosition +
       Vector(gWidth * i * size + font.getHorizontalSpacing() * i, 0);

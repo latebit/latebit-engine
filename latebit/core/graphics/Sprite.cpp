@@ -14,7 +14,7 @@ Sprite::Sprite(string label, uint8_t width, uint8_t height, uint8_t duration,
   this->width = width;
   this->height = height;
   this->duration = duration;
-  this->frames = vector<Frame>();
+  this->frames = vector<Keyframe>();
   this->frames.reserve(frameCount);
 }
 
@@ -28,7 +28,7 @@ Sprite::Sprite(const Sprite& other) {
 
 Sprite::~Sprite() = default;
 
-auto Sprite::addFrame(Frame frame) -> int {
+auto Sprite::addFrame(Keyframe frame) -> int {
   if (this->frames.size() >= this->frames.capacity()) {
     Log.error("Sprite::addFrame(): Cannot add frame. Maximum %d reached",
               this->frames.capacity());
@@ -37,7 +37,7 @@ auto Sprite::addFrame(Frame frame) -> int {
 
   if (frame.getWidth() != this->width || frame.getHeight() != this->height) {
     Log.error(
-      "Sprite::addFrame(): Frame dimensions (%d, %d) do not match sprite "
+      "Sprite::addFrame(): Keyframe dimensions (%d, %d) do not match sprite "
       "dimensions (%d, %d)",
       frame.getWidth(), frame.getHeight(), this->width, this->height);
     return -1;
@@ -48,7 +48,7 @@ auto Sprite::addFrame(Frame frame) -> int {
   return 0;
 }
 
-auto Sprite::getFrame(int index) const -> Frame {
+auto Sprite::getFrame(int index) const -> Keyframe {
   if (index < 0 || (size_t)index >= this->frames.size()) {
     Log.warning("Sprite::getFrame(): Invalid frame number (%d) with %d frames",
                 index, this->frames.size());
@@ -58,7 +58,7 @@ auto Sprite::getFrame(int index) const -> Frame {
   return this->frames[index];
 }
 
-auto Sprite::setFrame(int index, Frame frame) -> int {
+auto Sprite::setFrame(int index, Keyframe frame) -> int {
   if (index < 0 || (size_t)index >= this->frames.size()) {
     Log.warning("Sprite::setFrame(): Invalid frame number (%d) with %d frames",
                 index, this->frames.size());
@@ -67,7 +67,7 @@ auto Sprite::setFrame(int index, Frame frame) -> int {
 
   if (frame.getWidth() != this->width || frame.getHeight() != this->height) {
     Log.error(
-      "Sprite::setFrame(): Frame dimensions (%d, %d) do not match sprite "
+      "Sprite::setFrame(): Keyframe dimensions (%d, %d) do not match sprite "
       "dimensions (%d, %d)",
       frame.getWidth(), frame.getHeight(), this->width, this->height);
     return -1;

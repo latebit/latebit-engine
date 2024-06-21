@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "Frame.h"
+#include "Keyframe.h"
 #include "latebit/core/geometry/Vector.h"
 
 using namespace std;
@@ -24,7 +24,7 @@ class Sprite {
   // The label of the sprite, used to reference it
   string label = "";
   // The frames of the sprite
-  vector<Frame> frames = {};
+  vector<Keyframe> frames = {};
 
  public:
   ~Sprite();
@@ -51,11 +51,11 @@ class Sprite {
   [[nodiscard]] auto getDuration() const -> uint8_t;
 
   // Add a frame to the sprite
-  auto addFrame(Frame frame) -> int;
+  auto addFrame(Keyframe frame) -> int;
   // Get the frame at a given index from the sprite
-  [[nodiscard]] auto getFrame(int index) const -> Frame;
+  [[nodiscard]] auto getFrame(int index) const -> Keyframe;
   // Set the frame at a given index from the sprite
-  auto setFrame(int index, Frame frame) -> int;
+  auto setFrame(int index, Keyframe frame) -> int;
 
   // Get the number of frames the sprite holds
   [[nodiscard]] auto getFrameCount() const -> uint8_t;

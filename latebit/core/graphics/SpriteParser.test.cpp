@@ -81,7 +81,7 @@ auto main() -> int {
       const string withStopAnimation = "#v0.1#\n1\n1\n1\n0\n1";
       const Sprite result = SpriteParser::fromString(withStopAnimation, "");
       Sprite expected = Sprite("", 1, 1, 0, 1);
-      expected.addFrame(Frame(1, 1, vector<Color>({Color::DARK_BLUE})));
+      expected.addFrame(Keyframe(1, 1, vector<Color>({Color::DARK_BLUE})));
       assert("allows stopAnimation", result == expected);
 
       const string lowDuration = "#v0.1#\n1\n1\n1\n-1\n0";
@@ -171,7 +171,7 @@ auto main() -> int {
   suite("when converting sprite to text", []() {
     test("single frame", []() {
       auto sprite = Sprite("single", 1, 1, 1, 1);
-      sprite.addFrame(Frame(1, 1, vector<Color>({BLACK})));
+      sprite.addFrame(Keyframe(1, 1, vector<Color>({BLACK})));
       auto text = SpriteParser::toString(sprite);
       auto expected = "#v0.1#\n1\n1\n1\n1\n0\n";
       assertEq("text is correct", text, expected);
@@ -179,8 +179,8 @@ auto main() -> int {
 
     test("sprite sheet", []() {
       auto sprite = Sprite("sheet", 1, 1, 1, 2);
-      sprite.addFrame(Frame(1, 1, vector<Color>({BLACK})));
-      sprite.addFrame(Frame(1, 1, vector<Color>({DARK_BLUE})));
+      sprite.addFrame(Keyframe(1, 1, vector<Color>({BLACK})));
+      sprite.addFrame(Keyframe(1, 1, vector<Color>({DARK_BLUE})));
       auto text = SpriteParser::toString(sprite);
       auto expected = "#v0.1#\n2\n1\n1\n1\n0\n1\n";
       assertEq("text is correct", text, expected);

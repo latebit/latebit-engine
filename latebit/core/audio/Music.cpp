@@ -14,9 +14,11 @@ namespace lb {
 Music::Music() = default;
 Music::~Music() = default;
 
-auto Music::play(bool loop) -> void { AM.playMusic(this->music.get(), loop); }
-auto Music::pause() -> void { AM.pauseMusic(); }
-auto Music::stop() -> void { AM.stopMusic(); }
+auto Music::play(bool loop) const -> void {
+  AM.playMusic(this->music.get(), loop);
+}
+auto Music::pause() const -> void { AM.pauseMusic(); }
+auto Music::stop() const -> void { AM.stopMusic(); }
 
 auto Music::getLabel() const -> string { return this->label; }
 auto Music::setLabel(string l) -> void { this->label = l; }

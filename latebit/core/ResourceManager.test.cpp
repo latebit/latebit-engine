@@ -40,7 +40,7 @@ auto main() -> int {
     assertFail("does not load on invalid file",
                RM.loadTextSprite(anotherFile, label));
 
-    Sprite* sprite = RM.getSprite(label);
+    auto sprite = RM.getSprite(label);
     assert("retrieves loaded sprite", sprite != nullptr);
     assertEq("and label is correct", sprite->getLabel(), label);
 
@@ -79,7 +79,7 @@ auto main() -> int {
     assertFail("does not load on invalid file",
                RM.loadMusic(anotherFile, label));
 
-    Music* music = RM.getMusic(label);
+    auto music = RM.getMusic(label);
     assert("retrieves loaded sprite", music != nullptr);
     assertEq("and label is correct", music->getLabel(), label);
 
@@ -118,7 +118,7 @@ auto main() -> int {
     assertFail("does not load on invalid file",
                RM.loadSound(anotherFile, label));
 
-    Sound* sound = RM.getSound(label);
+    auto sound = RM.getSound(label);
     assert("retrieves loaded sprite", sound != nullptr);
     assertEq("and label is correct", sound->getLabel(), label);
 

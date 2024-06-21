@@ -39,13 +39,13 @@ class Music {
   [[nodiscard]] auto getLabel() const -> string;
 
   // Play music.
-  void play(bool loop = false);
+  void play(bool loop = false) const;
 
   // Stop music.
-  void stop();
+  void stop() const;
 
   // Pause music. It can be resumed with play().
-  void pause();
+  void pause() const;
 
  private:
   // Pointer to the underlying sid::Tune resource.

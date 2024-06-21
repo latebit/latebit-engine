@@ -14,7 +14,7 @@ int const STOP_ANIMATION_SLOWDOWN = -1;
 class Animation {
  private:
   // Sprite to be animated
-  Sprite *sprite = nullptr;
+  const Sprite *sprite = nullptr;
   // Name of the animation
   string name = "";
   // Index of the current frame
@@ -26,9 +26,9 @@ class Animation {
   Animation();
 
   // Set the sprite to be animated
-  void setSprite(Sprite *s);
+  void setSprite(const Sprite *s);
   // Get the sprite being animated
-  [[nodiscard]] auto getSprite() const -> Sprite *;
+  [[nodiscard]] auto getSprite() const -> const Sprite *;
 
   // Set the name of the animation
   void setName(string n);
@@ -47,9 +47,6 @@ class Animation {
 
   // Draws the current frame of the animation at the given position
   auto draw(Vector position) -> int;
-
-  // Returns the bounding box of the current frame
-  [[nodiscard]] auto getBox() const -> Box;
 
   auto operator==(const Animation &other) const -> bool;
 };

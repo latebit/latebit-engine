@@ -11,44 +11,25 @@ ResourceManager::ResourceManager() {
 }
 
 auto ResourceManager::startUp() -> int {
-  this->spriteCount = 0;
-  this->soundCount = 0;
-  this->musicCount = 0;
+  this->sprite.reserve(MAX_SPRITES);
+  this->sound.reserve(MAX_SOUNDS);
+  this->music.reserve(MAX_MUSICS);
+
   Log.info("ResourceManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
 void ResourceManager::shutDown() {
-  for (int i = 0; i < this->spriteCount; i++) {
-    delete this->sprite[i];
-  }
-
-  for (int i = 0; i < this->soundCount; i++) {
-    delete this->sound[i];
-  }
-
-  for (int i = 0; i < this->musicCount; i++) {
-    delete this->music[i];
-  }
-
-  this->spriteCount = 0;
-  this->soundCount = 0;
-  this->musicCount = 0;
+  this->sprite.clear();
+  this->sound.clear();
+  this->music.clear();
 
   Manager::shutDown();
   Log.info("ResourceManager::shutDown(): Shut down successfully");
 }
 
-auto ResourceManager::loadSprite(string filename, string label) -> int {
-  Log.warning(
-    "ResourceManager::loadSprite(): loadSprite is deprecated, use "
-    "loadTextSprite "
-    "instead");
-  return this->loadTextSprite(filename, label);
-}
-
 auto ResourceManager::loadTextSprite(string filename, string label) -> int {
-  if (this->spriteCount >= MAX_SPRITES) {
+  if (this->sprite.size() >= MAX_SPRITES) {
     Log.error(
       "ResourceManager::loadSprite(): Cannot load sprite. Maximum %d sprites "
       "reached",
@@ -64,10 +45,8 @@ auto ResourceManager::loadTextSprite(string filename, string label) -> int {
     return -1;
   }
 
-  auto* sprite = new Sprite(SpriteParser::fromTextFile(filename, label));
-
-  this->sprite[this->spriteCount] = sprite;
-  this->spriteCount++;
+  this->sprite.push_back(
+    make_unique<Sprite>(SpriteParser::fromTextFile(filename, label)));
 
   return 0;
 }
@@ -81,7 +60,7 @@ auto ResourceManager::loadImageSprite(string filename, string label, int frames,
     return -1;
   }
 
-  if (this->spriteCount >= MAX_SPRITES) {
+  if (this->sprite.size() >= MAX_SPRITES) {
     Log.error(
       "ResourceManager::loadSprite(): Cannot load sprite. Maximum %d sprites "
       "reached",
@@ -97,11 +76,8 @@ auto ResourceManager::loadImageSprite(string filename, string label, int frames,
     return -1;
   }
 
-  auto sprite =
-    new Sprite(SpriteParser::fromPNGFile(filename, label, frames, duration));
-
-  this->sprite[this->spriteCount] = sprite;
-  this->spriteCount++;
+  this->sprite.push_back(make_unique<Sprite>(
+    SpriteParser::fromPNGFile(filename, label, frames, duration)));
 
   return 0;
 }
@@ -112,15 +88,11 @@ auto ResourceManager::getInstance() -> ResourceManager& {
 }
 
 auto ResourceManager::unloadSprite(string label) -> int {
-  for (int i = 0; i < this->spriteCount; i++) {
+  for (size_t i = 0; i < this->sprite.size(); i++) {
     if (this->sprite[i] != nullptr && this->sprite[i]->getLabel() == label) {
-      delete this->sprite[i];
-
       // We need not scooting here, sprites are not ordered
-      this->sprite[i] = this->sprite[this->spriteCount - 1];
-      this->sprite[this->spriteCount - 1] = nullptr;
-
-      this->spriteCount--;
+      this->sprite[i] = std::move(this->sprite.back());
+      this->sprite.back() = nullptr;
       return 0;
     }
   }
@@ -128,12 +100,12 @@ auto ResourceManager::unloadSprite(string label) -> int {
   return -1;
 }
 
-auto ResourceManager::getSprite(string label) const -> Sprite* {
-  for (int i = 0; i < this->spriteCount; i++) {
+auto ResourceManager::getSprite(string label) const -> const Sprite* {
+  for (size_t i = 0; i < this->sprite.size(); i++) {
     if (this->sprite[i] == nullptr) continue;
 
     if (this->sprite[i]->getLabel() == label) {
-      return this->sprite[i];
+      return this->sprite[i].get();
     }
   }
 
@@ -143,7 +115,7 @@ auto ResourceManager::getSprite(string label) const -> Sprite* {
 }
 
 auto ResourceManager::loadSound(string filename, string label) -> int {
-  if (this->soundCount >= MAX_SOUNDS) {
+  if (this->sound.size() >= MAX_SOUNDS) {
     Log.error(
       "ResourceManager::loadSound(): Cannot load sound. Maximum %d sound "
       "reached",
@@ -159,31 +131,25 @@ auto ResourceManager::loadSound(string filename, string label) -> int {
     return -1;
   }
 
-  this->sound[this->soundCount] = new Sound();
+  this->sound.push_back(make_unique<Sound>());
+  const unique_ptr<Sound>& sound = this->sound.back();
 
-  if (this->sound[this->soundCount]->loadSound(filename) != 0) {
+  if (sound->loadSound(filename) != 0) {
     Log.error("ResourceManager::loadSound(): Could not load sound %s",
               label.c_str());
     return -1;
   };
 
-  this->sound[this->soundCount]->setLabel(label);
-  this->soundCount++;
-
+  sound->setLabel(label);
   return 0;
 }
 
 auto ResourceManager::unloadSound(string label) -> int {
-  for (int i = 0; i < this->soundCount; i++) {
-    auto sound = this->sound[i];
-    if (sound != nullptr && sound->getLabel() == label) {
-      delete sound;
-
+  for (size_t i = 0; i < this->sound.size(); i++) {
+    if (this->sound[i] != nullptr && this->sound[i]->getLabel() == label) {
       // We need not scooting here, sounds are not ordered
-      this->sound[i] = this->sound[this->soundCount - 1];
-      this->sound[this->soundCount - 1] = nullptr;
-      this->soundCount--;
-
+      this->sound[i] = std::move(this->sound.back());
+      this->sound.back() = nullptr;
       return 0;
     }
   }
@@ -194,10 +160,10 @@ auto ResourceManager::unloadSound(string label) -> int {
   return -1;
 }
 
-auto ResourceManager::getSound(string label) const -> Sound* {
-  for (int i = 0; i < this->soundCount; i++) {
+auto ResourceManager::getSound(string label) const -> const Sound* {
+  for (size_t i = 0; i < this->sound.size(); i++) {
     if (this->sound[i] != nullptr && this->sound[i]->getLabel() == label) {
-      return this->sound[i];
+      return this->sound[i].get();
     }
   }
 
@@ -207,7 +173,7 @@ auto ResourceManager::getSound(string label) const -> Sound* {
 }
 
 auto ResourceManager::loadMusic(string filename, string label) -> int {
-  if (this->musicCount >= MAX_MUSICS) {
+  if (this->music.size() >= MAX_MUSICS) {
     Log.error(
       "ResourceManager::loadMusic(): Cannot load sound. Maximum %d musics "
       "reached",
@@ -223,31 +189,25 @@ auto ResourceManager::loadMusic(string filename, string label) -> int {
     return -1;
   }
 
-  this->music[this->musicCount] = new Music();
+  this->music.push_back(make_unique<Music>());
+  const unique_ptr<Music>& music = this->music.back();
 
-  if (this->music[this->musicCount]->loadMusic(filename) != 0) {
+  if (music->loadMusic(filename) != 0) {
     Log.error("ResourceManager::loadMusic(): Could not load file %s",
               filename.c_str());
     return -1;
   };
 
-  this->music[this->musicCount]->setLabel(label);
-  this->musicCount++;
-
+  music->setLabel(label);
   return 0;
 }
 
 auto ResourceManager::unloadMusic(string label) -> int {
-  for (int i = 0; i < this->musicCount; i++) {
-    auto music = this->music[i];
-    if (music != nullptr && music->getLabel() == label) {
-      delete music;
-
+  for (size_t i = 0; i < this->music.size(); i++) {
+    if (this->music[i] != nullptr && this->music[i]->getLabel() == label) {
       // We need not scooting here, musics are not ordered
-      this->music[i] = this->music[this->musicCount - 1];
-      this->music[this->musicCount - 1] = nullptr;
-      this->musicCount--;
-
+      this->music[i] = std::move(this->music.back());
+      this->music.back() = nullptr;
       return 0;
     }
   }
@@ -258,10 +218,10 @@ auto ResourceManager::unloadMusic(string label) -> int {
   return -1;
 }
 
-auto ResourceManager::getMusic(string label) const -> Music* {
-  for (int i = 0; i < this->musicCount; i++) {
+auto ResourceManager::getMusic(string label) const -> const Music* {
+  for (size_t i = 0; i < this->music.size(); i++) {
     if (this->music[i] != nullptr && this->music[i]->getLabel() == label) {
-      return this->music[i];
+      return this->music[i].get();
     }
   }
 

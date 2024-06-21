@@ -14,9 +14,11 @@ namespace lb {
 Sound::Sound() = default;
 Sound::~Sound() = default;
 
-auto Sound::play(bool loop) -> void { AM.playSound(this->sound.get(), loop); }
-auto Sound::pause() -> void { AM.pauseSound(this->sound.get()); }
-auto Sound::stop() -> void { AM.stopSound(this->sound.get()); }
+auto Sound::play(bool loop) const -> void {
+  AM.playSound(this->sound.get(), loop);
+}
+auto Sound::pause() const -> void { AM.pauseSound(this->sound.get()); }
+auto Sound::stop() const -> void { AM.stopSound(this->sound.get()); }
 
 auto Sound::getLabel() const -> string { return this->label; }
 auto Sound::setLabel(string l) -> void { this->label = l; }

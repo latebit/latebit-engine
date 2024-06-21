@@ -5,7 +5,7 @@
 namespace lb {
 Animation::Animation() = default;
 
-void Animation::setSprite(Sprite* s) {
+void Animation::setSprite(const Sprite* s) {
   this->sprite = s;
   // In case the new sprite has a different number of frames, reset the index
   // and duration count to not have blank frames
@@ -14,7 +14,7 @@ void Animation::setSprite(Sprite* s) {
   this->index = 0;
   this->slowdownCount = 0;
 }
-auto Animation::getSprite() const -> Sprite* { return this->sprite; }
+auto Animation::getSprite() const -> const Sprite* { return this->sprite; }
 
 void Animation::setName(std::string n) { this->name = n; }
 auto Animation::getName() const -> std::string { return this->name; }
@@ -48,15 +48,6 @@ auto Animation::draw(Vector position) -> int {
 
   setSlowdownCount(duration);
   return result;
-}
-
-auto Animation::getBox() const -> Box {
-  if (this->sprite == nullptr) return {Vector(), 1, 1};
-
-  float width = this->sprite->getWidth();
-  float height = this->sprite->getHeight();
-
-  return {Vector(), width, height};
 }
 
 auto Animation::operator==(const Animation& other) const -> bool {

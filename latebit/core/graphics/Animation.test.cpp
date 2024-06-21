@@ -13,7 +13,7 @@ using namespace std;
 void setSprite() {
   Animation animation;
   RM.loadTextSprite(FIXTURES_FOLDER + "/correct.lbspr", "sprite");
-  Sprite *sprite = RM.getSprite("sprite");
+  auto sprite = RM.getSprite("sprite");
   animation.setIndex(1);
   animation.setSlowdownCount(1);
   animation.setSprite(sprite);
@@ -46,7 +46,7 @@ void draw() {
   auto label = "sprite";
 
   RM.loadTextSprite(filename, label);
-  Sprite *sprite = RM.getSprite(label);
+  auto sprite = RM.getSprite(label);
 
   Animation animation;
   animation.setSprite(sprite);
@@ -79,22 +79,6 @@ void draw() {
   RM.startUp();
 }
 
-void getBox() {
-  auto animation = Animation();
-  auto unitBox = Box(Vector(), 1.0, 1.0);
-  assertEq("returns unit box", animation.getBox(), unitBox);
-
-  auto filename = FIXTURES_FOLDER + "/correct.lbspr";
-  auto label = "label";
-  RM.loadTextSprite(filename, label);
-  Sprite *sprite = RM.getSprite(label);
-  animation.setSprite(sprite);
-
-  auto want = Box(Vector(), 3.0, 4.0);
-  auto animBox = animation.getBox();
-  assertEq("returns correct box", animBox, want);
-}
-
 auto main() -> int {
   DM.startUp();
   RM.startUp();
@@ -104,7 +88,6 @@ auto main() -> int {
   test("setIndex", setIndex);
   test("setSlowdownCount", setSlowdownCount);
   test("draw", draw);
-  test("getBox", getBox);
 
   RM.shutDown();
   RM.startUp();

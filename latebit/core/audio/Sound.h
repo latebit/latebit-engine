@@ -39,13 +39,13 @@ class Sound {
   [[nodiscard]] auto getLabel() const -> string;
 
   // Play sound.
-  void play(bool loop = false);
+  void play(bool loop = false) const;
 
   // Stop sound.
-  void stop();
+  void stop() const;
 
   // Pause sound. It can be resumed with play().
-  void pause();
+  void pause() const;
 
  private:
   // Pointer to the underlying Tune resource.

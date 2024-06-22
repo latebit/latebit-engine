@@ -45,8 +45,14 @@ auto ResourceManager::loadTextSprite(string filename, string label) -> int {
     return -1;
   }
 
-  this->sprite.push_back(
-    make_unique<Sprite>(SpriteParser::fromTextFile(filename, label)));
+  Sprite sprite = SpriteParser::fromTextFile(filename, label);
+  if (sprite == Sprite()) {
+    Log.error("ResourceManager::loadSprite(): Could not load sprite %s",
+              label.c_str());
+    return -1;
+  }
+
+  this->sprite.push_back(make_unique<Sprite>(sprite));
 
   return 0;
 }
@@ -76,8 +82,14 @@ auto ResourceManager::loadImageSprite(string filename, string label, int frames,
     return -1;
   }
 
-  this->sprite.push_back(make_unique<Sprite>(
-    SpriteParser::fromPNGFile(filename, label, frames, duration)));
+  Sprite sprite = SpriteParser::fromPNGFile(filename, label, frames, duration);
+  if (sprite == Sprite()) {
+    Log.error("ResourceManager::loadSprite(): Could not load sprite %s",
+              label.c_str());
+    return -1;
+  }
+
+  this->sprite.push_back(make_unique<Sprite>(sprite));
 
   return 0;
 }

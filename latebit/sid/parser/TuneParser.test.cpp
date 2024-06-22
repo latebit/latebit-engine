@@ -28,12 +28,12 @@ void simplest() {
   auto& track1 = t->getTrack(1);
   assertEq("track 1 has correct track length", track1->size(), 2);
   assert("reads note correctly", track1->at(0) == Note::fromSymbol("D-4---"));
-  assert("reads note correctly", track1->at(1).getType() == NoteType::Continue);
+  assert("reads note correctly", track1->at(1).getType() == NoteType::CONTINUE);
 
   auto& track2 = t->getTrack(2);
   assertEq("track 2 has correct track length", track2->size(), 2);
-  assert("reads note correctly", track2->at(0).getType() == NoteType::Rest);
-  assert("reads note correctly", track2->at(1).getType() == NoteType::Rest);
+  assert("reads note correctly", track2->at(0).getType() == NoteType::REST);
+  assert("reads note correctly", track2->at(1).getType() == NoteType::REST);
 }
 
 void withComments() {
@@ -62,12 +62,12 @@ void withComments() {
   auto& track1 = t->getTrack(1);
   assertEq("track 1 has correct track length", track1->size(), 2);
   assert("reads note correctly", track1->at(0) == Note::fromSymbol("D-4---"));
-  assert("reads note correctly", track1->at(1).getType() == NoteType::Continue);
+  assert("reads note correctly", track1->at(1).getType() == NoteType::CONTINUE);
 
   auto& track2 = t->getTrack(2);
   assertEq("track 2 has correct track length", track2->size(), 2);
-  assert("reads note correctly", track2->at(0).getType() == NoteType::Rest);
-  assert("reads note correctly", track2->at(1).getType() == NoteType::Rest);
+  assert("reads note correctly", track2->at(0).getType() == NoteType::REST);
+  assert("reads note correctly", track2->at(1).getType() == NoteType::REST);
 }
 
 void differentLengths() {
@@ -136,8 +136,8 @@ void continues() {
   auto& track = t->getTrack(0);
   assertEq("track 0 has correct track length", track->size(), 3);
   assert("has correct first note", track->at(0) == Note::fromSymbol("C-4---"));
-  assert("keeps correct note", track->at(1).getType() == NoteType::Continue);
-  assert("stops note", track->at(2).getType() == NoteType::Rest);
+  assert("keeps correct note", track->at(1).getType() == NoteType::CONTINUE);
+  assert("stops note", track->at(2).getType() == NoteType::REST);
 
   str =
     "#v0.1#\n"
@@ -152,8 +152,8 @@ void continues() {
 
   auto& track1 = t->getTrack(0);
   assertEq("track 0 has correct track length", track1->size(), 2);
-  assert("registers pause", track1->at(0).getType() == NoteType::Rest);
-  assert("keeps the pause", track1->at(1).getType() == NoteType::Continue);
+  assert("registers pause", track1->at(0).getType() == NoteType::REST);
+  assert("keeps the pause", track1->at(1).getType() == NoteType::CONTINUE);
 }
 
 void brokenHeader() {

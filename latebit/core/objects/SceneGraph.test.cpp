@@ -1,7 +1,7 @@
 #include "latebit/core/objects/SceneGraph.h"
 
-#include "../../../test/lib/test.h"
 #include "latebit/core/objects/Object.h"
+#include "test/lib/test.h"
 
 using namespace lb;
 
@@ -9,7 +9,7 @@ void insertObject() {
   SceneGraph sg;
   Object obj;
   Object nonSolidObj;
-  nonSolidObj.setSolidness(SPECTRAL);
+  nonSolidObj.setSolidness(Solidness::SPECTRAL);
 
   // Check if the object was inserted successfully
   assertOk("inserts object into the scene graph", sg.insertObject(&obj));
@@ -90,7 +90,7 @@ void getInactiveObjects() {
 void getSolidObjects() {
   SceneGraph sg;
   Object obj1, obj2, obj3;
-  obj2.setSolidness(SPECTRAL);
+  obj2.setSolidness(Solidness::SPECTRAL);
 
   // Insert objects into the scene graph
   sg.insertObject(&obj1);
@@ -140,7 +140,7 @@ void setSolidness() {
   sg.insertObject(&obj);
 
   // Set solidness of the object to HARD
-  int result = sg.setSolidness(&obj, HARD);
+  int result = sg.setSolidness(&obj, Solidness::HARD);
 
   // Check if the solidness was set successfully
   assertEq("sets solidness of the object to HARD", result, 0);
@@ -148,7 +148,7 @@ void setSolidness() {
            sg.getSolidObjects().getCount(), 1);
 
   // Set solidness of the object to SPECTRAL
-  result = sg.setSolidness(&obj, SPECTRAL);
+  result = sg.setSolidness(&obj, Solidness::SPECTRAL);
 
   // Check if the solidness was set successfully
   assertEq("sets solidness of the object to SPECTRAL", result, 0);

@@ -45,7 +45,7 @@ class SceneGraph {
   [[nodiscard]] auto getVisibleObjects(int altitude) const -> ObjectList;
 
   // Update solidness for a given object
-  auto setSolidness(Object *o, Solidness solidness) -> int;
+  auto setSolidness(Object *o, Solidness::Solidness solidness) -> int;
 
   // Update rendering layer for a given object
   auto setAltitude(Object *o, int altitude) -> int;

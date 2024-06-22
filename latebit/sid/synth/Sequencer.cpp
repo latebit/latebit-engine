@@ -166,7 +166,7 @@ auto Sequencer::getNextSample() -> float {
     const int nextTick = (currentTick + 1) % track->size();
 
     const Note next = track->at(nextTick);
-    const bool isChangingNotes = next.getType() != NoteType::Continue;
+    const bool isChangingNotes = next.getType() != NoteType::CONTINUE;
 
     if (shouldStopEnvelope && isChangingNotes) {
       envelope->release();

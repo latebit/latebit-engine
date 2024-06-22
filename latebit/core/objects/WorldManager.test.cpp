@@ -87,9 +87,9 @@ void getCollisions() {
   obj4->setPosition(Vector(0, 0));
 
   // Set obj1 as solid
-  obj1->setSolidness(HARD);
-  obj2->setSolidness(SOFT);
-  obj3->setSolidness(SPECTRAL);
+  obj1->setSolidness(Solidness::HARD);
+  obj2->setSolidness(Solidness::SOFT);
+  obj3->setSolidness(Solidness::SPECTRAL);
 
   // Call getCollisions function
   ObjectList collisions = WM.getCollisions(obj1, Vector(0, 0));
@@ -131,10 +131,10 @@ void moveObject() {
   spectralObject->setPosition(Vector(6, 6));
 
   // Set obj1 as solid
-  subject->setSolidness(HARD);
-  softObject->setSolidness(SOFT);
-  hardObject->setSolidness(HARD);
-  spectralObject->setSolidness(SPECTRAL);
+  subject->setSolidness(Solidness::HARD);
+  softObject->setSolidness(Solidness::SOFT);
+  hardObject->setSolidness(Solidness::HARD);
+  spectralObject->setSolidness(Solidness::SPECTRAL);
 
   Vector destination = softObject->getPosition();
 
@@ -161,7 +161,7 @@ void moveObject() {
 
   assertEq("updates position", subject->getPosition(), destination);
 
-  subject->setSolidness(SPECTRAL);
+  subject->setSolidness(Solidness::SPECTRAL);
   subject->setPosition(Vector(0, 0));
 
   destination = softObject->getPosition();
@@ -186,7 +186,7 @@ void moveObject() {
 
   assertEq("updates position", subject->getPosition(), destination);
 
-  subject->setSolidness(SOFT);
+  subject->setSolidness(Solidness::SOFT);
   subject->setPosition(Vector(0, 0));
 
   destination = softObject->getPosition();
@@ -213,7 +213,7 @@ void moveObject() {
 
   assertEq("updates position", subject->getPosition(), destination);
 
-  subject->setSolidness(HARD);
+  subject->setSolidness(Solidness::HARD);
   subject->setBox(Box(Vector(), 1.5, 1.5));
   // Almost on hard, but with part of the bounding box colliding
   destination = hardObject->getPosition() - Vector(1, 1);

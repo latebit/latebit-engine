@@ -12,7 +12,7 @@ using namespace std;
 const Sprite NULL_SPRITE = Sprite();
 
 auto main() -> int {
-  Log.setDestination(STDOUT);
+  Log.setDestination(LogDestination::STDOUT);
   suite("when parsing text sprite", []() {
     test("success", []() {
       Sprite sprite = SpriteParser::fromTextFile(
@@ -23,20 +23,20 @@ auto main() -> int {
       assertEq("width is correct", sprite.getWidth(), 3);
       assertEq("height is correct", sprite.getHeight(), 4);
       assertEq("duration is correct", sprite.getDuration(), 2);
-      assert(
-        "content of first frame is correct",
-        sprite.getFrame(0).getContent() ==
-          vector<Color>({Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE,
-                         Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE,
-                         Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE,
-                         Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE}));
-      assert(
-        "content of second frame is correct",
-        sprite.getFrame(1).getContent() ==
-          vector<Color>({Color::DARK_GREEN, Color::BROWN, Color::DARK_GRAY,
-                         Color::DARK_GREEN, Color::BROWN, Color::DARK_GRAY,
-                         Color::DARK_GREEN, Color::BROWN, Color::DARK_GRAY,
-                         Color::DARK_GREEN, Color::BROWN, Color::DARK_GRAY}));
+      assert("content of first frame is correct",
+             sprite.getFrame(0).getContent() ==
+               vector<Color::Color>(
+                 {Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE,
+                  Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE,
+                  Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE,
+                  Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE}));
+      assert("content of second frame is correct",
+             sprite.getFrame(1).getContent() ==
+               vector<Color::Color>(
+                 {Color::DARK_GREEN, Color::BROWN, Color::DARK_GRAY,
+                  Color::DARK_GREEN, Color::BROWN, Color::DARK_GRAY,
+                  Color::DARK_GREEN, Color::BROWN, Color::DARK_GRAY,
+                  Color::DARK_GREEN, Color::BROWN, Color::DARK_GRAY}));
     });
 
     test("validates the frames", []() {
@@ -81,7 +81,8 @@ auto main() -> int {
       const string withStopAnimation = "#v0.1#\n1\n1\n1\n0\n1";
       const Sprite result = SpriteParser::fromString(withStopAnimation, "");
       auto frames = vector<Keyframe>();
-      frames.push_back(Keyframe(1, 1, vector<Color>({Color::DARK_BLUE})));
+      frames.push_back(
+        Keyframe(1, 1, vector<Color::Color>({Color::DARK_BLUE})));
       Sprite expected = Sprite("", 1, 1, 0, frames);
       assert("allows stopAnimation", result == expected);
 
@@ -119,7 +120,8 @@ auto main() -> int {
       assertEq("duration is correct", sprite.getDuration(), 1);
       assert("content of first frame is correct",
              sprite.getFrame(0).getContent() ==
-               vector<Color>({DARK_BLUE, DARK_PURPLE, DARK_GREEN, BROWN}));
+               vector<Color::Color>({Color::DARK_BLUE, Color::DARK_PURPLE,
+                                     Color::DARK_GREEN, Color::BROWN}));
     });
 
     test("with transparency", []() {
@@ -128,7 +130,8 @@ auto main() -> int {
       assert(
         "detects transparency correctly",
         sprite.getFrame(0).getContent() ==
-          vector<Color>({DARK_GREEN, DARK_GREEN, DARK_GREEN, UNDEFINED_COLOR}));
+          vector<Color::Color>({Color::DARK_GREEN, Color::DARK_GREEN,
+                                Color::DARK_GREEN, Color::UNDEFINED_COLOR}));
     });
 
     test("sprite sheet", []() {
@@ -136,13 +139,17 @@ auto main() -> int {
                                               "sheet", 4, 1);
       assertEq("frame count is correct", sprite.getFrameCount(), 4);
       assert("content of first frame is correct",
-             sprite.getFrame(0).getContent() == vector<Color>({YELLOW}));
+             sprite.getFrame(0).getContent() ==
+               vector<Color::Color>({Color::YELLOW}));
       assert("content of second frame is correct",
-             sprite.getFrame(1).getContent() == vector<Color>({ORANGE}));
-      assert("content of third frame is correct",
-             sprite.getFrame(2).getContent() == vector<Color>({RED}));
+             sprite.getFrame(1).getContent() ==
+               vector<Color::Color>({Color::ORANGE}));
+      assert(
+        "content of third frame is correct",
+        sprite.getFrame(2).getContent() == vector<Color::Color>({Color::RED}));
       assert("content of fourth frame is correct",
-             sprite.getFrame(3).getContent() == vector<Color>({DARK_PURPLE}));
+             sprite.getFrame(3).getContent() ==
+               vector<Color::Color>({Color::DARK_PURPLE}));
     });
 
     test("validations", []() {
@@ -172,7 +179,7 @@ auto main() -> int {
   suite("when converting sprite to text", []() {
     test("single frame", []() {
       auto frames = vector<Keyframe>();
-      frames.push_back(Keyframe(1, 1, vector<Color>({BLACK})));
+      frames.push_back(Keyframe(1, 1, vector<Color::Color>({Color::BLACK})));
       auto sprite = Sprite("single", 1, 1, 1, frames);
       auto text = SpriteParser::toString(sprite);
       auto expected =
@@ -189,8 +196,9 @@ auto main() -> int {
 
     test("sprite sheet", []() {
       auto frames = vector<Keyframe>();
-      frames.push_back(Keyframe(1, 1, vector<Color>({BLACK})));
-      frames.push_back(Keyframe(1, 1, vector<Color>({DARK_BLUE})));
+      frames.push_back(Keyframe(1, 1, vector<Color::Color>({Color::BLACK})));
+      frames.push_back(
+        Keyframe(1, 1, vector<Color::Color>({Color::DARK_BLUE})));
       auto sprite = Sprite("sheet", 1, 1, 1, frames);
       auto text = SpriteParser::toString(sprite);
       auto expected =

@@ -80,7 +80,7 @@ auto SpriteParser::fromPNGFile(string filename, string label, int frameCount,
   frames.reserve(frameCount);
 
   for (int i = 0; i < frameCount; i++) {
-    vector<Color> content;
+    vector<Color::Color> content;
     content.reserve(spriteWidth * height);
 
     for (int y = 0; y < height; y++) {
@@ -179,7 +179,7 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
       return {};
     }
 
-    vector<Color> content;
+    vector<Color::Color> content;
     content.reserve(width * height);
 
     for (int j = 0; j < height; j++) {

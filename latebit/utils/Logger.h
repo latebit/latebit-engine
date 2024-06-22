@@ -12,9 +12,12 @@ using namespace std;
 #define Debug(a) lb::Logger::getInstance().debug(a)
 
 namespace lb {
-
+namespace LogLevel {
 enum LogLevel { ERROR, WARNING, INFO, DEBUG };
+}
+namespace LogDestination {
 enum LogDestination { LOG_FILE, STDOUT };
+}
 
 const string LOGFILE_NAME = "latebit.log";
 
@@ -25,8 +28,8 @@ class Logger {
   Logger(Logger const &) = delete;
   void operator=(Logger const &) = delete;
 
-  void setLevel(LogLevel level);
-  void setDestination(LogDestination destination);
+  void setLevel(LogLevel::LogLevel level);
+  void setDestination(LogDestination::LogDestination destination);
 
   // Log line as an error. Always printed
   void error(const string fmt, ...) const;
@@ -40,16 +43,16 @@ class Logger {
  private:
   Logger();
   // Log level
-  LogLevel level = INFO;
+  LogLevel::LogLevel level = LogLevel::INFO;
   // Log destination
   unique_ptr<std::ostream> output =
     make_unique<ofstream>(LOGFILE_NAME, ios::out);
 
   // Writes a log line to the chosen destination with a format string
-  void logf(LogLevel level, const string fmt, va_list args) const;
+  void logf(LogLevel::LogLevel level, const string fmt, va_list args) const;
 
   // Returns a string version of the current level
-  [[nodiscard]] auto getLevelString(LogLevel level) const -> string;
+  [[nodiscard]] auto getLevelString(LogLevel::LogLevel level) const -> string;
 };
 
 }  // namespace lb

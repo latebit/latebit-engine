@@ -20,7 +20,7 @@ class TestObject : public Object {
 };
 
 int main() {
-  Log.setDestination(STDOUT);
+  Log.setDestination(LogDestination::STDOUT);
   GM.startUp();
 
   if (RM.loadMusic("../../test/fixtures/song.lbtune", "song") != 0) {

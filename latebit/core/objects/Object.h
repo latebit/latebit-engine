@@ -11,11 +11,16 @@
 using namespace std;
 
 namespace lb {
+namespace Solidness {
 enum Solidness {
+  // Collides and impedes movement.
   HARD,
+  // Collides but does not impede movement.
   SOFT,
+  // Skip collision detection.
   SPECTRAL,
 };
+}
 
 const int MAX_EVENTS_PER_OBEJCT = 20;
 
@@ -39,11 +44,8 @@ class Object {
   // Speed in cells per frame.
   float speed = 0;
 
-  // Solidness of the object:
-  // - SPECTRAL won't collide;
-  // - SOFT collides but does not impede movement;
-  // - HARD collides and impedes movement.
-  Solidness solidness = HARD;
+  // Solidness of the object
+  Solidness::Solidness solidness = Solidness::HARD;
 
   // The animation for this object.
   Animation animation = Animation();
@@ -109,9 +111,9 @@ class Object {
   // Returns true if this object is not SPECTRAL.
   [[nodiscard]] auto isSolid() const -> bool;
   // Sets the solidness of this object.
-  void setSolidness(Solidness s);
+  void setSolidness(Solidness::Solidness s);
   // Returns the solidness of this object.
-  [[nodiscard]] auto getSolidness() const -> Solidness;
+  [[nodiscard]] auto getSolidness() const -> Solidness::Solidness;
 
   // Sets the animation for this object.
   void setAnimation(Animation a);

@@ -120,7 +120,7 @@ auto TuneParser::fromStream(istream *stream,
       } else {
         auto note = Note::fromSymbol(symbol);
 
-        if (note.getType() == NoteType::Invalid) {
+        if (note.getType() == NoteType::INVALID) {
           // error is already printed in the symbol parser
           return nullptr;
         }

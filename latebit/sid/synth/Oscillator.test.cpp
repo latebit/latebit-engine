@@ -9,8 +9,8 @@ using namespace sid;
 
 void init() {
   auto o = Oscillator(440);
-  assertEq("waveType should be TRIANGLE", o.getWaveType(), TRIANGLE);
-  assertEq("effect should be NONE", o.getEffectType(), NONE);
+  assertEq("waveType should be TRIANGLE", o.getWaveType(), WaveType::TRIANGLE);
+  assertEq("effect should be NONE", o.getEffectType(), EffectType::NONE);
   assertEq("step should be 0", o.getCurrentStep(), 0.0);
   assertEq("stepSize should be 0", o.getStepSize(), 40.867119);
 }
@@ -24,16 +24,17 @@ void pitch() {
 
 void effect() {
   auto o = Oscillator(100);
-  o.setEffect(DROP);
-  assertEq("sets effect type to DROP", o.getEffectType(), DROP);
-  o.setEffect(SLIDE);
-  assertEq("sets effect type to SLIDE", o.getEffectType(), SLIDE);
-  o.setEffect(FADEIN);
-  assertEq("sets effect type to FADEIN", o.getEffectType(), FADEIN);
-  o.setEffect(FADEOUT);
-  assertEq("sets effect type to FADEOUT", o.getEffectType(), FADEOUT);
-  o.setEffect(NONE);
-  assertEq("sets effect type to NONE", o.getEffectType(), NONE);
+  o.setEffect(EffectType::DROP);
+  assertEq("sets effect type to DROP", o.getEffectType(), EffectType::DROP);
+  o.setEffect(EffectType::SLIDE);
+  assertEq("sets effect type to SLIDE", o.getEffectType(), EffectType::SLIDE);
+  o.setEffect(EffectType::FADEIN);
+  assertEq("sets effect type to FADEIN", o.getEffectType(), EffectType::FADEIN);
+  o.setEffect(EffectType::FADEOUT);
+  assertEq("sets effect type to FADEOUT", o.getEffectType(),
+           EffectType::FADEOUT);
+  o.setEffect(EffectType::NONE);
+  assertEq("sets effect type to NONE", o.getEffectType(), EffectType::NONE);
 }
 
 void oscillations() {
@@ -42,7 +43,7 @@ void oscillations() {
   const int FREQUENCY = 100;
   auto o1 = Oscillator(FREQUENCY);
   auto o2 = Oscillator(FREQUENCY);
-  o1.setEffect(SLIDE);
+  o1.setEffect(EffectType::SLIDE);
 
   for (int i = 0; i < Configuration::getBufferSize(); i++) {
     o1.oscillate();
@@ -52,7 +53,7 @@ void oscillations() {
 
   o1 = Oscillator(FREQUENCY);
   o2 = Oscillator(FREQUENCY);
-  o1.setEffect(FADEIN);
+  o1.setEffect(EffectType::FADEIN);
 
   for (int i = 0; i < Configuration::getBufferSize(); i++) {
     o1.oscillate();

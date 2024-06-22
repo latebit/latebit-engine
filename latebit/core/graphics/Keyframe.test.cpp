@@ -18,7 +18,7 @@ auto main() -> int {
   });
 
   test("constructor with parameters", []() {
-    vector<Color> content = {Color::RED, Color::GREEN, Color::BLUE};
+    vector<Color::Color> content = {Color::RED, Color::GREEN, Color::BLUE};
     Keyframe frame(5, 3, content);
     assertEq("inits width", frame.getWidth(), 5);
     assertEq("inits height", frame.getHeight(), 3);
@@ -26,7 +26,7 @@ auto main() -> int {
   });
 
   test("draw", []() {
-    vector<Color> content = {Color::RED, Color::GREEN, Color::BLUE};
+    vector<Color::Color> content = {Color::RED, Color::GREEN, Color::BLUE};
     Keyframe frame(3, 1, content);
     assertOk("draws the frame", frame.draw(Vector()));
 
@@ -35,8 +35,8 @@ auto main() -> int {
   });
 
   test("equals (==)", []() {
-    vector<Color> content = {Color::RED, Color::GREEN, Color::BLUE};
-    vector<Color> otherContent = {Color::RED, Color::GREEN, Color::RED};
+    vector<Color::Color> content = {Color::RED, Color::GREEN, Color::BLUE};
+    vector<Color::Color> otherContent = {Color::RED, Color::GREEN, Color::RED};
     Keyframe frame1(3, 1, content);
     Keyframe frame2(3, 1, content);
     Keyframe frame3(3, 1, otherContent);

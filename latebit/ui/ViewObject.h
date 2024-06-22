@@ -28,7 +28,7 @@ class ViewObject : public Object {
   // True if value should be drawn
   bool drawValue = true;
   // Color for text and value
-  Color color = COLOR_DEFAULT;
+  Color::Color color = COLOR_DEFAULT;
   // Location of view object on screen
   ViewObjectLocation location = ViewObjectLocation::TOP_CENTER;
 
@@ -58,9 +58,9 @@ class ViewObject : public Object {
   [[nodiscard]] auto getValue() const -> int;
 
   // Set view color (for value, label and border)
-  void setColor(Color new_color);
+  void setColor(Color::Color color);
   // Get view color (for value, label and border)
-  [[nodiscard]] auto getColor() const -> Color;
+  [[nodiscard]] auto getColor() const -> Color::Color;
 
   // Set view label
   void setLabel(string label);

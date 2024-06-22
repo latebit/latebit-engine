@@ -102,8 +102,9 @@ auto SceneGraph::getVisibleObjects(int altitude) const -> ObjectList {
   return visible.at(altitude);
 }
 
-auto SceneGraph::setSolidness(Object *o, Solidness solidness) -> int {
-  bool isSolid = solidness == HARD || solidness == SOFT;
+auto SceneGraph::setSolidness(Object *o,
+                              Solidness::Solidness solidness) -> int {
+  bool isSolid = solidness == Solidness::HARD || solidness == Solidness::SOFT;
 
   if (isSolid == o->isSolid()) {
     Log.debug(

@@ -18,11 +18,11 @@ const string END_OF_TRACK_SYMBOL = "      ";
 
 namespace NoteType {
 enum NoteType {
-  Standard,
-  Rest,
-  Invalid,
-  Continue,
-  EndOfTrack,
+  STANDARD,
+  REST,
+  INVALID,
+  CONTINUE,
+  END_OF_TRACK,
 };
 };
 
@@ -53,9 +53,9 @@ class Note {
   // Returns the volume of the note in the range [0, 1]
   [[nodiscard]] auto getVolume() const -> float;
   // Returns the wave type of the note
-  [[nodiscard]] auto getWave() const -> WaveType;
+  [[nodiscard]] auto getWave() const -> WaveType::WaveType;
   // Returns the effect type of the note
-  [[nodiscard]] auto getEffect() const -> EffectType;
+  [[nodiscard]] auto getEffect() const -> EffectType::EffectType;
   // Returns the symbol from which this note was created
   [[nodiscard]] auto getSymbol() const -> Symbol;
   // Returns the symbol from which this note was created
@@ -67,19 +67,20 @@ class Note {
   auto operator!=(const Note& other) const -> bool;
 
  private:
-  Note(int pitch, int volume, WaveType wave, EffectType effect, string symbol);
+  Note(int pitch, int volume, WaveType::WaveType wave,
+       EffectType::EffectType effect, string symbol);
   // A number between 0 and 96 describing a note from C0 to B7
   int pitch = 0;
   // A number between 0 and 15 describing the volume of the note
   int volume = 0;
   // The type of wave associated with the note
-  WaveType wave = TRIANGLE;
+  WaveType::WaveType wave = WaveType::TRIANGLE;
   // The type of effect associated with the note
-  EffectType effect = NONE;
+  EffectType::EffectType effect = EffectType::NONE;
   // The symbol associated with the note
   Symbol symbol = END_OF_TRACK_SYMBOL;
   // The type of the note
-  NoteType::NoteType type = NoteType::EndOfTrack;
+  NoteType::NoteType type = NoteType::END_OF_TRACK;
 };
 
 using Track = std::vector<Note>;

@@ -1,8 +1,22 @@
 #pragma once
 
 namespace sid {
+
+namespace EffectType {
 // Effects supported by the oscillator
-enum EffectType { NONE, DROP, SLIDE, FADEIN, FADEOUT };
+enum EffectType {
+  // No effect
+  NONE,
+  // Drop the frequency down
+  DROP,
+  // Slide the frequency up
+  SLIDE,
+  // Fade in the volume
+  FADEIN,
+  // Fade out the volume
+  FADEOUT
+};
+}  // namespace EffectType
 
 // Effects modulate the frequency or volume of the oscillator
 class Effect {
@@ -12,10 +26,10 @@ class Effect {
   float previous = 0;
 
  public:
-  Effect(EffectType type, float amount, float previous);
+  Effect(EffectType::EffectType type, float amount, float previous);
 
   // The type of effect
-  EffectType type = NONE;
+  EffectType::EffectType type = EffectType::NONE;
   // Modulates the frequency based on the current effect returning the adjusted
   // step size
   auto processFrequency(float step) -> float;

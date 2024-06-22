@@ -70,13 +70,17 @@ auto Object::predictPosition() -> Vector {
   return this->position + getVelocity();
 }
 
-auto Object::isSolid() const -> bool { return this->solidness != SPECTRAL; }
+auto Object::isSolid() const -> bool {
+  return this->solidness != Solidness::SPECTRAL;
+}
 
-void Object::setSolidness(Solidness s) {
+void Object::setSolidness(Solidness::Solidness s) {
   WM.getSceneGraph().setSolidness(this, s);
   this->solidness = s;
 }
-auto Object::getSolidness() const -> Solidness { return this->solidness; }
+auto Object::getSolidness() const -> Solidness::Solidness {
+  return this->solidness;
+}
 
 void Object::setAnimation(Animation a) { this->animation = a; }
 auto Object::getAnimation() const -> Animation { return this->animation; }
@@ -123,7 +127,7 @@ auto Object::drawBoundingBox() const -> int {
   float width = box.getWidth();
   float height = box.getHeight();
 
-  return DM.drawRectangle(corner, width, height, RED);
+  return DM.drawRectangle(corner, width, height, Color::RED);
 }
 
 auto Object::subscribe(string eventType) -> int {

@@ -12,7 +12,7 @@ using namespace std;
 namespace lb {
 Keyframe::Keyframe() = default;
 
-Keyframe::Keyframe(uint8_t w, uint8_t h, vector<Color> content) {
+Keyframe::Keyframe(uint8_t w, uint8_t h, vector<Color::Color> content) {
   this->width = w;
   this->height = h;
   this->content = content;
@@ -22,7 +22,9 @@ auto Keyframe::getWidth() const -> uint8_t { return this->width; }
 
 auto Keyframe::getHeight() const -> uint8_t { return this->height; }
 
-auto Keyframe::getContent() const -> vector<Color> { return this->content; }
+auto Keyframe::getContent() const -> vector<Color::Color> {
+  return this->content;
+}
 
 auto Keyframe::draw(Vector position) const -> int {
   if (this->width <= 0 || this->height <= 0 || this->content.empty()) {

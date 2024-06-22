@@ -15,7 +15,7 @@
 using namespace std;
 
 namespace lb {
-auto SpriteParser::fromPNGFile(string filename, string label, int frames,
+auto SpriteParser::fromPNGFile(string filename, string label, int frameCount,
                                int duration) -> Sprite {
   auto decoder = PNGDecoder(filename);
 
@@ -63,20 +63,23 @@ auto SpriteParser::fromPNGFile(string filename, string label, int frames,
   int width = decoder.getWidth();
   int height = decoder.getHeight();
 
-  if (width % frames != 0) {
+  if (width % frameCount != 0) {
     Log.error(
       "SpriteParser::fromPNGFile(): Image width %d cannot be divided in "
       "%d equal frames",
-      width, frames);
+      width, frameCount);
     return {};
   }
 
+  // Set the label of the sprite
+  void setLabel(string label);
   // We assume the sprite is horizontal
-  int spriteWidth = width / frames;
+  int spriteWidth = width / frameCount;
 
-  Sprite sprite(label, spriteWidth, height, duration, frames);
+  auto frames = vector<Keyframe>();
+  frames.reserve(frameCount);
 
-  for (int i = 0; i < frames; i++) {
+  for (int i = 0; i < frameCount; i++) {
     vector<Color> content;
     content.reserve(spriteWidth * height);
 
@@ -86,8 +89,10 @@ auto SpriteParser::fromPNGFile(string filename, string label, int frames,
       }
     }
 
-    sprite.addFrame(Keyframe(spriteWidth, height, content));
+    frames.push_back(Keyframe(spriteWidth, height, content));
   }
+
+  Sprite sprite(label, spriteWidth, height, duration, frames);
 
   return sprite;
 }
@@ -129,10 +134,10 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
     return {};
   }
 
-  int frames = getNextNumber(stream);
-  if (frames < 1 || frames > 64) {
+  int frameCount = getNextNumber(stream);
+  if (frameCount < 1 || frameCount > 64) {
     Log.error("Invalid frame count. %s",
-              makeRangeValidationMessage(frames, 64).c_str());
+              makeRangeValidationMessage(frameCount, 64).c_str());
     return {};
   }
 
@@ -157,10 +162,10 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
     return {};
   }
 
-  Sprite sprite(label, (uint8_t)width, (uint8_t)height, (uint8_t)duration,
-                (uint8_t)frames);
+  auto frames = vector<Keyframe>();
+  frames.reserve(frameCount);
 
-  for (int i = 0; i < frames; i++) {
+  for (int i = 0; i < frameCount; i++) {
     if (!stream->good()) {
       Log.error(
         "SpriteParser::fromTextFile(): Unexpected end of file at frame %d", i);
@@ -171,7 +176,7 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
     content.reserve(width * height);
 
     for (int j = 0; j < height; j++) {
-      auto line = getLine(stream);
+      auto line = getNextNonCommentLine(stream);
       if (line.size() != (uint8_t)width) {
         Log.error(
           "SpriteParser::fromTextFile(): Invalid line length %d for frame "
@@ -184,9 +189,11 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
       for (char c : line) content.push_back(fromHex(c));
     }
 
-    sprite.addFrame(Keyframe(width, height, content));
+    frames.push_back(Keyframe(width, height, content));
   }
 
+  Sprite sprite(label, (uint8_t)width, (uint8_t)height, (uint8_t)duration,
+                frames);
   return sprite;
 }
 

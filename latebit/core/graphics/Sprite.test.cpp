@@ -18,51 +18,15 @@ void constructor() {
   assertEq("duration is initialized to 1", sprite.getDuration(), 1);
   assert("label is initialized to an empty string", sprite.getLabel().empty());
 
-  Sprite sprite2("s", 1, 1, 1, 1);
+  Sprite sprite2("s", 1, 1, 1, {});
   Sprite sprite3(sprite2);
 
   assert("clones itself", sprite2 == sprite3);
 }
 
-void frame() {
-  Sprite sprite("s", 1, 1, 1, 1);
-  Keyframe frame1(1, 1, {Color::RED});
-  Keyframe frame2(1, 1, {Color::BLUE});
-  Keyframe frame3(2, 2, {Color::BLUE});
-
-  // Add frames
-  assertOk("adds successfully", sprite.addFrame(frame1));
-  assertEq("frame count is incremented after adding a frame",
-           sprite.getFrameCount(), 1);
-  assert("getFrame returns the correct frame", frame1 == sprite.getFrame(0));
-
-  assertFail("won't add when maximum frame count is reached",
-             sprite.addFrame(frame2));
-  assertEq("frame count remains the same after reaching maximum",
-           sprite.getFrameCount(), 1);
-
-  assertFail("won't add when frame has incorrect size",
-             sprite.addFrame(frame3));
-
-  assertOk("replaces frame successfully", sprite.setFrame(0, frame2));
-  assert("getFrame returns the correct frame", frame2 == sprite.getFrame(0));
-  assertEq("frame count remains the same after reaching maximum",
-           sprite.getFrameCount(), 1);
-  assertFail("won't replace when frame number is out of bounds",
-             sprite.setFrame(10, frame1));
-  assertFail("won't replace when frame has incorrect size",
-             sprite.setFrame(0, frame3));
-
-  assert("returns empty frame when frame number is invalid",
-         Keyframe() == sprite.getFrame(10));
-}
-
 void draw() {
-  Sprite sprite("s", 1, 1, 1, 1);
-  Keyframe frame(1, 1, {Color::RED});
-
-  // Add frame
-  sprite.addFrame(frame);
+  auto frames = vector<Keyframe>{Keyframe(1, 1, {Color::RED})};
+  Sprite sprite("s", 1, 1, 1, frames);
 
   // Test draw
   assertOk("draws successfully", sprite.draw(0, Vector(0, 0)));
@@ -75,15 +39,15 @@ void draw() {
 auto main() -> int {
   DM.startUp();
   test("constructor", constructor);
-  test("frame", frame);
   test("draw", draw);
   test("equals (==)", []() {
-    Sprite sprite1("s", 1, 1, 1, 1);
-    Sprite sprite2("s", 1, 1, 1, 1);
-    Sprite sprite3("s", 2, 1, 1, 1);
-    Sprite sprite4("s", 1, 2, 1, 1);
-    Sprite sprite5("s", 1, 1, 2, 1);
-    Sprite sprite6("test", 1, 1, 1, 1);
+    vector<Keyframe> frames = {Keyframe(1, 1, {Color::RED})};
+    Sprite sprite1("s", 1, 1, 1, frames);
+    Sprite sprite2("s", 1, 1, 1, frames);
+    Sprite sprite3("s", 2, 1, 1, frames);
+    Sprite sprite4("s", 1, 2, 1, frames);
+    Sprite sprite5("s", 1, 1, 2, frames);
+    Sprite sprite6("test", 1, 1, 1, frames);
 
     assert("equals itself", sprite1 == sprite1);
     assert("equals another sprite", sprite1 == sprite2);

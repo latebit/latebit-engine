@@ -40,17 +40,17 @@ auto main() -> int {
     });
 
     test("validates the frames", []() {
-      auto sprite = SpriteParser::fromTextFile(
+      auto missing = SpriteParser::fromTextFile(
         FIXTURES_FOLDER + "/missing-frame.lbspr", "test_sprite");
-      assert("returns null with missing frames", sprite == NULL_SPRITE);
+      assert("returns null with missing frames", missing == NULL_SPRITE);
 
-      sprite = SpriteParser::fromTextFile(
+      auto width = SpriteParser::fromTextFile(
         FIXTURES_FOLDER + "/wrong-width.lbspr", "test_sprite");
-      assert("returns null with incorrect width", sprite == NULL_SPRITE);
+      assert("returns null with incorrect width", width == NULL_SPRITE);
 
-      sprite = SpriteParser::fromTextFile(
+      auto height = SpriteParser::fromTextFile(
         FIXTURES_FOLDER + "/wrong-height.lbspr", "test_sprite");
-      assert("returns null with incorrect height", sprite == NULL_SPRITE);
+      assert("returns null with incorrect height", height == NULL_SPRITE);
     });
 
     test("validates the headers", []() {
@@ -80,8 +80,9 @@ auto main() -> int {
 
       const string withStopAnimation = "#v0.1#\n1\n1\n1\n0\n1";
       const Sprite result = SpriteParser::fromString(withStopAnimation, "");
-      Sprite expected = Sprite("", 1, 1, 0, 1);
-      expected.addFrame(Keyframe(1, 1, vector<Color>({Color::DARK_BLUE})));
+      auto frames = vector<Keyframe>();
+      frames.push_back(Keyframe(1, 1, vector<Color>({Color::DARK_BLUE})));
+      Sprite expected = Sprite("", 1, 1, 0, frames);
       assert("allows stopAnimation", result == expected);
 
       const string lowDuration = "#v0.1#\n1\n1\n1\n-1\n0";
@@ -145,42 +146,44 @@ auto main() -> int {
     });
 
     test("validations", []() {
-      auto sprite = SpriteParser::fromPNGFile(FIXTURES_FOLDER + "/missing.png",
-                                              "missing", 1, 1);
-      assert("returns null with missing file", sprite == NULL_SPRITE);
+      auto missing = SpriteParser::fromPNGFile(FIXTURES_FOLDER + "/missing.png",
+                                               "missing", 1, 1);
+      assert("returns null with missing file", missing == NULL_SPRITE);
 
-      sprite = SpriteParser::fromPNGFile(
+      auto palette = SpriteParser::fromPNGFile(
         FIXTURES_FOLDER + "/bigger-palette.png", "bigger-palette", 1, 1);
-      assert("returns null with bigger palette", sprite == NULL_SPRITE);
+      assert("returns null with bigger palette", palette == NULL_SPRITE);
 
-      sprite = SpriteParser::fromPNGFile(FIXTURES_FOLDER + "/not-indexed.png",
-                                         "not-indexed", 1, 1);
-      assert("returns null with not indexed images", sprite == NULL_SPRITE);
+      auto index = SpriteParser::fromPNGFile(
+        FIXTURES_FOLDER + "/not-indexed.png", "not-indexed", 1, 1);
+      assert("returns null with not indexed images", index == NULL_SPRITE);
 
-      sprite = SpriteParser::fromPNGFile(FIXTURES_FOLDER + "/correct.lbspr",
-                                         "correct", 1, 1);
-      assert("returns null with a non PNG file", sprite == NULL_SPRITE);
+      auto correct = SpriteParser::fromPNGFile(
+        FIXTURES_FOLDER + "/correct.lbspr", "correct", 1, 1);
+      assert("returns null with a non PNG file", correct == NULL_SPRITE);
 
-      sprite = SpriteParser::fromPNGFile(FIXTURES_FOLDER + "/sheet.png",
-                                         "sheet", 5, 1);
+      auto sheet = SpriteParser::fromPNGFile(FIXTURES_FOLDER + "/sheet.png",
+                                             "sheet", 5, 1);
       assert("returns null if width cannot be divided by frames",
-             sprite == NULL_SPRITE);
+             sheet == NULL_SPRITE);
     });
   });
 
   suite("when converting sprite to text", []() {
     test("single frame", []() {
-      auto sprite = Sprite("single", 1, 1, 1, 1);
-      sprite.addFrame(Keyframe(1, 1, vector<Color>({BLACK})));
+      auto frames = vector<Keyframe>();
+      frames.push_back(Keyframe(1, 1, vector<Color>({BLACK})));
+      auto sprite = Sprite("single", 1, 1, 1, frames);
       auto text = SpriteParser::toString(sprite);
       auto expected = "#v0.1#\n1\n1\n1\n1\n0\n";
       assertEq("text is correct", text, expected);
     });
 
     test("sprite sheet", []() {
-      auto sprite = Sprite("sheet", 1, 1, 1, 2);
-      sprite.addFrame(Keyframe(1, 1, vector<Color>({BLACK})));
-      sprite.addFrame(Keyframe(1, 1, vector<Color>({DARK_BLUE})));
+      auto frames = vector<Keyframe>();
+      frames.push_back(Keyframe(1, 1, vector<Color>({BLACK})));
+      frames.push_back(Keyframe(1, 1, vector<Color>({DARK_BLUE})));
+      auto sprite = Sprite("sheet", 1, 1, 1, frames);
       auto text = SpriteParser::toString(sprite);
       auto expected = "#v0.1#\n2\n1\n1\n1\n0\n1\n";
       assertEq("text is correct", text, expected);

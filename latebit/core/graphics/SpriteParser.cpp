@@ -214,8 +214,6 @@ auto SpriteParser::toString(const Sprite &sprite) -> string {
 
   for (int i = 0; i < sprite.getFrameCount(); i++) {
     auto frame = sprite.getFrame(i);
-
-    stream << "#keyframe " << i << '\n';
     for (int y = 0; y < frame.getHeight(); y++) {
       for (int x = 0; x < frame.getWidth(); x++) {
         size_t index = x + y * frame.getWidth();

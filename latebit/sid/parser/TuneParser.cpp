@@ -156,8 +156,8 @@ auto TuneParser::toString(const Tune &tune) -> string {
   ss << "#v0.1#\n";
   ss << tune.getBpm() << " # tempo\n";
   ss << tune.getTicksPerBeat() << " # ticks per beat\n";
-  ss << tune.getBeatsCount() << " # beats count\n";
-  ss << tune.getTracksCount() << " # tracks count\n";
+  ss << tune.getBeatsCount() << " # beat count\n";
+  ss << tune.getTracksCount() << " # track count\n";
 
   int maxTrackLength = tune.getBeatsCount() * tune.getTicksPerBeat();
   for (int i = 0; i < maxTrackLength; i++) {

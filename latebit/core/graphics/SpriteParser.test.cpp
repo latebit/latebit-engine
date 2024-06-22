@@ -175,8 +175,16 @@ auto main() -> int {
       frames.push_back(Keyframe(1, 1, vector<Color>({BLACK})));
       auto sprite = Sprite("single", 1, 1, 1, frames);
       auto text = SpriteParser::toString(sprite);
-      auto expected = "#v0.1#\n1\n1\n1\n1\n0\n";
+      auto expected =
+        "#v0.1#\n"
+        "1 # keyframe count\n"
+        "1 # width\n"
+        "1 # height\n"
+        "1 # duration\n"
+        "0\n";
       assertEq("text is correct", text, expected);
+      assert("can be parsed back",
+             sprite == SpriteParser::fromString(expected, "single"));
     });
 
     test("sprite sheet", []() {
@@ -185,8 +193,17 @@ auto main() -> int {
       frames.push_back(Keyframe(1, 1, vector<Color>({DARK_BLUE})));
       auto sprite = Sprite("sheet", 1, 1, 1, frames);
       auto text = SpriteParser::toString(sprite);
-      auto expected = "#v0.1#\n2\n1\n1\n1\n0\n1\n";
+      auto expected =
+        "#v0.1#\n"
+        "2 # keyframe count\n"
+        "1 # width\n"
+        "1 # height\n"
+        "1 # duration\n"
+        "0\n"
+        "1\n";
       assertEq("text is correct", text, expected);
+      assert("can be parsed back",
+             sprite == SpriteParser::fromString(expected, "sheet"));
     });
   });
 

@@ -378,10 +378,10 @@ void header() {
 void consistency() {
   string str =
     "#v0.1#\n"
-    "90\n"
-    "1\n"
-    "3\n"
-    "1\n"
+    "90 # tempo\n"
+    "1 # ticks per beat\n"
+    "3 # beat count\n"
+    "1 # track count\n"
     "C-4---\n"
     "......\n"
     "------\n";
@@ -405,7 +405,7 @@ void consistency() {
   t = TuneParser::fromString(strWithComments, &DEFAULT_PARSER_OPTIONS);
   assert("parses tune", t != nullptr);
   out = TuneParser::toString(*t);
-  assertEq("strips out comments", out, str);
+  assertEq("replaces comments", out, str);
 }
 
 void correctOutput() {
@@ -420,10 +420,10 @@ void correctOutput() {
 
   string expected =
     "#v0.1#\n"
-    "90\n"
-    "1\n"
-    "2\n"
-    "2\n"
+    "90 # tempo\n"
+    "1 # ticks per beat\n"
+    "2 # beat count\n"
+    "2 # track count\n"
     "C-4---|E-4---\n"
     "D-4---|F-4---\n";
 
@@ -440,10 +440,10 @@ void emptyTrack() {
 
   string expected =
     "#v0.1#\n"
-    "90\n"
-    "1\n"
-    "2\n"
-    "2\n"
+    "90 # tempo\n"
+    "1 # ticks per beat\n"
+    "2 # beat count\n"
+    "2 # track count\n"
     "C-4---|      \n"
     "D-4---|      \n";
 
@@ -461,10 +461,10 @@ void unequalLengths() {
 
   string expected =
     "#v0.1#\n"
-    "90\n"
-    "1\n"
-    "2\n"
-    "2\n"
+    "90 # tempo\n"
+    "1 # ticks per beat\n"
+    "2 # beat count\n"
+    "2 # track count\n"
     "C-4---|E-4---\n"
     "D-4---|      \n";
 
@@ -482,10 +482,10 @@ void specialSymbols() {
 
   string expected =
     "#v0.1#\n"
-    "90\n"
-    "1\n"
-    "2\n"
-    "2\n"
+    "90 # tempo\n"
+    "1 # ticks per beat\n"
+    "2 # beat count\n"
+    "2 # track count\n"
     "C-4---|------\n"
     "......|      \n";
 
@@ -498,10 +498,10 @@ void withDifferentOptions() {
 
   string valid =
     "#v0.1#\n"
-    "90\n"
-    "1\n"
-    "2\n"
-    "1\n"
+    "90 # tempo\n"
+    "1 # ticks per beat\n"
+    "2 # beat count\n"
+    "1 # track count\n"
     "C-4---\n"
     "D-4---\n";
 
@@ -510,10 +510,10 @@ void withDifferentOptions() {
 
   string validButNotCompliant =
     "#v0.1#\n"
-    "90\n"
-    "1\n"
-    "2\n"
-    "2\n"
+    "90 # tempo\n"
+    "1 # ticks per beat\n"
+    "2 # beat count\n"
+    "2 # track count\n"
     "C-4---|C-4---\n"
     "D-4---|C-4---\n";
 

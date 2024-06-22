@@ -25,15 +25,9 @@ class Music {
   // Music is immutable
   Music(Music const &) = delete;
   void operator=(Music const &) = delete;
-
-  Music();
-  ~Music();
-
-  // Load music from a file. Return 0 if ok, else -1.
-  auto loadMusic(string filename) -> int;
-
-  // Set label associated with the music. Used to retrieve the resource.
-  auto setLabel(string label) -> void;
+  Music(string label = "", unique_ptr<Tune> music = nullptr)
+    : music(std::move(music)), label(label){};
+  ~Music() = default;
 
   // Get label associated with the music. Used to retrieve the resource.
   [[nodiscard]] auto getLabel() const -> string;
@@ -49,9 +43,9 @@ class Music {
 
  private:
   // Pointer to the underlying sid::Tune resource.
-  unique_ptr<Tune> music = nullptr;
+  const unique_ptr<Tune> music = nullptr;
 
   // Label associated with the music. Used to retrieve the resource.
-  string label = "";
+  const string label = "";
 };
 }  // namespace lb

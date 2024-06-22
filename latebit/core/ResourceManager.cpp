@@ -131,16 +131,14 @@ auto ResourceManager::loadSound(string filename, string label) -> int {
     return -1;
   }
 
-  this->sound.push_back(make_unique<Sound>());
-  const unique_ptr<Sound>& sound = this->sound.back();
-
-  if (sound->loadSound(filename) != 0) {
+  auto tune = TuneParser::fromFile(filename, &SOUND_PARSER_OPTIONS);
+  if (tune == nullptr) {
     Log.error("ResourceManager::loadSound(): Could not load sound %s",
               label.c_str());
     return -1;
   };
 
-  sound->setLabel(label);
+  this->sound.push_back(make_unique<Sound>(label, std::move(tune)));
   return 0;
 }
 
@@ -189,16 +187,14 @@ auto ResourceManager::loadMusic(string filename, string label) -> int {
     return -1;
   }
 
-  this->music.push_back(make_unique<Music>());
-  const unique_ptr<Music>& music = this->music.back();
-
-  if (music->loadMusic(filename) != 0) {
-    Log.error("ResourceManager::loadMusic(): Could not load file %s",
-              filename.c_str());
+  auto tune = TuneParser::fromFile(filename, &MUSIC_PARSER_OPTIONS);
+  if (tune == nullptr) {
+    Log.error("ResourceManager::loadMusic(): Could not load sound %s",
+              label.c_str());
     return -1;
   };
 
-  music->setLabel(label);
+  this->music.push_back(make_unique<Music>(label, std::move(tune)));
   return 0;
 }
 

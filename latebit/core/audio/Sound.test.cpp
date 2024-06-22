@@ -5,23 +5,13 @@
 
 auto main() -> int {
   AM.startUp();
+
   test("constructor", []() {
-    Sound sound;
-    assert("initializes the label", sound.getLabel().empty());
+    unique_ptr<Tune> tune = make_unique<Tune>();
+    Sound sound("test", std::move(tune));
+    assertEq("initializes the label", sound.getLabel(), "test");
   });
 
-  test("setters", []() {
-    Sound sound;
-    sound.setLabel("Background Music");
-    assertEq("updates the label", sound.getLabel(), "Background Music");
-  });
-
-  test("loadSound", []() {
-    Sound sound;
-    assertOk("loads valid file",
-             sound.loadSound(FIXTURES_FOLDER + "/sfx.lbsfx"));
-    assertFail("doesn't load invalid file", sound.loadSound("sound.wav"));
-  });
   AM.shutDown();
   return report();
 }

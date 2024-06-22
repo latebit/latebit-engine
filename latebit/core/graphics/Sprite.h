@@ -27,7 +27,6 @@ class Sprite {
   const vector<Keyframe> frames = {};
 
  public:
-  ~Sprite() = default;
   // Creates a sprite with the given parameters
   Sprite(string label = "", uint8_t width = 0, uint8_t height = 0,
          uint8_t duration = 1, vector<Keyframe> frames = {})
@@ -37,8 +36,10 @@ class Sprite {
       label(label),
       frames(frames){};
 
+  ~Sprite() = default;
+
   // Checks if two sprites are equal
-  auto operator==(const Sprite& other) const -> bool;
+  auto operator==(const Sprite &other) const -> bool;
 
   // Get the width of the sprite
   [[nodiscard]] auto getWidth() const -> uint8_t;

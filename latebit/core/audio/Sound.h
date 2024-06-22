@@ -26,14 +26,9 @@ class Sound {
   Sound(Sound const &) = delete;
   void operator=(Sound const &) = delete;
 
-  Sound();
-  ~Sound();
-
-  // Load sound effect from a file. Return 0 if ok, else -1.
-  auto loadSound(string filename) -> int;
-
-  // Set label associated with the sound. Used to retrieve the resource.
-  auto setLabel(string l) -> void;
+  Sound(string label = "", unique_ptr<Tune> sound = nullptr)
+    : sound(std::move(sound)), label(label){};
+  ~Sound() = default;
 
   // Get label associated with the sound. Used to retrieve the resource.
   [[nodiscard]] auto getLabel() const -> string;
@@ -49,9 +44,9 @@ class Sound {
 
  private:
   // Pointer to the underlying Tune resource.
-  unique_ptr<Tune> sound = nullptr;
+  const unique_ptr<Tune> sound = nullptr;
 
   // Label associated with the sound. Used to retrieve the resource.
-  string label = "";
+  const string label = "";
 };
 }  // namespace lb

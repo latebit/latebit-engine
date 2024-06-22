@@ -125,40 +125,46 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
   string version = getLine(stream);
   if (version != "#v0.1#") {
     if (version.at(0) == '#') {
-      Log.error("Invalid header. Unsupported version %s", version.c_str());
+      Log.error(
+        "SpriteParser::fromStream(): Invalid header in %s. Unsupported version "
+        "%s",
+        label.c_str(), version.c_str());
       return {};
     } else {
-      Log.error("Missing version header. Expected #v0.1#, got %s",
-                version.c_str());
+      Log.error(
+        "SpriteParser::fromStream(): Missing version header in %s. Expected "
+        "#v0.1#, got %s",
+        label.c_str(), version.c_str());
     }
     return {};
   }
 
   int frameCount = getNextNumber(stream);
   if (frameCount < 1 || frameCount > 64) {
-    Log.error("Invalid frame count. %s",
+    Log.error("SpriteParser::fromStream(): Invalid frame count in %s. %s",
+              label.c_str(),
               makeRangeValidationMessage(frameCount, 64).c_str());
     return {};
   }
 
   int width = getNextNumber(stream);
   if (width < 1 || width > 64) {
-    Log.error("Invalid width. %s",
-              makeRangeValidationMessage(width, 64).c_str());
+    Log.error("SpriteParser::fromStream(): Invalid width in %s. %s",
+              label.c_str(), makeRangeValidationMessage(width, 64).c_str());
     return {};
   }
 
   int height = getNextNumber(stream);
   if (height < 1 || height > 64) {
-    Log.error("Invalid height. %s",
-              makeRangeValidationMessage(height, 64).c_str());
+    Log.error("SpriteParser::fromStream(): Invalid height in %s. %s",
+              label.c_str(), makeRangeValidationMessage(height, 64).c_str());
     return {};
   }
 
   int duration = getNextNumber(stream);
   if (duration < 0 || duration > 255) {
-    Log.error("Invalid frame duration. %s",
-              makeRangeValidationMessage(height, 255).c_str());
+    Log.error("SpriteParser::fromStream(): Invalid frame duration in %s. %s",
+              label.c_str(), makeRangeValidationMessage(height, 255).c_str());
     return {};
   }
 
@@ -168,7 +174,8 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
   for (int i = 0; i < frameCount; i++) {
     if (!stream->good()) {
       Log.error(
-        "SpriteParser::fromTextFile(): Unexpected end of file at frame %d", i);
+        "SpriteParser::fromStream(): Unexpected end of file for %s at frame %d",
+        label.c_str(), i);
       return {};
     }
 
@@ -179,10 +186,9 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
       auto line = getNextNonCommentLine(stream);
       if (line.size() != (uint8_t)width) {
         Log.error(
-          "SpriteParser::fromTextFile(): Invalid line length %d for frame "
-          "%d. "
-          "Expected %d, got %d",
-          i, j, width, line.length());
+          "SpriteParser::fromStream(): Invalid line length "
+          "%d for %s for frame %d. Expected %d, got %d",
+          i, label.c_str(), j, width, line.length());
         return {};
       }
 
@@ -201,14 +207,15 @@ auto SpriteParser::toString(const Sprite &sprite) -> string {
   ostringstream stream;
 
   stream << "#v0.1#" << '\n';
-  stream << (int)sprite.getFrameCount() << '\n';
-  stream << (int)sprite.getWidth() << '\n';
-  stream << (int)sprite.getHeight() << '\n';
-  stream << (int)sprite.getDuration() << '\n';
+  stream << (int)sprite.getFrameCount() << " # keyframe count\n";
+  stream << (int)sprite.getWidth() << " # width\n";
+  stream << (int)sprite.getHeight() << " # height\n";
+  stream << (int)sprite.getDuration() << " # duration\n";
 
   for (int i = 0; i < sprite.getFrameCount(); i++) {
     auto frame = sprite.getFrame(i);
 
+    stream << "#keyframe " << i << '\n';
     for (int y = 0; y < frame.getHeight(); y++) {
       for (int x = 0; x < frame.getWidth(); x++) {
         size_t index = x + y * frame.getWidth();

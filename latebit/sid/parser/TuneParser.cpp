@@ -32,13 +32,15 @@ auto TuneParser::fromStream(istream *stream,
                             const ParserOptions *opts) -> unique_ptr<Tune> {
   string version = getLine(stream);
   if (version != "#v0.1#") {
-    Log.error("Invalid header. Unsupported version %s", version.c_str());
+    Log.error(
+      "TuneParser::fromStream(): Invalid header. Unsupported version %s",
+      version.c_str());
     return nullptr;
   }
 
   int bpm = getNextNumber(stream);
   if (bpm < 10 || bpm > 400) {
-    Log.error("Invalid bpm. %s",
+    Log.error("TuneParser::fromStream(): Invalid bpm. %s",
               makeRangeValidationMessage(bpm, 400, 10).c_str());
     return nullptr;
   }
@@ -46,7 +48,7 @@ auto TuneParser::fromStream(istream *stream,
   int ticksPerBeat = getNextNumber(stream);
   if (ticksPerBeat < 1 || ticksPerBeat > opts->maxTicksPerBeat) {
     Log.error(
-      "Invalid ticks per beat. %s",
+      "TuneParser::fromStream(): Invalid ticks per beat. %s",
       makeRangeValidationMessage(ticksPerBeat, opts->maxTicksPerBeat).c_str());
     return nullptr;
   }
@@ -54,7 +56,7 @@ auto TuneParser::fromStream(istream *stream,
   int beatsCount = getNextNumber(stream);
   if (beatsCount <= 0 || beatsCount > 64) {
     Log.error(
-      "Invalid beats count. %s",
+      "TuneParser::fromStream(): Invalid beats count. %s",
       makeRangeValidationMessage(beatsCount, opts->maxBeatsCount).c_str());
     return nullptr;
   }
@@ -62,7 +64,7 @@ auto TuneParser::fromStream(istream *stream,
   int tracksCount = getNextNumber(stream);
   if (tracksCount <= 0 || tracksCount > opts->maxTracksCount) {
     Log.error(
-      "Invalid tracks count. %s",
+      "TuneParser::fromStream(): Invalid tracks count. %s",
       makeRangeValidationMessage(tracksCount, opts->maxTracksCount).c_str());
     return nullptr;
   }
@@ -81,14 +83,16 @@ auto TuneParser::fromStream(istream *stream,
   for (int i = 0; i < maxTrackLength; i++) {
     auto line = getNextNonCommentLine(stream);
     if (line.empty()) {
-      Log.error("Unexpected end of file");
+      Log.error("TuneParser::fromStream(): Unexpected end of file.");
       return nullptr;
     }
 
     auto symbols = getSymbolsFromLine(line);
     if ((int)symbols.size() != tracksCount) {
-      Log.error("Invalid number of symbols in line %d. Expected %d, got %d", i,
-                tracksCount, symbols.size());
+      Log.error(
+        "TuneParser::fromStream(): Invalid number of symbols in line %d. "
+        "Expected %d, got %d",
+        i, tracksCount, symbols.size());
       return nullptr;
     }
 
@@ -106,7 +110,9 @@ auto TuneParser::fromStream(istream *stream,
         track->push_back(Note::makeRest());
       } else if (symbol == CONTINUE_SYMBOL) {
         if (i == 0) {
-          Log.error("First symbol of a track cannot be a continue symbol");
+          Log.error(
+            "TuneParser::fromStream(): First symbol of a track cannot be a "
+            "continue symbol");
           return nullptr;
         }
 
@@ -131,7 +137,8 @@ auto TuneParser::fromFile(const string filename,
                           const ParserOptions *opts) -> unique_ptr<Tune> {
   ifstream file(filename);
   if (!file.is_open()) {
-    Log.error("Could not open file %s", filename.c_str());
+    Log.error("TuneParser::fromFile(): Could not open file %s",
+              filename.c_str());
     return nullptr;
   }
 
@@ -147,10 +154,10 @@ auto TuneParser::fromString(string str,
 auto TuneParser::toString(const Tune &tune) -> string {
   stringstream ss;
   ss << "#v0.1#\n";
-  ss << tune.getBpm() << "\n";
-  ss << tune.getTicksPerBeat() << "\n";
-  ss << tune.getBeatsCount() << "\n";
-  ss << tune.getTracksCount() << "\n";
+  ss << tune.getBpm() << " # tempo\n";
+  ss << tune.getTicksPerBeat() << " # ticks per beat\n";
+  ss << tune.getBeatsCount() << " # beats count\n";
+  ss << tune.getTracksCount() << " # tracks count\n";
 
   int maxTrackLength = tune.getBeatsCount() * tune.getTicksPerBeat();
   for (int i = 0; i < maxTrackLength; i++) {

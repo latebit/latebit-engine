@@ -19,88 +19,128 @@ static const SDL_Color Indigo = {131, 118, 156, 255};
 static const SDL_Color Pink = {255, 119, 168, 255};
 static const SDL_Color Peach = {255, 204, 170, 255};
 
-auto toSDLColor(Color c) -> SDL_Color {
+auto toSDLColor(Color::Color c) -> SDL_Color {
   switch (c) {
-    case BLACK:
+    case Color::BLACK:
       return Black;
-    case DARK_BLUE:
+    case Color::DARK_BLUE:
       return DarkBlue;
-    case DARK_PURPLE:
+    case Color::DARK_PURPLE:
       return DarkPurple;
-    case DARK_GREEN:
+    case Color::DARK_GREEN:
       return DarkGreen;
-    case BROWN:
+    case Color::BROWN:
       return Brown;
-    case DARK_GRAY:
+    case Color::DARK_GRAY:
       return DarkGray;
-    case LIGHT_GRAY:
+    case Color::LIGHT_GRAY:
       return LightGray;
-    case WHITE:
+    case Color::WHITE:
       return White;
-    case RED:
+    case Color::RED:
       return Red;
-    case ORANGE:
+    case Color::ORANGE:
       return Orange;
-    case YELLOW:
+    case Color::YELLOW:
       return Yellow;
-    case GREEN:
+    case Color::GREEN:
       return Green;
-    case BLUE:
+    case Color::BLUE:
       return Blue;
-    case INDIGO:
+    case Color::INDIGO:
       return Indigo;
-    case PINK:
+    case Color::PINK:
       return Pink;
-    case PEACH:
+    case Color::PEACH:
       return Peach;
-    case UNDEFINED_COLOR:
+    case Color::UNDEFINED_COLOR:
     default:
       return SDL_Color{0, 0, 0, 0};
   }
 }
 
-auto fromHex(char c) -> Color {
+auto fromHex(char c) -> Color::Color {
   switch (c) {
     case '0':
-      return BLACK;
+      return Color::BLACK;
     case '1':
-      return DARK_BLUE;
+      return Color::DARK_BLUE;
     case '2':
-      return DARK_PURPLE;
+      return Color::DARK_PURPLE;
     case '3':
-      return DARK_GREEN;
+      return Color::DARK_GREEN;
     case '4':
-      return BROWN;
+      return Color::BROWN;
     case '5':
-      return DARK_GRAY;
+      return Color::DARK_GRAY;
     case '6':
-      return LIGHT_GRAY;
+      return Color::LIGHT_GRAY;
     case '7':
-      return WHITE;
+      return Color::WHITE;
     case '8':
-      return RED;
+      return Color::RED;
     case '9':
-      return ORANGE;
+      return Color::ORANGE;
     case 'a':
     case 'A':
-      return YELLOW;
+      return Color::YELLOW;
     case 'b':
     case 'B':
-      return GREEN;
+      return Color::GREEN;
     case 'c':
     case 'C':
-      return BLUE;
+      return Color::BLUE;
     case 'd':
     case 'D':
-      return INDIGO;
+      return Color::INDIGO;
     case 'e':
     case 'E':
-      return PINK;
+      return Color::PINK;
     case 'f':
     case 'F':
-      return PEACH;
+      return Color::PEACH;
     default:
-      return UNDEFINED_COLOR;
+      return Color::UNDEFINED_COLOR;
+  }
+}
+
+auto toHex(Color::Color c) -> char {
+  switch (c) {
+    case Color::BLACK:
+      return '0';
+    case Color::DARK_BLUE:
+      return '1';
+    case Color::DARK_PURPLE:
+      return '2';
+    case Color::DARK_GREEN:
+      return '3';
+    case Color::BROWN:
+      return '4';
+    case Color::DARK_GRAY:
+      return '5';
+    case Color::LIGHT_GRAY:
+      return '6';
+    case Color::WHITE:
+      return '7';
+    case Color::RED:
+      return '8';
+    case Color::ORANGE:
+      return '9';
+    case Color::YELLOW:
+      return 'A';
+    case Color::GREEN:
+      return 'B';
+    case Color::BLUE:
+      return 'C';
+    case Color::INDIGO:
+      return 'D';
+    case Color::PINK:
+      return 'E';
+    case Color::PEACH:
+      return 'F';
+    case Color::UNDEFINED_COLOR:
+    default:
+      return '-';
   }
 }
 

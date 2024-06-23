@@ -16,32 +16,31 @@ using namespace std;
 
 namespace lb {
 
+namespace TextAlignment {
 enum TextAlignment {
-  TEXT_ALIGN_LEFT,
-  TEXT_ALIGN_CENTER,
-  TEXT_ALIGN_RIGHT,
+  LEFT,
+  CENTER,
+  RIGHT,
 };
+}
 
+namespace TextSize {
 enum TextSize {
-  TEXT_SIZE_NORMAL = 1,
-  TEXT_SIZE_LARGE,
-  TEXT_SIZE_XLARGE,
-  TEXT_SIZE_XXLARGE,
+  NORMAL = 1,
+  LARGE,
+  XLARGE,
+  XXLARGE,
 };
+}
 
 // A 2D Vector representing a position in the world in cells
 using Position = Vector;
 
 const int WINDOW_HORIZONTAL_CELLS = 240;
 const int WINDOW_VERTICAL_CELLS = 160;
-const Color WINDOW_BACKGROUND_COLOR_DEFAULT = BLACK;
+const Color::Color WINDOW_BACKGROUND_COLOR_DEFAULT = Color::BLACK;
 
 const string DUMMY_VIDEODRIVER = "dummy";
-
-// Returns height of a single character
-auto charHeight() -> float;
-// Returns width of a single character
-auto cellSize() -> float;
 
 // Converts cell coodinates to pixel coordinates
 auto cellsToPixels(Position cells) -> Vector;
@@ -61,7 +60,7 @@ class DisplayManager : public Manager {
   // Window height in cells
   int heightInCells = WINDOW_VERTICAL_CELLS;
   // Background color of the window
-  Color backgroundColor = WINDOW_BACKGROUND_COLOR_DEFAULT;
+  Color::Color backgroundColor = WINDOW_BACKGROUND_COLOR_DEFAULT;
 
   // Returns appropriate renderer flags for the current driver
   [[nodiscard]] auto getRendererFlags() const -> int;
@@ -76,31 +75,32 @@ class DisplayManager : public Manager {
   void shutDown() override;
 
   // Draws a frame in the given position, scaling it by the given factor
-  [[nodiscard]] auto drawFrame(Position position, const Frame *frame,
+  [[nodiscard]] auto drawFrame(Position position, const Keyframe *frame,
                                int scaling = 1) const -> int;
 
   // Draws a rectangle outline at the given world position (top left cell)
   [[nodiscard]] auto drawRectangle(Position position, int width, int height,
-                                   Color borderColor) const -> int;
+                                   Color::Color borderColor) const -> int;
 
   // Draws a rectangle at the given world position (top left cell)
   [[nodiscard]] auto drawRectangle(Position position, int width, int height,
-                                   Color borderColor,
-                                   Color fillColor) const -> int;
+                                   Color::Color borderColor,
+                                   Color::Color fillColor) const -> int;
 
   // Draws a string to the window at the given world position
   [[nodiscard]] auto drawString(Position postion, string string,
-                                TextAlignment alignment, Color color,
-                                TextSize size = TEXT_SIZE_NORMAL,
+                                TextAlignment::TextAlignment alignment,
+                                Color::Color color,
+                                TextSize::TextSize size = TextSize::NORMAL,
                                 Font font = DEFAULT_FONT) const -> int;
 
   // Returns the bounding box of a given string. Dimensions are in cells
   [[nodiscard]] auto measureString(string string,
-                                   TextSize size = TEXT_SIZE_NORMAL,
+                                   TextSize::TextSize size = TextSize::NORMAL,
                                    Font font = DEFAULT_FONT) const -> Box;
 
   // Change the background color of the window
-  void setBackground(Color color);
+  void setBackground(Color::Color color);
 
   // Return the amount of horizontal cells
   [[nodiscard]] auto getHorizontalCells() const -> int;

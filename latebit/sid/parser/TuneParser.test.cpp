@@ -20,23 +20,20 @@ void simplest() {
   assertEq("parses beats", t->getBeatsCount(), 2);
   assertEq("parses tracks count", t->getTracksCount(), 3);
 
-  auto track = t->getTrack(0);
+  auto& track = t->getTrack(0);
   assertEq("track 0 has correct track length", track->size(), 2);
-  assert("reads note correctly",
-         track->at(0).isEqual(Note::fromSymbol("C-4---")));
-  assert("reads note correctly",
-         track->at(1).isEqual(Note::fromSymbol("C-5---")));
+  assert("reads note correctly", track->at(0) == Note::fromSymbol("C-4---"));
+  assert("reads note correctly", track->at(1) == Note::fromSymbol("C-5---"));
 
-  track = t->getTrack(1);
-  assertEq("track 1 has correct track length", track->size(), 2);
-  assert("reads note correctly",
-         track->at(0).isEqual(Note::fromSymbol("D-4---")));
-  assert("reads note correctly", track->at(1).isEqual(Note::makeContinue()));
+  auto& track1 = t->getTrack(1);
+  assertEq("track 1 has correct track length", track1->size(), 2);
+  assert("reads note correctly", track1->at(0) == Note::fromSymbol("D-4---"));
+  assert("reads note correctly", track1->at(1).getType() == NoteType::CONTINUE);
 
-  track = t->getTrack(2);
-  assertEq("track 2 has correct track length", track->size(), 2);
-  assert("reads note correctly", track->at(0).isEqual(Note::makeRest()));
-  assert("reads note correctly", track->at(1).isEqual(Note::makeRest()));
+  auto& track2 = t->getTrack(2);
+  assertEq("track 2 has correct track length", track2->size(), 2);
+  assert("reads note correctly", track2->at(0).getType() == NoteType::REST);
+  assert("reads note correctly", track2->at(1).getType() == NoteType::REST);
 }
 
 void withComments() {
@@ -57,23 +54,20 @@ void withComments() {
   assertEq("parses beats", t->getBeatsCount(), 2);
   assertEq("parses tracks count", t->getTracksCount(), 3);
 
-  auto track = t->getTrack(0);
+  auto& track = t->getTrack(0);
   assertEq("track 0 has correct track length", track->size(), 2);
-  assert("reads note correctly",
-         track->at(0).isEqual(Note::fromSymbol("C-4---")));
-  assert("reads note correctly",
-         track->at(1).isEqual(Note::fromSymbol("C-5---")));
+  assert("reads note correctly", track->at(0) == Note::fromSymbol("C-4---"));
+  assert("reads note correctly", track->at(1) == Note::fromSymbol("C-5---"));
 
-  track = t->getTrack(1);
-  assertEq("track 1 has correct track length", track->size(), 2);
-  assert("reads note correctly",
-         track->at(0).isEqual(Note::fromSymbol("D-4---")));
-  assert("reads note correctly", track->at(1).isEqual(Note::makeContinue()));
+  auto& track1 = t->getTrack(1);
+  assertEq("track 1 has correct track length", track1->size(), 2);
+  assert("reads note correctly", track1->at(0) == Note::fromSymbol("D-4---"));
+  assert("reads note correctly", track1->at(1).getType() == NoteType::CONTINUE);
 
-  track = t->getTrack(2);
-  assertEq("track 2 has correct track length", track->size(), 2);
-  assert("reads note correctly", track->at(0).isEqual(Note::makeRest()));
-  assert("reads note correctly", track->at(1).isEqual(Note::makeRest()));
+  auto& track2 = t->getTrack(2);
+  assertEq("track 2 has correct track length", track2->size(), 2);
+  assert("reads note correctly", track2->at(0).getType() == NoteType::REST);
+  assert("reads note correctly", track2->at(1).getType() == NoteType::REST);
 }
 
 void differentLengths() {
@@ -93,13 +87,13 @@ void differentLengths() {
   assertEq("has correct track length (1)", t->getTrack(1)->size(), 1);
   assertEq("has correct track length (2)", t->getTrack(2)->size(), 2);
   assert("reads correct note (0,0)",
-         t->getTrack(0)->at(0).isEqual(Note::fromSymbol("C-4---")));
+         t->getTrack(0)->at(0) == Note::fromSymbol("C-4---"));
   assert("reads correct note (0,1)",
-         t->getTrack(0)->at(1).isEqual(Note::fromSymbol("G-4---")));
+         t->getTrack(0)->at(1) == Note::fromSymbol("G-4---"));
   assert("reads correct note (0,2)",
-         t->getTrack(0)->at(2).isEqual(Note::fromSymbol("E-4---")));
+         t->getTrack(0)->at(2) == Note::fromSymbol("E-4---"));
   assert("reads correct note (1,0)",
-         t->getTrack(1)->at(0).isEqual(Note::fromSymbol("C-4---")));
+         t->getTrack(1)->at(0) == Note::fromSymbol("C-4---"));
 }
 
 void rests() {
@@ -117,15 +111,11 @@ void rests() {
 
   assert("parses tune", t != nullptr);
 
-  auto track = t->getTrack(0);
+  auto& track = t->getTrack(0);
   assertEq("track 0 has correct track length", track->size(), 3);
-  assert("reads note correctly",
-         track->at(0).isEqual(Note::fromSymbol("C-4---")));
-
-  assert("reads note correctly", track->at(1).isEqual(Note::makeRest()));
-
-  assert("reads note correctly",
-         track->at(2).isEqual(Note::fromSymbol("E-4---")));
+  assert("reads note correctly", track->at(0) == Note::fromSymbol("C-4---"));
+  assert("reads note correctly", track->at(1) == Note::makeRest());
+  assert("reads note correctly", track->at(2) == Note::fromSymbol("E-4---"));
 }
 
 void continues() {
@@ -143,12 +133,11 @@ void continues() {
 
   assert("parses tune", t != nullptr);
 
-  auto track = t->getTrack(0);
+  auto& track = t->getTrack(0);
   assertEq("track 0 has correct track length", track->size(), 3);
-  assert("has correct first note",
-         track->at(0).isEqual(Note::fromSymbol("C-4---")));
-  assert("keeps correct note", track->at(1).isEqual(Note::makeContinue()));
-  assert("stops note", track->at(2).isEqual(Note::makeRest()));
+  assert("has correct first note", track->at(0) == Note::fromSymbol("C-4---"));
+  assert("keeps correct note", track->at(1).getType() == NoteType::CONTINUE);
+  assert("stops note", track->at(2).getType() == NoteType::REST);
 
   str =
     "#v0.1#\n"
@@ -161,10 +150,10 @@ void continues() {
 
   t = TuneParser::fromString(str, &DEFAULT_PARSER_OPTIONS);
 
-  track = t->getTrack(0);
-  assertEq("track 0 has correct track length", track->size(), 2);
-  assert("registers pause", track->at(0).isEqual(Note::makeRest()));
-  assert("keeps the pause", track->at(1).isEqual(Note::makeRest()));
+  auto& track1 = t->getTrack(0);
+  assertEq("track 0 has correct track length", track1->size(), 2);
+  assert("registers pause", track1->at(0).getType() == NoteType::REST);
+  assert("keeps the pause", track1->at(1).getType() == NoteType::CONTINUE);
 }
 
 void brokenHeader() {
@@ -389,10 +378,10 @@ void header() {
 void consistency() {
   string str =
     "#v0.1#\n"
-    "90\n"
-    "1\n"
-    "3\n"
-    "1\n"
+    "90 # tempo\n"
+    "1 # ticks per beat\n"
+    "3 # beat count\n"
+    "1 # track count\n"
     "C-4---\n"
     "......\n"
     "------\n";
@@ -416,7 +405,7 @@ void consistency() {
   t = TuneParser::fromString(strWithComments, &DEFAULT_PARSER_OPTIONS);
   assert("parses tune", t != nullptr);
   out = TuneParser::toString(*t);
-  assertEq("strips out comments", out, str);
+  assertEq("replaces comments", out, str);
 }
 
 void correctOutput() {
@@ -431,10 +420,10 @@ void correctOutput() {
 
   string expected =
     "#v0.1#\n"
-    "90\n"
-    "1\n"
-    "2\n"
-    "2\n"
+    "90 # tempo\n"
+    "1 # ticks per beat\n"
+    "2 # beat count\n"
+    "2 # track count\n"
     "C-4---|E-4---\n"
     "D-4---|F-4---\n";
 
@@ -451,10 +440,10 @@ void emptyTrack() {
 
   string expected =
     "#v0.1#\n"
-    "90\n"
-    "1\n"
-    "2\n"
-    "2\n"
+    "90 # tempo\n"
+    "1 # ticks per beat\n"
+    "2 # beat count\n"
+    "2 # track count\n"
     "C-4---|      \n"
     "D-4---|      \n";
 
@@ -472,10 +461,10 @@ void unequalLengths() {
 
   string expected =
     "#v0.1#\n"
-    "90\n"
-    "1\n"
-    "2\n"
-    "2\n"
+    "90 # tempo\n"
+    "1 # ticks per beat\n"
+    "2 # beat count\n"
+    "2 # track count\n"
     "C-4---|E-4---\n"
     "D-4---|      \n";
 
@@ -493,10 +482,10 @@ void specialSymbols() {
 
   string expected =
     "#v0.1#\n"
-    "90\n"
-    "1\n"
-    "2\n"
-    "2\n"
+    "90 # tempo\n"
+    "1 # ticks per beat\n"
+    "2 # beat count\n"
+    "2 # track count\n"
     "C-4---|------\n"
     "......|      \n";
 
@@ -509,10 +498,10 @@ void withDifferentOptions() {
 
   string valid =
     "#v0.1#\n"
-    "90\n"
-    "1\n"
-    "2\n"
-    "1\n"
+    "90 # tempo\n"
+    "1 # ticks per beat\n"
+    "2 # beat count\n"
+    "1 # track count\n"
     "C-4---\n"
     "D-4---\n";
 
@@ -521,10 +510,10 @@ void withDifferentOptions() {
 
   string validButNotCompliant =
     "#v0.1#\n"
-    "90\n"
-    "1\n"
-    "2\n"
-    "2\n"
+    "90 # tempo\n"
+    "1 # ticks per beat\n"
+    "2 # beat count\n"
+    "2 # track count\n"
     "C-4---|C-4---\n"
     "D-4---|C-4---\n";
 

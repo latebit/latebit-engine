@@ -12,7 +12,7 @@ namespace lb {
 
 ViewObject::ViewObject() {
   setType("ViewObject");
-  setSolidness(SPECTRAL);
+  setSolidness(Solidness::SPECTRAL);
   setAltitude(MAX_ALTITUDE);
 
   subscribe(VIEW_EVENT);
@@ -23,7 +23,7 @@ auto ViewObject::getDisplayString() -> string {
 }
 
 auto ViewObject::draw() -> int {
-  return DM.drawString(getPosition(), getDisplayString(), TEXT_ALIGN_LEFT,
+  return DM.drawString(getPosition(), getDisplayString(), TextAlignment::LEFT,
                        color);
 }
 
@@ -103,8 +103,8 @@ auto ViewObject::setValue(int value) -> void {
 }
 auto ViewObject::getValue() const -> int { return value; }
 
-auto ViewObject::setColor(Color color) -> void { this->color = color; }
-auto ViewObject::getColor() const -> Color { return color; }
+auto ViewObject::setColor(Color::Color color) -> void { this->color = color; }
+auto ViewObject::getColor() const -> Color::Color { return color; }
 
 auto ViewObject::setLabel(string label) -> void {
   this->label = label;

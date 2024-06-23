@@ -47,7 +47,7 @@ auto validate(const Symbol& symbol, int position, const array<char, T>& allowed,
 
   if (c == NULL_CHAR) return 0;
 
-  for (int i = 0; i < allowed.size(); i++) {
+  for (size_t i = 0; i < allowed.size(); i++) {
     if (c == allowed[i]) return 0;
   }
 
@@ -61,32 +61,32 @@ auto validate(const Symbol& symbol, int position, const array<char, T>& allowed,
   return 1;
 }
 
-Note::Note(int pitch, int volume, WaveType wave, EffectType effect,
-           string symbol)
+Note::Note(int pitch, int volume, WaveType::WaveType wave,
+           EffectType::EffectType effect, string symbol)
   : pitch(pitch),
     volume(volume),
     wave(wave),
     effect(effect),
     symbol(std::move(symbol)) {
-  static int id = 0;
-  this->id = id++;
+  this->type = NoteType::STANDARD;
 }
 
 auto Note::makeRest() -> Note {
-  auto note = Note(0, 0, TRIANGLE, NONE, "------");
-  note.id = -1;
+  auto note = Note(0, 0, WaveType::TRIANGLE, EffectType::NONE, REST_SYMBOL);
+  note.type = NoteType::REST;
   return note;
 }
 
 auto Note::makeInvalid() -> Note {
-  auto note = Note(0, 0, TRIANGLE, NONE, "      ");
-  note.id = -2;
+  auto note =
+    Note(0, 0, WaveType::TRIANGLE, EffectType::NONE, END_OF_TRACK_SYMBOL);
+  note.type = NoteType::INVALID;
   return note;
 }
 
 auto Note::makeContinue() -> Note {
-  auto note = Note(0, 0, TRIANGLE, NONE, "......");
-  note.id = -3;
+  auto note = Note(0, 0, WaveType::TRIANGLE, EffectType::NONE, CONTINUE_SYMBOL);
+  note.type = NoteType::CONTINUE;
   return note;
 }
 
@@ -119,8 +119,8 @@ auto Note::fromSymbol(const Symbol& str) -> Note {
 
   int pitch = 0;
   int volume = 0;
-  EffectType effect = NONE;
-  WaveType wave = TRIANGLE;
+  EffectType::EffectType effect = EffectType::NONE;
+  WaveType::WaveType wave = WaveType::TRIANGLE;
 
   if (str[0] == 'C') {
     pitch = 0;
@@ -147,25 +147,25 @@ auto Note::fromSymbol(const Symbol& str) -> Note {
   }
 
   if (str[3] == '0' || str[3] == NULL_CHAR) {
-    wave = TRIANGLE;
+    wave = WaveType::TRIANGLE;
   } else if (str[3] == '1') {
-    wave = SAWTOOTH;
+    wave = WaveType::SAWTOOTH;
   } else if (str[3] == '2') {
-    wave = SQUARE;
+    wave = WaveType::SQUARE;
   } else if (str[3] == '3') {
-    wave = NOISE;
+    wave = WaveType::NOISE;
   }
 
   if (str[5] == '0' || str[5] == NULL_CHAR) {
-    effect = NONE;
+    effect = EffectType::NONE;
   } else if (str[5] == '1') {
-    effect = DROP;
+    effect = EffectType::DROP;
   } else if (str[5] == '2') {
-    effect = SLIDE;
+    effect = EffectType::SLIDE;
   } else if (str[5] == '3') {
-    effect = FADEIN;
+    effect = EffectType::FADEIN;
   } else if (str[5] == '4') {
-    effect = FADEOUT;
+    effect = EffectType::FADEOUT;
   }
 
   int octave = str[2] == NULL_CHAR ? 4 : digitToInt(str[2]);
@@ -193,19 +193,19 @@ auto Note::fromSymbol(const Symbol& str) -> Note {
   return {pitch, volume, wave, effect, str};
 }
 
-auto Note::isRest() const -> bool { return this->id == -1; }
-auto Note::isInvalid() const -> bool { return this->id == -2; }
-auto Note::isContinue() const -> bool { return this->id == -3; }
-
-auto Note::isEqual(Note other) const -> bool {
-  return this->pitch == other.pitch && this->volume == other.volume &&
+auto Note::operator==(const Note& other) const -> bool {
+  return this->type == other.type && this->symbol == other.symbol &&
+         this->pitch == other.pitch && this->volume == other.volume &&
          this->wave == other.wave && this->effect == other.effect;
+}
+auto Note::operator!=(const Note& other) const -> bool {
+  return !(*this == other);
 }
 auto Note::getPitch() const -> int { return this->pitch; }
 auto Note::getVolume() const -> float { return this->volume / 15.0; }
-auto Note::getWave() const -> WaveType { return this->wave; }
-auto Note::getEffect() const -> EffectType { return this->effect; }
-auto Note::getId() const -> long unsigned int { return this->id; }
+auto Note::getWave() const -> WaveType::WaveType { return this->wave; }
+auto Note::getEffect() const -> EffectType::EffectType { return this->effect; }
 auto Note::getSymbol() const -> string { return this->symbol; }
+auto Note::getType() const -> NoteType::NoteType { return this->type; }
 
 }  // namespace sid

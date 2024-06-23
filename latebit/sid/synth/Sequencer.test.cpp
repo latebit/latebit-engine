@@ -14,22 +14,22 @@ void envelope() {
 
   e.attack();
   assertEq("starts at 0", e.getValue(), 0.0);
-  assertEq("starts in attack", e.getState(), ATTACK);
+  assertEq("starts in attack", e.getState(), EnvelopeState::ATTACK);
 
   for (int i = 0; i <= 100; i++) e.process();
   assertEq("attack completes", e.getValue(), 1.0);
-  assertEq("moves to decay", e.getState(), DECAY);
+  assertEq("moves to decay", e.getState(), EnvelopeState::DECAY);
 
   for (int i = 0; i <= 500; i++) e.process();
   assertEq("decay completes", e.getValue(), e.getSustainLevel());
-  assertEq("moves to sustain", e.getState(), SUSTAIN);
+  assertEq("moves to sustain", e.getState(), EnvelopeState::SUSTAIN);
 
   e.release();
-  assertEq("moves to release", e.getState(), RELEASE);
+  assertEq("moves to release", e.getState(), EnvelopeState::RELEASE);
 
   for (int i = 0; i <= 500; i++) e.process();
   assertEq("release completes", e.getValue(), 0.0);
-  assertEq("done", e.getState(), DONE);
+  assertEq("done", e.getState(), EnvelopeState::DONE);
 }
 
 void getSamples() {
@@ -64,9 +64,12 @@ void getSamples() {
 
   // close the envelope
   s.getNextSample();
-  assertEq("releases envelope (0)", s.getEnvelope(0)->getState(), RELEASE);
-  assertEq("releases envelope (1)", s.getEnvelope(1)->getState(), RELEASE);
-  assertEq("releases envelope (2)", s.getEnvelope(2)->getState(), RELEASE);
+  assertEq("releases envelope (0)", s.getEnvelope(0)->getState(),
+           EnvelopeState::RELEASE);
+  assertEq("releases envelope (1)", s.getEnvelope(1)->getState(),
+           EnvelopeState::RELEASE);
+  assertEq("releases envelope (2)", s.getEnvelope(2)->getState(),
+           EnvelopeState::RELEASE);
 
   // advance until the end of the tick
   for (int i = s.getSamplesPerTick() - ENVELOPE_RELEASE_SAMPLES + 1;
@@ -78,7 +81,8 @@ void getSamples() {
   s.getNextSample();
   for (int i = 0; i < 3; i++) {
     assertEq("advances notes", s.getCurrentTick(i), 1);
-    assertEq("resets envelope", s.getEnvelope(i)->getState(), ATTACK);
+    assertEq("resets envelope", s.getEnvelope(i)->getState(),
+             EnvelopeState::ATTACK);
   }
 }
 

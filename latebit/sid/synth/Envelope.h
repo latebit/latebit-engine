@@ -8,7 +8,10 @@
 #include "Tune.h"
 
 namespace sid {
+
+namespace EnvelopeState {
 enum EnvelopeState { ATTACK, DECAY, SUSTAIN, RELEASE, DONE };
+}
 
 // Defines a volume envelope. Its value is between 0 and 1 where 0 is
 // silence and 1 is full volume associated with the Note being played
@@ -28,13 +31,13 @@ class Envelope {
   // Returns the current value of the envelope
   [[nodiscard]] auto getValue() const -> float;
   // Returns the current state of the envelope
-  [[nodiscard]] auto getState() const -> EnvelopeState;
+  [[nodiscard]] auto getState() const -> EnvelopeState::EnvelopeState;
   // Returns the level of volume to sustain after the decay phase
   [[nodiscard]] auto getSustainLevel() const -> float;
 
  private:
   // The current state of the envelope
-  EnvelopeState state = DONE;
+  EnvelopeState::EnvelopeState state = EnvelopeState::DONE;
   // The current value of the envelope
   float value = 0;
   // How much volume to increase per sample in the attack phase

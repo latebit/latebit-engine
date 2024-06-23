@@ -2,8 +2,10 @@
 #include "Effect.h"
 
 namespace sid {
+namespace WaveType {
 // Waves supported by the oscillator
 enum WaveType { TRIANGLE, SQUARE, SAWTOOTH, NOISE };
+}  // namespace WaveType
 
 // The oscillator is the main structure that produces sound. It contains the
 // current step in the wave table, the step size used to advance in the wave
@@ -25,14 +27,14 @@ class Oscillator {
   // Sets the volume of the oscillator
   void setVolume(float volume);
   // Sets the wave of the oscillator
-  void setWave(WaveType wave);
+  void setWave(WaveType::WaveType wave);
   // Sets the effect of the oscillator
-  void setEffect(EffectType effect);
+  void setEffect(EffectType::EffectType effect);
 
   // Returns the wave of the oscillator
-  auto getWaveType() -> WaveType;
+  auto getWaveType() -> WaveType::WaveType;
   // Returns the effect of the oscillator
-  auto getEffectType() -> EffectType;
+  auto getEffectType() -> EffectType::EffectType;
   // Returns the volume of the oscillator
   auto getVolume() -> float;
   // Returns the current step in the wave table
@@ -49,7 +51,7 @@ class Oscillator {
   float volume = 0.5;
   // The wave type used to produce the sound
   // This also maps to the wave table
-  WaveType waveType = TRIANGLE;
+  WaveType::WaveType waveType = WaveType::TRIANGLE;
   // The effect applied to the oscillator to modulate the frequency or volume
   Effect effect = NONE_EFFECT;
 

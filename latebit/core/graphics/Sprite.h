@@ -3,68 +3,64 @@
 #include <string>
 #include <vector>
 
-#include "Frame.h"
+#include "Keyframe.h"
 #include "latebit/core/geometry/Vector.h"
 
 using namespace std;
 
 namespace lb {
-enum Slowdown {
-  STOANIMATION = 0,
-  NO_SLOWDOWN = 1,
-};
+const uint8_t NO_ANIMATION = 0;
 
 class Sprite {
  private:
   // The width of the sprite
-  uint8_t width = 0;
+  const uint8_t width = 0;
   // The height of the sprite
-  uint8_t height = 0;
-  // The number of frames to wait before changing frame
-  uint8_t slowdown = NO_SLOWDOWN;
-  // The frames of the sprite
-  vector<Frame> frames = {};
+  const uint8_t height = 0;
+  // Duration of frames in FPS.
+  // For example, if the game runs at 60FPS, duration = 60
+  // means that the sprite will change frame every second
+  const uint8_t duration = 1;
   // The label of the sprite, used to reference it
-  string label = "";
+  const string label = "";
+  // The frames of the sprite
+  const vector<Keyframe> frames = {};
 
  public:
-  ~Sprite();
-  // Creates a sprite with a given maximum number of frames
+  // Creates a sprite with the given parameters
   Sprite(string label = "", uint8_t width = 0, uint8_t height = 0,
-         uint8_t slowdown = NO_SLOWDOWN, uint8_t frameCount = 0);
-  // Creates a sprite from another sprite
-  Sprite(const Sprite& other);
-  // Checks if two sprites are equal
-  auto operator==(const Sprite& other) const -> bool;
+         uint8_t duration = 1, vector<Keyframe> frames = {})
+    : width(width),
+      height(height),
+      duration(duration),
+      label(label),
+      frames(frames){};
 
-  // Set the width of the sprite
-  void setWidth(uint8_t width);
+  ~Sprite() = default;
+
+  // Checks if two sprites are equal
+  auto operator==(const Sprite &other) const -> bool;
+
   // Get the width of the sprite
   [[nodiscard]] auto getWidth() const -> uint8_t;
 
-  // Set the height of the sprite
-  void setHeight(uint8_t height);
   // Get the height of the sprite
   [[nodiscard]] auto getHeight() const -> uint8_t;
 
-  // Set the label of the sprite
-  void setLabel(string label);
   // Get the label of the sprite
   [[nodiscard]] auto getLabel() const -> string;
 
-  // Set the number of frames to wait before changing frame
-  void setSlowdown(uint8_t slowdown);
   // Get the number of frames to wait before changing frame
-  [[nodiscard]] auto getSlowdown() const -> uint8_t;
+  [[nodiscard]] auto getDuration() const -> uint8_t;
 
-  // Add a frame to the sprite
-  auto addFrame(Frame frame) -> int;
   // Get the frame at a given index from the sprite
-  [[nodiscard]] auto getFrame(int index) const -> Frame;
+  [[nodiscard]] auto getFrame(int index) const -> Keyframe;
+
   // Get the number of frames the sprite holds
   [[nodiscard]] auto getFrameCount() const -> uint8_t;
+
   // Draw the i-th frame of the sprite at the given position
-  [[nodiscard]] auto draw(int i, Vector position) const -> int;
+  [[nodiscard]] auto draw(int index, Vector position) const -> int;
 };
 
 }  // namespace lb

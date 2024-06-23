@@ -17,7 +17,7 @@ auto main() -> int {
 
   test("sprites", []() {
     string label = "test_sprite";
-    string filename = FIXTURES_FOLDER + "/correct.txt";
+    string filename = FIXTURES_FOLDER + "/correct.lbspr";
 
     assertOk("loads sprite successfully", RM.loadTextSprite(filename, label));
     assertFail("does not load same label", RM.loadTextSprite(filename, label));
@@ -36,11 +36,11 @@ auto main() -> int {
     assertFail("does not load missing file",
                RM.loadTextSprite("does-not-exist", label));
 
-    string anotherFile = FIXTURES_FOLDER + "/missing-frame.txt";
+    string anotherFile = FIXTURES_FOLDER + "/missing-frame.lbspr";
     assertFail("does not load on invalid file",
                RM.loadTextSprite(anotherFile, label));
 
-    Sprite* sprite = RM.getSprite(label);
+    auto sprite = RM.getSprite(label);
     assert("retrieves loaded sprite", sprite != nullptr);
     assertEq("and label is correct", sprite->getLabel(), label);
 
@@ -75,11 +75,11 @@ auto main() -> int {
     assertFail("does not load missing file",
                RM.loadMusic("does-not-exist", label));
 
-    string anotherFile = FIXTURES_FOLDER + "/missing-frame.txt";
+    string anotherFile = FIXTURES_FOLDER + "/missing-frame.lbspr";
     assertFail("does not load on invalid file",
                RM.loadMusic(anotherFile, label));
 
-    Music* music = RM.getMusic(label);
+    auto music = RM.getMusic(label);
     assert("retrieves loaded sprite", music != nullptr);
     assertEq("and label is correct", music->getLabel(), label);
 
@@ -114,11 +114,11 @@ auto main() -> int {
     assertFail("does not load missing file",
                RM.loadSound("does-not-exist", label));
 
-    string anotherFile = FIXTURES_FOLDER + "/missing-frame.txt";
+    string anotherFile = FIXTURES_FOLDER + "/missing-frame.lbspr";
     assertFail("does not load on invalid file",
                RM.loadSound(anotherFile, label));
 
-    Sound* sound = RM.getSound(label);
+    auto sound = RM.getSound(label);
     assert("retrieves loaded sprite", sound != nullptr);
     assertEq("and label is correct", sound->getLabel(), label);
 

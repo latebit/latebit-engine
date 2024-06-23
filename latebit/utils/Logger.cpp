@@ -32,31 +32,32 @@ auto Logger::getInstance() -> Logger& {
   return instance;
 }
 
-void Logger::setDestination(LogDestination d) {
-  if (d == STDOUT) {
+void Logger::setDestination(LogDestination::LogDestination d) {
+  if (d == LogDestination::STDOUT) {
     this->output = make_unique<ostream>(cout.rdbuf());
   } else {
     this->output = make_unique<ofstream>(LOGFILE_NAME, ios::out);
   }
 }
 
-void Logger::setLevel(LogLevel l) { this->level = l; }
+void Logger::setLevel(LogLevel::LogLevel l) { this->level = l; }
 
-auto Logger::getLevelString(LogLevel l) const -> string {
+auto Logger::getLevelString(LogLevel::LogLevel l) const -> string {
   switch (l) {
-    case ERROR:
+    case LogLevel::ERROR:
       return "ERROR";
-    case WARNING:
+    case LogLevel::WARNING:
       return "WARNING";
-    case INFO:
+    case LogLevel::INFO:
       return "INFO";
-    case DEBUG:
+    case LogLevel::DEBUG:
       return "DEBUG";
   }
   return "UNKNOWN";
 }
 
-void Logger::logf(LogLevel level, const string fmt, va_list args) const {
+void Logger::logf(LogLevel::LogLevel level, const string fmt,
+                  va_list args) const {
   if (level <= this->level) {
     string time = getTimeString();
     string logLevel = getLevelString(level);
@@ -72,28 +73,28 @@ void Logger::logf(LogLevel level, const string fmt, va_list args) const {
 void Logger::error(const string message, ...) const {
   va_list args;
   va_start(args, message);
-  logf(ERROR, message, args);
+  logf(LogLevel::ERROR, message, args);
   va_end(args);
 }
 
 void Logger::warning(const string message, ...) const {
   va_list args;
   va_start(args, message);
-  logf(WARNING, message, args);
+  logf(LogLevel::WARNING, message, args);
   va_end(args);
 }
 
 void Logger::info(const string message, ...) const {
   va_list args;
   va_start(args, message);
-  logf(INFO, message, args);
+  logf(LogLevel::INFO, message, args);
   va_end(args);
 }
 
 void Logger::debug(const string message, ...) const {
   va_list args;
   va_start(args, message);
-  logf(DEBUG, message, args);
+  logf(LogLevel::DEBUG, message, args);
   va_end(args);
 }
 

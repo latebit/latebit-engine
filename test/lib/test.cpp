@@ -28,13 +28,13 @@ auto assert(const string name, bool assertion, const string message) -> int {
   ASSERTIONS++;
 
   if (!assertion) {
-    cout << red("    ✗ " + name) << endl;
-    cout << "      " << message << endl;
+    cout << red("    ✗ " + name) << "\n\r";
+    cout << "      " << message << "\n\r";
     FAILED_ASSERTIONS++;
     return 1;
   }
 
-  if (!FAILED_ONLY) cout << green("    ✓ " + name) << endl;
+  if (!FAILED_ONLY) cout << green("    ✓ " + name) << "\n\r";
   return 0;
 }
 
@@ -91,25 +91,25 @@ auto assertEq(string name, Box got, Box want) -> int {
 
 void timing(float delta) {
   if (delta > 1000) {
-    printf("      Duration: %.2fms\n", delta / 1000);
+    printf("      Duration: %.2fms\n\r", delta / 1000);
   } else {
-    printf("      Duration: %.2fμs\n", delta);
+    printf("      Duration: %.2fμs\n\r", delta);
   }
 }
 
 auto suite(std::string name, void (*test)()) -> void {
   if (!FOCUS.empty() && FOCUS != name) {
-    std::cout << yellow(name + " (skip)\n");
+    std::cout << yellow(name + " (skip)\n\r");
     return;
   }
 
-  std::cout << yellow("\n" + name + "\n");
+  std::cout << yellow("\n\r" + name + "\n\r");
   test();
   timing(c.delta());
 }
 
 auto test(std::string name, void (*test)()) -> void {
-  std::cout << "  " + name + "\n";
+  std::cout << "  " + name + "\n\r";
   test();
 }
 
@@ -118,11 +118,11 @@ auto report() -> int {
   auto total = getAssertions();
 
   if (failed == 0) {
-    std::cout << std::endl << "Success! All " + total + " assertions passed.";
+    std::cout << "\n\r" << "Success! All " + total + " assertions passed.";
   } else {
-    std::cout << std::endl
+    std::cout << "\n\r"
               << "Failure. " + std::to_string(failed) + " failed tests."
-              << std::endl;
+              << "\n\r";
   }
 
   return failed;

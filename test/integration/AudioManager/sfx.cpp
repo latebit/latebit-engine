@@ -10,10 +10,10 @@
 using namespace lb;
 
 class TestObject : public Object {
-  Sound *sound;
-  Sound *sound2;
-  Sound *sound3;
-  Sound *sound4;
+  const Sound *sound;
+  const Sound *sound2;
+  const Sound *sound3;
+  const Sound *sound4;
 
  public:
   TestObject() {
@@ -49,7 +49,7 @@ class TestObject : public Object {
 };
 
 int main() {
-  Log.setDestination(STDOUT);
+  Log.setDestination(LogDestination::STDOUT);
   GM.startUp();
 
   if (RM.loadMusic("../../test/fixtures/song.lbtune", "song") != 0) {

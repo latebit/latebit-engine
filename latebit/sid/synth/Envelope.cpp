@@ -12,41 +12,41 @@ using namespace std;
 
 namespace sid {
 void Envelope::attack() {
-  state = ATTACK;
+  state = EnvelopeState::ATTACK;
   value = 0;
 }
 
-void Envelope::release() { state = RELEASE; }
+void Envelope::release() { state = EnvelopeState::RELEASE; }
 
 void Envelope::done() {
-  state = DONE;
+  state = EnvelopeState::DONE;
   value = 0;
 }
 
 auto Envelope::process() -> float {
   switch (this->state) {
-    case ATTACK:
+    case EnvelopeState::ATTACK:
       this->value += this->attackPerSample;
       if (this->value >= 1) {
         this->value = 1;
-        this->state = DECAY;
+        this->state = EnvelopeState::DECAY;
       }
       break;
-    case DECAY:
+    case EnvelopeState::DECAY:
       this->value -= this->decayPerSample;
       if (this->value <= this->sustainLevel) {
         this->value = this->sustainLevel;
-        this->state = SUSTAIN;
+        this->state = EnvelopeState::SUSTAIN;
       }
       break;
     default:
-    case SUSTAIN:
+    case EnvelopeState::SUSTAIN:
       break;
-    case RELEASE:
+    case EnvelopeState::RELEASE:
       this->value -= this->releasePerSample;
       if (this->value <= 0) {
         this->value = 0;
-        this->state = DONE;
+        this->state = EnvelopeState::DONE;
       }
       break;
   }
@@ -55,6 +55,8 @@ auto Envelope::process() -> float {
 }
 
 auto Envelope::getValue() const -> float { return this->value; }
-auto Envelope::getState() const -> EnvelopeState { return this->state; }
+auto Envelope::getState() const -> EnvelopeState::EnvelopeState {
+  return this->state;
+}
 auto Envelope::getSustainLevel() const -> float { return this->sustainLevel; }
 }  // namespace sid

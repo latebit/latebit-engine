@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include "../../../test/lib/test.h"
+#include "../../utils/Logger.h"
 #include "latebit/core/GameManager.h"
 #include "latebit/core/ResourceManager.h"
 #include "latebit/core/events/Event.h"
@@ -61,22 +62,22 @@ void kinematics() {
 void solidness() {
   Object subject;
 
-  subject.setSolidness(SOFT);
-  assertEq("updates solidness", subject.getSolidness(), SOFT);
+  subject.setSolidness(Solidness::SOFT);
+  assertEq("updates solidness", subject.getSolidness(), Solidness::SOFT);
   assert("updates current scene",
          WM.getSceneGraph().getSolidObjects().find(&subject) > -1);
 
   assert("SOFT is solid", subject.isSolid());
-  subject.setSolidness(HARD);
+  subject.setSolidness(Solidness::HARD);
   assert("HARD is solid", subject.isSolid());
-  subject.setSolidness(SPECTRAL);
+  subject.setSolidness(Solidness::SPECTRAL);
   assert("SPECTRAL is not solid", !subject.isSolid());
 }
 
 void boundingBox() {
   Object subject;
   subject.setPosition(Vector(1, 1));
-  RM.loadTextSprite(FIXTURES_FOLDER + "/correct.txt", "sprite");
+  RM.loadTextSprite(FIXTURES_FOLDER + "/correct.lbspr", "sprite");
 
   subject.setSprite("sprite");
 
@@ -226,7 +227,7 @@ auto main() -> int {
 
     assertEq("sets a direction", subject.getDirection(), Vector());
     assertEq("sets a speed", subject.getSpeed(), 0.0);
-    assertEq("sets a solidness", subject.getSolidness(), HARD);
+    assertEq("sets a solidness", subject.getSolidness(), Solidness::HARD);
     assert("sets a bounding box", subject.getBox() == Box(Vector(), 1, 1));
 
     assert("sets an animation", subject.getAnimation() == Animation());
@@ -249,7 +250,7 @@ auto main() -> int {
     subject.setAnimation(animation);
     assert("updates animation", subject.getAnimation() == animation);
 
-    RM.loadTextSprite(FIXTURES_FOLDER + "/correct.txt", "sprite");
+    RM.loadTextSprite(FIXTURES_FOLDER + "/correct.lbspr", "sprite");
     assertOk("sets valid sprite", subject.setSprite("sprite"));
     assertFail("does not set invalid sprite", subject.setSprite("invalid"));
     RM.unloadSprite("sprite");

@@ -1,12 +1,13 @@
 #include "SpriteParser.h"
 
-#include <fstream>
+#include <istream>
+#include <sstream>
 #include <string>
 #include <vector>
 
 #include "./PNG.cpp"
 #include "Colors.h"
-#include "Frame.h"
+#include "Keyframe.h"
 #include "Sprite.h"
 #include "latebit/utils/Logger.h"
 #include "latebit/utils/Parser.h"
@@ -14,25 +15,25 @@
 using namespace std;
 
 namespace lb {
-auto SpriteParser::parseImageSprite(string filename, string label, int frames,
-                                    int slowdown) -> Sprite {
+auto SpriteParser::fromPNGFile(string filename, string label, int frameCount,
+                               int duration) -> Sprite {
   auto decoder = PNGDecoder(filename);
 
   if (!decoder.canOpenFile()) {
-    Log.error("SpriteParser::parseImageSprite(): Could not open file %s",
+    Log.error("SpriteParser::fromPNGFile(): Could not open file %s",
               filename.c_str());
     return {};
   }
 
   if (!decoder.isPNGFile()) {
-    Log.error("SpriteParser::parseImageSprite(): %s is not a PNG file",
+    Log.error("SpriteParser::fromPNGFile(): %s is not a PNG file",
               filename.c_str());
     return {};
   }
 
   if (!decoder.canAllocateMemory()) {
     Log.error(
-      "SpriteParser::parseImageSprite(): Could load %s. Unable to allocate "
+      "SpriteParser::fromPNGFile(): Could load %s. Unable to allocate "
       "memory",
       filename.c_str());
     return {};
@@ -40,7 +41,7 @@ auto SpriteParser::parseImageSprite(string filename, string label, int frames,
 
   if (decoder.decode() != 0) {
     Log.error(
-      "SpriteParser::parseImageSprite(): Could not decode %s. Invalid PNG "
+      "SpriteParser::fromPNGFile(): Could not decode %s. Invalid PNG "
       "structure",
       filename.c_str());
     return {};
@@ -48,36 +49,38 @@ auto SpriteParser::parseImageSprite(string filename, string label, int frames,
 
   if (!decoder.is16ColorsPNG()) {
     Log.error(
-      "SpriteParser::parseImageSprite(): Image is not palette-based. Only 16 "
+      "SpriteParser::fromPNGFile(): Image is not palette-based. Only 16 "
       "colors PNGs are supported");
     return {};
   }
 
   if (decoder.readImage() != 0) {
-    Log.error(
-      "SpriteParser::parseImageSprite(): Could not read image data from %s",
-      filename.c_str());
+    Log.error("SpriteParser::fromPNGFile(): Could not read image data from %s",
+              filename.c_str());
     return {};
   }
 
   int width = decoder.getWidth();
   int height = decoder.getHeight();
 
-  if (width % frames != 0) {
+  if (width % frameCount != 0) {
     Log.error(
-      "SpriteParser::parseImageSprite(): Image width %d cannot be divided in "
+      "SpriteParser::fromPNGFile(): Image width %d cannot be divided in "
       "%d equal frames",
-      width, frames);
+      width, frameCount);
     return {};
   }
 
+  // Set the label of the sprite
+  void setLabel(string label);
   // We assume the sprite is horizontal
-  int spriteWidth = width / frames;
+  int spriteWidth = width / frameCount;
 
-  Sprite sprite(label, spriteWidth, height, slowdown, frames);
+  auto frames = vector<Keyframe>();
+  frames.reserve(frameCount);
 
-  for (int i = 0; i < frames; i++) {
-    vector<Color> content;
+  for (int i = 0; i < frameCount; i++) {
+    vector<Color::Color> content;
     content.reserve(spriteWidth * height);
 
     for (int y = 0; y < height; y++) {
@@ -86,58 +89,141 @@ auto SpriteParser::parseImageSprite(string filename, string label, int frames,
       }
     }
 
-    sprite.addFrame(Frame(spriteWidth, height, content));
+    frames.push_back(Keyframe(spriteWidth, height, content));
   }
+
+  Sprite sprite(label, spriteWidth, height, duration, frames);
 
   return sprite;
 }
 
-auto SpriteParser::parseTextSprite(string filename, string label) -> Sprite {
+auto SpriteParser::fromTextFile(string filename, string label) -> Sprite {
   ifstream file(filename);
 
   if (!file.is_open()) {
-    Log.error("SpriteParser::parseTextSprite(): Could not open file %s",
+    Log.error("SpriteParser::fromTextFile(): Could not open file %s",
               filename.c_str());
     return {};
   }
 
+  return fromStream(&file, label);
+}
+
+auto SpriteParser::fromString(string str, string label) -> Sprite {
+  istringstream stream(str);
+
+  if (!stream.good()) {
+    Log.error("SpriteParser::fromString(): Could not open string");
+    return {};
+  }
+
+  return fromStream(&stream, label);
+}
+
+auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
   // Order of these lines matters! Do not change!
-  uint8_t frames = stoi(getLine(&file));
-  uint8_t width = stoi(getLine(&file));
-  uint8_t height = stoi(getLine(&file));
-  uint8_t slowdown = stoi(getLine(&file));
-
-  Sprite sprite(label, width, height, slowdown, frames);
-
-  for (int i = 0; i < frames; i++) {
-    if (!file.good()) {
+  string version = getLine(stream);
+  if (version != "#v0.1#") {
+    if (version.at(0) == '#') {
       Log.error(
-        "SpriteParser::parseTextSprite(): Unexpected end of file at frame %d",
-        i);
+        "SpriteParser::fromStream(): Invalid header in %s. Unsupported version "
+        "%s",
+        label.c_str(), version.c_str());
+      return {};
+    } else {
+      Log.error(
+        "SpriteParser::fromStream(): Missing version header in %s. Expected "
+        "#v0.1#, got %s",
+        label.c_str(), version.c_str());
+    }
+    return {};
+  }
+
+  int frameCount = getNextNumber(stream);
+  if (frameCount < 1 || frameCount > 64) {
+    Log.error("SpriteParser::fromStream(): Invalid frame count in %s. %s",
+              label.c_str(),
+              makeRangeValidationMessage(frameCount, 64).c_str());
+    return {};
+  }
+
+  int width = getNextNumber(stream);
+  if (width < 1 || width > 64) {
+    Log.error("SpriteParser::fromStream(): Invalid width in %s. %s",
+              label.c_str(), makeRangeValidationMessage(width, 64).c_str());
+    return {};
+  }
+
+  int height = getNextNumber(stream);
+  if (height < 1 || height > 64) {
+    Log.error("SpriteParser::fromStream(): Invalid height in %s. %s",
+              label.c_str(), makeRangeValidationMessage(height, 64).c_str());
+    return {};
+  }
+
+  int duration = getNextNumber(stream);
+  if (duration < 0 || duration > 255) {
+    Log.error("SpriteParser::fromStream(): Invalid frame duration in %s. %s",
+              label.c_str(), makeRangeValidationMessage(height, 255).c_str());
+    return {};
+  }
+
+  auto frames = vector<Keyframe>();
+  frames.reserve(frameCount);
+
+  for (int i = 0; i < frameCount; i++) {
+    if (!stream->good()) {
+      Log.error(
+        "SpriteParser::fromStream(): Unexpected end of file for %s at frame %d",
+        label.c_str(), i);
       return {};
     }
 
-    vector<Color> content;
+    vector<Color::Color> content;
     content.reserve(width * height);
 
     for (int j = 0; j < height; j++) {
-      auto line = getLine(&file);
-      if (line.size() != width) {
+      auto line = getNextNonCommentLine(stream);
+      if (line.size() != (uint8_t)width) {
         Log.error(
-          "SpriteParser::parseTextSprite(): Invalid line length %d for frame "
-          "%d. "
-          "Expected %d, got %d",
-          i, j, width, line.length());
+          "SpriteParser::fromStream(): Invalid line length "
+          "%d for %s for frame %d. Expected %d, got %d",
+          i, label.c_str(), j, width, line.length());
         return {};
       }
 
       for (char c : line) content.push_back(fromHex(c));
     }
 
-    sprite.addFrame(Frame(width, height, content));
+    frames.push_back(Keyframe(width, height, content));
   }
 
+  Sprite sprite(label, (uint8_t)width, (uint8_t)height, (uint8_t)duration,
+                frames);
   return sprite;
+}
+
+auto SpriteParser::toString(const Sprite &sprite) -> string {
+  ostringstream stream;
+
+  stream << "#v0.1#" << '\n';
+  stream << (int)sprite.getFrameCount() << " # keyframe count\n";
+  stream << (int)sprite.getWidth() << " # width\n";
+  stream << (int)sprite.getHeight() << " # height\n";
+  stream << (int)sprite.getDuration() << " # duration\n";
+
+  for (int i = 0; i < sprite.getFrameCount(); i++) {
+    auto frame = sprite.getFrame(i);
+    for (int y = 0; y < frame.getHeight(); y++) {
+      for (int x = 0; x < frame.getWidth(); x++) {
+        size_t index = x + y * frame.getWidth();
+        stream << toHex(frame.getContent().at(index));
+      }
+      stream << '\n';
+    }
+  }
+
+  return stream.str();
 }
 
 }  // namespace lb

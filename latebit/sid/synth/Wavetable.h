@@ -22,7 +22,7 @@ class WaveTable {
 
  public:
   // Returns the value of the waveform for the given wave type and sample.
-  static auto get(WaveType waveType, float step) -> float;
+  static auto get(WaveType::WaveType waveType, float step) -> float;
 
   // Returns the size of the wave table.
   static auto getSize() -> int;

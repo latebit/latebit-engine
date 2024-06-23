@@ -6,9 +6,13 @@
 
 using namespace sid;
 
+const Note REST = Note::makeRest();
+const Note INVALID = Note::makeInvalid();
+const Note CONTINUE = Note::makeContinue();
+
 void defaultValues() {
   Note n = Note::fromSymbol("--50F0");
-  assert("default pitch is rest", n.isRest());
+  assert("default pitch is rest", n.getType() == NoteType::REST);
 
   n = Note::fromSymbol("C-50F0");
   assertEq("default alteration is none", n.getPitch(), 60);
@@ -17,13 +21,13 @@ void defaultValues() {
   assertEq("default octave is 4", n.getPitch(), 49);
 
   n = Note::fromSymbol("C#5-F0");
-  assertEq("default wave is TRIANGLE", n.getWave(), TRIANGLE);
+  assertEq("default wave is TRIANGLE", n.getWave(), WaveType::TRIANGLE);
 
   n = Note::fromSymbol("C#51-0");
   assertEq("default volume is 8", n.getVolume(), 0.53333);
 
   n = Note::fromSymbol("C#519-");
-  assertEq("default volume is NONE", n.getEffect(), NONE);
+  assertEq("default effect is NONE", n.getEffect(), EffectType::NONE);
 }
 
 void alterations() {
@@ -57,16 +61,16 @@ void octaves() {
 
 void waves() {
   Note n = Note::fromSymbol("C#50F0");
-  assertEq("parses TRIANGLE", n.getWave(), TRIANGLE);
+  assertEq("parses TRIANGLE", n.getWave(), WaveType::TRIANGLE);
 
   n = Note::fromSymbol("C#51F0");
-  assertEq("parses SAWTOOTH", n.getWave(), SAWTOOTH);
+  assertEq("parses SAWTOOTH", n.getWave(), WaveType::SAWTOOTH);
 
   n = Note::fromSymbol("C#52F0");
-  assertEq("parses SQUARE", n.getWave(), SQUARE);
+  assertEq("parses SQUARE", n.getWave(), WaveType::SQUARE);
 
   n = Note::fromSymbol("C#53F0");
-  assertEq("parses NOISE", n.getWave(), NOISE);
+  assertEq("parses NOISE", n.getWave(), WaveType::NOISE);
 }
 
 void volume() {
@@ -82,61 +86,66 @@ void volume() {
 
 void effects() {
   Note n = Note::fromSymbol("C#51F0");
-  assertEq("parses effect NONE", n.getEffect(), NONE);
+  assertEq("parses effect NONE", n.getEffect(), EffectType::NONE);
   n = Note::fromSymbol("C#51F1");
-  assertEq("parses effect DROP", n.getEffect(), DROP);
+  assertEq("parses effect DROP", n.getEffect(), EffectType::DROP);
   n = Note::fromSymbol("C#51F2");
-  assertEq("parses effect SLIDE", n.getEffect(), SLIDE);
+  assertEq("parses effect SLIDE", n.getEffect(), EffectType::SLIDE);
   n = Note::fromSymbol("C#51F3");
-  assertEq("parses effect FADEIN", n.getEffect(), FADEIN);
+  assertEq("parses effect FADEIN", n.getEffect(), EffectType::FADEIN);
   n = Note::fromSymbol("C#51F4");
-  assertEq("parses effect FADEOUT", n.getEffect(), FADEOUT);
+  assertEq("parses effect FADEOUT", n.getEffect(), EffectType::FADEOUT);
 }
 
 void invalid() {
   Note n = Note::fromSymbol("");
-  assert("empty string yields invalid", n.isInvalid());
+  assert("empty string yields invalid", n.getType() == NoteType::INVALID);
 
   n = Note::fromSymbol("C#51F");
-  assert("incomplete string yields invalid", n.isInvalid());
+  assert("incomplete string yields invalid", n.getType() == NoteType::INVALID);
 
   n = Note::fromSymbol("C#51F5");
-  assert("invalid effect yields invalid", n.isInvalid());
+  assert("invalid effect yields invalid", n.getType() == NoteType::INVALID);
 
   n = Note::fromSymbol("C#51E5");
-  assert("invalid volume yields invalid", n.isInvalid());
+  assert("invalid volume yields invalid", n.getType() == NoteType::INVALID);
 
   n = Note::fromSymbol("C#51D5");
-  assert("invalid wave yields invalid", n.isInvalid());
+  assert("invalid wave yields invalid", n.getType() == NoteType::INVALID);
 
   n = Note::fromSymbol("C#51C5");
-  assert("invalid pitch yields invalid", n.isInvalid());
+  assert("invalid pitch yields invalid", n.getType() == NoteType::INVALID);
 
   n = Note::fromSymbol("C#51B5");
-  assert("invalid alteration yields invalid", n.isInvalid());
+  assert("invalid alteration yields invalid", n.getType() == NoteType::INVALID);
 }
 
-void notes() {
+void equals() {
   Note n = Note::fromSymbol("C-4---");
   Note m = Note::fromSymbol("C-4---");
   Note r = Note::makeRest();
-  Note s = Note::makeRest();
   Note i = Note::makeInvalid();
-  Note j = Note::makeInvalid();
+  Note c = Note::makeContinue();
 
-  assert("deep compares different notes", n.isEqual(m));
+  assert("deep compares different notes", n == m);
+  assert("detects rest", r == Note::makeRest());
+  assert("detects invalid", i == Note::makeInvalid());
+  assert("detects continue", c == Note::makeContinue());
+  assert("rest is not invalid", r != i);
+  assert("rest is not standard", r != n);
+  assert("rest is not continue", r != c);
+  assert("invalid is not standard", i != n);
+  assert("invalid is not continue", i != c);
+  assert("continue is not standard", c != n);
 
-  assert("detects rest", r.isRest());
-  assert("does not detect rest (invalid)", !i.isRest());
-  assert("does not detect rest (note)", !n.isRest());
-
-  assert("detects invalid", i.isInvalid());
-  assert("does not detect invalid (invalid)", !r.isInvalid());
-  assert("does not detect invalid (note)", !n.isInvalid());
+  assert("has correct type (standard)", n.getType() == NoteType::STANDARD);
+  assert("has correct type (rest)", r.getType() == NoteType::REST);
+  assert("has correct type (invalid)", i.getType() == NoteType::INVALID);
+  assert("has correct type (continue)", c.getType() == NoteType::CONTINUE);
 }
 
 auto main() -> int {
-  test("notes", notes);
+  test("==", equals);
 
   Note n = Note::fromSymbol("C#51F1");
   assertEq("correct pitch", n.getPitch(), 61);

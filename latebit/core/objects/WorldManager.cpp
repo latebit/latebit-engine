@@ -136,7 +136,8 @@ auto WorldManager::moveObject(Object* o, Vector where) -> int {
     current->eventHandler(&event);
 
     // If hitting a hard object, don't move
-    if (o->getSolidness() == HARD && current->getSolidness() == HARD) {
+    if (o->getSolidness() == Solidness::HARD &&
+        current->getSolidness() == Solidness::HARD) {
       shouldMove = false;
       break;
     }

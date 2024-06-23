@@ -63,29 +63,31 @@ void Oscillator::setPitch(int note) {
 void Oscillator::setVolume(float volume) {
   this->volume = clamp(volume, 0.0, 1.0);
 }
-void Oscillator::setWave(WaveType wave) { this->waveType = wave; }
-void Oscillator::setEffect(EffectType effect) {
+void Oscillator::setWave(WaveType::WaveType wave) { this->waveType = wave; }
+void Oscillator::setEffect(EffectType::EffectType effect) {
   switch (effect) {
-    case DROP:
+    case EffectType::DROP:
       this->effect = DROP_EFFECT;
       return;
-    case SLIDE:
+    case EffectType::SLIDE:
       this->effect = SLIDE_EFFECT;
       return;
-    case FADEIN:
+    case EffectType::FADEIN:
       this->effect = FADEIN_EFFECT;
       return;
-    case FADEOUT:
+    case EffectType::FADEOUT:
       this->effect = FADEOUT_EFFECT;
       return;
     default:
-    case NONE:
+    case EffectType::NONE:
       this->effect = NONE_EFFECT;
       return;
   }
 }
-auto Oscillator::getWaveType() -> WaveType { return this->waveType; }
-auto Oscillator::getEffectType() -> EffectType { return this->effect.type; }
+auto Oscillator::getWaveType() -> WaveType::WaveType { return this->waveType; }
+auto Oscillator::getEffectType() -> EffectType::EffectType {
+  return this->effect.type;
+}
 auto Oscillator::getVolume() -> float { return this->volume; }
 auto Oscillator::getCurrentStep() -> float { return this->currentStep; }
 auto Oscillator::getStepSize() -> float { return this->stepSize; }
@@ -93,7 +95,7 @@ auto Oscillator::reset() -> void {
   this->currentStep = 0;
   this->effect = NONE_EFFECT;
   this->volume = 0.5;
-  this->waveType = TRIANGLE;
+  this->waveType = WaveType::TRIANGLE;
 }
 
 }  // namespace sid

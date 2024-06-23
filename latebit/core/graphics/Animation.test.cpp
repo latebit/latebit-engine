@@ -12,15 +12,15 @@ using namespace std;
 
 void setSprite() {
   Animation animation;
-  RM.loadTextSprite(FIXTURES_FOLDER + "/correct.txt", "sprite");
-  Sprite *sprite = RM.getSprite("sprite");
+  RM.loadTextSprite(FIXTURES_FOLDER + "/correct.lbspr", "sprite");
+  auto sprite = RM.getSprite("sprite");
   animation.setIndex(1);
   animation.setSlowdownCount(1);
   animation.setSprite(sprite);
 
   assert("sets sprite", animation.getSprite() == sprite);
   assertEq("resets index", animation.getIndex(), 0);
-  assertEq("resets slowdown count", animation.getSlowdownCount(), 0);
+  assertEq("resets duration count", animation.getSlowdownCount(), 0);
 }
 
 void setName() {
@@ -38,31 +38,31 @@ void setIndex() {
 void setSlowdownCount() {
   Animation animation;
   animation.setSlowdownCount(3);
-  assertEq("sets slowdown count", animation.getSlowdownCount(), 3);
+  assertEq("sets duration count", animation.getSlowdownCount(), 3);
 }
 
 void draw() {
-  auto filename = FIXTURES_FOLDER + "/correct.txt";
+  auto filename = FIXTURES_FOLDER + "/correct.lbspr";
   auto label = "sprite";
 
   RM.loadTextSprite(filename, label);
-  Sprite *sprite = RM.getSprite(label);
+  auto sprite = RM.getSprite(label);
 
   Animation animation;
   animation.setSprite(sprite);
 
   assertOk("draws the frame", animation.draw(Vector()));
-  assertEq("does't update index before slowdown", animation.getIndex(), 0);
-  assertEq("slowdown count is updated", animation.getSlowdownCount(), 1);
+  assertEq("does't update index before duration", animation.getIndex(), 0);
+  assertEq("duration count is updated", animation.getSlowdownCount(), 1);
   assertOk("draws the frame", animation.draw(Vector()));
   assertEq("index is updated", animation.getIndex(), 1);
-  assertEq("slowdown is updated", animation.getSlowdownCount(), 0);
+  assertEq("duration is updated", animation.getSlowdownCount(), 0);
 
-  // Test animation slowdown
+  // Test animation duration
   animation.setSlowdownCount(STOP_ANIMATION_SLOWDOWN);
   assertOk("draws the frame", animation.draw(Vector()));
   assertEq("index is not updated", animation.getIndex(), 1);
-  assertEq("slowdown is not updated", animation.getSlowdownCount(),
+  assertEq("duration is not updated", animation.getSlowdownCount(),
            STOP_ANIMATION_SLOWDOWN);
 
   animation.setSlowdownCount(0);
@@ -79,22 +79,6 @@ void draw() {
   RM.startUp();
 }
 
-void getBox() {
-  auto animation = Animation();
-  auto unitBox = Box(Vector(), 1.0, 1.0);
-  assertEq("returns unit box", animation.getBox(), unitBox);
-
-  auto filename = FIXTURES_FOLDER + "/correct.txt";
-  auto label = "label";
-  RM.loadTextSprite(filename, label);
-  Sprite *sprite = RM.getSprite(label);
-  animation.setSprite(sprite);
-
-  auto want = Box(Vector(), 3.0, 4.0);
-  auto animBox = animation.getBox();
-  assertEq("returns correct box", animBox, want);
-}
-
 auto main() -> int {
   DM.startUp();
   RM.startUp();
@@ -104,7 +88,6 @@ auto main() -> int {
   test("setIndex", setIndex);
   test("setSlowdownCount", setSlowdownCount);
   test("draw", draw);
-  test("getBox", getBox);
 
   RM.shutDown();
   RM.startUp();

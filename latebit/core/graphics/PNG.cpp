@@ -96,17 +96,17 @@ class PNGDecoder {
   }
 
   // Returns the color of the cell at (x, y) position
-  auto getCellColor(int x, int y) -> Color {
-    if (y >= height) return UNDEFINED_COLOR;
-    if (x >= width) return UNDEFINED_COLOR;
+  auto getCellColor(int x, int y) -> Color::Color {
+    if (y >= height) return Color::UNDEFINED_COLOR;
+    if (x >= width) return Color::UNDEFINED_COLOR;
 
     auto index = image[y][x];
 
     if (index < transparentEntriesCount && transparentEntries[index] == 0) {
-      return UNDEFINED_COLOR;
+      return Color::UNDEFINED_COLOR;
     }
 
-    return (Color)index;
+    return (Color::Color)index;
   }
 
   // Returns the width of the image

@@ -8,7 +8,7 @@
 #include "test/lib/test.h"
 
 auto main() -> int {
-  Log.setDestination(lb::STDOUT);
+  Log.setDestination(lb::LogDestination::STDOUT);
   DM.startUp();
 
   test("initialization", []() {

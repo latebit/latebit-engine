@@ -10,7 +10,7 @@
 
 #include "Colors.h"
 #include "Font.h"
-#include "Frame.h"
+#include "Keyframe.h"
 #include "latebit/core/configuration/Configuration.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/objects/WorldManager.h"
@@ -85,7 +85,7 @@ auto DisplayManager::getRendererFlags() const -> int {
            : SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 }
 
-auto DisplayManager::drawFrame(Position position, const Frame* frame,
+auto DisplayManager::drawFrame(Position position, const Keyframe* frame,
                                int scaling) const -> int {
   if (this->window == nullptr) {
     Log.error("DisplayManager::drawFrame(): Window is null");
@@ -154,8 +154,8 @@ auto DisplayManager::drawFrame(Position position, const Frame* frame,
 }
 
 auto DisplayManager::drawRectangle(Position position, int width, int height,
-                                   Color borderColor,
-                                   Color fillColor) const -> int {
+                                   Color::Color borderColor,
+                                   Color::Color fillColor) const -> int {
   if (this->window == nullptr) return -1;
 
   auto viewPosition = WorldManager::worldToView(position);
@@ -164,7 +164,7 @@ auto DisplayManager::drawRectangle(Position position, int width, int height,
   SDL_Rect rectangle = {(int)pixelPosition.getX(), (int)pixelPosition.getY(),
                         width * CELL_SIZE, height * CELL_SIZE};
 
-  if (fillColor != UNDEFINED_COLOR) {
+  if (fillColor != Color::UNDEFINED_COLOR) {
     auto fill = toSDLColor(fillColor);
     SDL_SetRenderDrawColor(this->renderer, fill.r, fill.g, fill.b, fill.a);
     SDL_RenderFillRect(this->renderer, &rectangle);
@@ -179,13 +179,15 @@ auto DisplayManager::drawRectangle(Position position, int width, int height,
 }
 
 auto DisplayManager::drawRectangle(Position position, int width, int height,
-                                   Color borderColor) const -> int {
-  return drawRectangle(position, width, height, borderColor, UNDEFINED_COLOR);
+                                   Color::Color borderColor) const -> int {
+  return drawRectangle(position, width, height, borderColor,
+                       Color::UNDEFINED_COLOR);
 }
 
 auto DisplayManager::drawString(Position position, string string,
-                                TextAlignment alignment, Color color,
-                                TextSize size, Font font) const -> int {
+                                TextAlignment::TextAlignment alignment,
+                                Color::Color color, TextSize::TextSize size,
+                                Font font) const -> int {
   if (this->window == nullptr) return -1;
 
   Position viewPosition = WorldManager::worldToView(position);
@@ -201,26 +203,27 @@ auto DisplayManager::drawString(Position position, string string,
     auto glyph = font.getGlyph(string[i]);
 
     // Populate the content vector with the color of the glyph
-    auto content = vector<Color>();
+    auto content = vector<Color::Color>();
     for (int y = gHeight - 1; y >= 0; y--) {
       for (int x = gWidth - 1; x >= 0; x--) {
-        content.push_back(glyph[y * gWidth + x] ? color : UNDEFINED_COLOR);
+        content.push_back(glyph[y * gWidth + x] ? color
+                                                : Color::UNDEFINED_COLOR);
       }
     }
 
-    auto frame = Frame(gWidth, gHeight, content);
+    auto frame = Keyframe(gWidth, gHeight, content);
     auto position =
       viewPosition +
       Vector(gWidth * i * size + font.getHorizontalSpacing() * i, 0);
 
     switch (alignment) {
-      case TEXT_ALIGN_CENTER:
+      case TextAlignment::CENTER:
         position.setX(position.getX() - lineWidth / 2);
         break;
-      case TEXT_ALIGN_RIGHT:
+      case TextAlignment::RIGHT:
         position.setX(position.getX() - lineWidth);
         break;
-      case TEXT_ALIGN_LEFT:
+      case TextAlignment::LEFT:
         break;
     }
 
@@ -231,7 +234,7 @@ auto DisplayManager::drawString(Position position, string string,
   return 0;
 }
 
-auto DisplayManager::measureString(string string, TextSize size,
+auto DisplayManager::measureString(string string, TextSize::TextSize size,
                                    Font font) const -> Box {
   int len = string.size();
   int gWidth = font.getGlyphWidth();
@@ -244,7 +247,7 @@ auto DisplayManager::measureString(string string, TextSize size,
   return {cellBounds.getX(), cellBounds.getY()};
 }
 
-void DisplayManager::setBackground(Color color) {
+void DisplayManager::setBackground(Color::Color color) {
   this->backgroundColor = color;
 }
 

@@ -26,32 +26,27 @@ class Sound {
   Sound(Sound const &) = delete;
   void operator=(Sound const &) = delete;
 
-  Sound();
-  ~Sound();
-
-  // Load sound effect from a file. Return 0 if ok, else -1.
-  auto loadSound(string filename) -> int;
-
-  // Set label associated with the sound. Used to retrieve the resource.
-  auto setLabel(string l) -> void;
+  Sound(string label = "", unique_ptr<Tune> sound = nullptr)
+    : sound(std::move(sound)), label(label){};
+  ~Sound() = default;
 
   // Get label associated with the sound. Used to retrieve the resource.
   [[nodiscard]] auto getLabel() const -> string;
 
   // Play sound.
-  void play(bool loop = false);
+  void play(bool loop = false) const;
 
   // Stop sound.
-  void stop();
+  void stop() const;
 
   // Pause sound. It can be resumed with play().
-  void pause();
+  void pause() const;
 
  private:
   // Pointer to the underlying Tune resource.
-  unique_ptr<Tune> sound = nullptr;
+  const unique_ptr<Tune> sound = nullptr;
 
   // Label associated with the sound. Used to retrieve the resource.
-  string label = "";
+  const string label = "";
 };
 }  // namespace lb

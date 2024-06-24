@@ -5,9 +5,11 @@
 using namespace lb;
 
 auto main() -> int {
-  Event subject;
-
-  subject.setType("type");
+  Event subject("type");
   assertEq("updates type", subject.getType(), "type");
+
+  Event undef;
+  assertEq("updates type", undef.getType(), UNDEFINED_EVENT);
+
   return report();
 }

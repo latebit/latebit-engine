@@ -9,7 +9,7 @@
 #include "latebit/core/ResourceManager.h"
 #include "latebit/core/events/Event.h"
 #include "latebit/core/events/EventCollision.h"
-#include "latebit/core/events/EventKeyboard.h"
+#include "latebit/core/events/EventInput.h"
 #include "latebit/core/events/EventOut.h"
 #include "latebit/core/events/EventStep.h"
 #include "latebit/core/graphics/Animation.h"
@@ -107,8 +107,7 @@ void eventSubscription() {
   assertOk("subscribes to Collision", obj.subscribe(COLLISION_EVENT));
   assertOk("subscribes to Out", obj.subscribe(OUT_EVENT));
   assertOk("subscribes to Step", obj.subscribe(STEP_EVENT));
-  assertOk("subscribes to Keyboard", obj.subscribe(KEYBOARD_EVENT));
-  assertOk("subscribes to Mouse", obj.subscribe(MSE_EVENT));
+  assertOk("subscribes to Input", obj.subscribe(INPUT_EVENT));
   assertOk("subscribes to custom", obj.subscribe("custom"));
 
   EventCollision collision;
@@ -125,18 +124,12 @@ void eventSubscription() {
   assertEq("responds to Step",
            Object_eventSubscription_test_emittedCount[STEP_EVENT], 1);
 
-  EventKeyboard keyboard;
-  IM.onEvent(&keyboard);
+  EventInput input;
+  IM.onEvent(&input);
   assertEq("responds to Keyboard",
-           Object_eventSubscription_test_emittedCount[KEYBOARD_EVENT], 1);
+           Object_eventSubscription_test_emittedCount[INPUT_EVENT], 1);
 
-  EventMouse mouse;
-  IM.onEvent(&mouse);
-  assertEq("responds to Mouse",
-           Object_eventSubscription_test_emittedCount[MSE_EVENT], 1);
-
-  Event customEvent;
-  customEvent.setType("custom");
+  Event customEvent("custom");
   WM.onEvent(&customEvent);
   assertEq("responds to custom event",
            Object_eventSubscription_test_emittedCount["custom"], 1);
@@ -144,8 +137,7 @@ void eventSubscription() {
   assertOk("unsubscribes to Collision", obj.unsubscribe(COLLISION_EVENT));
   assertOk("unsubscribes to Out", obj.unsubscribe(OUT_EVENT));
   assertOk("unsubscribes to Step", obj.unsubscribe(STEP_EVENT));
-  assertOk("unsubscribes to Keyboard", obj.unsubscribe(KEYBOARD_EVENT));
-  assertOk("unsubscribes to Mouse", obj.unsubscribe(MSE_EVENT));
+  assertOk("unsubscribes to Input", obj.unsubscribe(INPUT_EVENT));
   assertOk("unsubscribes to custom", obj.unsubscribe("custom"));
 
   WM.onEvent(&collision);
@@ -160,13 +152,9 @@ void eventSubscription() {
   assertEq("does not respond to Step",
            Object_eventSubscription_test_emittedCount[STEP_EVENT], 1);
 
-  IM.onEvent(&keyboard);
+  IM.onEvent(&input);
   assertEq("does not respond to Keyboard",
-           Object_eventSubscription_test_emittedCount[KEYBOARD_EVENT], 1);
-
-  IM.onEvent(&mouse);
-  assertEq("does not respond to Mouse",
-           Object_eventSubscription_test_emittedCount[MSE_EVENT], 1);
+           Object_eventSubscription_test_emittedCount[INPUT_EVENT], 1);
 
   WM.onEvent(&customEvent);
   assertEq("does not respond to custom event",

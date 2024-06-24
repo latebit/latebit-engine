@@ -95,14 +95,12 @@ void GameManager::run() {
   long int loopTime = 0;
   long int steps = 0;
 
-  EventStep step(0);
-
   while (!gameOver) {
     clock->delta();
 
     // Send a step event to all subscribers
-    step.setStepCount(++steps);
-    onEvent(&step);
+    const auto evt = EventStep(steps++);
+    onEvent(&evt);
 
     IM.getInput();
 

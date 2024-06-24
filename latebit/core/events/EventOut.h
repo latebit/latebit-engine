@@ -7,7 +7,7 @@ const std::string OUT_EVENT = "lb::out";
 class EventOut : public Event {
  public:
   // Creates an event signaling an object has gone out of bounds
-  EventOut();
+  EventOut() : Event(OUT_EVENT){};
 };
 
 }  // namespace lb

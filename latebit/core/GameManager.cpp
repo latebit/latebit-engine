@@ -21,8 +21,7 @@ void sleep(long int microseconds) {
   this_thread::sleep_for(chrono::microseconds(microseconds));
 }
 
-GameManager::GameManager() {
-  setType("GameManager");
+GameManager::GameManager() : Manager("GameManager") {
   Log.debug("GameManager::GameManager(): Created GameManager");
 }
 

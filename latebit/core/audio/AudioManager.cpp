@@ -49,8 +49,7 @@ void AudioManager::callback([[maybe_unused]] void *userdata, Uint8 *stream,
   }
 }
 
-AudioManager::AudioManager() {
-  setType("AudioManager");
+AudioManager::AudioManager() : Manager("Manager") {
   AudioManager::musicSequencer = make_unique<Sequencer>();
   for (auto &sequencer : AudioManager::sfxSequencers)
     sequencer = make_unique<Sequencer>();

@@ -5,8 +5,7 @@
 
 namespace lb {
 
-ResourceManager::ResourceManager() {
-  setType("ResourceManager");
+ResourceManager::ResourceManager() : Manager("ResourceManager") {
   Log.debug("ResourceManager::ResourceManager(): Created ResourceManager");
 }
 

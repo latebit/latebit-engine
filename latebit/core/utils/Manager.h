@@ -13,7 +13,7 @@ const int MAX_EVENTS = 100;
 
 class Manager {
  private:
-  string type = "Manager";
+  const string type = "Manager";
   bool started = false;
 
   // Number of events for which there is a subscription
@@ -28,13 +28,9 @@ class Manager {
   // List of subscribers. Every element matches an event in `events`
   array<ObjectList, MAX_EVENTS> subscribers = {};
 
- protected:
-  // Sets the current manager type
-  void setType(string type);
-
  public:
-  Manager();
-  virtual ~Manager();
+  Manager(const string &type) : type(type){};
+  virtual ~Manager() = default;
 
   // Returns the manager type
   [[nodiscard]] auto getType() const -> string;

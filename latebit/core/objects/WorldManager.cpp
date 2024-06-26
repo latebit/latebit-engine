@@ -21,8 +21,7 @@ auto WorldManager::viewToWorld(Vector viewPosition) -> Vector {
   return viewPosition + viewOrigin;
 }
 
-WorldManager::WorldManager() {
-  setType("WorldManager");
+WorldManager::WorldManager() : Manager("WorldManager") {
   Log.debug("WorldManager::WorldManager(): Created WorldManager");
 }
 

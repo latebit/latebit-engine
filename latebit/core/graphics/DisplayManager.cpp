@@ -21,8 +21,7 @@ namespace lb {
 
 const int CELL_SIZE = 3;
 
-DisplayManager::DisplayManager() {
-  setType("DisplayManager");
+DisplayManager::DisplayManager() : Manager("DisplayManager") {
   Log.debug("DisplayManager::DisplayManager(): Created DisplayManager");
 }
 

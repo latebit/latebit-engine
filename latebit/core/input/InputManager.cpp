@@ -18,8 +18,7 @@ auto InputManager::getInstance() -> InputManager& {
   return instance;
 }
 
-InputManager::InputManager() {
-  setType("InputManager");
+InputManager::InputManager() : Manager("InputManager") {
   Log.debug("InputManager::InputManager(): Created InputManager");
 }
 

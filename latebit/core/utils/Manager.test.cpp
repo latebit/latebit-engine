@@ -12,7 +12,7 @@ int emittedCount = 0;
 auto main() -> int {
   class TestManager : public Manager {
    public:
-    TestManager() { this->setType("TestType"); };
+    TestManager() : Manager("TestType"){};
     [[nodiscard]] auto isValid(string eventType) const -> bool override {
       return eventType == MANAGER_TEST_EVENT;
     };
@@ -20,7 +20,7 @@ auto main() -> int {
 
   class TestObject : public Object {
    public:
-    TestObject() { this->setType("TestObject"); };
+    TestObject() : Object("TestObject"){};
     auto eventHandler(const Event* e) -> int override {
       if (e->getType() == MANAGER_TEST_EVENT) {
         emittedCount++;

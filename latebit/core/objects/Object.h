@@ -69,7 +69,7 @@ class Object {
 
  public:
   Object();
-  Object(const string& type) : type(type){};
+  Object(const string& type);
 
   virtual ~Object();
 

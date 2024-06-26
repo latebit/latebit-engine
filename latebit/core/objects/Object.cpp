@@ -22,6 +22,8 @@ Object::Object() {
   WM.insertObject(this);
 }
 
+Object::Object(const string& type) : Object() { this->type = type; }
+
 Object::~Object() {
   auto count = this->eventCount;
   for (int i = 0; i < count; i++) {

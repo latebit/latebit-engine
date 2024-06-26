@@ -65,11 +65,11 @@ auto main() -> int {
 
     auto withCorrectType = Event(MANAGER_TEST_EVENT);
 
-    obj.setActive(false);
+    assertOk("makes the object inactive", obj.setActive(false));
     manager.onEvent(&withCorrectType);
     assertEq("does not trigger if object is inactive", emittedCount, 0);
 
-    obj.setActive(true);
+    assertOk("makes the object active", obj.setActive(true));
     manager.onEvent(&withCorrectType);
     assertEq("triggers for correct type", emittedCount, 1);
 

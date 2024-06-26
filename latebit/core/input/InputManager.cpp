@@ -81,9 +81,9 @@ auto InputManager::fromSDLKeyCode(SDL_Keycode key) const -> InputKey::InputKey {
     case SDLK_x:
       return InputKey::B;
     case SDLK_a:
-      return InputKey::C;
+      return InputKey::L;
     case SDLK_s:
-      return InputKey::D;
+      return InputKey::R;
     case SDLK_UP:
       return InputKey::UP;
     case SDLK_DOWN:

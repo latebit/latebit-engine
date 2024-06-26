@@ -40,10 +40,10 @@ class TestObject : public Object {
         return "A";
       case InputKey::B:
         return "B";
-      case InputKey::C:
-        return "C";
-      case InputKey::D:
-        return "D";
+      case InputKey::L:
+        return "L";
+      case InputKey::R:
+        return "R";
       case InputKey::START:
         return "START";
       case InputKey::OPTIONS:

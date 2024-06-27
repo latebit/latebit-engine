@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "latebit/core/GameManager.h"
 #include "latebit/core/events/EventInput.h"
 #include "latebit/core/graphics/DisplayManager.h"
@@ -11,15 +13,12 @@ class TestObject : public Object {
   string lastAction = "n/a";
 
  public:
-  TestObject() {
-    setType("TestObject");
-    subscribe(INPUT_EVENT);
-  }
+  TestObject() : Object("TestObject") { subscribe(INPUT_EVENT); }
 
   auto eventHandler(const Event *event) -> int override {
     if (event->getType() == INPUT_EVENT) {
       auto e = dynamic_cast<const EventInput *>(event);
-      lastKey = toKeyString(e->getKey());
+      lastKey = keyToChar(e->getKey());
       lastAction = toActionString(e->getAction());
     }
     return 0;
@@ -27,40 +26,44 @@ class TestObject : public Object {
 
   auto draw() -> int override {
     int result = 0;
-    result += DM.drawString(Vector(20, 20), "Last Key: " + this->lastKey,
-                            TextAlignment::LEFT, Color::RED);
-    result += DM.drawString(Vector(20, 40), "Last Action: " + this->lastAction,
-                            TextAlignment::LEFT, Color::BLUE);
+    stringstream key;
+    key << "Last key: " << this->lastKey << ".";
+    stringstream action;
+    action << "Last action: " << this->lastAction << ".";
+
+    result +=
+      DM.drawString(Vector(20, 20), key.str(), TextAlignment::LEFT, Color::RED);
+    result += DM.drawString(Vector(20, 40), action.str(), TextAlignment::LEFT,
+                            Color::BLUE);
     return result;
   }
 
-  string toKeyString(InputKey::InputKey k) {
+  char keyToChar(InputKey::InputKey k) {
     switch (k) {
       case InputKey::A:
-        return "A";
+        return InputGlyph::A;
       case InputKey::B:
-        return "B";
+        return InputGlyph::B;
       case InputKey::L:
-        return "L";
+        return InputGlyph::L;
       case InputKey::R:
-        return "R";
+        return InputGlyph::R;
       case InputKey::START:
-        return "START";
+        return InputGlyph::START;
       case InputKey::OPTIONS:
-        return "OPTIONS";
+        return InputGlyph::OPTIONS;
       case InputKey::UP:
-        return "UP";
+        return InputGlyph::UP;
       case InputKey::DOWN:
-        return "DOWN";
+        return InputGlyph::DOWN;
       case InputKey::LEFT:
-        return "LEFT";
+        return InputGlyph::LEFT;
       case InputKey::RIGHT:
-        return "RIGHT";
+        return InputGlyph::RIGHT;
       case InputKey::UNDEFINED_KEY:
-        return "UNDEFINED";
-      default:
-        return "Wrong Key";
+        return 0;
     }
+    return 0;
   }
 
   string toActionString(InputAction::InputAction a) {

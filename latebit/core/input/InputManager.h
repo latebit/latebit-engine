@@ -25,12 +25,12 @@ enum InputKey {
   B,
   L,
   R,
+  START,
+  OPTIONS,
   UP,
   DOWN,
   LEFT,
   RIGHT,
-  START,
-  OPTIONS,
 };
 }
 

@@ -22,17 +22,116 @@ auto Font::getHorizontalSpacing() const -> int {
   return this->horizontalSpacing;
 }
 
+bool isInputGlyph(int code) { return code > 13 && code < 25; }
+bool isASCIICharacter(int code) { return code > 31 && code < 127; }
+
 auto Font::getGlyph(char c) const -> const Glyph& {
   int code = static_cast<int>(c);
 
-  if (code < 32 || code > 126) {
-    code = 32;
+  if (isInputGlyph(code)) {
+    // Glyphs are mapped to ASCII control characters starting at 14
+    return this->glyphs[code - 14];
+  } else if (isASCIICharacter(code)) {
+    // ASCII characters we map start at code 32. Our representation places
+    // them at position 10 onwards. 10 is the number of input glyphs we map
+    return this->glyphs[code - 22];
   }
 
-  return this->glyphs[code - 32];
+  // Return space when the character cannot be rendered
+  return this->glyphs[10];
 }
 
 const GlyphList DEFAULT_FONT_GLYPHS = {
+  // Input: A
+  Glyph{"11111"
+        "10001"
+        "10101"
+        "10001"
+        "10101"
+        "10101"
+        "11111"
+        "00000"},
+  // Input: B
+  Glyph{"11111"
+        "10011"
+        "10101"
+        "10011"
+        "10101"
+        "10001"
+        "11111"
+        "00000"},
+  // Input: L
+  Glyph{"11111"
+        "10111"
+        "10111"
+        "10111"
+        "10111"
+        "10001"
+        "11111"
+        "00000"},
+  // Input: R
+  Glyph{"11111"
+        "10011"
+        "10101"
+        "10011"
+        "10101"
+        "10101"
+        "11111"
+        "00000"},
+  // Input: Start
+  Glyph{"11111"
+        "10001"
+        "10111"
+        "10001"
+        "11101"
+        "10001"
+        "11111"
+        "00000"},
+  // Input: Select
+  Glyph{"11111"
+        "10001"
+        "10101"
+        "10101"
+        "10101"
+        "10001"
+        "11111"
+        "00000"},
+  // Input: Up
+  Glyph{"11111"
+        "11011"
+        "10101"
+        "11111"
+        "11111"
+        "11111"
+        "11111"
+        "00000"},
+  // Input: Down
+  Glyph{"11111"
+        "11111"
+        "11111"
+        "11111"
+        "10101"
+        "11011"
+        "11111"
+        "00000"},
+  // Input: Left
+  Glyph{"11111"
+        "11111"
+        "11011"
+        "10111"
+        "11011"
+        "11111"
+        "11111"
+        "00000"},
+  // Input: Right
+  Glyph{"11111"
+        "11111"
+        "11011"
+        "11101"
+        "11011"
+        "11111"
+        "11111"
+        "00000"},
   // ASCII 32: Space
   Glyph{"00000"
         "00000"

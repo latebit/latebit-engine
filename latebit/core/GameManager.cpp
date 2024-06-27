@@ -130,7 +130,6 @@ struct EmscriptenLoopArgs {
   long int* adjustTime = 0;
   long int* loopTime = 0;
   long int* steps = 0;
-  EventStep* step = 0;
   Clock* clock = 0;
   int frameTime = 0;
   bool* paused = 0;
@@ -138,8 +137,9 @@ struct EmscriptenLoopArgs {
 
 void GameManager::loop(void* a) {
   EmscriptenLoopArgs* args = (EmscriptenLoopArgs*)a;
-  args->step->setStepCount(++(*args->steps));
-  GM.onEvent(args->step);
+  // Send a step event to all subscribers
+  const auto evt = EventStep(++(*args->steps));
+  GM.onEvent(&evt);
 
   IM.getInput();
   if (!*args->paused) {
@@ -155,7 +155,7 @@ void GameManager::run() {
   long int steps = 0;
   EventStep step(0);
 
-  EmscriptenLoopArgs args = {&adjustTime, &loopTime, &steps,       &step,
+  EmscriptenLoopArgs args = {&adjustTime, &loopTime, &steps,
                              clock,       frameTime, &this->paused};
 
   emscripten_set_main_loop_arg(loop, &args, 0, 1);

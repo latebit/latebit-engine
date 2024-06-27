@@ -103,7 +103,6 @@ jobs:
 
   wasm:
     runs-on: ubuntu-22.04
-    if: startsWith(github.ref, 'refs/tags/')
     steps:
     - uses: actions/checkout@v4
     
@@ -129,6 +128,7 @@ jobs:
       run: emmake cmake --build build -j8 -t package
 
     - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v2
       with:
         files: build/latebit-*

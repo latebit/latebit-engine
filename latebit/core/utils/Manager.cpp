@@ -5,11 +5,6 @@
 
 namespace lb {
 
-void Manager::setType(std::string type) { this->type = type; }
-
-Manager::Manager() = default;
-Manager::~Manager() = default;
-
 auto Manager::getType() const -> std::string { return this->type; }
 
 auto Manager::isStarted() const -> bool { return this->started; }

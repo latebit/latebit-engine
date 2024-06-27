@@ -4,26 +4,44 @@
 
 #include <unordered_map>
 
-#include "latebit/core/events/EventKeyboard.h"
-#include "latebit/core/events/EventMouse.h"
 #include "latebit/core/utils/Manager.h"
 
 #define IM lb::InputManager::getInstance()
 
 namespace lb {
+
+namespace InputAction {
+enum InputAction {
+  UNDEFINED_ACTION = -1,
+  PRESSED,
+  RELEASED,
+};
+}
+
+namespace InputKey {
+enum InputKey {
+  UNDEFINED_KEY = -1,
+  A,
+  B,
+  L,
+  R,
+  START,
+  OPTIONS,
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT,
+};
+}
+
 class InputManager : public Manager {
  private:
   // Singleton
   InputManager();
 
-  // Map for quick lookup of keyboard events.
-  std::unordered_map<SDL_Keycode, Keyboard::Key> keyboardEvent;
-
-  // Converts SDL key code to local key code.
-  [[nodiscard]] auto fromSDLKeyCode(SDL_Keycode key) const -> Keyboard::Key;
-
-  // Converts SDL mouse buttons to local mouse button.
-  [[nodiscard]] auto fromSDLMouseButton(char btn) const -> Mouse::Button;
+  // Converts SDL Keycode to InputKey.
+  [[nodiscard]] auto fromSDLKeyCode(SDL_Keycode key) const
+    -> InputKey::InputKey;
 
  public:
   static auto getInstance() -> InputManager &;
@@ -35,7 +53,8 @@ class InputManager : public Manager {
   // Returns true if event is can be handled by this manager
   [[nodiscard]] auto isValid(string eventType) const -> bool override;
 
-  // Get input from the keyboard and mouse.
+  // Polls for input from connected devices and dispatches EventInput
+  // accordingly
   void getInput() const;
 };
 }  // namespace lb

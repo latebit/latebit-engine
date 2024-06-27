@@ -69,6 +69,7 @@ class Object {
 
  public:
   Object();
+  Object(const string& type);
 
   virtual ~Object();
 
@@ -147,7 +148,7 @@ class Object {
   auto unsubscribe(string eventType) -> int;
 
   // Handle event (default is to ignore everything).
-  virtual auto eventHandler(const Event *e) -> int;
+  virtual auto eventHandler(const Event* e) -> int;
   // Draw single sprite frame and bounding box (if debug).
   virtual auto draw() -> int;
 

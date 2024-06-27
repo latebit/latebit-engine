@@ -9,15 +9,19 @@ auto main() -> int {
     Font font = DEFAULT_FONT;
 
     const Glyph& AGlyph = font.getGlyph('A');
-    assert("glyph is retrieved", AGlyph == font.getGlyphs()[33]);
+    assert("glyph is retrieved", AGlyph == font.getGlyphs()[43]);
 
     const Glyph& lowGlyph = font.getGlyph(0);
     assert("returns empty glyph when out of bounds (lower)",
-           lowGlyph == font.getGlyphs()[0]);
+           lowGlyph == font.getGlyphs()[10]);
 
     const Glyph& hiGlyph = font.getGlyph(127);
     assert("returns empty glyph when out of bounds (lower)",
-           hiGlyph == font.getGlyphs()[0]);
+           hiGlyph == font.getGlyphs()[10]);
+
+    const Glyph& inputGlyph = font.getGlyph(InputGlyph::A);
+    assert("returns input glyph when called with InputGlyph",
+           inputGlyph == font.getGlyphs()[0]);
   });
 
   test("constructor", []() {

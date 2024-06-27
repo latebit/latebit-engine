@@ -2,28 +2,28 @@
 
 #include <string>
 
-#include "../../../test/lib/test.h"
 #include "latebit/core/objects/Object.h"
+#include "test/lib/test.h"
 
-const string Manager_test_evt = "TestEvent";
-const string Manager_test_wrongEvt = "TestEvent2";
+const string MANAGER_TEST_EVENT = "TestEvent";
+const string MANAGER_TEST_ANOTHER_EVENT = "TestEvent2";
 
-int Manager_test_emittedCount = 0;
+int emittedCount = 0;
 auto main() -> int {
   class TestManager : public Manager {
    public:
-    TestManager() { this->setType("TestType"); };
+    TestManager() : Manager("TestType"){};
     [[nodiscard]] auto isValid(string eventType) const -> bool override {
-      return eventType == Manager_test_evt;
+      return eventType == MANAGER_TEST_EVENT;
     };
   };
 
   class TestObject : public Object {
    public:
-    TestObject() { this->setType("TestObject"); };
+    TestObject() : Object("TestObject"){};
     auto eventHandler(const Event* e) -> int override {
-      if (e->getType() == Manager_test_evt) {
-        Manager_test_emittedCount++;
+      if (e->getType() == MANAGER_TEST_EVENT) {
+        emittedCount++;
         return 0;
       }
       return -1;
@@ -50,33 +50,33 @@ auto main() -> int {
     TestObject obj;
 
     assertOk("subscribes to TestEvent",
-             manager.subscribe(&obj, Manager_test_evt));
+             manager.subscribe(&obj, MANAGER_TEST_EVENT));
     assertFail("cannot subscribe to another event",
-               manager.subscribe(&obj, Manager_test_wrongEvt));
+               manager.subscribe(&obj, MANAGER_TEST_ANOTHER_EVENT));
 
     assertOk("unsubscribes from TestEvent",
-             manager.unsubscribe(&obj, Manager_test_evt));
+             manager.unsubscribe(&obj, MANAGER_TEST_EVENT));
 
     auto event = Event();
 
-    manager.subscribe(&obj, Manager_test_evt);
+    manager.subscribe(&obj, MANAGER_TEST_EVENT);
     manager.onEvent(&event);
-    assertEq("does not trigger for wrong type", Manager_test_emittedCount, 0);
+    assertEq("does not trigger for wrong type", emittedCount, 0);
 
-    event.setType(Manager_test_evt);
+    auto withCorrectType = Event(MANAGER_TEST_EVENT);
 
-    obj.setActive(false);
-    manager.onEvent(&event);
-    assertEq("does not trigger if object is inactive",
-             Manager_test_emittedCount, 0);
+    assertOk("makes the object inactive", obj.setActive(false));
+    manager.onEvent(&withCorrectType);
+    assertEq("does not trigger if object is inactive", emittedCount, 0);
 
-    obj.setActive(true);
-    manager.onEvent(&event);
-    assertEq("triggers for correct type", Manager_test_emittedCount, 1);
+    assertOk("makes the object active", obj.setActive(true));
+    manager.onEvent(&withCorrectType);
+    assertEq("triggers for correct type", emittedCount, 1);
 
-    assert("returns true for valid events", manager.isValid(Manager_test_evt));
+    assert("returns true for valid events",
+           manager.isValid(MANAGER_TEST_EVENT));
     assert("returns false for wrong events",
-           !manager.isValid(Manager_test_wrongEvt));
+           !manager.isValid(MANAGER_TEST_ANOTHER_EVENT));
   });
 
   return report();

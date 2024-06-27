@@ -9,14 +9,12 @@ const string UNDEFINED_EVENT = "lb::undefined";
 class Event {
  private:
   // Holds the type of the event
-  string type = UNDEFINED_EVENT;
+  const string type;
 
  public:
-  Event();
-  virtual ~Event();
+  Event(const string& type = UNDEFINED_EVENT) : type(type){};
+  virtual ~Event() = default;
 
-  // Set the type of the event
-  void setType(string t);
   // Get the type of the event
   [[nodiscard]] auto getType() const -> string;
 };

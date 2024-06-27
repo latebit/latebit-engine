@@ -10,28 +10,23 @@ const string VIEW_EVENT = "lb::view";
 class EventView : public Event {
  private:
   // The type of the ViewObject to update
-  string objectType;
+  const string objectType = "";
   // Set to true to update the value by adding the new value to the old one
-  bool delta;
+  const bool delta = false;
   // The new value to provide to the view object
-  int value;
+  const int value = 0;
 
  public:
-  EventView();
-  EventView(string objectType, int value, bool delta = false);
+  EventView() : Event(VIEW_EVENT){};
+  EventView(string objectType, int value, bool delta = false)
+    : Event(VIEW_EVENT), objectType(objectType), delta(delta), value(value){};
 
-  // Set the type of the ViewObject to update
-  void setObjectType(string type);
   // Get the type of the ViewObject to update
   [[nodiscard]] auto getObjectType() const -> string;
 
-  // Set the new value to provide to the view object
-  void setValue(int value);
   // Get the new value to provide to the view object
   [[nodiscard]] auto getValue() const -> int;
 
-  // Set to true to update the value by adding the new value to the old one
-  void setDelta(bool delta);
   // Returns true to update the value by adding the new value to the old one
   [[nodiscard]] auto getDelta() const -> bool;
 };

@@ -9,14 +9,39 @@ namespace lb {
 // A bitset representing a single 8x8 glyph
 using Glyph = bitset<64>;
 
-// A list of 96 glyphs, representing the printable ASCII characters
-using GlyphList = array<Glyph, 96>;
+// The list of glyphs composing the font.
+// Font glyph composition:
+// 1. Special Input Symbols (first 10 characters):
+//    Order: A, B, L, R, Start, Options, Up, Down, Left, Right
+//    These are mapped to rarely used control characters.
+//    Note: Do not rely on specific character codes as they may change.
+//    See InputGlyph for more information.
+//
+// 2. Standard ASCII Characters:
+//    Includes all printable ASCII (codes 32 to 126 inclusive)
+//
+// Total glyph count: 10 special + 96 ASCII = 106 glyphs
+using GlyphList = array<Glyph, 106>;
+
+namespace InputGlyph {
+// Symbols representing input buttons. They can be used to consistently
+// display inputs in the game engine. They are meant to be used in strings:
+//
+//   stringstream msg;
+//   msg << "Press " << InputGlyph::START << " to continue."
+//   DM.drawString(Vector(), msg.str(), TextAlignment::LEFT, Color::RED);
+//
+// For this reason they are mapped to ASCII control characters. The actual
+// characters used to map the glyphs are _unstable_. Only rely on the enum and
+// not on the underlying code!
+enum InputGlyph { A = 14, B, L, R, START, OPTIONS, UP, DOWN, LEFT, RIGHT };
+}  // namespace InputGlyph
 
 // A Font encompasses a list of glyphs and some metrics to print them
 class Font {
  private:
-  // The list of glyphs composing the font, they represent all the printable
-  // ASCII characters (from 32 to 126, inclusive)
+  // The list of glyphs composing the font.
+  // Check the GlyphList type for more details on the layout.
   GlyphList glyphs = {};
 
   // The width of a single glyph in cells

@@ -241,9 +241,7 @@ auto DisplayManager::measureString(string string, TextSize::TextSize size,
   float lineWidth = len * gWidth * size + len * font.getHorizontalSpacing();
   float lineHeight = gHeight * size;
 
-  auto cellBounds = pixelsToCells({lineWidth, lineHeight});
-
-  return {cellBounds.getX(), cellBounds.getY()};
+  return {lineWidth, lineHeight};
 }
 
 void DisplayManager::setBackground(Color::Color color) {

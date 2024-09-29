@@ -92,15 +92,15 @@ auto WorldManager::objectsOfType(std::string type,
 
 auto WorldManager::getCollisions(Object* o, Vector where) const -> ObjectList {
   ObjectList collisions;
-  auto solid = this->sceneGraph.getSolidObjects();
+  const auto solid = this->sceneGraph.getSolidObjects();
   auto iterator = ObjectListIterator(&solid);
-  auto box = o->getWorldBox(where);
+  const auto box = o->getWorldBox(where);
 
   for (iterator.first(); !iterator.isDone(); iterator.next()) {
-    auto current = iterator.currentObject();
+    const auto current = iterator.currentObject();
     if (current == o) continue;
 
-    auto currentBox = current->getWorldBox();
+    const auto currentBox = current->getWorldBox();
 
     if (intersects(box, currentBox)) {
       collisions.insert(current);
@@ -110,18 +110,18 @@ auto WorldManager::getCollisions(Object* o, Vector where) const -> ObjectList {
   return collisions;
 }
 
-auto WorldManager::moveObject(Object* o, Vector where) -> int {
+auto WorldManager::moveObject(Object* object, Vector where) -> int {
   // Spectral objects can just move
-  if (!o->isSolid()) {
-    moveAndCheckBounds(o, where);
+  if (!object->isSolid()) {
+    moveAndCheckBounds(object, where);
     return 0;
   }
 
-  ObjectList collisions = getCollisions(o, where);
+  ObjectList collisions = getCollisions(object, where);
 
   // In absence of collisions, just move
   if (collisions.isEmpty()) {
-    moveAndCheckBounds(o, where);
+    moveAndCheckBounds(object, where);
     return 0;
   }
 
@@ -129,21 +129,39 @@ auto WorldManager::moveObject(Object* o, Vector where) -> int {
   auto iterator = ObjectListIterator(&collisions);
 
   for (iterator.first(); !iterator.isDone(); iterator.next()) {
-    auto current = iterator.currentObject();
-    auto event = EventCollision(o, current, where);
-    o->eventHandler(&event);
-    current->eventHandler(&event);
+    auto collidingObject = iterator.currentObject();
+    auto event = EventCollision(object, collidingObject, where);
+    object->eventHandler(&event);
+    collidingObject->eventHandler(&event);
 
-    // If hitting a hard object, don't move
-    if (o->getSolidness() == Solidness::HARD &&
-        current->getSolidness() == Solidness::HARD) {
-      shouldMove = false;
-      break;
+    if (object->getSolidness() == Solidness::SOFT ||
+        collidingObject->getSolidness() == Solidness::SOFT) {
+      continue;
+    }
+
+    const auto direction = object->getDirection();
+
+    if (direction.getX() > 0 &&
+        object->getPosition().getX() < collidingObject->getPosition().getX()) {
+      where.setX(0);
+    } else if (direction.getX() < 0 &&
+               object->getPosition().getX() >
+                 collidingObject->getPosition().getX()) {
+      where.setX(0);
+    }
+
+    if (direction.getY() > 0 &&
+        object->getPosition().getY() < collidingObject->getPosition().getY()) {
+      where.setY(0);
+    } else if (direction.getY() < 0 &&
+               object->getPosition().getY() >
+                 collidingObject->getPosition().getY()) {
+      where.setY(0);
     }
   }
 
-  if (shouldMove) {
-    moveAndCheckBounds(o, where);
+  if (where == Vector()) {
+    moveAndCheckBounds(object, where);
     return 0;
   } else {
     return -1;
@@ -153,10 +171,11 @@ auto WorldManager::moveObject(Object* o, Vector where) -> int {
 }
 
 void WorldManager::moveAndCheckBounds(Object* o, Vector where) {
-  auto initial = o->getWorldBox();
+  const auto initial = o->getWorldBox();
+  // This should account for direction of movement
   o->setPosition(where);
-  auto final = o->getWorldBox();
-  auto boundary = WM.getBoundary();
+  const auto final = o->getWorldBox();
+  const auto boundary = WM.getBoundary();
 
   if (intersects(initial, boundary) && !intersects(final, boundary)) {
     auto event = EventOut();

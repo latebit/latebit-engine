@@ -5,14 +5,15 @@
 namespace lb {
 Animation::Animation() = default;
 
+// TODO: should animation own the sprite?
 void Animation::setSprite(const Sprite* s) {
   this->sprite = s;
   // In case the new sprite has a different number of frames, reset the index
-  // and duration count to not have blank frames
+  // and currentFrame count to not have blank frames
   // For exmaple, when you try to render index 4, but the new sprite has only 3
   // frames, it will render a blank frame instead of the first one)
   this->index = 0;
-  this->slowdownCount = 0;
+  this->currentFrame = 0;
 }
 auto Animation::getSprite() const -> const Sprite* { return this->sprite; }
 
@@ -22,8 +23,8 @@ auto Animation::getName() const -> std::string { return this->name; }
 void Animation::setIndex(int i) { this->index = i; }
 auto Animation::getIndex() const -> int { return this->index; }
 
-void Animation::setSlowdownCount(int c) { this->slowdownCount = c; }
-auto Animation::getSlowdownCount() const -> int { return this->slowdownCount; }
+void Animation::setCurrentFrame(int c) { this->currentFrame = c; }
+auto Animation::getCurrentFrame() const -> int { return this->currentFrame; }
 
 auto Animation::draw(Vector position) -> int {
   if (this->sprite == nullptr) return -1;
@@ -31,29 +32,28 @@ auto Animation::draw(Vector position) -> int {
   int index = getIndex();
   int result = this->sprite->draw(index, position);
 
-  int duration = getSlowdownCount();
-  if (duration == STOP_ANIMATION_SLOWDOWN) return 0;
+  if (sprite->getDuration() == NO_ANIMATION) return result;
 
   // Do not update the animation if the game is paused
   if (GM.isPaused()) return result;
 
-  duration++;
+  int currentFrame = getCurrentFrame();
+  currentFrame++;
 
-  if (duration >= this->sprite->getDuration()) {
-    duration = 0;
+  if (currentFrame >= this->sprite->getDuration()) {
+    currentFrame = 0;
     // Circularly iterate through frames
     index = (index + 1) % this->sprite->getFrameCount();
     setIndex(index);
   }
 
-  setSlowdownCount(duration);
+  setCurrentFrame(currentFrame);
   return result;
 }
 
 auto Animation::operator==(const Animation& other) const -> bool {
   return this->sprite == other.sprite && this->name == other.name &&
-         this->index == other.index &&
-         this->slowdownCount == other.slowdownCount;
+         this->index == other.index && this->currentFrame == other.currentFrame;
 }
 
 }  // namespace lb

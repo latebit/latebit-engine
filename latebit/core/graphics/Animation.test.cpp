@@ -1,12 +1,12 @@
 #include "latebit/core/graphics/Animation.h"
 
-#include "../../../test/lib/test.h"
 #include "latebit/core/GameManager.h"
 #include "latebit/core/ResourceManager.h"
 #include "latebit/core/geometry/Box.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/graphics/DisplayManager.h"
 #include "latebit/core/graphics/Sprite.h"
+#include "test/lib/test.h"
 
 using namespace std;
 
@@ -15,12 +15,12 @@ void setSprite() {
   RM.loadTextSprite(FIXTURES_FOLDER + "/correct.lbspr", "sprite");
   auto sprite = RM.getSprite("sprite");
   animation.setIndex(1);
-  animation.setSlowdownCount(1);
+  animation.setCurrentFrame(1);
   animation.setSprite(sprite);
 
   assert("sets sprite", animation.getSprite() == sprite);
   assertEq("resets index", animation.getIndex(), 0);
-  assertEq("resets duration count", animation.getSlowdownCount(), 0);
+  assertEq("resets duration count", animation.getCurrentFrame(), 0);
 }
 
 void setName() {
@@ -35,10 +35,10 @@ void setIndex() {
   assertEq("sets index", animation.getIndex(), 5);
 }
 
-void setSlowdownCount() {
+void setCurrentFrame() {
   Animation animation;
-  animation.setSlowdownCount(3);
-  assertEq("sets duration count", animation.getSlowdownCount(), 3);
+  animation.setCurrentFrame(3);
+  assertEq("sets duration count", animation.getCurrentFrame(), 3);
 }
 
 void draw() {
@@ -53,19 +53,19 @@ void draw() {
 
   assertOk("draws the frame", animation.draw(Vector()));
   assertEq("does't update index before duration", animation.getIndex(), 0);
-  assertEq("duration count is updated", animation.getSlowdownCount(), 1);
+  assertEq("duration count is updated", animation.getCurrentFrame(), 1);
   assertOk("draws the frame", animation.draw(Vector()));
   assertEq("index is updated", animation.getIndex(), 1);
-  assertEq("duration is updated", animation.getSlowdownCount(), 0);
+  assertEq("duration is updated", animation.getCurrentFrame(), 0);
 
   // Test animation duration
-  animation.setSlowdownCount(STOP_ANIMATION_SLOWDOWN);
+  animation.setCurrentFrame(STOP_ANIMATION_DURATION);
   assertOk("draws the frame", animation.draw(Vector()));
   assertEq("index is not updated", animation.getIndex(), 1);
-  assertEq("duration is not updated", animation.getSlowdownCount(),
-           STOP_ANIMATION_SLOWDOWN);
+  assertEq("duration is not updated", animation.getCurrentFrame(),
+           STOP_ANIMATION_DURATION);
 
-  animation.setSlowdownCount(0);
+  animation.setCurrentFrame(0);
   assertOk("draws the frame", animation.draw(Vector()));
   assertEq("index is updated", animation.getIndex(), 1);
   GM.pause();
@@ -86,7 +86,7 @@ auto main() -> int {
   test("setSprite", setSprite);
   test("setName", setName);
   test("setIndex", setIndex);
-  test("setSlowdownCount", setSlowdownCount);
+  test("setCurrentFrame", setCurrentFrame);
   test("draw", draw);
 
   RM.shutDown();

@@ -38,7 +38,7 @@ class ResourceManager : public Manager {
   // The PNG can have multiple frames, in which case we will assume they all are
   // on the same line and divide the image width by the number of frames
   auto loadImageSprite(string filename, string label, int frames = 1,
-                       int slowDown = STOP_ANIMATION_SLOWDOWN) -> int;
+                       int slowDown = STOP_ANIMATION_DURATION) -> int;
 
   // Frees the sprite label and associated resources
   auto unloadSprite(string label) -> int;

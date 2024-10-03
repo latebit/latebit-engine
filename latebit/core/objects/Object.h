@@ -38,11 +38,11 @@ class Object {
   // Rendering layer for this object.
   int altitude = 0;
 
-  // Where this object is moving.
-  Vector direction = Vector();
+  // Velocity vector of this object.
+  Vector velocity = Vector();
 
-  // Speed in cells per frame.
-  float speed = 0;
+  // Acceleration vector of this object.
+  Vector acceleration = Vector();
 
   // Solidness of the object
   Solidness::Solidness solidness = Solidness::HARD;
@@ -96,23 +96,19 @@ class Object {
   // Returns the rendering layer of this object.
   [[nodiscard]] auto getAltitude() const -> int;
 
-  // Sets the direction of the movement this object.
-  void setDirection(Vector d);
-  // Returns the direction of the movement of this object.
-  [[nodiscard]] auto getDirection() const -> Vector;
-
-  // Sets the speed of this object in cells per frame.
-  void setSpeed(float s);
-  // Returns the speed of this object in cells per frame.
-  [[nodiscard]] auto getSpeed() const -> float;
-
   // Sets the velocity vector of this object.
+  // For any practical purposes, it is recommended to clamp the components of
+  // the velocity vector to a range that makes sense for your game.
   void setVelocity(Vector v);
   // Returns the velocity vector of this object.
   [[nodiscard]] auto getVelocity() const -> Vector;
 
-  // Returns the predicted position of this object in the next frame.
-  [[nodiscard]] auto predictPosition() -> Vector;
+  // Sets the acceleration vector of this object.
+  // For any practical purposes, it is recommended to clamp the components of
+  // the acceleration vector to a range that makes sense for your game.
+  void setAcceleration(Vector v);
+  // Returns the acceleration vector of this object.
+  [[nodiscard]] auto getAcceleration() const -> Vector;
 
   // Returns true if this object is not SPECTRAL.
   [[nodiscard]] auto isSolid() const -> bool;

@@ -33,9 +33,9 @@ void viewToWorld() {
   WM.setView(initialView);
 }
 
-array<int, 5> draw_drawCount;
 void draw() {
   WM.startUp();
+  static array<int, 5> drawCount;
 
   class TestObject : public Object {
    public:
@@ -45,19 +45,19 @@ void draw() {
     }
     auto draw() -> int override {
       // Count the number of drawings per altitude
-      draw_drawCount[getAltitude()]++;
+      drawCount[getAltitude()]++;
       return Object::draw();
     }
   };
 
   // Initialize objects and results array
   for (int i = 0; i < 5; i++) {
-    draw_drawCount[i] = 0;
+    drawCount[i] = 0;
     new TestObject(i);
   };
 
   WM.draw();
-  for (int i : draw_drawCount) {
+  for (int i : drawCount) {
     assertEq("draws all objects", i, 1);
   }
 
@@ -66,7 +66,7 @@ void draw() {
 
   new TestObject(0, Vector(-2, -2));
   WM.draw();
-  assertEq("does not draw out of bounds", draw_drawCount[0], 1);
+  assertEq("does not draw out of bounds", drawCount[0], 1);
 
   WM.shutDown();
 }
@@ -110,27 +110,19 @@ void getCollisions() {
   WM.shutDown();
 }
 
-void moveObject() {
+void resolveMovement() {
   WM.startUp();
 
-  // Create test objects
-  auto subject = new Object;
-  auto softObject = new Object;
-  auto hardObject = new Object;
-  auto spectralObject = new Object;
+  auto subject = new Object("subject");
+  auto softObject = new Object("soft");
+  auto hardObject = new Object("hard");
+  auto spectralObject = new Object("spectral");
 
-  // For debugging
-  softObject->setType("soft");
-  hardObject->setType("hard");
-  spectralObject->setType("spectral");
-
-  // Set positions of test objects
   subject->setPosition(Vector(0, 0));
   softObject->setPosition(Vector(2, 2));
   hardObject->setPosition(Vector(4, 4));
   spectralObject->setPosition(Vector(6, 6));
 
-  // Set obj1 as solid
   subject->setSolidness(Solidness::HARD);
   softObject->setSolidness(Solidness::SOFT);
   hardObject->setSolidness(Solidness::HARD);
@@ -138,26 +130,26 @@ void moveObject() {
 
   Vector destination = softObject->getPosition();
 
-  assertOk("moves HARD over SOFT", WM.moveObject(subject, destination));
+  assertOk("moves HARD over SOFT", WM.resolveMovement(subject, destination));
 
   assertEq("updates position", subject->getPosition(), destination);
 
   destination = spectralObject->getPosition();
 
-  assertOk("moves HARD over SPECTRAL", WM.moveObject(subject, destination));
+  assertOk("moves HARD over SPECTRAL", WM.resolveMovement(subject, destination));
 
   assertEq("updates position", subject->getPosition(), destination);
 
   auto previousPosition = subject->getPosition();
   destination = hardObject->getPosition();
   assertFail("does not move HARD over HARD",
-             WM.moveObject(subject, destination));
+             WM.resolveMovement(subject, destination));
   assertEq("does not update position", subject->getPosition(),
            previousPosition);
 
   destination = Vector(0, 0);
 
-  assertOk("moves HARD on empty spot", WM.moveObject(subject, destination));
+  assertOk("moves HARD on empty spot", WM.resolveMovement(subject, destination));
 
   assertEq("updates position", subject->getPosition(), destination);
 
@@ -166,23 +158,23 @@ void moveObject() {
 
   destination = softObject->getPosition();
 
-  assertOk("moves SPECTRAL over SOFT", WM.moveObject(subject, destination));
+  assertOk("moves SPECTRAL over SOFT", WM.resolveMovement(subject, destination));
 
   assertEq("updates position", subject->getPosition(), destination);
 
   destination = spectralObject->getPosition();
-  assertOk("moves SPECTRAL over SPECTRAL", WM.moveObject(subject, destination));
+  assertOk("moves SPECTRAL over SPECTRAL", WM.resolveMovement(subject, destination));
 
   assertEq("updates position", subject->getPosition(), destination);
 
   destination = hardObject->getPosition();
 
-  assertOk("moves SPECTRAL over HARD", WM.moveObject(subject, destination));
+  assertOk("moves SPECTRAL over HARD", WM.resolveMovement(subject, destination));
 
   assertEq("updates position", subject->getPosition(), destination);
 
   destination = Vector(0, 0);
-  assertOk("moves SPECTRAL on empty spot", WM.moveObject(subject, destination));
+  assertOk("moves SPECTRAL on empty spot", WM.resolveMovement(subject, destination));
 
   assertEq("updates position", subject->getPosition(), destination);
 
@@ -191,25 +183,25 @@ void moveObject() {
 
   destination = softObject->getPosition();
 
-  assertOk("moves SOFT over SOFT", WM.moveObject(subject, destination));
+  assertOk("moves SOFT over SOFT", WM.resolveMovement(subject, destination));
 
   assertEq("updates position", subject->getPosition(), destination);
 
   destination = spectralObject->getPosition();
 
-  assertOk("moves SOFT over SPECTRAL", WM.moveObject(subject, destination));
+  assertOk("moves SOFT over SPECTRAL", WM.resolveMovement(subject, destination));
 
   assertEq("updates position", subject->getPosition(), destination);
 
   destination = hardObject->getPosition();
 
-  assertOk("moves SOFT over HARD", WM.moveObject(subject, destination));
+  assertOk("moves SOFT over HARD", WM.resolveMovement(subject, destination));
 
   assertEq("updates position", subject->getPosition(), destination);
 
   destination = Vector(0, 0);
 
-  assertOk("moves SOFT on empty spot", WM.moveObject(subject, destination));
+  assertOk("moves SOFT on empty spot", WM.resolveMovement(subject, destination));
 
   assertEq("updates position", subject->getPosition(), destination);
 
@@ -218,7 +210,7 @@ void moveObject() {
   // Almost on hard, but with part of the bounding box colliding
   destination = hardObject->getPosition() - Vector(1, 1);
   assertFail("does not move HARD over HARD (larger bounding boxes)",
-             WM.moveObject(subject, destination));
+             WM.resolveMovement(subject, destination));
 
   // Clean up test objects
   WM.markForDelete(subject);
@@ -240,30 +232,30 @@ void viewFollowing() {
   WM.setBoundary(Box(20, 20));
 
   WM.setViewFollowing(subject);
-  WM.moveObject(subject, Vector(10, 10));
+  WM.resolveMovement(subject, Vector(10, 10));
   assertEq("does not update view", WM.getView(), initialView);
-  WM.moveObject(subject, Vector(11, 11));
+  WM.resolveMovement(subject, Vector(11, 11));
 
   assertEq("updates the view", WM.getView(), Box(Vector(6, 6), 10, 10));
 
-  WM.moveObject(subject, Vector(11, 5));
+  WM.resolveMovement(subject, Vector(11, 5));
   assertEq("updates the view (vertical lower bound)", WM.getView(),
            Box(Vector(6, 0), 10, 10));
 
-  WM.moveObject(subject, Vector(11, 15));
+  WM.resolveMovement(subject, Vector(11, 15));
   assertEq("updates the view (vertical upper bound)", WM.getView(),
            Box(Vector(6, 10), 10, 10));
 
-  WM.moveObject(subject, Vector(5, 11));
+  WM.resolveMovement(subject, Vector(5, 11));
   assertEq("updates the view (horizontal lower bound)", WM.getView(),
            Box(Vector(0, 6), 10, 10));
 
-  WM.moveObject(subject, Vector(15, 11));
+  WM.resolveMovement(subject, Vector(15, 11));
   assertEq("updates the view (horizontal upper bound)", WM.getView(),
            Box(Vector(10, 6), 10, 10));
 
   WM.setViewDeadZone(Box(WM.getView().getCorner(), 5, 5));
-  WM.moveObject(subject, Vector(12, 10));
+  WM.resolveMovement(subject, Vector(12, 10));
   assertEq("does not update the view within dead zone", WM.getView(),
            Box(Vector(10, 6), 10, 10));
 
@@ -290,12 +282,12 @@ void outOfBounds() {
   obj1->setPosition(Vector());
   obj1->setBox(Box(1, 1));
 
-  WM.moveObject(obj1, Vector(-2, 0));
+  WM.resolveMovement(obj1, Vector(-2, 0));
 
   assert("emits out of bounds event", outOfBounds_emitted);
 
   outOfBounds_emitted = false;
-  WM.moveObject(obj1, Vector(-3, 0));
+  WM.resolveMovement(obj1, Vector(-3, 0));
   assert("does not emit out of bounds if already out", !outOfBounds_emitted);
 
   WM.shutDown();
@@ -359,8 +351,8 @@ void setters() {
 auto main() -> int {
   test("setters", setters);
   test("object management", objectManagement);
-  test("getCollisions", getCollisions);
-  test("moveObject", moveObject);
+  test("collisions ", getCollisions);
+  test("resolve movements", resolveMovement);
   test("outOfBounds", outOfBounds);
   test("draw", draw);
   test("viewFollowing", viewFollowing);

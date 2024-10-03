@@ -4,7 +4,6 @@
 #include <unordered_map>
 
 #include "../../../test/lib/test.h"
-#include "../../utils/Logger.h"
 #include "latebit/core/GameManager.h"
 #include "latebit/core/ResourceManager.h"
 #include "latebit/core/events/Event.h"
@@ -12,6 +11,7 @@
 #include "latebit/core/events/EventInput.h"
 #include "latebit/core/events/EventOut.h"
 #include "latebit/core/events/EventStep.h"
+#include "latebit/core/geometry/Vector.h"
 #include "latebit/core/graphics/Animation.h"
 #include "latebit/core/input/InputManager.h"
 #include "latebit/core/objects/ObjectList.h"
@@ -38,25 +38,6 @@ void altitude() {
   subject.setAltitude(-1);
   assertEq("prevents out of bounds (min)", subject.getAltitude(),
            initialAltitude);
-}
-
-void kinematics() {
-  Object subject;
-
-  subject.setSpeed(1);
-  assertEq("updates speed", subject.getSpeed(), 1.0);
-
-  subject.setDirection(Vector(1, 1));
-  assertEq("updates direction", subject.getDirection(), Vector(1, 1));
-
-  subject.setVelocity(Vector(1, 2));
-
-  assertEq("updates velocity", subject.getVelocity(), Vector(1, 2));
-
-  subject.setSpeed(2);
-  subject.setDirection(Vector(1, 0));
-
-  assertEq("updates velocity", subject.getVelocity(), Vector(2, 0));
 }
 
 void solidness() {
@@ -207,17 +188,15 @@ void active() {
 auto main() -> int {
   test("constructor", []() {
     Object subject;
-    // test constructor
+    
     assertEq("sets a type", subject.getType(), "Object");
-
     assertEq("sets a position", subject.getPosition(), Vector());
     assertEq("sets an altitude", subject.getAltitude(), 0);
-
-    assertEq("sets a direction", subject.getDirection(), Vector());
-    assertEq("sets a speed", subject.getSpeed(), 0.0);
     assertEq("sets a solidness", subject.getSolidness(), Solidness::HARD);
+    assertEq("sets a scale", subject.getScale(), 1);
+    assertEq("sets a velocity", subject.getVelocity(), Vector());
+    assertEq("sets a acceleration", subject.getAcceleration(), Vector());
     assert("sets a bounding box", subject.getBox() == Box(Vector(), 1, 1));
-
     assert("sets an animation", subject.getAnimation() == Animation());
   });
 
@@ -257,7 +236,6 @@ auto main() -> int {
   });
 
   test("altitude", altitude);
-  test("kinematics", kinematics);
   test("solidness", solidness);
   test("boundingBox", boundingBox);
   test("eventSubscription", eventSubscription);

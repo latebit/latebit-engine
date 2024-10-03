@@ -1,7 +1,5 @@
 #include "latebit/core/graphics/SpriteParser.h"
 
-#include <filesystem>
-
 #include "../../../test/lib/test.h"
 #include "latebit/core/graphics/Colors.h"
 #include "latebit/utils/Logger.h"

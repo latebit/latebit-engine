@@ -71,6 +71,7 @@ void draw() {
   GM.resume();
   assertOk("draws the frame", animation.draw(Vector()));
   assertEq("index is updated", animation.getIndex(), 0);
+  DM::shutDown();
 
   static int scale = 0;
   const auto frames = vector<Keyframe>{{Color::RED}}; 
@@ -83,7 +84,6 @@ void draw() {
   assertOk("draws the frame", animation.draw(Vector(), 2));
   assertEq("uses correct scale", scale, 2);
 
-  DM::shutDown();
   RM.shutDown();
   RM.startUp();
 }

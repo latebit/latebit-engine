@@ -38,8 +38,6 @@ enum TextSize {
 // A 2D Vector representing a position in the world in cells
 using Position = Vector;
 
-const int WINDOW_HORIZONTAL_CELLS = 240;
-const int WINDOW_VERTICAL_CELLS = 160;
 const Color::Color WINDOW_BACKGROUND_COLOR_DEFAULT = Color::BLACK;
 
 const string DUMMY_VIDEODRIVER = "dummy";
@@ -64,9 +62,9 @@ class DisplayManager {
 
  public:
    // Window width in cells
-  static const int widthInCells = WINDOW_HORIZONTAL_CELLS;
-  // Window height in cells
-  static const int heightInCells = WINDOW_VERTICAL_CELLS;
+  static constexpr int WINDOW_WIDTH = 240;
+   // Window width in cells
+  static constexpr int WINDOW_HEIGHT = 160;
 
   [[nodiscard]] static auto isStarted() -> bool; 
 

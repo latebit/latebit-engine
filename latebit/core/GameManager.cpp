@@ -50,7 +50,7 @@ auto GameManager::startUp() -> int {
   this->setFrameTime(1000 / Configuration::getMaxFrameRate());
 
   // By default boundary equates view and it's the whole window
-  Box boundary(Vector(0, 0), DM::widthInCells, DM::heightInCells);
+  Box boundary(Vector(0, 0), DM::WINDOW_WIDTH, DM::WINDOW_HEIGHT);
   WM.setBoundary(boundary);
   WM.setView(boundary);
 

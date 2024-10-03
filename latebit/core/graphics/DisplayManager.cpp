@@ -32,12 +32,7 @@ auto DisplayManager::isStarted() -> bool {
 }
 
 auto DisplayManager::startUp() -> int {
-  if (DisplayManager::isStarted()) {
-    return 0;
-  }
-
-  auto widthInPixels = DisplayManager::widthInCells * CELL_SIZE;
-  auto heightInPixels = DisplayManager::heightInCells * CELL_SIZE;
+  if (DisplayManager::isStarted()) return 0;
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO) != 0) {
     Log.error("DisplayManager::startUp(): Cannot initiate SDL. %s",
@@ -45,6 +40,8 @@ auto DisplayManager::startUp() -> int {
     return -1;
   }
 
+  auto widthInPixels = DisplayManager::WINDOW_WIDTH * CELL_SIZE;
+  auto heightInPixels = DisplayManager::WINDOW_HEIGHT * CELL_SIZE;
   DisplayManager::window = SDL_CreateWindow(
     Configuration::getInitialWindowTitle().c_str(), SDL_WINDOWPOS_CENTERED,
     SDL_WINDOWPOS_CENTERED, widthInPixels, heightInPixels, SDL_WINDOW_SHOWN);

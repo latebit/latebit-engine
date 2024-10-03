@@ -13,7 +13,7 @@ auto main() -> int {
     GM.startUp();
     assert("starts up", GM.isStarted());
 
-    Box wanted(Vector(0, 0), DM.getHorizontalCells(), DM.getVerticalCells());
+    Box wanted(Vector(0, 0), DM::widthInCells, DM::heightInCells);
     assertEq("boundary is set up", WM.getBoundary(), wanted);
     assertEq("view is set up", WM.getView(), wanted);
     assertEq("is not over", GM.getGameOver(), false);

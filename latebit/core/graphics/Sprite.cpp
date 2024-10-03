@@ -1,5 +1,6 @@
 #include "Sprite.h"
 
+#include <cstdint>
 #include <string>
 
 #include "latebit/core/geometry/Vector.h"
@@ -22,17 +23,11 @@ auto Sprite::getFrameCount() const -> uint8_t { return this->frames.size(); }
 auto Sprite::getWidth() const -> uint8_t { return this->width; }
 auto Sprite::getHeight() const -> uint8_t { return this->height; }
 auto Sprite::getDuration() const -> uint8_t { return this->duration; }
-
 auto Sprite::getLabel() const -> std::string { return this->label; }
 
-auto Sprite::draw(int index, Vector position) const -> int {
-  if (index < 0 || (size_t)index >= this->frames.size()) {
-    Log.warning("Sprite::draw(): Invalid frame number (%d) with %d frames",
-                index, this->frames.size());
-    return -1;
-  }
-
-  return this->frames[index].draw(position);
+auto Sprite::drawKeyframe(int index, Vector position, uint8_t scale) const -> int {
+  auto frame = this->getFrame(index);
+  return drawKeyframeAtPosition(position, &frame, this->width, this->height, scale);
 }
 
 auto Sprite::operator==(const Sprite& other) const -> bool {

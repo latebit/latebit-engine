@@ -67,6 +67,8 @@ class Object {
   // Current number of subscribed events
   int eventCount = 0;
 
+  uint8_t scale = 1;
+
  public:
   Object();
   Object(const string& type);
@@ -85,6 +87,9 @@ class Object {
   void setPosition(Vector p);
   // Returns the position of this object in the game world.
   [[nodiscard]] auto getPosition() const -> Vector;
+
+  void setScale(uint8_t scale);
+  [[nodiscard]] auto getScale() const -> uint8_t;
 
   // Sets the the rendering layer for this object.
   void setAltitude(int a);

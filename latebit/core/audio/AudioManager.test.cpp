@@ -9,7 +9,7 @@
 
 auto main() -> int {
   Log.setDestination(lb::LogDestination::STDOUT);
-  DM.startUp();
+  DM::startUp();
 
   test("initialization", []() {
     assertOk("starts up", AM.startUp());
@@ -18,6 +18,6 @@ auto main() -> int {
     AM.shutDown();
   });
 
-  DM.shutDown();
+  DM::shutDown();
   return report();
 }

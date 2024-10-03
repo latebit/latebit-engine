@@ -10,7 +10,6 @@ using namespace std;
 void constructor() {
   Sprite sprite;
 
-  // Test default values
   assertEq("width is initialized to 0", sprite.getWidth(), 0);
   assertEq("height is initialized to 0", sprite.getHeight(), 0);
 
@@ -25,23 +24,29 @@ void constructor() {
 }
 
 void draw() {
-  auto frames = vector<Keyframe>{Keyframe(1, 1, {Color::RED})};
+  auto frames = vector<Keyframe>{{Color::RED}};
   Sprite sprite("s", 1, 1, 1, frames);
 
-  // Test draw
-  assertOk("draws successfully", sprite.draw(0, Vector(0, 0)));
-
-  // Test invalid frame number
+  assertOk("draws successfully", sprite.drawKeyframe(0, Vector()));
   assertFail("fails when frame number is invalid",
-             sprite.draw(10, Vector(0, 0)));
+             sprite.drawKeyframe(10, Vector()));
+
+  static auto scale = 0;
+  Sprite sprite2 = Sprite("s", 1, 1, 1, frames, [](Vector, const vector<Color::Color> *, uint8_t, uint8_t, uint8_t s) -> int { 
+    scale = s;
+    return 0; 
+  });
+
+  assertOk("draws with scale", sprite2.drawKeyframe(0, Vector(), 2));
+  assertEq("calls draw with scale", scale, 2);
 }
 
 auto main() -> int {
-  DM.startUp();
+  DM::startUp();
   test("constructor", constructor);
   test("draw", draw);
   test("equals (==)", []() {
-    vector<Keyframe> frames = {Keyframe(1, 1, {Color::RED})};
+    vector<Keyframe> frames = {{Color::RED}};
     Sprite sprite1("s", 1, 1, 1, frames);
     Sprite sprite2("s", 1, 1, 1, frames);
     Sprite sprite3("s", 2, 1, 1, frames);
@@ -57,6 +62,6 @@ auto main() -> int {
     assert("not equals different label", !(sprite1 == sprite6));
     assert("not equals empty sprite", !(sprite1 == Sprite()));
   });
-  DM.shutDown();
+  DM::shutDown();
   return report();
 }

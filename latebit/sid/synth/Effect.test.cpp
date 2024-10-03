@@ -1,7 +1,7 @@
 #include <array>
 
 #include "Configuration.h"
-#include "Oscillator.h"
+#include "Effect.h"
 #include "test/lib/test.h"
 
 using namespace sid;

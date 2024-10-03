@@ -3,10 +3,7 @@
 #include "../../../test/lib/test.h"
 #include "latebit/core/GameManager.h"
 #include "latebit/core/ResourceManager.h"
-#include "latebit/core/geometry/Box.h"
 #include "latebit/core/geometry/Vector.h"
-#include "latebit/core/graphics/DisplayManager.h"
-#include "latebit/core/graphics/Sprite.h"
 
 using namespace std;
 
@@ -42,6 +39,7 @@ void setSlowdownCount() {
 }
 
 void draw() {
+  DM::startUp();
   auto filename = FIXTURES_FOLDER + "/correct.lbspr";
   auto label = "sprite";
 
@@ -58,7 +56,6 @@ void draw() {
   assertEq("index is updated", animation.getIndex(), 1);
   assertEq("duration is updated", animation.getSlowdownCount(), 0);
 
-  // Test animation duration
   animation.setSlowdownCount(STOP_ANIMATION_SLOWDOWN);
   assertOk("draws the frame", animation.draw(Vector()));
   assertEq("index is not updated", animation.getIndex(), 1);
@@ -75,12 +72,23 @@ void draw() {
   assertOk("draws the frame", animation.draw(Vector()));
   assertEq("index is updated", animation.getIndex(), 0);
 
+  static int scale = 0;
+  const auto frames = vector<Keyframe>{{Color::RED}}; 
+  const auto sprite2 = Sprite("s", 1, 1, 1, frames, [](Vector, const vector<Color::Color> *, uint8_t, uint8_t, uint8_t s) -> int { 
+    scale = s;
+    return 0;
+  });
+  animation.setSprite(&sprite2);
+  
+  assertOk("draws the frame", animation.draw(Vector(), 2));
+  assertEq("uses correct scale", scale, 2);
+
+  DM::shutDown();
   RM.shutDown();
   RM.startUp();
 }
 
 auto main() -> int {
-  DM.startUp();
   RM.startUp();
 
   test("setSprite", setSprite);
@@ -91,8 +99,6 @@ auto main() -> int {
 
   RM.shutDown();
   RM.startUp();
-  DM.shutDown();
-  DM.startUp();
 
   return report();
 }

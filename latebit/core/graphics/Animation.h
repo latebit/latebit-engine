@@ -2,7 +2,6 @@
 
 #include <string>
 
-#include "latebit/core/geometry/Box.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/graphics/Sprite.h"
 
@@ -46,7 +45,7 @@ class Animation {
   [[nodiscard]] auto getSlowdownCount() const -> int;
 
   // Draws the current frame of the animation at the given position
-  auto draw(Vector position) -> int;
+  auto draw(Vector position, uint8_t scale = 1) -> int;
 
   auto operator==(const Animation &other) const -> bool;
 };

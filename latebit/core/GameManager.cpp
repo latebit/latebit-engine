@@ -31,7 +31,7 @@ auto GameManager::startUp() -> int {
     return -1;
   }
 
-  if (DM.startUp() != 0) {
+  if (DM::startUp() != 0) {
     Log.error("GameManager::startUp(): Error starting DisplayManager");
     return -1;
   }
@@ -50,7 +50,7 @@ auto GameManager::startUp() -> int {
   this->setFrameTime(1000 / Configuration::getMaxFrameRate());
 
   // By default boundary equates view and it's the whole window
-  Box boundary(Vector(0, 0), DM.getHorizontalCells(), DM.getVerticalCells());
+  Box boundary(Vector(0, 0), DM::widthInCells, DM::heightInCells);
   WM.setBoundary(boundary);
   WM.setView(boundary);
 
@@ -72,7 +72,7 @@ void GameManager::shutDown() {
   setGameOver(true);
   AM.shutDown();
   IM.shutDown();
-  DM.shutDown();
+  DM::shutDown();
   WM.shutDown();
   Manager::shutDown();
   Log.info("GameManager::shutDown(): Shut down successfully");
@@ -108,7 +108,7 @@ void GameManager::run() {
     }
 
     WM.draw();
-    DM.swapBuffers();
+    DM::swapBuffers();
 
     loopTime = clock->delta();
     sleep(frameTime - loopTime);

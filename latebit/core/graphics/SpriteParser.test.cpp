@@ -24,14 +24,14 @@ auto main() -> int {
       assertEq("height is correct", sprite.getHeight(), 4);
       assertEq("duration is correct", sprite.getDuration(), 2);
       assert("content of first frame is correct",
-             sprite.getFrame(0).getContent() ==
+             sprite.getFrame(0) ==
                vector<Color::Color>(
                  {Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE,
                   Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE,
                   Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE,
                   Color::BLACK, Color::DARK_BLUE, Color::DARK_PURPLE}));
       assert("content of second frame is correct",
-             sprite.getFrame(1).getContent() ==
+             sprite.getFrame(1) ==
                vector<Color::Color>(
                  {Color::DARK_GREEN, Color::BROWN, Color::DARK_GRAY,
                   Color::DARK_GREEN, Color::BROWN, Color::DARK_GRAY,
@@ -81,8 +81,7 @@ auto main() -> int {
       const string withStopAnimation = "#v0.1#\n1\n1\n1\n0\n1";
       const Sprite result = SpriteParser::fromString(withStopAnimation, "");
       auto frames = vector<Keyframe>();
-      frames.push_back(
-        Keyframe(1, 1, vector<Color::Color>({Color::DARK_BLUE})));
+      frames.push_back({Color::DARK_BLUE});
       Sprite expected = Sprite("", 1, 1, 0, frames);
       assert("allows stopAnimation", result == expected);
 
@@ -119,7 +118,7 @@ auto main() -> int {
       assertEq("height is correct", sprite.getHeight(), 2);
       assertEq("duration is correct", sprite.getDuration(), 1);
       assert("content of first frame is correct",
-             sprite.getFrame(0).getContent() ==
+             sprite.getFrame(0) ==
                vector<Color::Color>({Color::DARK_BLUE, Color::DARK_PURPLE,
                                      Color::DARK_GREEN, Color::BROWN}));
     });
@@ -129,7 +128,7 @@ auto main() -> int {
         FIXTURES_FOLDER + "/correct-transparent.png", "transparent", 1, 1);
       assert(
         "detects transparency correctly",
-        sprite.getFrame(0).getContent() ==
+        sprite.getFrame(0) ==
           vector<Color::Color>({Color::DARK_GREEN, Color::DARK_GREEN,
                                 Color::DARK_GREEN, Color::UNDEFINED_COLOR}));
     });
@@ -139,16 +138,16 @@ auto main() -> int {
                                               "sheet", 4, 1);
       assertEq("frame count is correct", sprite.getFrameCount(), 4);
       assert("content of first frame is correct",
-             sprite.getFrame(0).getContent() ==
+             sprite.getFrame(0) ==
                vector<Color::Color>({Color::YELLOW}));
       assert("content of second frame is correct",
-             sprite.getFrame(1).getContent() ==
+             sprite.getFrame(1) ==
                vector<Color::Color>({Color::ORANGE}));
       assert(
         "content of third frame is correct",
-        sprite.getFrame(2).getContent() == vector<Color::Color>({Color::RED}));
+        sprite.getFrame(2) == vector<Color::Color>({Color::RED}));
       assert("content of fourth frame is correct",
-             sprite.getFrame(3).getContent() ==
+             sprite.getFrame(3) ==
                vector<Color::Color>({Color::DARK_PURPLE}));
     });
 
@@ -179,7 +178,7 @@ auto main() -> int {
   suite("when converting sprite to text", []() {
     test("single frame", []() {
       auto frames = vector<Keyframe>();
-      frames.push_back(Keyframe(1, 1, vector<Color::Color>({Color::BLACK})));
+      frames.push_back({Color::BLACK});
       auto sprite = Sprite("single", 1, 1, 1, frames);
       auto text = SpriteParser::toString(sprite);
       auto expected =
@@ -196,9 +195,8 @@ auto main() -> int {
 
     test("sprite sheet", []() {
       auto frames = vector<Keyframe>();
-      frames.push_back(Keyframe(1, 1, vector<Color::Color>({Color::BLACK})));
-      frames.push_back(
-        Keyframe(1, 1, vector<Color::Color>({Color::DARK_BLUE})));
+      frames.push_back({Color::BLACK});
+      frames.push_back({Color::DARK_BLUE});
       auto sprite = Sprite("sheet", 1, 1, 1, frames);
       auto text = SpriteParser::toString(sprite);
       auto expected =

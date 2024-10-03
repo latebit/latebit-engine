@@ -89,7 +89,7 @@ auto SpriteParser::fromPNGFile(string filename, string label, int frameCount,
       }
     }
 
-    frames.push_back(Keyframe(spriteWidth, height, content));
+    frames.push_back(content);
   }
 
   Sprite sprite(label, spriteWidth, height, duration, frames);
@@ -195,7 +195,7 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
       for (char c : line) content.push_back(fromHex(c));
     }
 
-    frames.push_back(Keyframe(width, height, content));
+    frames.push_back(content);
   }
 
   Sprite sprite(label, (uint8_t)width, (uint8_t)height, (uint8_t)duration,
@@ -204,20 +204,23 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
 }
 
 auto SpriteParser::toString(const Sprite &sprite) -> string {
+  const int width = sprite.getWidth();
+  const int height = sprite.getHeight();
+
   ostringstream stream;
 
   stream << "#v0.1#" << '\n';
   stream << (int)sprite.getFrameCount() << " # keyframe count\n";
-  stream << (int)sprite.getWidth() << " # width\n";
-  stream << (int)sprite.getHeight() << " # height\n";
+  stream << width << " # width\n";
+  stream << height << " # height\n";
   stream << (int)sprite.getDuration() << " # duration\n";
 
   for (int i = 0; i < sprite.getFrameCount(); i++) {
     auto frame = sprite.getFrame(i);
-    for (int y = 0; y < frame.getHeight(); y++) {
-      for (int x = 0; x < frame.getWidth(); x++) {
-        size_t index = x + y * frame.getWidth();
-        stream << toHex(frame.getContent().at(index));
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        size_t index = x + y * width;
+        stream << toHex(frame.at(index));
       }
       stream << '\n';
     }

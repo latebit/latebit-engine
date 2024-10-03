@@ -320,9 +320,9 @@ void objectManagement() {
   assertEq("has active objects", activeObjects.getCount(), 4);
   auto allObjects = WM.getAllObjects(true);
   assertEq("has all the objects", allObjects.getCount(), 5);
-  auto activeTypeObjects = WM.objectsOfType("type");
+  auto activeTypeObjects = WM.getAllObjectsByType("type");
   assertEq("filters active objects by type", activeTypeObjects.getCount(), 2);
-  auto allTypeObjects = WM.objectsOfType("type", true);
+  auto allTypeObjects = WM.getAllObjectsByType("type", true);
   assertEq("filters all objects by type", allTypeObjects.getCount(), 3);
 
   WM.markForDelete(objects[0]);

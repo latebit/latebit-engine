@@ -75,7 +75,7 @@ auto WorldManager::getAllObjects(bool includeInactive) const -> ObjectList {
   return this->sceneGraph.getActiveObjects();
 }
 
-auto WorldManager::objectsOfType(std::string type,
+auto WorldManager::getAllObjectsByType(std::string type,
                                  bool includeInactive) const -> ObjectList {
   ObjectList result;
   auto solid = this->getAllObjects(includeInactive);

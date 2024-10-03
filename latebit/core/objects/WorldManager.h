@@ -56,7 +56,7 @@ class WorldManager : public Manager {
     -> ObjectList;
 
   // Returns a list of all active objects of a given type
-  [[nodiscard]] auto objectsOfType(
+  [[nodiscard]] auto getAllObjectsByType(
     string type, bool includeInactive = false) const -> ObjectList;
 
   // Returns a list of object colliding with the object at a given position

@@ -5,6 +5,7 @@
 #include "latebit/core/events/EventCollision.h"
 #include "latebit/core/events/EventOut.h"
 #include "latebit/core/geometry/Vector.h"
+#include "latebit/core/objects/Object.h"
 #include "latebit/core/utils/utils.h"
 #include "latebit/utils/Logger.h"
 #include "latebit/utils/Math.h"
@@ -112,6 +113,17 @@ auto WorldManager::getCollisions(Object* o, Vector where) const -> ObjectList {
   return collisions;
 }
 
+void bounce(Object* object, Object *otherObject) {
+  // We assume same mass and completely elastic collision
+  auto velocity = object->getVelocity();
+  object->setVelocity(otherObject->getVelocity());
+  otherObject->setVelocity(velocity);
+
+  auto acceleration = object->getAcceleration();
+  object->setAcceleration(otherObject->getAcceleration());
+  otherObject->setAcceleration(acceleration);
+}
+
 auto WorldManager::resolveMovement(Object* object, Vector position) -> int {
   // Non-solid can always move, since they have no collisions
   if (!object->isSolid()) {
@@ -135,18 +147,9 @@ auto WorldManager::resolveMovement(Object* object, Vector position) -> int {
     object->eventHandler(&event);
     otherObject->eventHandler(&event);
 
-    // If hitting a hard object, don't move
     if (object->getSolidness() == Solidness::HARD &&
         otherObject->getSolidness() == Solidness::HARD) {
-      // We assume same mass and completely elastic collision
-      auto velocity = object->getVelocity();
-      object->setVelocity(otherObject->getVelocity());
-      otherObject->setVelocity(velocity);
-
-      auto acceleration = object->getAcceleration();
-      object->setAcceleration(otherObject->getAcceleration());
-      otherObject->setAcceleration(acceleration);
-
+        bounce(object, otherObject);
       break;
     }
   }

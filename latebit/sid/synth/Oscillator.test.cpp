@@ -1,7 +1,5 @@
 #include "Oscillator.h"
 
-#include <array>
-
 #include "Configuration.h"
 #include "test/lib/test.h"
 

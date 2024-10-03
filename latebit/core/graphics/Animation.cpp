@@ -1,4 +1,5 @@
 #include "Animation.h"
+#include <cstdint>
 
 #include "latebit/core/GameManager.h"
 
@@ -9,7 +10,7 @@ void Animation::setSprite(const Sprite* s) {
   this->sprite = s;
   // In case the new sprite has a different number of frames, reset the index
   // and duration count to not have blank frames
-  // For exmaple, when you try to render index 4, but the new sprite has only 3
+  // For example, when you try to render index 4, but the new sprite has only 3
   // frames, it will render a blank frame instead of the first one)
   this->index = 0;
   this->slowdownCount = 0;
@@ -25,11 +26,12 @@ auto Animation::getIndex() const -> int { return this->index; }
 void Animation::setSlowdownCount(int c) { this->slowdownCount = c; }
 auto Animation::getSlowdownCount() const -> int { return this->slowdownCount; }
 
-auto Animation::draw(Vector position) -> int {
+auto Animation::draw(Vector position, uint8_t scale) -> int {
   if (this->sprite == nullptr) return -1;
+  if (this->sprite->getFrameCount() == 0) return -1;
 
   int index = getIndex();
-  int result = this->sprite->draw(index, position);
+  int result = this->sprite->drawKeyframe(index, position, scale);
 
   int duration = getSlowdownCount();
   if (duration == STOP_ANIMATION_SLOWDOWN) return 0;

@@ -1,10 +1,13 @@
 #pragma once
 
+#include <cstdint>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "Keyframe.h"
 #include "latebit/core/geometry/Vector.h"
+#include "latebit/core/graphics/DisplayManager.h"
 
 using namespace std;
 
@@ -26,15 +29,18 @@ class Sprite {
   // The frames of the sprite
   const vector<Keyframe> frames = {};
 
+  int (*drawKeyframeAtPosition)(Vector position, const vector<Color::Color> * keyframe, uint8_t width, uint8_t height, uint8_t scale);
+
  public:
   // Creates a sprite with the given parameters
   Sprite(string label = "", uint8_t width = 0, uint8_t height = 0,
-         uint8_t duration = 1, vector<Keyframe> frames = {})
+         uint8_t duration = 1, vector<Keyframe> frames = {}, int (*draw)(Vector, const vector<Color::Color> *, uint8_t, uint8_t, uint8_t) = &DisplayManager::drawKeyframe)
     : width(width),
       height(height),
       duration(duration),
-      label(label),
-      frames(frames){};
+      label(std::move(label)),
+      frames(std::move(frames)),
+      drawKeyframeAtPosition(draw){};
 
   ~Sprite() = default;
 
@@ -60,7 +66,7 @@ class Sprite {
   [[nodiscard]] auto getFrameCount() const -> uint8_t;
 
   // Draw the i-th frame of the sprite at the given position
-  [[nodiscard]] auto draw(int index, Vector position) const -> int;
+  [[nodiscard]] auto drawKeyframe(int index, Vector position, uint8_t scale = 1) const -> int;
 };
 
 }  // namespace lb

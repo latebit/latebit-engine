@@ -2,6 +2,7 @@
 
 #include <array>
 #include <string>
+#include <utility>
 
 #include "latebit/core/events/Event.h"
 #include "latebit/core/objects/ObjectList.h"
@@ -29,7 +30,7 @@ class Manager {
   array<ObjectList, MAX_EVENTS> subscribers = {};
 
  public:
-  Manager(const string &type) : type(type){};
+  Manager(string type) : type(std::move(type)){};
   virtual ~Manager() = default;
 
   // Returns the manager type

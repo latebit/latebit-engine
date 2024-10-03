@@ -1,9 +1,7 @@
 #pragma once
 
-#include <fstream>
 #include <string>
 
-#include "Colors.h"
 #include "Sprite.h"
 
 using namespace std;

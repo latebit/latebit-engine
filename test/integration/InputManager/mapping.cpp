@@ -32,13 +32,13 @@ class TestObject : public Object {
     action << "Last action: " << this->lastAction << ".";
 
     result +=
-      DM.drawString(Vector(20, 20), key.str(), TextAlignment::LEFT, Color::RED);
-    result += DM.drawString(Vector(20, 40), action.str(), TextAlignment::LEFT,
+      DM::drawString(Vector(20, 20), key.str(), TextAlignment::LEFT, Color::RED);
+    result += DM::drawString(Vector(20, 40), action.str(), TextAlignment::LEFT,
                             Color::BLUE);
     return result;
   }
 
-  char keyToChar(InputKey::InputKey k) {
+  auto keyToChar(InputKey::InputKey k) -> char {
     switch (k) {
       case InputKey::A:
         return InputGlyph::A;
@@ -66,7 +66,7 @@ class TestObject : public Object {
     return 0;
   }
 
-  string toActionString(InputAction::InputAction a) {
+  auto toActionString(InputAction::InputAction a) -> string {
     switch (a) {
       case InputAction::PRESSED:
         return "PRESSED";
@@ -80,7 +80,7 @@ class TestObject : public Object {
   }
 };
 
-int main() {
+auto main() -> int {
   Log.setDestination(LogDestination::STDOUT);
   GM.startUp();
   new TestObject();

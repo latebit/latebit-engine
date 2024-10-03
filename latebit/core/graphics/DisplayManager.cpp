@@ -7,6 +7,8 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_video.h>
+#include <sys/types.h>
+#include <cstdint>
 
 #include "Colors.h"
 #include "Font.h"
@@ -21,22 +23,16 @@ namespace lb {
 
 const int CELL_SIZE = 3;
 
-DisplayManager::DisplayManager() : Manager("DisplayManager") {
-  Log.debug("DisplayManager::DisplayManager(): Created DisplayManager");
-}
+SDL_Window* DisplayManager::window = nullptr;
+SDL_Renderer* DisplayManager::renderer = nullptr;
+Color::Color DisplayManager::backgroundColor = Color::BLACK;
 
-auto DisplayManager::getInstance() -> DisplayManager& {
-  static DisplayManager instance;
-  return instance;
+auto DisplayManager::isStarted() -> bool {
+  return DisplayManager::window != nullptr;
 }
 
 auto DisplayManager::startUp() -> int {
-  if (this->window != nullptr) {
-    return 0;
-  }
-
-  auto widthInPixels = this->widthInCells * CELL_SIZE;
-  auto heightInPixels = this->heightInCells * CELL_SIZE;
+  if (DisplayManager::isStarted()) return 0;
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO) != 0) {
     Log.error("DisplayManager::startUp(): Cannot initiate SDL. %s",
@@ -44,62 +40,69 @@ auto DisplayManager::startUp() -> int {
     return -1;
   }
 
-  this->window = SDL_CreateWindow(
+  auto widthInPixels = DisplayManager::WINDOW_WIDTH * CELL_SIZE;
+  auto heightInPixels = DisplayManager::WINDOW_HEIGHT * CELL_SIZE;
+  DisplayManager::window = SDL_CreateWindow(
     Configuration::getInitialWindowTitle().c_str(), SDL_WINDOWPOS_CENTERED,
     SDL_WINDOWPOS_CENTERED, widthInPixels, heightInPixels, SDL_WINDOW_SHOWN);
 
-  if (this->window == nullptr) {
+  if (DisplayManager::window == nullptr) {
     Log.error("DisplayManager::startUp(): Cannot create window. %s",
               SDL_GetError());
     return -1;
   }
 
-  this->renderer =
-    SDL_CreateRenderer(this->window, -1, this->getRendererFlags());
-  if (this->renderer == nullptr) {
+  DisplayManager::renderer =
+    SDL_CreateRenderer(DisplayManager::window, -1, DisplayManager::getRendererFlags());
+  if (DisplayManager::renderer == nullptr) {
     Log.error("DisplayManager::startUp(): Cannot create renderer. %s",
               SDL_GetError());
-    this->shutDown();
+    DisplayManager::shutDown();
     return -1;
   }
 
   Log.info("DisplayManager::startUp(): Started successfully");
-  return Manager::startUp();
+  return 0;
 }
 
 void DisplayManager::shutDown() {
-  SDL_DestroyRenderer(this->renderer);
-  SDL_DestroyWindow(this->window);
+  SDL_DestroyRenderer(DisplayManager::renderer);
+  SDL_DestroyWindow(DisplayManager::window);
 
-  this->window = nullptr;
-  this->renderer = nullptr;
+  DisplayManager::window = nullptr;
+  DisplayManager::renderer = nullptr;
   SDL_Quit();
-  Manager::shutDown();
   Log.info("DisplayManager::shutDown(): Shut down successfully");
 }
 
-auto DisplayManager::getRendererFlags() const -> int {
+auto DisplayManager::getRendererFlags() -> int {
   return string(SDL_GetCurrentVideoDriver()) == DUMMY_VIDEODRIVER
            ? 0
            : SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 }
 
-auto DisplayManager::drawFrame(Position position, const Keyframe* frame,
-                               int scaling) const -> int {
-  if (this->window == nullptr) {
-    Log.error("DisplayManager::drawFrame(): Window is null");
+auto DisplayManager::drawKeyframe(Position position, const Keyframe* frame, uint8_t width, uint8_t height, uint8_t scaling) -> int {
+  if (!DisplayManager::isStarted()) {
+    Log.error("DisplayManager::drawFrame(): Display Manager is not started");
     return -1;
+  }
+
+  if (frame->size() != width * height) {
+    Log.error("DisplayManager::drawFrame(): Invalid frame size. Expected %d, got %d",
+              width * height, frame->size());
+    return -1;
+  }
+
+  if (frame->size() == 0) {
+    return 0;
   }
 
   scaling = clamp(scaling, 1, 10);
   auto viewPosition = WorldManager::worldToView(position);
   auto pixelPosition = cellsToPixels(viewPosition);
-  auto content = frame->getContent();
   auto cellSize = CELL_SIZE * scaling;
 
-  SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(
-    0, frame->getWidth() * cellSize, frame->getHeight() * cellSize, 32,
-    SDL_PIXELFORMAT_RGBA32);
+  SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, width * cellSize, height * cellSize, 32, SDL_PIXELFORMAT_RGBA32);
 
   if (surface == nullptr) {
     Log.error("DisplayManager::drawFrame(): Cannot create surface. %s",
@@ -107,10 +110,10 @@ auto DisplayManager::drawFrame(Position position, const Keyframe* frame,
     return -1;
   }
 
-  for (uint8_t i = 0; i < frame->getHeight(); i++) {
-    for (uint8_t j = 0; j < frame->getWidth(); j++) {
-      auto index = i * frame->getWidth() + j;
-      auto color = toSDLColor(content[index]);
+  for (uint8_t i = 0; i < height; i++) {
+    for (uint8_t j = 0; j < width; j++) {
+      auto index = i * width + j;
+      auto color = toSDLColor(frame->at(index));
 
       // Iterate over each pixel cellSize times in both width and height
       for (int k = 0; k < cellSize; k++) {
@@ -133,7 +136,7 @@ auto DisplayManager::drawFrame(Position position, const Keyframe* frame,
     }
   }
 
-  SDL_Texture* texture = SDL_CreateTextureFromSurface(this->renderer, surface);
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(DisplayManager::renderer, surface);
 
   if (texture == nullptr) {
     Log.error("DisplayManager::drawFrame(): Cannot create texture. %s",
@@ -142,10 +145,10 @@ auto DisplayManager::drawFrame(Position position, const Keyframe* frame,
   }
 
   SDL_Rect rectangle = {(int)pixelPosition.getX(), (int)pixelPosition.getY(),
-                        (int)frame->getWidth() * cellSize,
-                        (int)frame->getHeight() * cellSize};
+                        width * cellSize,
+                        height * cellSize};
 
-  SDL_RenderCopy(this->renderer, texture, nullptr, &rectangle);
+  SDL_RenderCopy(DisplayManager::renderer, texture, nullptr, &rectangle);
   SDL_FreeSurface(surface);
   SDL_DestroyTexture(texture);
 
@@ -154,8 +157,8 @@ auto DisplayManager::drawFrame(Position position, const Keyframe* frame,
 
 auto DisplayManager::drawRectangle(Position position, int width, int height,
                                    Color::Color borderColor,
-                                   Color::Color fillColor) const -> int {
-  if (this->window == nullptr) return -1;
+                                   Color::Color fillColor) -> int {
+  if (DisplayManager::window == nullptr) return -1;
 
   auto viewPosition = WorldManager::worldToView(position);
   auto pixelPosition = cellsToPixels(viewPosition);
@@ -165,20 +168,20 @@ auto DisplayManager::drawRectangle(Position position, int width, int height,
 
   if (fillColor != Color::UNDEFINED_COLOR) {
     auto fill = toSDLColor(fillColor);
-    SDL_SetRenderDrawColor(this->renderer, fill.r, fill.g, fill.b, fill.a);
-    SDL_RenderFillRect(this->renderer, &rectangle);
+    SDL_SetRenderDrawColor(DisplayManager::renderer, fill.r, fill.g, fill.b, fill.a);
+    SDL_RenderFillRect(DisplayManager::renderer, &rectangle);
   }
 
   auto border = toSDLColor(borderColor);
-  SDL_SetRenderDrawColor(this->renderer, border.r, border.g, border.b,
+  SDL_SetRenderDrawColor(DisplayManager::renderer, border.r, border.g, border.b,
                          border.a);
-  SDL_RenderDrawRect(this->renderer, &rectangle);
+  SDL_RenderDrawRect(DisplayManager::renderer, &rectangle);
 
   return 0;
 }
 
 auto DisplayManager::drawRectangle(Position position, int width, int height,
-                                   Color::Color borderColor) const -> int {
+                                   Color::Color borderColor) -> int {
   return drawRectangle(position, width, height, borderColor,
                        Color::UNDEFINED_COLOR);
 }
@@ -186,8 +189,8 @@ auto DisplayManager::drawRectangle(Position position, int width, int height,
 auto DisplayManager::drawString(Position position, string string,
                                 TextAlignment::TextAlignment alignment,
                                 Color::Color color, TextSize::TextSize size,
-                                Font font) const -> int {
-  if (this->window == nullptr) return -1;
+                                Font font) -> int {
+  if (DisplayManager::window == nullptr) return -1;
 
   Position viewPosition = WorldManager::worldToView(position);
   int len = string.size();
@@ -210,7 +213,6 @@ auto DisplayManager::drawString(Position position, string string,
       }
     }
 
-    auto frame = Keyframe(gWidth, gHeight, content);
     auto position =
       viewPosition +
       Vector(gWidth * i * size + font.getHorizontalSpacing() * i, 0);
@@ -226,7 +228,7 @@ auto DisplayManager::drawString(Position position, string string,
         break;
     }
 
-    if (drawFrame(position, &frame, size) != 0) {
+    if (DisplayManager::drawKeyframe(position, &content, gWidth, gHeight, size) != 0) {
       return -1;
     }
   }
@@ -234,7 +236,7 @@ auto DisplayManager::drawString(Position position, string string,
 }
 
 auto DisplayManager::measureString(string string, TextSize::TextSize size,
-                                   Font font) const -> Box {
+                                   Font font) -> Box {
   int len = string.size();
   int gWidth = font.getGlyphWidth();
   int gHeight = font.getGlyphHeight();
@@ -245,30 +247,22 @@ auto DisplayManager::measureString(string string, TextSize::TextSize size,
 }
 
 void DisplayManager::setBackground(Color::Color color) {
-  this->backgroundColor = color;
-}
-
-auto DisplayManager::getHorizontalCells() const -> int {
-  return this->widthInCells;
-}
-
-auto DisplayManager::getVerticalCells() const -> int {
-  return this->heightInCells;
+  DisplayManager::backgroundColor = color;
 }
 
 auto DisplayManager::swapBuffers() -> int {
-  if (this->window == nullptr) {
+  if (DisplayManager::window == nullptr) {
     Log.error("DisplayManager::swapBuffers(): Window is null");
     return -1;
   }
 
   // displays current buffer
-  SDL_RenderPresent(this->renderer);
+  SDL_RenderPresent(DisplayManager::renderer);
 
   // clears second buffer
-  auto c = toSDLColor(this->backgroundColor);
-  SDL_SetRenderDrawColor(this->renderer, c.r, c.g, c.b, c.a);
-  SDL_RenderClear(this->renderer);
+  auto c = toSDLColor(DisplayManager::backgroundColor);
+  SDL_SetRenderDrawColor(DisplayManager::renderer, c.r, c.g, c.b, c.a);
+  SDL_RenderClear(DisplayManager::renderer);
 
   return 0;
 }

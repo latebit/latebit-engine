@@ -4,8 +4,6 @@
 #include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_mouse.h>
 
-#include <unordered_map>
-
 #include "latebit/core/GameManager.h"
 #include "latebit/core/events/EventInput.h"
 #include "latebit/core/graphics/DisplayManager.h"
@@ -23,7 +21,7 @@ InputManager::InputManager() : Manager("InputManager") {
 }
 
 auto InputManager::startUp() -> int {
-  if (!DM.isStarted()) {
+  if (!DM::isStarted()) {
     Log.error(
       "InputManager::startUp(): Cannot start. DisplayManager is not started");
     return -1;

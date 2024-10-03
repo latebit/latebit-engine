@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "ObjectList.h"
 #include "SceneGraph.h"
+#include "latebit/core/geometry/Vector.h"
 #include "latebit/core/utils/Manager.h"
 
 #define WM lb::WorldManager::getInstance()
@@ -30,7 +31,7 @@ class WorldManager : public Manager {
   SceneGraph sceneGraph = SceneGraph();
 
   // Move object and check if it is out of bounds
-  void moveAndCheckBounds(Object *o, Vector where);
+  void moveAndCheckBounds(Object *o, Vector position);
 
  public:
   // Singleton
@@ -56,15 +57,14 @@ class WorldManager : public Manager {
     -> ObjectList;
 
   // Returns a list of all active objects of a given type
-  [[nodiscard]] auto objectsOfType(
+  [[nodiscard]] auto getAllObjectsByType(
     string type, bool includeInactive = false) const -> ObjectList;
 
   // Returns a list of object colliding with the object at a given position
   auto getCollisions(Object *o, Vector where) const -> ObjectList;
 
-  // Attempts to move an object to a given position.
-  // Returns 0 for success, -1 for failure
-  auto moveObject(Object *o, Vector where) -> int;
+  // Moves an object to a given position and resolves 
+  void resolveMovement(Object *o, Vector position);
 
   // Updates all active objects and frees resources for deleted ones
   void update();

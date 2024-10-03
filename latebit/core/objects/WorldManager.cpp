@@ -1,8 +1,11 @@
 #include "WorldManager.h"
+#include <cstdio>
 
 #include "ObjectListIterator.h"
 #include "latebit/core/events/EventCollision.h"
 #include "latebit/core/events/EventOut.h"
+#include "latebit/core/geometry/Vector.h"
+#include "latebit/core/objects/Object.h"
 #include "latebit/core/utils/utils.h"
 #include "latebit/utils/Logger.h"
 #include "latebit/utils/Math.h"
@@ -75,7 +78,7 @@ auto WorldManager::getAllObjects(bool includeInactive) const -> ObjectList {
   return this->sceneGraph.getActiveObjects();
 }
 
-auto WorldManager::objectsOfType(std::string type,
+auto WorldManager::getAllObjectsByType(std::string type,
                                  bool includeInactive) const -> ObjectList {
   ObjectList result;
   auto solid = this->getAllObjects(includeInactive);
@@ -110,51 +113,53 @@ auto WorldManager::getCollisions(Object* o, Vector where) const -> ObjectList {
   return collisions;
 }
 
-auto WorldManager::moveObject(Object* o, Vector where) -> int {
-  // Spectral objects can just move
-  if (!o->isSolid()) {
-    moveAndCheckBounds(o, where);
-    return 0;
+void bounce(Object* object, Object *otherObject) {
+  // We assume same mass and completely elastic collision
+  auto velocity = object->getVelocity();
+  object->setVelocity(otherObject->getVelocity());
+  otherObject->setVelocity(velocity);
+
+  auto acceleration = object->getAcceleration();
+  object->setAcceleration(otherObject->getAcceleration());
+  otherObject->setAcceleration(acceleration);
+}
+
+void WorldManager::resolveMovement(Object* object, Vector position) {
+  // Non-solid can always move, since they have no collisions
+  if (!object->isSolid()) {
+    return moveAndCheckBounds(object, position);
   }
 
-  ObjectList collisions = getCollisions(o, where);
+  ObjectList collisions = getCollisions(object, position);
 
   // In absence of collisions, just move
   if (collisions.isEmpty()) {
-    moveAndCheckBounds(o, where);
-    return 0;
+    return moveAndCheckBounds(object, position);
   }
 
-  bool shouldMove = true;
   auto iterator = ObjectListIterator(&collisions);
 
+  bool shouldMove = true;
   for (iterator.first(); !iterator.isDone(); iterator.next()) {
-    auto current = iterator.currentObject();
-    auto event = EventCollision(o, current, where);
-    o->eventHandler(&event);
-    current->eventHandler(&event);
+    auto otherObject = iterator.currentObject();
+    auto event = EventCollision(object, otherObject, position);
+    object->eventHandler(&event);
+    otherObject->eventHandler(&event);
 
-    // If hitting a hard object, don't move
-    if (o->getSolidness() == Solidness::HARD &&
-        current->getSolidness() == Solidness::HARD) {
-      shouldMove = false;
+    if (object->getSolidness() == Solidness::HARD &&
+        otherObject->getSolidness() == Solidness::HARD) {
+        bounce(object, otherObject);
+        shouldMove = false;
       break;
     }
   }
 
-  if (shouldMove) {
-    moveAndCheckBounds(o, where);
-    return 0;
-  } else {
-    return -1;
-  }
-
-  return 0;
+  if (shouldMove) moveAndCheckBounds(object, position);
 }
 
-void WorldManager::moveAndCheckBounds(Object* o, Vector where) {
+void WorldManager::moveAndCheckBounds(Object* o, Vector position) {
   auto initial = o->getWorldBox();
-  o->setPosition(where);
+  o->setPosition(position);
   auto final = o->getWorldBox();
   auto boundary = WM.getBoundary();
 
@@ -168,7 +173,7 @@ void WorldManager::moveAndCheckBounds(Object* o, Vector where) {
 
     // Move the view if the object is outside of the dead zone
     if (!contains(viewDeadZone, final)) {
-      this->setViewPosition(where);
+      this->setViewPosition(position);
     }
   }
 }
@@ -193,10 +198,12 @@ void WorldManager::update() {
   for (updates.first(); !updates.isDone(); updates.next()) {
     auto object = updates.currentObject();
     auto oldPosition = object->getPosition();
-    auto newPosition = object->predictPosition();
+    auto newVelocity = object->getVelocity() + object->getAcceleration();
+    auto newPosition = object->getPosition() + newVelocity;
 
+    object->setVelocity(newVelocity);
     if (oldPosition != newPosition) {
-      moveObject(object, newPosition);
+      this->resolveMovement(object, newPosition);
     }
   }
 }

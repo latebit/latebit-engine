@@ -146,7 +146,7 @@ void GameManager::loop(void* a) {
     WM.update();
   }
   WM.draw();
-  DM.swapBuffers();
+  DM::swapBuffers();
 };
 
 void GameManager::run() {

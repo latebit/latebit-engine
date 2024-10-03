@@ -124,23 +124,22 @@ void bounce(Object* object, Object *otherObject) {
   otherObject->setAcceleration(acceleration);
 }
 
-auto WorldManager::resolveMovement(Object* object, Vector position) -> int {
+void WorldManager::resolveMovement(Object* object, Vector position) {
   // Non-solid can always move, since they have no collisions
   if (!object->isSolid()) {
-    moveAndCheckBounds(object, position);
-    return 0;
+    return moveAndCheckBounds(object, position);
   }
 
   ObjectList collisions = getCollisions(object, position);
 
   // In absence of collisions, just move
   if (collisions.isEmpty()) {
-    moveAndCheckBounds(object, position);
-    return 0;
+    return moveAndCheckBounds(object, position);
   }
 
   auto iterator = ObjectListIterator(&collisions);
 
+  bool shouldMove = true;
   for (iterator.first(); !iterator.isDone(); iterator.next()) {
     auto otherObject = iterator.currentObject();
     auto event = EventCollision(object, otherObject, position);
@@ -150,11 +149,12 @@ auto WorldManager::resolveMovement(Object* object, Vector position) -> int {
     if (object->getSolidness() == Solidness::HARD &&
         otherObject->getSolidness() == Solidness::HARD) {
         bounce(object, otherObject);
+        shouldMove = false;
       break;
     }
   }
-  moveAndCheckBounds(object, position);
-  return 0;
+
+  if (shouldMove) moveAndCheckBounds(object, position);
 }
 
 void WorldManager::moveAndCheckBounds(Object* o, Vector position) {

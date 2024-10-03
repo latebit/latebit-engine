@@ -128,89 +128,101 @@ void resolveMovement() {
   hardObject->setSolidness(Solidness::HARD);
   spectralObject->setSolidness(Solidness::SPECTRAL);
 
-  Vector destination = softObject->getPosition();
+  subject->setVelocity(Vector(1, 1));
+  softObject->setVelocity(Vector(-1, -1));
+  hardObject->setVelocity(Vector(-1, -1));
+  spectralObject->setVelocity(Vector(-1, -1));
 
-  assertOk("moves HARD over SOFT", WM.resolveMovement(subject, destination));
+  Vector targetPosition, targetVelocity, targetAcceleration, position, velocity, acceleration;
+  
+  targetPosition = softObject->getPosition();
+  WM.resolveMovement(subject, targetPosition);
+  assertEq("moves HARD on SOFT", subject->getPosition(), targetPosition);
 
-  assertEq("updates position", subject->getPosition(), destination);
+  targetPosition = spectralObject->getPosition();
+  WM.resolveMovement(subject, targetPosition);
+  assertEq("moves HARD on SPECTRAL", subject->getPosition(), targetPosition);
 
-  destination = spectralObject->getPosition();
+  position = subject->getPosition();
+  velocity = subject->getVelocity();
+  acceleration = subject->getAcceleration();
 
-  assertOk("moves HARD over SPECTRAL", WM.resolveMovement(subject, destination));
+  targetPosition = hardObject->getPosition();
+  targetVelocity = hardObject->getVelocity();
+  targetAcceleration = hardObject->getAcceleration();
 
-  assertEq("updates position", subject->getPosition(), destination);
+  WM.resolveMovement(subject, targetPosition);
+  assertEq("does not move HARD over HARD", subject->getPosition(), position);
+  assertEq("reflects velocity (subject)", subject->getVelocity(), targetVelocity);
+  assertEq("reflects velocity (object)", hardObject->getVelocity(), velocity);
+  assertEq("reflects acceleration (subject)", subject->getAcceleration(),
+           targetAcceleration);
+  assertEq("reflects acceleration (object)", hardObject->getAcceleration(), acceleration);
 
-  auto previousPosition = subject->getPosition();
-  destination = hardObject->getPosition();
-  assertFail("does not move HARD over HARD",
-             WM.resolveMovement(subject, destination));
-  assertEq("does not update position", subject->getPosition(),
-           previousPosition);
-
-  destination = Vector(0, 0);
-
-  assertOk("moves HARD on empty spot", WM.resolveMovement(subject, destination));
-
-  assertEq("updates position", subject->getPosition(), destination);
+  targetPosition = Vector(0, 0);
+  WM.resolveMovement(subject, targetPosition);
+  assertEq("moves HARD on empty spot", subject->getPosition(), targetPosition);
 
   subject->setSolidness(Solidness::SPECTRAL);
   subject->setPosition(Vector(0, 0));
 
-  destination = softObject->getPosition();
+  targetPosition = softObject->getPosition();
+  WM.resolveMovement(subject, targetPosition);
+  assertEq("moves SPECTRAL on SOFT", subject->getPosition(), targetPosition);
 
-  assertOk("moves SPECTRAL over SOFT", WM.resolveMovement(subject, destination));
+  targetPosition = spectralObject->getPosition();
+  WM.resolveMovement(subject, targetPosition);
+  assertEq("moves SPECTRAL on SPECTRAL", subject->getPosition(), targetPosition);
 
-  assertEq("updates position", subject->getPosition(), destination);
+  targetPosition = hardObject->getPosition();
+  WM.resolveMovement(subject, targetPosition);
+  assertEq("moves SPECTRAL on HARD", subject->getPosition(), targetPosition);
 
-  destination = spectralObject->getPosition();
-  assertOk("moves SPECTRAL over SPECTRAL", WM.resolveMovement(subject, destination));
-
-  assertEq("updates position", subject->getPosition(), destination);
-
-  destination = hardObject->getPosition();
-
-  assertOk("moves SPECTRAL over HARD", WM.resolveMovement(subject, destination));
-
-  assertEq("updates position", subject->getPosition(), destination);
-
-  destination = Vector(0, 0);
-  assertOk("moves SPECTRAL on empty spot", WM.resolveMovement(subject, destination));
-
-  assertEq("updates position", subject->getPosition(), destination);
+  targetPosition = Vector(0, 0);
+  WM.resolveMovement(subject, targetPosition);
+  assertEq("moves SPECTRAL on empty spot", subject->getPosition(), targetPosition);
 
   subject->setSolidness(Solidness::SOFT);
   subject->setPosition(Vector(0, 0));
 
-  destination = softObject->getPosition();
+  targetPosition = softObject->getPosition();
+  WM.resolveMovement(subject, targetPosition);
+  assertEq("moves SPECTRAL over SPECTRAL", subject->getPosition(), targetPosition);
 
-  assertOk("moves SOFT over SOFT", WM.resolveMovement(subject, destination));
+  targetPosition = spectralObject->getPosition();
+  WM.resolveMovement(subject, targetPosition);
+  assertEq("moves SOFT over SPECTRAL", subject->getPosition(), targetPosition);
 
-  assertEq("updates position", subject->getPosition(), destination);
+  targetPosition = hardObject->getPosition();
+  WM.resolveMovement(subject, targetPosition);
+  assertEq("moves SOFT over SPECTRAL", subject->getPosition(), targetPosition);
 
-  destination = spectralObject->getPosition();
+  targetPosition = Vector(0, 0);
+  WM.resolveMovement(subject, targetPosition);
+  assertEq("moves SOFT over empty spot", subject->getPosition(), targetPosition);
 
-  assertOk("moves SOFT over SPECTRAL", WM.resolveMovement(subject, destination));
-
-  assertEq("updates position", subject->getPosition(), destination);
-
-  destination = hardObject->getPosition();
-
-  assertOk("moves SOFT over HARD", WM.resolveMovement(subject, destination));
-
-  assertEq("updates position", subject->getPosition(), destination);
-
-  destination = Vector(0, 0);
-
-  assertOk("moves SOFT on empty spot", WM.resolveMovement(subject, destination));
-
-  assertEq("updates position", subject->getPosition(), destination);
+  position = subject->getPosition();
+  velocity = Vector(1, 1);
+  acceleration = Vector(2, 2);
+  targetVelocity = Vector(-1, -1);
+  targetAcceleration = Vector(-2, -2);
 
   subject->setSolidness(Solidness::HARD);
   subject->setBox(Box(Vector(), 1.5, 1.5));
+  subject->setVelocity(velocity);
+  subject->setAcceleration(acceleration);
+  hardObject->setVelocity(targetVelocity);
+  hardObject->setAcceleration(targetAcceleration);
+  
   // Almost on hard, but with part of the bounding box colliding
-  destination = hardObject->getPosition() - Vector(1, 1);
-  assertFail("does not move HARD over HARD (larger bounding boxes)",
-             WM.resolveMovement(subject, destination));
+  targetPosition = hardObject->getPosition() - velocity;
+  WM.resolveMovement(subject, targetPosition);
+  assertEq("does not move HARD on HARD with bounding box collision",
+           subject->getPosition(), position);
+  assertEq("reflects velocity (subject)", subject->getVelocity(), targetVelocity);
+  assertEq("reflects acceleration (subject)", subject->getAcceleration(), targetAcceleration);
+  assertEq("reflects velocity (object)", hardObject->getVelocity(), velocity);
+  assertEq("reflects acceleration (object)", hardObject->getAcceleration(), acceleration);
 
   // Clean up test objects
   WM.markForDelete(subject);

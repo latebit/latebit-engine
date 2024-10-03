@@ -63,9 +63,8 @@ class WorldManager : public Manager {
   // Returns a list of object colliding with the object at a given position
   auto getCollisions(Object *o, Vector where) const -> ObjectList;
 
-  // Attempts to move an object to a given position.
-  // Returns 0 for success, -1 for failure
-  auto resolveMovement(Object *o, Vector position) -> int;
+  // Moves an object to a given position and resolves 
+  void resolveMovement(Object *o, Vector position);
 
   // Updates all active objects and frees resources for deleted ones
   void update();

@@ -1,4 +1,4 @@
-#include "latebit/core/objects/SceneGraph.h"
+#include "SceneGraph.h"
 
 #include "latebit/core/objects/Object.h"
 #include "test/lib/test.h"

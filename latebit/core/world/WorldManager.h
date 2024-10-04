@@ -1,8 +1,8 @@
 #pragma once
 
+#include "SceneGraph.h"
 #include "View.h"
 #include "latebit/core/objects/Object.h"
-#include "latebit/core/objects/SceneGraph.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/utils/Manager.h"
 

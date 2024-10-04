@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <string>
 
-#include "SceneGraph.h"
+#include "latebit/core/world/SceneGraph.h"
 #include "latebit/core/world/WorldManager.h"
 #include "latebit/core/GameManager.h"
 #include "latebit/core/ResourceManager.h"

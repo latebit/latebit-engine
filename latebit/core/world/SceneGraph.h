@@ -2,8 +2,8 @@
 
 #include <array>
 
-#include "Object.h"
-#include "ObjectList.h"
+#include "latebit/core/objects/Object.h"
+#include "latebit/core/objects/ObjectList.h"
 
 namespace lb {
 const int MAX_ALTITUDE = 4;

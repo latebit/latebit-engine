@@ -1,7 +1,5 @@
 #include "SceneGraph.h"
 
-#include "Object.h"
-#include "ObjectList.h"
 #include "latebit/utils/Logger.h"
 
 namespace lb {

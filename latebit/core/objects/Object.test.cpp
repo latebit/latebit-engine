@@ -191,11 +191,11 @@ auto main() -> int {
     
     assertEq("sets a type", subject.getType(), "Object");
     assertEq("sets a position", subject.getPosition(), Vector());
+    assertEq("sets a velocity", subject.getVelocity(), Vector());
+    assertEq("sets a acceleration", subject.getAcceleration(), Vector());
     assertEq("sets an altitude", subject.getAltitude(), 0);
     assertEq("sets a solidness", subject.getSolidness(), Solidness::HARD);
     assertEq("sets a scale", subject.getScale(), 1);
-    assertEq("sets a velocity", subject.getVelocity(), Vector());
-    assertEq("sets a acceleration", subject.getAcceleration(), Vector());
     assert("sets a bounding box", subject.getBox() == Box(Vector(), 1, 1));
     assert("sets an animation", subject.getAnimation() == Animation());
   });

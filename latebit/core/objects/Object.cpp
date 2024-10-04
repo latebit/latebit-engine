@@ -1,26 +1,22 @@
 #include "Object.h"
 
-#include <array>
 #include <cstdint>
 #include <string>
-
-#include "latebit/core/world/SceneGraph.h"
-#include "latebit/core/world/WorldManager.h"
 #include "latebit/core/GameManager.h"
 #include "latebit/core/ResourceManager.h"
-#include "latebit/core/geometry/Vector.h"
-#include "latebit/core/graphics/DisplayManager.h"
 #include "latebit/core/input/InputManager.h"
+#include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Logger.h"
+#include "latebit/core/world/SceneGraph.h"
 
 using namespace std;
 
 namespace lb {
 
-Object::Object() {
+Object::Object() : sceneGraph(&WM.getSceneGraph()) {
   static int id = 0;
   this->id = id++;
-  WM.insertObject(this);
+  sceneGraph->insertObject(this);
 }
 
 Object::Object(const string& type) : Object() { this->type = type; }
@@ -31,9 +27,7 @@ Object::~Object() {
     unsubscribe(this->events[i]);
   }
 
-  // This object is owned by the world manager,
-  // so resources for this object are freed in WorldManager::shutDown/update
-  WM.removeObject(this);
+  sceneGraph->removeObject(this);
 }
 
 auto Object::getId() const -> int { return this->id; }
@@ -167,14 +161,14 @@ auto Object::unsubscribe(string eventType) -> int {
 }
 
 auto Object::setActive(bool active) -> int {
-  if (WM.getSceneGraph().setActive(this, active) != 0) return -1;
+  if (sceneGraph->setActive(this, active) != 0) return -1;
   this->active = active;
   return 0;
 }
 auto Object::isActive() const -> bool { return this->active; }
 
 auto Object::setVisible(bool visible) -> int {
-  if (WM.getSceneGraph().setVisible(this, visible) != 0) return -1;
+  if (sceneGraph->setVisible(this, visible) != 0) return -1;
   this->visible = visible;
   return 0;
 }

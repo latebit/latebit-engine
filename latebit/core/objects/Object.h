@@ -24,6 +24,8 @@ enum Solidness {
 
 const int MAX_EVENTS_PER_OBEJCT = 20;
 
+class SceneGraph;
+
 class Object {
  private:
   // Unique id of this object.
@@ -31,6 +33,8 @@ class Object {
 
   // A string representing the type of object.
   string type = "Object";
+
+  SceneGraph* sceneGraph;
 
   // Position of the object in World coordinates.
   Vector position = Vector();

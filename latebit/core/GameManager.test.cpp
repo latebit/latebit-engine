@@ -4,7 +4,7 @@
 
 #include "../../test/lib/test.h"
 #include "latebit/core/graphics/DisplayManager.h"
-#include "latebit/core/objects/WorldManager.h"
+#include "latebit/core/world/WorldManager.h"
 
 using namespace lb;
 

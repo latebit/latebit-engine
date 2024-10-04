@@ -15,7 +15,7 @@
 #include "Keyframe.h"
 #include "latebit/core/configuration/Configuration.h"
 #include "latebit/core/geometry/Vector.h"
-#include "latebit/core/objects/WorldManager.h"
+#include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Logger.h"
 #include "latebit/utils/Math.h"
 

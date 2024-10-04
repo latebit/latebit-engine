@@ -7,7 +7,7 @@
 #include "latebit/core/events/EventStep.h"
 #include "latebit/core/graphics/DisplayManager.h"
 #include "latebit/core/input/InputManager.h"
-#include "latebit/core/objects/WorldManager.h"
+#include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Logger.h"
 
 #ifdef __EMSCRIPTEN__

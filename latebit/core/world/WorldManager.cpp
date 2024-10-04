@@ -1,11 +1,11 @@
 #include "WorldManager.h"
 #include <cstdio>
 
-#include "ObjectListIterator.h"
 #include "latebit/core/events/EventCollision.h"
 #include "latebit/core/events/EventOut.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/objects/Object.h"
+#include "latebit/core/objects/ObjectListIterator.h"
 #include "latebit/core/utils/utils.h"
 #include "latebit/utils/Logger.h"
 #include "latebit/utils/Math.h"

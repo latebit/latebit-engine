@@ -1,4 +1,4 @@
-#include "latebit/core/objects/WorldManager.h"
+#include "latebit/core/world/WorldManager.h"
 
 #include <array>
 

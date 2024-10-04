@@ -16,7 +16,7 @@
 #include "latebit/core/input/InputManager.h"
 #include "latebit/core/objects/ObjectList.h"
 #include "latebit/core/objects/ObjectListIterator.h"
-#include "latebit/core/objects/WorldManager.h"
+#include "latebit/core/world/WorldManager.h"
 
 void altitude() {
   Object subject;

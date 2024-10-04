@@ -5,7 +5,7 @@
 #include <string>
 
 #include "SceneGraph.h"
-#include "WorldManager.h"
+#include "latebit/core/world/WorldManager.h"
 #include "latebit/core/GameManager.h"
 #include "latebit/core/ResourceManager.h"
 #include "latebit/core/geometry/Vector.h"

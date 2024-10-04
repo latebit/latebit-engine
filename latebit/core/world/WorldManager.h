@@ -1,5 +1,6 @@
 #pragma once
 
+#include "View.h"
 #include "latebit/core/objects/Object.h"
 #include "latebit/core/objects/SceneGraph.h"
 #include "latebit/core/geometry/Vector.h"
@@ -11,6 +12,8 @@ using namespace std;
 
 namespace lb {
 
+class View;
+
 class WorldManager : public Manager {
  private:
   // Make WorldManager a singleton
@@ -20,23 +23,18 @@ class WorldManager : public Manager {
   ObjectList deletions = ObjectList();
   // The boundaries of the world, regardless of where the camera points in cells
   Box boundary = Box();
-  // The boundaries of the visible portion of the world in cells
-  Box view = Box();
-  // The object the view is following, if any
-  Object *viewFollowing = nullptr;
-  // Part of the view where viewFollowing can move without moving the camera
-  Box viewDeadZone = Box();
   // The current SceneGraph
   SceneGraph sceneGraph = SceneGraph();
+  // The current View
+  View view = View(this);
 
   // Move object and check if it is out of bounds
   void moveAndCheckBounds(Object *o, Vector position);
-
  public:
+
   // Singleton
   WorldManager(WorldManager const &) = delete;
   void operator=(WorldManager const &) = delete;
-
   static auto getInstance() -> WorldManager &;
 
   auto startUp() -> int override;
@@ -79,32 +77,9 @@ class WorldManager : public Manager {
   // Get the boundary for the world
   [[nodiscard]] auto getBoundary() const -> Box;
 
-  // Set the current view (i.e., visible portion of the world)
-  void setView(Box v);
-  // Get the current view
-  [[nodiscard]] auto getView() const -> Box;
-
-  // Centers the view on a given position.
-  // View edge will not go beyond world boundary.
-  void setViewPosition(Vector where);
-
-  // Set the view to follow a given object.
-  // Set to NULL to stop following.
-  // Returns 0 for success, -1 for failure
-  auto setViewFollowing(Object *o) -> int;
-
-  // Set the dead zone for the view following
-  void setViewDeadZone(Box d);
-  // Get the dead zone for the view following
-  [[nodiscard]] auto getViewDeadZone() const -> Box;
-
   // Returns the current SceneGraph
   [[nodiscard]] auto getSceneGraph() -> SceneGraph &;
-
-  // Convert world coordinates to view coordinates
-  auto static worldToView(Vector worldPosition) -> Vector;
-
-  // Convert view coordinates to world coordinates
-  auto static viewToWorld(Vector viewPosition) -> Vector;
+  // Returns the current View
+  [[nodiscard]] auto getView() -> View &;
 };
 }  // namespace lb

@@ -52,7 +52,7 @@ auto GameManager::startUp() -> int {
   // By default boundary equates view and it's the whole window
   Box boundary(Vector(0, 0), DM::WINDOW_WIDTH, DM::WINDOW_HEIGHT);
   WM.setBoundary(boundary);
-  WM.setView(boundary);
+  WM.getView().setView(boundary);
 
   Log.info("GameManager::startUp(): Started successfully");
   return Manager::startUp();

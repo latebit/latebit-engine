@@ -11,28 +11,6 @@
 using namespace std;
 using namespace lb;
 
-void worldToView() {
-  auto initialView = WM.getView();
-  WM.setView(Box(Vector(5, 5), 10, 10));
-
-  assertEq("converts world position to view position",
-           WorldManager::worldToView(Vector(5, 5)), Vector(0, 0));
-  assertEq("converts world position to view position (origin)",
-           WorldManager::worldToView(Vector(0, 0)), Vector(-5, -5));
-  WM.setView(initialView);
-}
-
-void viewToWorld() {
-  auto initialView = WM.getView();
-  WM.setView(Box(Vector(5, 5), 10, 10));
-
-  assertEq("converts view position to world position",
-           WorldManager::viewToWorld(Vector(0, 0)), Vector(5, 5));
-  assertEq("converts view position to world position (origin)",
-           WorldManager::worldToView(Vector(-5, -5)), Vector(0, 0));
-  WM.setView(initialView);
-}
-
 void draw() {
   WM.startUp();
   static array<int, 5> drawCount;
@@ -233,47 +211,6 @@ void resolveMovement() {
   WM.shutDown();
 }
 
-void viewFollowing() {
-  WM.startUp();
-
-  auto subject = new Object;
-  subject->setPosition(Vector());
-
-  auto initialView = Box(Vector(5, 5), 10, 10);
-  WM.setView(initialView);
-  WM.setBoundary(Box(20, 20));
-
-  WM.setViewFollowing(subject);
-  WM.resolveMovement(subject, Vector(10, 10));
-  assertEq("does not update view", WM.getView(), initialView);
-  WM.resolveMovement(subject, Vector(11, 11));
-
-  assertEq("updates the view", WM.getView(), Box(Vector(6, 6), 10, 10));
-
-  WM.resolveMovement(subject, Vector(11, 5));
-  assertEq("updates the view (vertical lower bound)", WM.getView(),
-           Box(Vector(6, 0), 10, 10));
-
-  WM.resolveMovement(subject, Vector(11, 15));
-  assertEq("updates the view (vertical upper bound)", WM.getView(),
-           Box(Vector(6, 10), 10, 10));
-
-  WM.resolveMovement(subject, Vector(5, 11));
-  assertEq("updates the view (horizontal lower bound)", WM.getView(),
-           Box(Vector(0, 6), 10, 10));
-
-  WM.resolveMovement(subject, Vector(15, 11));
-  assertEq("updates the view (horizontal upper bound)", WM.getView(),
-           Box(Vector(10, 6), 10, 10));
-
-  WM.setViewDeadZone(Box(WM.getView().getCorner(), 5, 5));
-  WM.resolveMovement(subject, Vector(12, 10));
-  assertEq("does not update the view within dead zone", WM.getView(),
-           Box(Vector(10, 6), 10, 10));
-
-  WM.shutDown();
-}
-
 bool outOfBounds_emitted = false;
 void outOfBounds() {
   WM.startUp();
@@ -345,30 +282,11 @@ void objectManagement() {
   assertEq("removes everything", activeObjects.getCount(), 0);
 }
 
-void setters() {
-  WM.setView(Box(Vector(0, 0), 10, 10));
-  assertEq("sets view", WM.getView(), Box(Vector(0, 0), 10, 10));
-
-  WM.setBoundary(Box(Vector(0, 0), 10, 10));
-  assertEq("sets boundary", WM.getBoundary(), Box(Vector(0, 0), 10, 10));
-
-  WM.setViewDeadZone(Box(Vector(0, 0), 10, 10));
-  assertEq("sets view dead zone", WM.getViewDeadZone(),
-           Box(Vector(0, 0), 10, 10));
-
-  WM.setView(Box(Vector(0, 0), 10, 10));
-  assertEq("sets view", WM.getView(), Box(Vector(0, 0), 10, 10));
-}
-
 auto main() -> int {
-  test("setters", setters);
   test("object management", objectManagement);
   test("collisions ", getCollisions);
   test("resolve movements", resolveMovement);
   test("outOfBounds", outOfBounds);
   test("draw", draw);
-  test("viewFollowing", viewFollowing);
-  test("worldToView", worldToView);
-  test("viewToWorld", worldToView);
   return report();
 }

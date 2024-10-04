@@ -98,7 +98,7 @@ auto DisplayManager::drawKeyframe(Position position, const Keyframe* frame, uint
   }
 
   scaling = clamp(scaling, 1, 10);
-  auto viewPosition = WorldManager::worldToView(position);
+  auto viewPosition = WM.getView().worldToView(position);
   auto pixelPosition = cellsToPixels(viewPosition);
   auto cellSize = CELL_SIZE * scaling;
 
@@ -160,7 +160,7 @@ auto DisplayManager::drawRectangle(Position position, int width, int height,
                                    Color::Color fillColor) -> int {
   if (DisplayManager::window == nullptr) return -1;
 
-  auto viewPosition = WorldManager::worldToView(position);
+  auto viewPosition = WM.getView().worldToView(position);
   auto pixelPosition = cellsToPixels(viewPosition);
 
   SDL_Rect rectangle = {(int)pixelPosition.getX(), (int)pixelPosition.getY(),
@@ -192,7 +192,7 @@ auto DisplayManager::drawString(Position position, string string,
                                 Font font) -> int {
   if (DisplayManager::window == nullptr) return -1;
 
-  Position viewPosition = WorldManager::worldToView(position);
+  Position viewPosition = WM.getView().worldToView(position);
   int len = string.size();
   int gWidth = font.getGlyphWidth();
   int gHeight = font.getGlyphHeight();

@@ -7,6 +7,7 @@
 #include "latebit/core/objects/Object.h"
 #include "latebit/core/objects/ObjectListIterator.h"
 #include "latebit/core/utils/utils.h"
+#include "latebit/core/world/View.h"
 #include "latebit/utils/Logger.h"
 
 #define WM lb::WorldManager::getInstance()
@@ -25,6 +26,7 @@ auto WorldManager::getInstance() -> WorldManager& {
 auto WorldManager::startUp() -> int {
   this->deletions = ObjectList();
   this->sceneGraph = SceneGraph();
+  this->view = View(this);
   Log.info("WorldManager::startUp(): Started successfully");
   return Manager::startUp();
 }

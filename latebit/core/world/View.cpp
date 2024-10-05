@@ -1,5 +1,4 @@
 #include "View.h"
-#include "latebit/core/objects/ObjectListIterator.h"
 #include "latebit/core/utils/utils.h"
 #include "latebit/utils/Logger.h"
 #include "latebit/utils/Math.h"
@@ -41,9 +40,8 @@ auto View::setViewFollowing(Object* o) -> int {
   }
 
   auto updates = world->getAllObjects();
-  auto iterator = ObjectListIterator(&updates);
-  for (iterator.first(); !iterator.isDone(); iterator.next()) {
-    if (iterator.currentObject() == o) {
+  for (auto object : updates) {
+    if (object == o) {
       this->viewFollowing = o;
       return 0;
     }

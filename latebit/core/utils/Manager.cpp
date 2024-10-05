@@ -1,7 +1,7 @@
 #include "Manager.h"
 
 #include "latebit/core/events/Event.h"
-#include "latebit/core/objects/ObjectListIterator.h"
+#include "latebit/core/objects/utils.h"
 
 namespace lb {
 
@@ -25,7 +25,7 @@ auto Manager::subscribe(Object* o, string eventType) -> int {
 
   for (int i = 0; i < this->eventCount; i++) {
     if (this->events[i] == eventType) {
-      this->subscribers[i].insert(o);
+      this->subscribers[i].push_back(o);
       return 0;
     }
   }
@@ -33,7 +33,7 @@ auto Manager::subscribe(Object* o, string eventType) -> int {
   // Subscribe to a new event
   this->events[this->eventCount] = eventType;
   this->subscribers[this->eventCount].clear();
-  this->subscribers[this->eventCount].insert(o);
+  this->subscribers[this->eventCount].push_back(o);
   this->eventCount++;
 
   return 0;
@@ -47,13 +47,13 @@ auto Manager::unsubscribe(Object* o, string eventType) -> int {
   int foundIndex = 0;
   for (int i = 0; i < this->eventCount; i++) {
     if (this->events[i] == eventType) {
-      this->subscribers[i].remove(o);
+      remove(this->subscribers[i], o);
       foundIndex = i;
       break;
     }
   }
 
-  if (this->subscribers[foundIndex].isEmpty()) {
+  if (this->subscribers[foundIndex].empty()) {
     this->subscribers[foundIndex] = this->subscribers[this->eventCount];
     this->events[foundIndex] = this->events[this->eventCount];
     this->eventCount--;
@@ -68,18 +68,12 @@ auto Manager::onEvent(const Event* event) const -> int {
   for (int i = 0; i < this->eventCount; i++) {
     auto currentEvent = this->events[i];
     if (currentEvent == event->getType()) {
-      // Generate a copy to avoid race conditions on the subscribers list
-      // For example when as a result of handling an event, a new subscriber
-      // is added to the list
       auto subscribers = this->subscribers[i];
-      auto iterator = ObjectListIterator(&subscribers);
+      for (auto &subscriber : subscribers) {
+        if (subscriber == nullptr) continue;
 
-      for (iterator.first(); !iterator.isDone(); iterator.next()) {
-        auto currentObject = iterator.currentObject();
-        if (currentObject == nullptr) continue;
-
-        if (currentObject->isActive()) {
-          currentObject->eventHandler(event);
+        if (subscriber->isActive()) {
+          subscriber->eventHandler(event);
           count++;
         }
       }

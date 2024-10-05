@@ -1,11 +1,11 @@
 #include "WorldManager.h"
 #include <cstdio>
+#include <vector>
 
 #include "latebit/core/events/EventCollision.h"
 #include "latebit/core/events/EventOut.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/objects/Object.h"
-#include "latebit/core/objects/ObjectListIterator.h"
 #include "latebit/core/utils/utils.h"
 #include "latebit/core/world/View.h"
 #include "latebit/utils/Logger.h"
@@ -24,24 +24,14 @@ auto WorldManager::getInstance() -> WorldManager& {
 }
 
 auto WorldManager::startUp() -> int {
-  this->deletions = ObjectList();
-  this->sceneGraph = SceneGraph();
+  this->sceneGraph.clear();
   this->view = View(this);
   Log.info("WorldManager::startUp(): Started successfully");
   return Manager::startUp();
 }
 
 void WorldManager::shutDown() {
-  auto all = this->getAllObjects(true);
-  auto iterator = ObjectListIterator(&all);
-  for (iterator.first(); !iterator.isDone(); iterator.next()) {
-    // This is not leaving a danglig null reference!
-    // In the destructor of Object, we also remove it from the world
-    auto current = iterator.currentObject();
-    delete current;
-    current = nullptr;
-  }
-
+  sceneGraph.clear();
   Manager::shutDown();
   Log.info("WorldManager::shutDown(): Shut down successfully");
 }
@@ -52,52 +42,44 @@ auto WorldManager::isValid([[maybe_unused]] string eventType) const -> bool {
   return true;
 }
 
-auto WorldManager::insertObject(Object* o) -> int {
-  return this->sceneGraph.insertObject(o);
-}
-
-auto WorldManager::removeObject(Object* o) -> int {
-  return this->sceneGraph.removeObject(o);
-}
-
-auto WorldManager::getAllObjects(bool includeInactive) const -> ObjectList {
+auto WorldManager::getAllObjects(bool includeInactive) const -> vector<Object *> {
   if (includeInactive) {
-    return this->sceneGraph.getActiveObjects() +
-           this->sceneGraph.getInactiveObjects();
+    auto active = this->sceneGraph.getActiveObjects();
+    auto inactive = this->sceneGraph.getInactiveObjects();
+    active.insert(active.end(), inactive.begin(), inactive.end());
+    return active;
   }
 
   return this->sceneGraph.getActiveObjects();
 }
 
 auto WorldManager::getAllObjectsByType(std::string type,
-                                 bool includeInactive) const -> ObjectList {
-  ObjectList result;
-  auto solid = this->getAllObjects(includeInactive);
-  auto iterator = ObjectListIterator(&solid);
-
-  for (iterator.first(); !iterator.isDone(); iterator.next()) {
-    if (iterator.currentObject()->getType() == type) {
-      result.insert(iterator.currentObject());
+                                 bool includeInactive) const -> vector<Object *> {
+  vector<Object *> result = {};
+  auto all = this->getAllObjects(includeInactive);
+  result.reserve(all.size());
+  
+  for (auto object : all) {
+    if (object->getType() == type) {
+      result.push_back(object);
     }
   }
 
   return result;
 }
 
-auto WorldManager::getCollisions(Object* o, Vector where) const -> ObjectList {
-  ObjectList collisions;
+auto WorldManager::getCollisions(Object* o, Vector where) const -> vector<Object *> {
+  vector<Object *> collisions = {};
   auto solid = this->sceneGraph.getSolidObjects();
-  auto iterator = ObjectListIterator(&solid);
   auto box = o->getWorldBox(where);
+  collisions.reserve(solid.size());
 
-  for (iterator.first(); !iterator.isDone(); iterator.next()) {
-    auto current = iterator.currentObject();
+  for (auto current : solid) {
     if (current == o) continue;
-
     auto currentBox = current->getWorldBox();
 
     if (intersects(box, currentBox)) {
-      collisions.insert(current);
+      collisions.push_back(current);
     }
   }
 
@@ -121,18 +103,15 @@ void WorldManager::resolveMovement(Object* object, Vector position) {
     return moveAndCheckBounds(object, position);
   }
 
-  ObjectList collisions = getCollisions(object, position);
+  vector<Object *> collisions = getCollisions(object, position);
 
   // In absence of collisions, just move
-  if (collisions.isEmpty()) {
+  if (collisions.empty()) {
     return moveAndCheckBounds(object, position);
   }
 
-  auto iterator = ObjectListIterator(&collisions);
-
   bool shouldMove = true;
-  for (iterator.first(); !iterator.isDone(); iterator.next()) {
-    auto otherObject = iterator.currentObject();
+  for (auto otherObject : collisions) {
     auto event = EventCollision(object, otherObject, position);
     object->eventHandler(&event);
     otherObject->eventHandler(&event);
@@ -172,22 +151,13 @@ void WorldManager::moveAndCheckBounds(Object* o, Vector position) {
 void WorldManager::update() {
   if (!isStarted()) return;
 
-  auto deletions = ObjectListIterator(&this->deletions);
-  for (deletions.first(); !deletions.isDone(); deletions.next()) {
-    Log.debug("WorldManager::update(): Deleting object %s",
-              deletions.currentObject()->toString().c_str());
-    // This is not leaving a danglig null reference!
-    // In the destructor of Object, we also remove it from the world
-    auto current = deletions.currentObject();
-    delete current;
-    current = nullptr;
+  // Delete objects marked for deletion
+  for (auto &object : deletions) {
+    this->sceneGraph.removeObject(object);
   }
-  this->deletions.clear();
 
   auto active = this->sceneGraph.getActiveObjects();
-  auto updates = ObjectListIterator(&active);
-  for (updates.first(); !updates.isDone(); updates.next()) {
-    auto object = updates.currentObject();
+  for (auto &object : active) {
     auto oldPosition = object->getPosition();
     auto newVelocity = object->getVelocity() + object->getAcceleration();
     auto newPosition = object->getPosition() + newVelocity;
@@ -200,22 +170,14 @@ void WorldManager::update() {
 }
 
 auto WorldManager::markForDelete(Object* o) -> int {
-  // Prevents marking the same object for deletion twice
-  auto iterator = ObjectListIterator(&this->deletions);
-  for (iterator.first(); !iterator.isDone(); iterator.next()) {
-    if (iterator.currentObject() == o) return 0;
-  }
-
-  return this->deletions.insert(o);
+  deletions.insert(o);
+  return 0;
 }
 
 void WorldManager::draw() {
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
     auto visible = this->getSceneGraph().getVisibleObjects(i);
-    auto iterator = ObjectListIterator(&visible);
-
-    for (iterator.first(); !iterator.isDone(); iterator.next()) {
-      auto object = iterator.currentObject();
+    for (auto &object : visible) {
       if (object != nullptr && intersects(object->getWorldBox(), this->view.getView())) {
         object->draw();
       };

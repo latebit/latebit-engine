@@ -6,6 +6,7 @@
 #include "latebit/core/graphics/Keyframe.h"
 #include "latebit/core/graphics/Sprite.h"
 #include "latebit/core/objects/Object.h"
+#include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Logger.h"
 
 using namespace lb;
@@ -38,11 +39,11 @@ auto main() -> int {
 
   GM.startUp();
   
-  new TestObject(Vector(50, 10), Vector(), Vector(0.01, 0), Color::RED, 10);
-  new TestObject(Vector(100, 10), Vector(), Vector(-0.01, 0), Color::GREEN, 10);
+  WM.create<TestObject>(Vector(50, 10), Vector(), Vector(0.01, 0), Color::RED, 10);
+  WM.create<TestObject>(Vector(100, 10), Vector(), Vector(-0.01, 0), Color::GREEN, 10);
 
-  new TestObject(Vector(50, 40), Vector(1, 0), Vector(), Color::YELLOW, 10);
-  new TestObject(Vector(100, 40), Vector(-1, 0), Vector(), Color::PINK, 10);
+  WM.create<TestObject>(Vector(50, 40), Vector(1, 0), Vector(), Color::YELLOW, 10);
+  WM.create<TestObject>(Vector(100, 40), Vector(-1, 0), Vector(), Color::PINK, 10);
 
   GM.run();
   return 0;

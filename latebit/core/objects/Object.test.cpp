@@ -12,10 +12,8 @@
 #include "latebit/core/events/EventOut.h"
 #include "latebit/core/events/EventStep.h"
 #include "latebit/core/geometry/Vector.h"
-#include "latebit/core/graphics/Animation.h"
 #include "latebit/core/input/InputManager.h"
-#include "latebit/core/objects/ObjectList.h"
-#include "latebit/core/objects/ObjectListIterator.h"
+#include "latebit/core/objects/utils.h"
 #include "latebit/core/world/WorldManager.h"
 
 void altitude() {
@@ -28,7 +26,7 @@ void altitude() {
 
   subject.setAltitude(1);
   assert("updates current scene",
-         WM.getSceneGraph().getVisibleObjects(1).find(&subject) > -1);
+         contains(WM.getSceneGraph().getVisibleObjects(1), &subject));
 
   auto initialAltitude = subject.getAltitude();
 
@@ -46,7 +44,7 @@ void solidness() {
   subject.setSolidness(Solidness::SOFT);
   assertEq("updates solidness", subject.getSolidness(), Solidness::SOFT);
   assert("updates current scene",
-         WM.getSceneGraph().getSolidObjects().find(&subject) > -1);
+         contains(WM.getSceneGraph().getSolidObjects(), &subject));
 
   assert("SOFT is solid", subject.isSolid());
   subject.setSolidness(Solidness::HARD);
@@ -143,27 +141,26 @@ void eventSubscription() {
 }
 
 void visible() {
-  Object subject;
+  auto subject = WM.create<Object>();
 
-  subject.setVisible(false);
-  assert("is invisible", !subject.isVisible());
+  subject->setVisible(false);
+  assert("is invisible", !subject->isVisible());
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
     assert("does not appear in visible list for altitude " + to_string(i),
-           WM.getSceneGraph().getVisibleObjects(i).find(&subject) == -1);
+           !contains(WM.getSceneGraph().getVisibleObjects(i), subject));
   }
 
-  subject.setVisible(true);
-  assert("is visible", subject.isVisible());
+  subject->setVisible(true);
+  assert("is visible", subject->isVisible());
   assert(
-    "appears in visible list for altitude " + to_string(subject.getAltitude()),
-    WM.getSceneGraph().getVisibleObjects(subject.getAltitude()).find(&subject) >
-      -1);
+    "appears in visible list for altitude " + to_string(subject->getAltitude()),
+    contains(WM.getSceneGraph().getVisibleObjects(subject->getAltitude()), subject));
 
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
-    if (i == subject.getAltitude()) continue;
+    if (i == subject->getAltitude()) continue;
 
     assert("does not appear in visible for altitude " + to_string(i),
-           WM.getSceneGraph().getVisibleObjects(i).find(&subject) == -1);
+      !contains(WM.getSceneGraph().getVisibleObjects(i), subject));
   }
 }
 
@@ -172,17 +169,17 @@ void active() {
 
   subject.setActive(false);
   assert("sets active to false", !subject.isActive());
-  assertEq("does not appear in active objects",
-           WM.getSceneGraph().getActiveObjects().find(&subject), -1);
+  assert("does not appear in active objects",
+           !contains(WM.getSceneGraph().getActiveObjects(), &subject));
   assert("appears in inactive objects",
-         WM.getSceneGraph().getInactiveObjects().find(&subject) > -1);
+         contains(WM.getSceneGraph().getInactiveObjects(), &subject));
 
   subject.setActive(true);
   assert("sets active to true", subject.isActive());
   assert("does not appear in inactive objects",
-         WM.getSceneGraph().getInactiveObjects().find(&subject) == -1);
+         !contains(WM.getSceneGraph().getInactiveObjects(), &subject));
   assert("appears in active objects",
-         WM.getSceneGraph().getActiveObjects().find(&subject) > -1);
+         contains(WM.getSceneGraph().getActiveObjects(), &subject));
 }
 
 auto main() -> int {

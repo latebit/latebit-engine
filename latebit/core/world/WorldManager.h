@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_set>
+#include <vector>
 #include "SceneGraph.h"
 #include "View.h"
 #include "latebit/core/objects/Object.h"
@@ -19,8 +21,7 @@ class WorldManager : public Manager {
   // Make WorldManager a singleton
   WorldManager();
 
-  // Objects that are marked for deletion
-  ObjectList deletions = ObjectList();
+  unordered_set<Object*> deletions = {};
   // The boundaries of the world, regardless of where the camera points in cells
   Box boundary = Box();
   // The current SceneGraph
@@ -41,24 +42,16 @@ class WorldManager : public Manager {
   void shutDown() override;
   [[nodiscard]] auto isValid(string eventType) const -> bool override;
 
-  // Adds an objects to the list of active objects
-  auto insertObject(Object *o) -> int;
-
-  // Removes on object from the list of active objects.
-  // This DOES NOT delete the object nor free associated resources.
-  // If you need to delete an object, use markForDelete() instead.
-  auto removeObject(Object *o) -> int;
-
   // Returns all active objects
   [[nodiscard]] auto getAllObjects(bool includeInactive = false) const
-    -> ObjectList;
+    -> vector<Object*>;
 
   // Returns a list of all active objects of a given type
   [[nodiscard]] auto getAllObjectsByType(
-    string type, bool includeInactive = false) const -> ObjectList;
+    string type, bool includeInactive = false) const -> vector<Object*>;
 
   // Returns a list of object colliding with the object at a given position
-  auto getCollisions(Object *o, Vector where) const -> ObjectList;
+  auto getCollisions(Object *o, Vector where) const -> vector<Object*>;
 
   // Moves an object to a given position and resolves 
   void resolveMovement(Object *o, Vector position);
@@ -68,6 +61,15 @@ class WorldManager : public Manager {
 
   // Marks an object to be deleted in the next update call
   auto markForDelete(Object *o) -> int;
+
+  template<typename T, typename... Args>
+  static auto create(Args&&... args) -> T* {
+    static_assert(std::is_base_of<Object, T>::value, "T must inherit from Object");
+    auto obj = std::make_unique<T>(std::forward<Args>(args)...);
+    T* ptr = obj.get();
+    getInstance().sceneGraph.insertObject(std::move(obj));
+    return ptr;
+  }
 
   // Draws all the active objects in the view
   void draw();

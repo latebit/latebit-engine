@@ -1,12 +1,14 @@
 #include "latebit/core/world/WorldManager.h"
 
 #include <array>
+#include <vector>
 
 #include "../../../test/lib/test.h"
 #include "latebit/core/events/EventOut.h"
 #include "latebit/core/geometry/Box.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/objects/Object.h"
+#include "latebit/core/objects/utils.h"
 
 using namespace std;
 using namespace lb;
@@ -53,10 +55,10 @@ void getCollisions() {
   WM.startUp();
 
   // Create test objects
-  auto obj1 = new Object;
-  auto obj2 = new Object;
-  auto obj3 = new Object;
-  auto obj4 = new Object;
+  auto obj1 = WM.create<Object>();
+  auto obj2 = WM.create<Object>();
+  auto obj3 = WM.create<Object>();
+  auto obj4 = WM.create<Object>();
 
   // Set positions of test objects
   obj1->setPosition(Vector(0, 0));
@@ -70,13 +72,12 @@ void getCollisions() {
   obj3->setSolidness(Solidness::SPECTRAL);
 
   // Call getCollisions function
-  ObjectList collisions = WM.getCollisions(obj1, Vector(0, 0));
+  vector<Object *> collisions = WM.getCollisions(obj1, Vector(0, 0));
 
   // Check if obj4 is in the collisions list
-  assert("collides with hard", collisions.find(obj4) > -1);
-  assert("collides with soft", collisions.find(obj2) > -1);
-
-  assert("does not collide with spectral", collisions.find(obj3) == -1);
+  assert("collides with hard", contains(collisions, obj4));
+  assert("collides with soft", contains(collisions, obj2));
+  assert("does not collide with spectral", !contains(collisions, obj3));
 
   // Clean up test objects
   WM.markForDelete(obj1);
@@ -246,7 +247,7 @@ void objectManagement() {
   WM.startUp();
   array<Object*, 5> objects;
 
-  for (int i = 0; i < 5; i++) objects[i] = new Object;
+  for (int i = 0; i < 5; i++) objects[i] = WM.create<Object>();
 
   objects[0]->setType("lol");
   objects[1]->setType("asd");
@@ -258,28 +259,22 @@ void objectManagement() {
   WM.update();
 
   auto activeObjects = WM.getAllObjects();
-  assertEq("has active objects", activeObjects.getCount(), 4);
+  assertEq("has active objects", activeObjects.size(), 4);
   auto allObjects = WM.getAllObjects(true);
-  assertEq("has all the objects", allObjects.getCount(), 5);
+  assertEq("has all the objects", allObjects.size(), 5);
   auto activeTypeObjects = WM.getAllObjectsByType("type");
-  assertEq("filters active objects by type", activeTypeObjects.getCount(), 2);
+  assertEq("filters active objects by type", activeTypeObjects.size(), 2);
   auto allTypeObjects = WM.getAllObjectsByType("type", true);
-  assertEq("filters all objects by type", allTypeObjects.getCount(), 3);
+  assertEq("filters all objects by type", allTypeObjects.size(), 3);
 
   WM.markForDelete(objects[0]);
   WM.update();
   activeObjects = WM.getAllObjects();
-  assertEq("has one less object", activeObjects.getCount(), 3);
-
-  WM.removeObject(objects[1]);
-  WM.update();
-  activeObjects = WM.getAllObjects();
-  assertEq("removes an object", activeObjects.getCount(), 2);
-  delete (objects[1]);
+  assertEq("has one less object", activeObjects.size(), 3);
 
   WM.shutDown();
   activeObjects = WM.getAllObjects();
-  assertEq("removes everything", activeObjects.getCount(), 0);
+  assertEq("removes everything", activeObjects.size(), 0);
 }
 
 auto main() -> int {

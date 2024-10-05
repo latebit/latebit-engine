@@ -33,7 +33,7 @@ void viewToWorld() {
 void viewFollowing() {
   WM.startUp();
 
-  auto subject = new Object;
+  auto subject = WM.create<Object>();
   subject->setPosition(Vector());
 
   auto initialView = Box(Vector(5, 5), 10, 10);

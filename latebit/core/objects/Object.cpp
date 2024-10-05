@@ -16,7 +16,6 @@ namespace lb {
 Object::Object() : sceneGraph(&WM.getSceneGraph()) {
   static int id = 0;
   this->id = id++;
-  sceneGraph->insertObject(this);
 }
 
 Object::Object(const string& type) : Object() { this->type = type; }
@@ -26,8 +25,6 @@ Object::~Object() {
   for (int i = 0; i < count; i++) {
     unsubscribe(this->events[i]);
   }
-
-  sceneGraph->removeObject(this);
 }
 
 auto Object::getId() const -> int { return this->id; }
@@ -43,7 +40,7 @@ auto Object::getScale() const -> uint8_t { return this->scale; }
 
 void Object::setAltitude(int a) {
   if (a <= MAX_ALTITUDE && a >= 0) {
-    WM.getSceneGraph().setAltitude(this, a);
+    sceneGraph->setAltitude(this, a);
     this->altitude = a;
   }
 }

@@ -30,6 +30,8 @@ void insert(vector<Object*>& l, Object* o) {
 }
 
 void insert(vector<unique_ptr<Object>>& l, unique_ptr<Object> o) {
+  if (contains(l, o.get())) return;
+
   l.push_back(std::move(o));
   if (l.size() == l.capacity()) {
     l.reserve(l.size() + CHUNK_SIZE);

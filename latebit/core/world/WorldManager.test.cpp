@@ -1,6 +1,7 @@
 #include "latebit/core/world/WorldManager.h"
 
 #include <array>
+#include <cstdio>
 #include <vector>
 
 #include "../../../test/lib/test.h"
@@ -15,7 +16,7 @@ using namespace lb;
 
 void draw() {
   WM.startUp();
-  static array<int, 5> drawCount;
+  static array<int, 5> drawCount = {0,0,0,0,0};
 
   class TestObject : public Object {
    public:
@@ -33,7 +34,7 @@ void draw() {
   // Initialize objects and results array
   for (int i = 0; i < 5; i++) {
     drawCount[i] = 0;
-    new TestObject(i);
+    WM.create<TestObject>(i);
   };
 
   WM.draw();
@@ -44,7 +45,7 @@ void draw() {
   WM.shutDown();
   WM.startUp();
 
-  new TestObject(0, Vector(-2, -2));
+  WM.create<TestObject>(0, Vector(-2, -2));
   WM.draw();
   assertEq("does not draw out of bounds", drawCount[0], 1);
 
@@ -92,10 +93,10 @@ void getCollisions() {
 void resolveMovement() {
   WM.startUp();
 
-  auto subject = new Object("subject");
-  auto softObject = new Object("soft");
-  auto hardObject = new Object("hard");
-  auto spectralObject = new Object("spectral");
+  auto subject = WM.create<Object>("subject");
+  auto softObject = WM.create<Object>("soft");
+  auto hardObject = WM.create<Object>("hard");
+  auto spectralObject = WM.create<Object>("spectral");
 
   subject->setPosition(Vector(0, 0));
   softObject->setPosition(Vector(2, 2));
@@ -227,7 +228,7 @@ void outOfBounds() {
     }
   };
 
-  auto obj1 = new TestObject;
+  auto obj1 = WM.create<TestObject>();
 
   obj1->setPosition(Vector());
   obj1->setBox(Box(1, 1));

@@ -155,6 +155,7 @@ void WorldManager::update() {
   for (auto &object : deletions) {
     this->sceneGraph.removeObject(object);
   }
+  deletions.clear();
 
   auto active = this->sceneGraph.getActiveObjects();
   for (auto &object : active) {

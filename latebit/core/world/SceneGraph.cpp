@@ -95,9 +95,7 @@ auto SceneGraph::setAltitude(Object *rawO, int altitude) -> int {
     return -1;
   }
 
-  auto& oldVisible = this->visible.at(rawO->getAltitude());
-  remove(oldVisible, rawO);
-
+  remove(visible.at(rawO->getAltitude()), rawO);
   insert(visible.at(altitude), rawO);
   return 0;
 }
@@ -124,7 +122,7 @@ auto SceneGraph::setActive(Object *rawO, bool isActive) -> int {
   insert(active, rawO);
   remove(inactive, rawO);
   
-  auto visible = this->visible.at(rawO->getAltitude());
+  auto& visible = this->visible.at(rawO->getAltitude());
   insert(visible, rawO);
 
   if (rawO->isSolid()) insert(solid, rawO);
@@ -135,14 +133,14 @@ auto SceneGraph::setActive(Object *rawO, bool isActive) -> int {
 auto SceneGraph::setVisible(Object *rawO, bool isVisible) -> int {
   if (rawO->isVisible() == isVisible) return 0;
 
-  auto& visible = this->visible.at(rawO->getAltitude());
+  auto altitude = rawO->getAltitude();
   
   if (!isVisible) {
-    remove(visible, rawO);
+    remove(visible.at(altitude), rawO);
     return 0;
   }
 
-  insert(visible, rawO);
+  insert(visible.at(altitude), rawO);
   return 0;
 }
 

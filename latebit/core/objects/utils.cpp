@@ -19,6 +19,8 @@ auto contains(vector<Object*> l, Object* o) -> bool {
 }
 
 void insert(vector<Object*>& l, Object* o) {
+  if (contains(l, o)) return;
+
   l.push_back(o);
   if (l.size() == l.capacity()) {
     l.reserve(l.size() + CHUNK_SIZE);

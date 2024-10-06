@@ -1,0 +1,5 @@
+- [ ] wrap insert to allocate chunks
+- [ ] prevent creating Objects with new
+- [ ] make world static
+- [ ] non-owning containers are used for write actions (?)
+- [ ] review containers

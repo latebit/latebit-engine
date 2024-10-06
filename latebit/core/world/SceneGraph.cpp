@@ -21,20 +21,20 @@ auto SceneGraph::insertObject(unique_ptr<Object> o) -> int {
   auto rawO = o.get();
 
   if (o->isActive()) {
-    active.push_back(rawO);
+    insert(active, rawO);
   } else {
-    inactive.push_back(rawO);
+    insert(inactive, rawO);
   }
 
   if (o->isSolid()) {
-    solid.push_back(rawO);
+    insert(solid, rawO);
   }
 
   if (o->isVisible()) {
-    this->visible.at(o->getAltitude()).push_back(rawO);
+    insert(visible.at(o->getAltitude()), rawO);
   }
 
-  all.push_back(std::move(o));
+  insert(all, std::move(o));
   return 0;
 }
 
@@ -85,7 +85,7 @@ auto SceneGraph::setSolidness(Object *rawO,
 
   if (rawO->isSolid()) remove(solid, rawO);
 
-  if (isSolid) solid.push_back(rawO);
+  if (isSolid) insert(solid, rawO);
   
   return 0;
 }
@@ -98,7 +98,7 @@ auto SceneGraph::setAltitude(Object *rawO, int altitude) -> int {
   auto& oldVisible = this->visible.at(rawO->getAltitude());
   remove(oldVisible, rawO);
 
-  visible.at(altitude).push_back(rawO);
+  insert(visible.at(altitude), rawO);
   return 0;
 }
 
@@ -110,7 +110,7 @@ auto SceneGraph::setActive(Object *rawO, bool isActive) -> int {
   // Switching from active to inactive
   if (rawO->isActive()) {
     remove(active, rawO);
-    inactive.push_back(rawO);
+    insert(inactive, rawO);
 
     auto& visible = this->visible.at(rawO->getAltitude());
     remove(visible, rawO);
@@ -121,13 +121,13 @@ auto SceneGraph::setActive(Object *rawO, bool isActive) -> int {
   }
 
   // Switching from inactive to active
-  active.push_back(rawO);
+  insert(active, rawO);
   remove(inactive, rawO);
   
   auto visible = this->visible.at(rawO->getAltitude());
-  visible.push_back(rawO);
+  insert(visible, rawO);
 
-  if (rawO->isSolid()) solid.push_back(rawO);
+  if (rawO->isSolid()) insert(solid, rawO);
   
   return 0;
 }
@@ -142,7 +142,7 @@ auto SceneGraph::setVisible(Object *rawO, bool isVisible) -> int {
     return 0;
   }
 
-  visible.push_back(rawO);
+  insert(visible, rawO);
   return 0;
 }
 

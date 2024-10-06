@@ -14,7 +14,7 @@ function(generate_tests PACKAGE_NAME)
     target_link_libraries(${FILE_NAME}.test latebit latebit-test)
 
     set(TEST_NAME "${PACKAGE_NAME}/${RELATIVE_DIRECTORY}/${FILE_NAME}")
-    string(REPLACE "//" "/" TEST_NAME "/${TEST_NAME}")  # Ensure no double slashes
+    string(REPLACE "//" "/" TEST_NAME "${TEST_NAME}")  # Ensure no double slashes
 
     add_test(NAME "${TEST_NAME}" COMMAND ${FILE_NAME}.test)
   endforeach()

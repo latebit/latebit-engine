@@ -149,6 +149,15 @@ void getVisibleObjects() {
   assertEq("returns visible objects with altitude 0 from the scene graph",
            visible.size(), 1);
   assert("contains visible object 1", contains(visible, subject1));
+
+  sg.removeObject(subject1);
+  sg.removeObject(subject2);
+  visible = sg.getVisibleObjects(0);
+  assert("does not contain visible object 1", !contains(visible, subject1));
+  assertEq("size", visible.size(), 0);
+  visible = sg.getVisibleObjects(1);
+  assert("does not contain visible object 2", !contains(visible, subject2));
+  assertEq("size", visible.size(), 1);
 }
 
 void setSolidness() {

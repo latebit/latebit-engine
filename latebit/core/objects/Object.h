@@ -34,6 +34,7 @@ class Object {
   // A string representing the type of object.
   string type = "Object";
 
+  // Pointer to the scene graph this object belongs to.
   SceneGraph* sceneGraph;
 
   // Position of the object in World coordinates.
@@ -71,13 +72,17 @@ class Object {
   // Current number of subscribed events
   int eventCount = 0;
 
+  // Scale of the object. 1 is normal size, 2 is double size, etc.
   uint8_t scale = 1;
 
  public:
+  // Create an object with a default type.
   Object();
+
+  // Create an object with a type.
   Object(const string& type);
 
-  virtual ~Object();
+  virtual ~Object() = default;
 
   // Returns the unique id of this object.
   [[nodiscard]] auto getId() const -> int;
@@ -149,13 +154,17 @@ class Object {
 
   // Subscribe to event, e.g., "COLLISION" or "KEYBOARD".
   auto subscribe(string eventType) -> int;
-  // Unsubscribe to event, e.g., "COLLISION" or "KEYBOARD".
+  // Unsubscribe from event, e.g., "COLLISION" or "KEYBOARD".
   auto unsubscribe(string eventType) -> int;
+  // Unsubscribe from all events
+  auto unsubscribeAll() -> int;
 
   // Handle event (default is to ignore everything).
   virtual auto eventHandler(const Event* e) -> int;
   // Draw single sprite frame and bounding box (if debug).
   virtual auto draw() -> int;
+  // Called just before object is destroyed. Can be overridden to cleanup resources.
+  virtual void teardown() {};
 
   // Set object to be active or not active.
   auto setActive(bool active = true) -> int;

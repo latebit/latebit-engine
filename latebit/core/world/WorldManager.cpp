@@ -7,6 +7,7 @@
 #include "latebit/core/events/EventOut.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/objects/Object.h"
+#include "latebit/core/objects/ObjectUtils.h"
 #include "latebit/core/utils/utils.h"
 #include "latebit/core/world/View.h"
 #include "latebit/utils/Logger.h"
@@ -32,7 +33,7 @@ auto WorldManager::startUp() -> int {
 }
 
 void WorldManager::shutDown() {
-  sceneGraph.clear();
+  this->sceneGraph.clear();
   Manager::shutDown();
   Log.info("WorldManager::shutDown(): Shut down successfully");
 }
@@ -174,17 +175,18 @@ void WorldManager::update() {
 }
 
 auto WorldManager::markForDelete(Object *o) -> int {
-  deletions.insert(o);
+  o->unsubscribeAll();
+  o->teardown();
+  insert(deletions, o);
   return 0;
 }
 
 void WorldManager::draw() {
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
-    auto visible = this->getSceneGraph().getVisibleObjects(i);
-    for (auto &object : visible) {
-      if (object != nullptr &&
-          intersects(object->getWorldBox(), this->view.getView())) {
-        object->draw();
+    auto visible = this->sceneGraph.getVisibleObjects(i);
+    for (auto &o : visible) {
+      if (o != nullptr && intersects(o->getWorldBox(), this->view.getView())) {
+        o->draw();
       };
     }
   }

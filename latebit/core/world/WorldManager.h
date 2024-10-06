@@ -1,6 +1,5 @@
 #pragma once
 
-#include <unordered_set>
 #include <vector>
 
 #include "SceneGraph.h"
@@ -22,7 +21,7 @@ class WorldManager : public Manager {
   // Make WorldManager a singleton
   WorldManager();
 
-  unordered_set<Object *> deletions = {};
+  vector<Object *> deletions = {};
   // The boundaries of the world, regardless of where the camera points in cells
   Box boundary = Box();
   // The current SceneGraph
@@ -38,6 +37,8 @@ class WorldManager : public Manager {
   WorldManager(WorldManager const &) = delete;
   void operator=(WorldManager const &) = delete;
   static auto getInstance() -> WorldManager &;
+
+  ~WorldManager() = default;
 
   auto startUp() -> int override;
   void shutDown() override;

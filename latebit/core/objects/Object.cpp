@@ -6,7 +6,6 @@
 #include "latebit/core/GameManager.h"
 #include "latebit/core/ResourceManager.h"
 #include "latebit/core/input/InputManager.h"
-#include "latebit/core/world/SceneGraph.h"
 #include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Logger.h"
 
@@ -21,13 +20,6 @@ Object::Object() : sceneGraph(&WM.getSceneGraph()) {
 
 Object::Object(const string& type) : Object() { this->type = type; }
 
-Object::~Object() {
-  auto count = this->eventCount;
-  for (int i = 0; i < count; i++) {
-    unsubscribe(this->events[i]);
-  }
-}
-
 auto Object::getId() const -> int { return this->id; }
 
 void Object::setType(string t) { this->type = t; }
@@ -41,7 +33,7 @@ auto Object::getScale() const -> uint8_t { return this->scale; }
 
 void Object::setAltitude(int a) {
   if (a <= MAX_ALTITUDE && a >= 0) {
-    sceneGraph->setAltitude(this, a);
+    this->sceneGraph->setAltitude(this, a);
     this->altitude = a;
   }
 }
@@ -58,7 +50,7 @@ auto Object::isSolid() const -> bool {
 }
 
 void Object::setSolidness(Solidness::Solidness s) {
-  WM.getSceneGraph().setSolidness(this, s);
+  this->sceneGraph->setSolidness(this, s);
   this->solidness = s;
 }
 auto Object::getSolidness() const -> Solidness::Solidness {
@@ -158,15 +150,24 @@ auto Object::unsubscribe(string eventType) -> int {
   return WM.unsubscribe(this, eventType);
 }
 
+auto Object::unsubscribeAll() -> int {
+  int result = 0;
+  auto count = this->eventCount;
+  for (int i = 0; i < count; i++) {
+    result |= unsubscribe(this->events[i]);
+  }
+  return result;
+}
+
 auto Object::setActive(bool active) -> int {
-  if (sceneGraph->setActive(this, active) != 0) return -1;
+  if (this->sceneGraph->setActive(this, active) != 0) return -1;
   this->active = active;
   return 0;
 }
 auto Object::isActive() const -> bool { return this->active; }
 
 auto Object::setVisible(bool visible) -> int {
-  if (sceneGraph->setVisible(this, visible) != 0) return -1;
+  if (this->sceneGraph->setVisible(this, visible) != 0) return -1;
   this->visible = visible;
   return 0;
 }

@@ -68,15 +68,15 @@ void boundingBox() {
   RM.unloadSprite("sprite");
 }
 
-unordered_map<string, int> Object_eventSubscription_test_emittedCount = {};
 void eventSubscription() {
+  static unordered_map<string, int> emittedCount = {};
   Object subject;
 
   class TestObject : public Object {
    public:
     TestObject() : Object("TestObject"){};
     auto eventHandler(const Event* e) -> int override {
-      Object_eventSubscription_test_emittedCount[e->getType()]++;
+      emittedCount[e->getType()]++;
       return 0;
     };
   };
@@ -92,26 +92,26 @@ void eventSubscription() {
   EventCollision collision;
   WM.onEvent(&collision);
   assertEq("responds to Collision",
-           Object_eventSubscription_test_emittedCount[COLLISION_EVENT], 1);
+           emittedCount[COLLISION_EVENT], 1);
   EventOut out;
   WM.onEvent(&out);
   assertEq("responds to Out",
-           Object_eventSubscription_test_emittedCount[OUT_EVENT], 1);
+           emittedCount[OUT_EVENT], 1);
 
   EventStep step;
   GM.onEvent(&step);
   assertEq("responds to Step",
-           Object_eventSubscription_test_emittedCount[STEP_EVENT], 1);
+           emittedCount[STEP_EVENT], 1);
 
   EventInput input;
   IM.onEvent(&input);
   assertEq("responds to Keyboard",
-           Object_eventSubscription_test_emittedCount[INPUT_EVENT], 1);
+           emittedCount[INPUT_EVENT], 1);
 
   Event customEvent("custom");
   WM.onEvent(&customEvent);
   assertEq("responds to custom event",
-           Object_eventSubscription_test_emittedCount["custom"], 1);
+           emittedCount["custom"], 1);
 
   assertOk("unsubscribes to Collision", obj.unsubscribe(COLLISION_EVENT));
   assertOk("unsubscribes to Out", obj.unsubscribe(OUT_EVENT));
@@ -121,23 +121,23 @@ void eventSubscription() {
 
   WM.onEvent(&collision);
   assertEq("does not respond to Collision",
-           Object_eventSubscription_test_emittedCount[COLLISION_EVENT], 1);
+           emittedCount[COLLISION_EVENT], 1);
 
   WM.onEvent(&out);
   assertEq("does not respond to Out",
-           Object_eventSubscription_test_emittedCount[OUT_EVENT], 1);
+           emittedCount[OUT_EVENT], 1);
 
   GM.onEvent(&step);
   assertEq("does not respond to Step",
-           Object_eventSubscription_test_emittedCount[STEP_EVENT], 1);
+           emittedCount[STEP_EVENT], 1);
 
   IM.onEvent(&input);
   assertEq("does not respond to Keyboard",
-           Object_eventSubscription_test_emittedCount[INPUT_EVENT], 1);
+           emittedCount[INPUT_EVENT], 1);
 
   WM.onEvent(&customEvent);
   assertEq("does not respond to custom event",
-           Object_eventSubscription_test_emittedCount["custom"], 1);
+           emittedCount["custom"], 1);
 }
 
 void visible() {

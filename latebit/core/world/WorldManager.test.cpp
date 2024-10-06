@@ -9,7 +9,7 @@
 #include "latebit/core/geometry/Box.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/objects/Object.h"
-#include "latebit/core/objects/utils.h"
+#include "latebit/core/objects/ObjectUtils.h"
 
 using namespace std;
 using namespace lb;

@@ -156,7 +156,7 @@ void GameManager::run() {
   EventStep step(0);
 
   EmscriptenLoopArgs args = {&adjustTime, &loopTime, &steps,
-                             clock,       frameTime, &this->paused};
+                             clock.get(),       frameTime, &this->paused};
 
   emscripten_set_main_loop_arg(loop, &args, 0, 1);
   emscripten_set_main_loop_timing(EM_TIMING_RAF, 33);

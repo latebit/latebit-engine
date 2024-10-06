@@ -1,8 +1,9 @@
 #include "View.h"
+
 #include "latebit/core/utils/utils.h"
+#include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Logger.h"
 #include "latebit/utils/Math.h"
-#include "latebit/core/world/WorldManager.h"
 
 namespace lb {
 
@@ -47,9 +48,8 @@ auto View::setViewFollowing(Object* o) -> int {
     }
   }
 
-  Log.error(
-    "View::setViewFollowing(): Object %s to be followed was not found",
-    o->toString().c_str());
+  Log.error("View::setViewFollowing(): Object %s to be followed was not found",
+            o->toString().c_str());
   return -1;
 }
 
@@ -75,6 +75,4 @@ auto View::viewToWorld(Vector viewPosition) -> Vector {
   auto viewOrigin = this->view.getCorner();
   return viewPosition + viewOrigin;
 }
-};
-
-
+};  // namespace lb

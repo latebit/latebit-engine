@@ -8,6 +8,7 @@
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_video.h>
 #include <sys/types.h>
+
 #include <cstdint>
 
 #include "Colors.h"
@@ -52,8 +53,8 @@ auto DisplayManager::startUp() -> int {
     return -1;
   }
 
-  DisplayManager::renderer =
-    SDL_CreateRenderer(DisplayManager::window, -1, DisplayManager::getRendererFlags());
+  DisplayManager::renderer = SDL_CreateRenderer(
+    DisplayManager::window, -1, DisplayManager::getRendererFlags());
   if (DisplayManager::renderer == nullptr) {
     Log.error("DisplayManager::startUp(): Cannot create renderer. %s",
               SDL_GetError());
@@ -81,15 +82,18 @@ auto DisplayManager::getRendererFlags() -> int {
            : SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 }
 
-auto DisplayManager::drawKeyframe(Position position, const Keyframe* frame, uint8_t width, uint8_t height, uint8_t scaling) -> int {
+auto DisplayManager::drawKeyframe(Position position, const Keyframe* frame,
+                                  uint8_t width, uint8_t height,
+                                  uint8_t scaling) -> int {
   if (!DisplayManager::isStarted()) {
     Log.error("DisplayManager::drawFrame(): Display Manager is not started");
     return -1;
   }
 
   if (frame->size() != width * height) {
-    Log.error("DisplayManager::drawFrame(): Invalid frame size. Expected %d, got %d",
-              width * height, frame->size());
+    Log.error(
+      "DisplayManager::drawFrame(): Invalid frame size. Expected %d, got %d",
+      width * height, frame->size());
     return -1;
   }
 
@@ -102,7 +106,8 @@ auto DisplayManager::drawKeyframe(Position position, const Keyframe* frame, uint
   auto pixelPosition = cellsToPixels(viewPosition);
   auto cellSize = CELL_SIZE * scaling;
 
-  SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, width * cellSize, height * cellSize, 32, SDL_PIXELFORMAT_RGBA32);
+  SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(
+    0, width * cellSize, height * cellSize, 32, SDL_PIXELFORMAT_RGBA32);
 
   if (surface == nullptr) {
     Log.error("DisplayManager::drawFrame(): Cannot create surface. %s",
@@ -136,7 +141,8 @@ auto DisplayManager::drawKeyframe(Position position, const Keyframe* frame, uint
     }
   }
 
-  SDL_Texture* texture = SDL_CreateTextureFromSurface(DisplayManager::renderer, surface);
+  SDL_Texture* texture =
+    SDL_CreateTextureFromSurface(DisplayManager::renderer, surface);
 
   if (texture == nullptr) {
     Log.error("DisplayManager::drawFrame(): Cannot create texture. %s",
@@ -145,8 +151,7 @@ auto DisplayManager::drawKeyframe(Position position, const Keyframe* frame, uint
   }
 
   SDL_Rect rectangle = {(int)pixelPosition.getX(), (int)pixelPosition.getY(),
-                        width * cellSize,
-                        height * cellSize};
+                        width * cellSize, height * cellSize};
 
   SDL_RenderCopy(DisplayManager::renderer, texture, nullptr, &rectangle);
   SDL_FreeSurface(surface);
@@ -168,7 +173,8 @@ auto DisplayManager::drawRectangle(Position position, int width, int height,
 
   if (fillColor != Color::UNDEFINED_COLOR) {
     auto fill = toSDLColor(fillColor);
-    SDL_SetRenderDrawColor(DisplayManager::renderer, fill.r, fill.g, fill.b, fill.a);
+    SDL_SetRenderDrawColor(DisplayManager::renderer, fill.r, fill.g, fill.b,
+                           fill.a);
     SDL_RenderFillRect(DisplayManager::renderer, &rectangle);
   }
 
@@ -228,7 +234,8 @@ auto DisplayManager::drawString(Position position, string string,
         break;
     }
 
-    if (DisplayManager::drawKeyframe(position, &content, gWidth, gHeight, size) != 0) {
+    if (DisplayManager::drawKeyframe(position, &content, gWidth, gHeight,
+                                     size) != 0) {
       return -1;
     }
   }

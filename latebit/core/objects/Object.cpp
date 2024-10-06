@@ -2,12 +2,13 @@
 
 #include <cstdint>
 #include <string>
+
 #include "latebit/core/GameManager.h"
 #include "latebit/core/ResourceManager.h"
 #include "latebit/core/input/InputManager.h"
+#include "latebit/core/world/SceneGraph.h"
 #include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Logger.h"
-#include "latebit/core/world/SceneGraph.h"
 
 using namespace std;
 
@@ -50,7 +51,7 @@ void Object::setVelocity(Vector v) { this->velocity = v; }
 auto Object::getVelocity() const -> Vector { return this->velocity; }
 
 void Object::setAcceleration(Vector a) { this->acceleration = a; }
-auto Object::getAcceleration() const -> Vector { return  this->acceleration; }
+auto Object::getAcceleration() const -> Vector { return this->acceleration; }
 
 auto Object::isSolid() const -> bool {
   return this->solidness != Solidness::SPECTRAL;

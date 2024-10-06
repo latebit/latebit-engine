@@ -52,26 +52,31 @@ auto SceneGraph::removeObject(Object *rawO) -> int {
   }
 
   if (rawO->isVisible()) {
-    auto& visible = this->visible.at(rawO->getAltitude());
+    auto &visible = this->visible.at(rawO->getAltitude());
     remove(visible, rawO);
   }
 
-  all.erase(std::remove_if(
-    all.begin(), all.end(),
-    [rawO](const std::unique_ptr<Object> &p) { return p.get() == rawO; }),
-  all.end());
+  all.erase(std::remove_if(all.begin(), all.end(),
+                           [rawO](const std::unique_ptr<Object> &p) {
+                             return p.get() == rawO;
+                           }),
+            all.end());
   return 0;
 }
 
-auto SceneGraph::getActiveObjects() const -> vector<Object*> { return this->active; }
+auto SceneGraph::getActiveObjects() const -> vector<Object *> {
+  return this->active;
+}
 
-auto SceneGraph::getInactiveObjects() const -> vector<Object*> {
+auto SceneGraph::getInactiveObjects() const -> vector<Object *> {
   return this->inactive;
 }
 
-auto SceneGraph::getSolidObjects() const -> vector<Object*> { return this->solid; }
+auto SceneGraph::getSolidObjects() const -> vector<Object *> {
+  return this->solid;
+}
 
-auto SceneGraph::getVisibleObjects(int altitude) const -> vector<Object*> {
+auto SceneGraph::getVisibleObjects(int altitude) const -> vector<Object *> {
   if (altitude < 0 || altitude > MAX_ALTITUDE) {
     return {};
   }
@@ -86,7 +91,7 @@ auto SceneGraph::setSolidness(Object *rawO,
   if (rawO->isSolid()) remove(solid, rawO);
 
   if (isSolid) insert(solid, rawO);
-  
+
   return 0;
 }
 
@@ -110,7 +115,7 @@ auto SceneGraph::setActive(Object *rawO, bool isActive) -> int {
     remove(active, rawO);
     insert(inactive, rawO);
 
-    auto& visible = this->visible.at(rawO->getAltitude());
+    auto &visible = this->visible.at(rawO->getAltitude());
     remove(visible, rawO);
 
     if (rawO->isSolid()) remove(solid, rawO);
@@ -121,12 +126,12 @@ auto SceneGraph::setActive(Object *rawO, bool isActive) -> int {
   // Switching from inactive to active
   insert(active, rawO);
   remove(inactive, rawO);
-  
-  auto& visible = this->visible.at(rawO->getAltitude());
+
+  auto &visible = this->visible.at(rawO->getAltitude());
   insert(visible, rawO);
 
   if (rawO->isSolid()) insert(solid, rawO);
-  
+
   return 0;
 }
 
@@ -134,7 +139,7 @@ auto SceneGraph::setVisible(Object *rawO, bool isVisible) -> int {
   if (rawO->isVisible() == isVisible) return 0;
 
   auto altitude = rawO->getAltitude();
-  
+
   if (!isVisible) {
     remove(visible.at(altitude), rawO);
     return 0;
@@ -144,7 +149,7 @@ auto SceneGraph::setVisible(Object *rawO, bool isVisible) -> int {
   return 0;
 }
 
-auto SceneGraph::getAllObjects() const -> const vector<unique_ptr<Object>>& {
+auto SceneGraph::getAllObjects() const -> const vector<unique_ptr<Object>> & {
   return this->all;
 }
 
@@ -153,7 +158,7 @@ auto SceneGraph::clear() -> void {
   active.clear();
   inactive.clear();
   solid.clear();
-  for (auto& v : visible) {
+  for (auto &v : visible) {
     v.clear();
   }
 }

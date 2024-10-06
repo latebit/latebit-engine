@@ -32,10 +32,12 @@ void draw() {
              sprite.drawKeyframe(10, Vector()));
 
   static auto scale = 0;
-  Sprite sprite2 = Sprite("s", 1, 1, 1, frames, [](Vector, const vector<Color::Color> *, uint8_t, uint8_t, uint8_t s) -> int { 
-    scale = s;
-    return 0; 
-  });
+  Sprite sprite2 = Sprite("s", 1, 1, 1, frames,
+                          [](Vector, const vector<Color::Color> *, uint8_t,
+                             uint8_t, uint8_t s) -> int {
+                            scale = s;
+                            return 0;
+                          });
 
   assertOk("draws with scale", sprite2.drawKeyframe(0, Vector(), 2));
   assertEq("calls draw with scale", scale, 2);

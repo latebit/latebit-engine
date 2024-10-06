@@ -13,20 +13,20 @@ class SceneGraph {
  private:
   // All objects
   vector<unique_ptr<Object>> all = {};
-  
+
   // Active objects in the scene
-  vector<Object*> active = {};
+  vector<Object *> active = {};
 
   // Inactive objects in the scene
-  vector<Object*> inactive = {};
+  vector<Object *> inactive = {};
 
   // Solid objects in the scene
-  vector<Object*> solid = {};
+  vector<Object *> solid = {};
 
   // Visible objects in the scene
-  array<vector<Object*>, MAX_ALTITUDE + 1> visible = {
-    vector<Object*>{}, vector<Object*>{}, vector<Object*>{}, vector<Object*>{}, vector<Object*>{}
-  };
+  array<vector<Object *>, MAX_ALTITUDE + 1> visible = {
+    vector<Object *>{}, vector<Object *>{}, vector<Object *>{},
+    vector<Object *>{}, vector<Object *>{}};
 
  public:
   SceneGraph();
@@ -39,18 +39,19 @@ class SceneGraph {
   auto removeObject(Object *o) -> int;
 
   // Returns active objects
-  [[nodiscard]] auto getActiveObjects() const -> vector<Object*>;
+  [[nodiscard]] auto getActiveObjects() const -> vector<Object *>;
 
   // Returns inactive objects
-  [[nodiscard]] auto getInactiveObjects() const -> vector<Object*>;
+  [[nodiscard]] auto getInactiveObjects() const -> vector<Object *>;
 
   // Returns all active solid objects
-  [[nodiscard]] auto getSolidObjects() const -> vector<Object*>;
+  [[nodiscard]] auto getSolidObjects() const -> vector<Object *>;
 
   // Returns all active visible objects on a given rendering layer
-  [[nodiscard]] auto getVisibleObjects(int altitude) const -> vector<Object*>;
+  [[nodiscard]] auto getVisibleObjects(int altitude) const -> vector<Object *>;
 
-  [[nodiscard]] auto getAllObjects() const -> const vector<unique_ptr<Object>>&;
+  [[nodiscard]] auto getAllObjects() const
+    -> const vector<unique_ptr<Object>> &;
 
   // Update solidness for a given object
   auto setSolidness(Object *o, Solidness::Solidness solidness) -> int;

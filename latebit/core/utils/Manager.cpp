@@ -69,7 +69,7 @@ auto Manager::onEvent(const Event* event) const -> int {
     auto currentEvent = this->events[i];
     if (currentEvent == event->getType()) {
       auto subscribers = this->subscribers[i];
-      for (auto &subscriber : subscribers) {
+      for (auto& subscriber : subscribers) {
         if (subscriber == nullptr) continue;
 
         if (subscriber->isActive()) {

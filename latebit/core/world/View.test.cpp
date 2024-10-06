@@ -1,9 +1,8 @@
-#include "latebit/core/world/WorldManager.h"
-
 #include "../../../test/lib/test.h"
 #include "latebit/core/geometry/Box.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/objects/Object.h"
+#include "latebit/core/world/WorldManager.h"
 
 using namespace std;
 using namespace lb;
@@ -45,7 +44,8 @@ void viewFollowing() {
   assertEq("does not update view", WM.getView().getView(), initialView);
   WM.resolveMovement(subject, Vector(11, 11));
 
-  assertEq("updates the view", WM.getView().getView(), Box(Vector(6, 6), 10, 10));
+  assertEq("updates the view", WM.getView().getView(),
+           Box(Vector(6, 6), 10, 10));
 
   WM.resolveMovement(subject, Vector(11, 5));
   assertEq("updates the view (vertical lower bound)", WM.getView().getView(),

@@ -16,7 +16,7 @@ using namespace lb;
 
 void draw() {
   WM.startUp();
-  static array<int, 5> drawCount = {0,0,0,0,0};
+  static array<int, 5> drawCount = {0, 0, 0, 0, 0};
 
   class TestObject : public Object {
    public:
@@ -73,7 +73,7 @@ void getCollisions() {
   obj3->setSolidness(Solidness::SPECTRAL);
 
   // Call getCollisions function
-  vector<Object *> collisions = WM.getCollisions(obj1, Vector(0, 0));
+  vector<Object*> collisions = WM.getCollisions(obj1, Vector(0, 0));
 
   // Check if obj4 is in the collisions list
   assert("collides with hard", contains(collisions, obj4));
@@ -113,8 +113,9 @@ void resolveMovement() {
   hardObject->setVelocity(Vector(-1, -1));
   spectralObject->setVelocity(Vector(-1, -1));
 
-  Vector targetPosition, targetVelocity, targetAcceleration, position, velocity, acceleration;
-  
+  Vector targetPosition, targetVelocity, targetAcceleration, position, velocity,
+    acceleration;
+
   targetPosition = softObject->getPosition();
   WM.resolveMovement(subject, targetPosition);
   assertEq("moves HARD on SOFT", subject->getPosition(), targetPosition);
@@ -133,11 +134,13 @@ void resolveMovement() {
 
   WM.resolveMovement(subject, targetPosition);
   assertEq("does not move HARD over HARD", subject->getPosition(), position);
-  assertEq("reflects velocity (subject)", subject->getVelocity(), targetVelocity);
+  assertEq("reflects velocity (subject)", subject->getVelocity(),
+           targetVelocity);
   assertEq("reflects velocity (object)", hardObject->getVelocity(), velocity);
   assertEq("reflects acceleration (subject)", subject->getAcceleration(),
            targetAcceleration);
-  assertEq("reflects acceleration (object)", hardObject->getAcceleration(), acceleration);
+  assertEq("reflects acceleration (object)", hardObject->getAcceleration(),
+           acceleration);
 
   targetPosition = Vector(0, 0);
   WM.resolveMovement(subject, targetPosition);
@@ -152,7 +155,8 @@ void resolveMovement() {
 
   targetPosition = spectralObject->getPosition();
   WM.resolveMovement(subject, targetPosition);
-  assertEq("moves SPECTRAL on SPECTRAL", subject->getPosition(), targetPosition);
+  assertEq("moves SPECTRAL on SPECTRAL", subject->getPosition(),
+           targetPosition);
 
   targetPosition = hardObject->getPosition();
   WM.resolveMovement(subject, targetPosition);
@@ -160,14 +164,16 @@ void resolveMovement() {
 
   targetPosition = Vector(0, 0);
   WM.resolveMovement(subject, targetPosition);
-  assertEq("moves SPECTRAL on empty spot", subject->getPosition(), targetPosition);
+  assertEq("moves SPECTRAL on empty spot", subject->getPosition(),
+           targetPosition);
 
   subject->setSolidness(Solidness::SOFT);
   subject->setPosition(Vector(0, 0));
 
   targetPosition = softObject->getPosition();
   WM.resolveMovement(subject, targetPosition);
-  assertEq("moves SPECTRAL over SPECTRAL", subject->getPosition(), targetPosition);
+  assertEq("moves SPECTRAL over SPECTRAL", subject->getPosition(),
+           targetPosition);
 
   targetPosition = spectralObject->getPosition();
   WM.resolveMovement(subject, targetPosition);
@@ -179,7 +185,8 @@ void resolveMovement() {
 
   targetPosition = Vector(0, 0);
   WM.resolveMovement(subject, targetPosition);
-  assertEq("moves SOFT over empty spot", subject->getPosition(), targetPosition);
+  assertEq("moves SOFT over empty spot", subject->getPosition(),
+           targetPosition);
 
   position = subject->getPosition();
   velocity = Vector(1, 1);
@@ -193,16 +200,19 @@ void resolveMovement() {
   subject->setAcceleration(acceleration);
   hardObject->setVelocity(targetVelocity);
   hardObject->setAcceleration(targetAcceleration);
-  
+
   // Almost on hard, but with part of the bounding box colliding
   targetPosition = hardObject->getPosition() - velocity;
   WM.resolveMovement(subject, targetPosition);
   assertEq("does not move HARD on HARD with bounding box collision",
            subject->getPosition(), position);
-  assertEq("reflects velocity (subject)", subject->getVelocity(), targetVelocity);
-  assertEq("reflects acceleration (subject)", subject->getAcceleration(), targetAcceleration);
+  assertEq("reflects velocity (subject)", subject->getVelocity(),
+           targetVelocity);
+  assertEq("reflects acceleration (subject)", subject->getAcceleration(),
+           targetAcceleration);
   assertEq("reflects velocity (object)", hardObject->getVelocity(), velocity);
-  assertEq("reflects acceleration (object)", hardObject->getAcceleration(), acceleration);
+  assertEq("reflects acceleration (object)", hardObject->getAcceleration(),
+           acceleration);
 
   // Clean up test objects
   WM.markForDelete(subject);

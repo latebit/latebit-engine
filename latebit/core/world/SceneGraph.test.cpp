@@ -1,4 +1,5 @@
 #include "SceneGraph.h"
+
 #include <memory>
 
 #include "latebit/core/objects/Object.h"
@@ -15,11 +16,13 @@ void insertObject() {
   nonSolidObj->setSolidness(Solidness::SPECTRAL);
 
   // Check if the object was inserted successfully
-  assertOk("inserts object into the scene graph", sg.insertObject(std::move(obj)));
+  assertOk("inserts object into the scene graph",
+           sg.insertObject(std::move(obj)));
   assertEq("scene graph contains the object", sg.getAllObjects().size(), 1);
-  assertEq("scene graph contains the active object", sg.getActiveObjects().size(), 1);
-  assertEq("scene graph contains the solid object",
-           sg.getSolidObjects().size(), 1);
+  assertEq("scene graph contains the active object",
+           sg.getActiveObjects().size(), 1);
+  assertEq("scene graph contains the solid object", sg.getSolidObjects().size(),
+           1);
   assertEq("scene graph contains the visible object",
            sg.getVisibleObjects(altitude).size(), 1);
   assertOk("inserts non solid object into the scene graph",
@@ -39,8 +42,8 @@ void removeObject() {
 
   // Check if the object was removed successfully
   assertOk("removes object from the scene graph", sg.removeObject(subject));
-  assertEq("scene graph does not contain the object",
-           sg.getAllObjects().size(), 0);
+  assertEq("scene graph does not contain the object", sg.getAllObjects().size(),
+           0);
   assertEq("scene graph does not contain the active object",
            sg.getActiveObjects().size(), 0);
   assertEq("scene graph does not contain the solid object",
@@ -51,8 +54,10 @@ void removeObject() {
 
 void getActiveObjects() {
   SceneGraph sg;
-  auto obj1 = make_unique<Object>(), obj2 = make_unique<Object>(), obj3 = make_unique<Object>(), obj4 = make_unique<Object>();
-  auto subject1 = obj1.get(), subject2 = obj2.get(), subject3 = obj3.get(), subject4 = obj4.get();
+  auto obj1 = make_unique<Object>(), obj2 = make_unique<Object>(),
+       obj3 = make_unique<Object>(), obj4 = make_unique<Object>();
+  auto subject1 = obj1.get(), subject2 = obj2.get(), subject3 = obj3.get(),
+       subject4 = obj4.get();
   obj2->setActive(false);
 
   // Insert objects into the scene graph
@@ -62,17 +67,21 @@ void getActiveObjects() {
   sg.insertObject(std::move(obj4));
 
   // Check if all objects are returned
-  assertEq("returns all objects from the scene graph", sg.getActiveObjects().size(), 3);
+  assertEq("returns all objects from the scene graph",
+           sg.getActiveObjects().size(), 3);
   assert("contains object 1", contains(sg.getActiveObjects(), subject1));
-  assert("does not contain object 2", !contains(sg.getActiveObjects(), subject2));
+  assert("does not contain object 2",
+         !contains(sg.getActiveObjects(), subject2));
   assert("contains object 3", contains(sg.getActiveObjects(), subject3));
   assert("contains object 4", contains(sg.getActiveObjects(), subject4));
 }
 
 void getInactiveObjects() {
   SceneGraph sg;
-  auto obj1 = make_unique<Object>(), obj2 = make_unique<Object>(), obj3 = make_unique<Object>(), obj4 = make_unique<Object>();
-  auto subject1 = obj1.get(), subject2 = obj2.get(), subject3 = obj3.get(), subject4 = obj4.get();
+  auto obj1 = make_unique<Object>(), obj2 = make_unique<Object>(),
+       obj3 = make_unique<Object>(), obj4 = make_unique<Object>();
+  auto subject1 = obj1.get(), subject2 = obj2.get(), subject3 = obj3.get(),
+       subject4 = obj4.get();
   obj2->setActive(false);
 
   sg.insertObject(std::move(obj1));
@@ -91,7 +100,8 @@ void getInactiveObjects() {
 
 void getSolidObjects() {
   SceneGraph sg;
-  auto obj1 = make_unique<Object>(), obj2 = make_unique<Object>(), obj3 = make_unique<Object>();
+  auto obj1 = make_unique<Object>(), obj2 = make_unique<Object>(),
+       obj3 = make_unique<Object>();
   auto subject1 = obj1.get(), subject2 = obj2.get(), subject3 = obj3.get();
   obj2->setSolidness(Solidness::SPECTRAL);
 
@@ -109,7 +119,8 @@ void getSolidObjects() {
 
 void getVisibleObjects() {
   SceneGraph sg;
-  auto obj1 = make_unique<Object>(), obj2 = make_unique<Object>(), obj3 = make_unique<Object>();
+  auto obj1 = make_unique<Object>(), obj2 = make_unique<Object>(),
+       obj3 = make_unique<Object>();
   auto subject1 = obj1.get(), subject2 = obj2.get(), subject3 = obj3.get();
 
   // Set altitudes for the objects
@@ -133,7 +144,7 @@ void getVisibleObjects() {
 
   // Get visible objects with altitude 0 from the scene graph
   visible = sg.getVisibleObjects(0);
-  
+
   // Check if visible objects with altitude 0 are returned
   assertEq("returns visible objects with altitude 0 from the scene graph",
            visible.size(), 1);
@@ -148,8 +159,8 @@ void setSolidness() {
 
   int result = sg.setSolidness(subject, Solidness::HARD);
   assertEq("sets solidness of the object to HARD", result, 0);
-  assertEq("scene graph contains the solid object",
-           sg.getSolidObjects().size(), 1);
+  assertEq("scene graph contains the solid object", sg.getSolidObjects().size(),
+           1);
 
   result = sg.setSolidness(subject, Solidness::SPECTRAL);
   assertEq("sets solidness of the object to SPECTRAL", result, 0);
@@ -202,17 +213,17 @@ void setActive() {
   assert("list of active objects contains object",
          contains(sg.getActiveObjects(), subject));
   assert("list of inactive objects does not contain object",
-           !contains(sg.getInactiveObjects(), subject));
+         !contains(sg.getInactiveObjects(), subject));
   assert("list of solid objects contains object",
          contains(sg.getSolidObjects(), subject));
 
   assertOk("sets inactive", sg.setActive(subject, false));
   assert("list of active objects does not contain object",
-           !contains(sg.getActiveObjects(), subject));
+         !contains(sg.getActiveObjects(), subject));
   assert("list of inactive objects contains object",
          contains(sg.getInactiveObjects(), subject));
   assert("list of solid objects does not contain object",
-           !contains(sg.getSolidObjects(), subject));
+         !contains(sg.getSolidObjects(), subject));
 }
 
 auto main() -> int {

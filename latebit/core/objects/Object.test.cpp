@@ -91,27 +91,22 @@ void eventSubscription() {
 
   EventCollision collision;
   WM.onEvent(&collision);
-  assertEq("responds to Collision",
-           emittedCount[COLLISION_EVENT], 1);
+  assertEq("responds to Collision", emittedCount[COLLISION_EVENT], 1);
   EventOut out;
   WM.onEvent(&out);
-  assertEq("responds to Out",
-           emittedCount[OUT_EVENT], 1);
+  assertEq("responds to Out", emittedCount[OUT_EVENT], 1);
 
   EventStep step;
   GM.onEvent(&step);
-  assertEq("responds to Step",
-           emittedCount[STEP_EVENT], 1);
+  assertEq("responds to Step", emittedCount[STEP_EVENT], 1);
 
   EventInput input;
   IM.onEvent(&input);
-  assertEq("responds to Keyboard",
-           emittedCount[INPUT_EVENT], 1);
+  assertEq("responds to Keyboard", emittedCount[INPUT_EVENT], 1);
 
   Event customEvent("custom");
   WM.onEvent(&customEvent);
-  assertEq("responds to custom event",
-           emittedCount["custom"], 1);
+  assertEq("responds to custom event", emittedCount["custom"], 1);
 
   assertOk("unsubscribes to Collision", obj.unsubscribe(COLLISION_EVENT));
   assertOk("unsubscribes to Out", obj.unsubscribe(OUT_EVENT));
@@ -120,24 +115,19 @@ void eventSubscription() {
   assertOk("unsubscribes to custom", obj.unsubscribe("custom"));
 
   WM.onEvent(&collision);
-  assertEq("does not respond to Collision",
-           emittedCount[COLLISION_EVENT], 1);
+  assertEq("does not respond to Collision", emittedCount[COLLISION_EVENT], 1);
 
   WM.onEvent(&out);
-  assertEq("does not respond to Out",
-           emittedCount[OUT_EVENT], 1);
+  assertEq("does not respond to Out", emittedCount[OUT_EVENT], 1);
 
   GM.onEvent(&step);
-  assertEq("does not respond to Step",
-           emittedCount[STEP_EVENT], 1);
+  assertEq("does not respond to Step", emittedCount[STEP_EVENT], 1);
 
   IM.onEvent(&input);
-  assertEq("does not respond to Keyboard",
-           emittedCount[INPUT_EVENT], 1);
+  assertEq("does not respond to Keyboard", emittedCount[INPUT_EVENT], 1);
 
   WM.onEvent(&customEvent);
-  assertEq("does not respond to custom event",
-           emittedCount["custom"], 1);
+  assertEq("does not respond to custom event", emittedCount["custom"], 1);
 }
 
 void visible() {
@@ -154,13 +144,14 @@ void visible() {
   assert("is visible", subject->isVisible());
   assert(
     "appears in visible list for altitude " + to_string(subject->getAltitude()),
-    contains(WM.getSceneGraph().getVisibleObjects(subject->getAltitude()), subject));
+    contains(WM.getSceneGraph().getVisibleObjects(subject->getAltitude()),
+             subject));
 
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
     if (i == subject->getAltitude()) continue;
 
     assert("does not appear in visible for altitude " + to_string(i),
-      !contains(WM.getSceneGraph().getVisibleObjects(i), subject));
+           !contains(WM.getSceneGraph().getVisibleObjects(i), subject));
   }
 }
 
@@ -170,7 +161,7 @@ void active() {
   subject.setActive(false);
   assert("sets active to false", !subject.isActive());
   assert("does not appear in active objects",
-           !contains(WM.getSceneGraph().getActiveObjects(), &subject));
+         !contains(WM.getSceneGraph().getActiveObjects(), &subject));
   assert("appears in inactive objects",
          contains(WM.getSceneGraph().getInactiveObjects(), &subject));
 
@@ -185,7 +176,7 @@ void active() {
 auto main() -> int {
   test("constructor", []() {
     Object subject;
-    
+
     assertEq("sets a type", subject.getType(), "Object");
     assertEq("sets a position", subject.getPosition(), Vector());
     assertEq("sets a velocity", subject.getVelocity(), Vector());

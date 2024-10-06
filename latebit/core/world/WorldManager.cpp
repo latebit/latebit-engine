@@ -1,4 +1,5 @@
 #include "WorldManager.h"
+
 #include <cstdio>
 #include <vector>
 
@@ -18,7 +19,7 @@ WorldManager::WorldManager() : Manager("WorldManager") {
   Log.debug("WorldManager::WorldManager(): Created WorldManager");
 }
 
-auto WorldManager::getInstance() -> WorldManager& {
+auto WorldManager::getInstance() -> WorldManager & {
   static WorldManager instance;
   return instance;
 }
@@ -42,7 +43,8 @@ auto WorldManager::isValid([[maybe_unused]] string eventType) const -> bool {
   return true;
 }
 
-auto WorldManager::getAllObjects(bool includeInactive) const -> vector<Object *> {
+auto WorldManager::getAllObjects(bool includeInactive) const
+  -> vector<Object *> {
   if (includeInactive) {
     auto active = this->sceneGraph.getActiveObjects();
     auto inactive = this->sceneGraph.getInactiveObjects();
@@ -53,12 +55,12 @@ auto WorldManager::getAllObjects(bool includeInactive) const -> vector<Object *>
   return this->sceneGraph.getActiveObjects();
 }
 
-auto WorldManager::getAllObjectsByType(std::string type,
-                                 bool includeInactive) const -> vector<Object *> {
+auto WorldManager::getAllObjectsByType(
+  std::string type, bool includeInactive) const -> vector<Object *> {
   vector<Object *> result = {};
   auto all = this->getAllObjects(includeInactive);
   result.reserve(all.size());
-  
+
   for (auto object : all) {
     if (object->getType() == type) {
       result.push_back(object);
@@ -68,7 +70,8 @@ auto WorldManager::getAllObjectsByType(std::string type,
   return result;
 }
 
-auto WorldManager::getCollisions(Object* o, Vector where) const -> vector<Object *> {
+auto WorldManager::getCollisions(Object *o,
+                                 Vector where) const -> vector<Object *> {
   vector<Object *> collisions = {};
   auto solid = this->sceneGraph.getSolidObjects();
   auto box = o->getWorldBox(where);
@@ -86,7 +89,7 @@ auto WorldManager::getCollisions(Object* o, Vector where) const -> vector<Object
   return collisions;
 }
 
-void bounce(Object* object, Object *otherObject) {
+void bounce(Object *object, Object *otherObject) {
   // We assume same mass and completely elastic collision
   auto velocity = object->getVelocity();
   object->setVelocity(otherObject->getVelocity());
@@ -97,7 +100,7 @@ void bounce(Object* object, Object *otherObject) {
   otherObject->setAcceleration(acceleration);
 }
 
-void WorldManager::resolveMovement(Object* object, Vector position) {
+void WorldManager::resolveMovement(Object *object, Vector position) {
   // Non-solid can always move, since they have no collisions
   if (!object->isSolid()) {
     return moveAndCheckBounds(object, position);
@@ -118,8 +121,8 @@ void WorldManager::resolveMovement(Object* object, Vector position) {
 
     if (object->getSolidness() == Solidness::HARD &&
         otherObject->getSolidness() == Solidness::HARD) {
-        bounce(object, otherObject);
-        shouldMove = false;
+      bounce(object, otherObject);
+      shouldMove = false;
       break;
     }
   }
@@ -127,7 +130,7 @@ void WorldManager::resolveMovement(Object* object, Vector position) {
   if (shouldMove) moveAndCheckBounds(object, position);
 }
 
-void WorldManager::moveAndCheckBounds(Object* o, Vector position) {
+void WorldManager::moveAndCheckBounds(Object *o, Vector position) {
   auto initial = o->getWorldBox();
   o->setPosition(position);
   auto final = o->getWorldBox();
@@ -170,7 +173,7 @@ void WorldManager::update() {
   }
 }
 
-auto WorldManager::markForDelete(Object* o) -> int {
+auto WorldManager::markForDelete(Object *o) -> int {
   deletions.insert(o);
   return 0;
 }
@@ -179,7 +182,8 @@ void WorldManager::draw() {
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
     auto visible = this->getSceneGraph().getVisibleObjects(i);
     for (auto &object : visible) {
-      if (object != nullptr && intersects(object->getWorldBox(), this->view.getView())) {
+      if (object != nullptr &&
+          intersects(object->getWorldBox(), this->view.getView())) {
         object->draw();
       };
     }
@@ -189,6 +193,6 @@ void WorldManager::draw() {
 void WorldManager::setBoundary(Box b) { this->boundary = b; }
 auto WorldManager::getBoundary() const -> Box { return this->boundary; }
 
-auto WorldManager::getSceneGraph() -> SceneGraph& { return this->sceneGraph; }
-auto WorldManager::getView() -> View& { return this->view; }
+auto WorldManager::getSceneGraph() -> SceneGraph & { return this->sceneGraph; }
+auto WorldManager::getView() -> View & { return this->view; }
 }  // namespace lb

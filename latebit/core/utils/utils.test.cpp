@@ -2,6 +2,8 @@
 
 #include "../../../test/lib/test.h"
 
+using namespace lb;
+
 void utils_match_test() {
   Vector v1(1, 2);
   Vector v2(1, 2);

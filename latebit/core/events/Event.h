@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <utility>
 
 using namespace std;
 
@@ -12,7 +13,7 @@ class Event {
   const string type;
 
  public:
-  Event(const string& type = UNDEFINED_EVENT) : type(type){};
+  Event(string  type = UNDEFINED_EVENT) : type(std::move(type)){};
   virtual ~Event() = default;
 
   // Get the type of the event

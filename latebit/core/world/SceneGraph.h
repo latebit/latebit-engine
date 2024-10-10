@@ -1,7 +1,6 @@
 #pragma once
 
 #include <array>
-#include <memory>
 #include <vector>
 
 #include "latebit/core/objects/Object.h"
@@ -9,11 +8,11 @@
 namespace lb {
 const int MAX_ALTITUDE = 4;
 
+// SceneGraph is responsible for managing the objects in the scene. It does not
+// own the objects. It is only responsible for providing easy access to objects
+// managed by the scene that owns it.
 class SceneGraph {
  private:
-  // All objects
-  vector<unique_ptr<Object>> all = {};
-
   // Active objects in the scene
   vector<Object *> active = {};
 
@@ -32,8 +31,8 @@ class SceneGraph {
   SceneGraph();
   ~SceneGraph() = default;
 
-  // Insert object in the scene
-  auto insertObject(unique_ptr<Object> o) -> int;
+  // Insert object in the scene. This method takes ownership of the object.
+  auto insertObject(Object* o) -> int;
 
   // Remove object from the scene
   auto removeObject(Object *o) -> int;
@@ -50,9 +49,6 @@ class SceneGraph {
   // Returns all active visible objects on a given rendering layer
   [[nodiscard]] auto getVisibleObjects(int altitude) const -> vector<Object *>;
 
-  [[nodiscard]] auto getAllObjects() const
-    -> const vector<unique_ptr<Object>> &;
-
   // Update solidness for a given object
   auto setSolidness(Object *o, Solidness::Solidness solidness) -> int;
 
@@ -65,6 +61,7 @@ class SceneGraph {
   // Marks an object as active
   auto setActive(Object *o, bool isActive) -> int;
 
+  // Resets the graph
   void clear();
 };
 }  // namespace lb

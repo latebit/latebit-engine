@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "SceneGraph.h"
 #include "View.h"
@@ -68,6 +69,16 @@ class WorldManager : public Manager {
   static auto create(Args &&...args) -> T * {
     static_assert(std::is_base_of<Object, T>::value,
                   "T must inherit from Object");
+    auto obj = std::make_unique<T>(std::forward<Args>(args)...);
+    T *ptr = obj.get();
+    getInstance().sceneGraph.insertObject(std::move(obj));
+    return ptr;
+  }
+
+  template <typename T, typename... Args>
+  static auto createScene(Args &&...args) -> T * {
+    static_assert(std::is_base_of<Scene, T>::value,
+                  "T must inherit from Scene");
     auto obj = std::make_unique<T>(std::forward<Args>(args)...);
     T *ptr = obj.get();
     getInstance().sceneGraph.insertObject(std::move(obj));

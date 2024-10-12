@@ -1,41 +1,22 @@
-#include "latebit/core/objects/WorldManager.h"
+#include "latebit/core/world/WorldManager.h"
 
 #include <array>
+#include <cstdio>
+#include <vector>
 
 #include "../../../test/lib/test.h"
 #include "latebit/core/events/EventOut.h"
 #include "latebit/core/geometry/Box.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/objects/Object.h"
+#include "latebit/core/objects/ObjectUtils.h"
 
 using namespace std;
 using namespace lb;
 
-void worldToView() {
-  auto initialView = WM.getView();
-  WM.setView(Box(Vector(5, 5), 10, 10));
-
-  assertEq("converts world position to view position",
-           WorldManager::worldToView(Vector(5, 5)), Vector(0, 0));
-  assertEq("converts world position to view position (origin)",
-           WorldManager::worldToView(Vector(0, 0)), Vector(-5, -5));
-  WM.setView(initialView);
-}
-
-void viewToWorld() {
-  auto initialView = WM.getView();
-  WM.setView(Box(Vector(5, 5), 10, 10));
-
-  assertEq("converts view position to world position",
-           WorldManager::viewToWorld(Vector(0, 0)), Vector(5, 5));
-  assertEq("converts view position to world position (origin)",
-           WorldManager::worldToView(Vector(-5, -5)), Vector(0, 0));
-  WM.setView(initialView);
-}
-
 void draw() {
   WM.startUp();
-  static array<int, 5> drawCount;
+  static array<int, 5> drawCount = {0, 0, 0, 0, 0};
 
   class TestObject : public Object {
    public:
@@ -53,7 +34,7 @@ void draw() {
   // Initialize objects and results array
   for (int i = 0; i < 5; i++) {
     drawCount[i] = 0;
-    new TestObject(i);
+    WM.create<TestObject>(i);
   };
 
   WM.draw();
@@ -64,7 +45,7 @@ void draw() {
   WM.shutDown();
   WM.startUp();
 
-  new TestObject(0, Vector(-2, -2));
+  WM.create<TestObject>(0, Vector(-2, -2));
   WM.draw();
   assertEq("does not draw out of bounds", drawCount[0], 1);
 
@@ -75,10 +56,10 @@ void getCollisions() {
   WM.startUp();
 
   // Create test objects
-  auto obj1 = new Object;
-  auto obj2 = new Object;
-  auto obj3 = new Object;
-  auto obj4 = new Object;
+  auto obj1 = WM.create<Object>();
+  auto obj2 = WM.create<Object>();
+  auto obj3 = WM.create<Object>();
+  auto obj4 = WM.create<Object>();
 
   // Set positions of test objects
   obj1->setPosition(Vector(0, 0));
@@ -92,13 +73,12 @@ void getCollisions() {
   obj3->setSolidness(Solidness::SPECTRAL);
 
   // Call getCollisions function
-  ObjectList collisions = WM.getCollisions(obj1, Vector(0, 0));
+  vector<Object*> collisions = WM.getCollisions(obj1, Vector(0, 0));
 
   // Check if obj4 is in the collisions list
-  assert("collides with hard", collisions.find(obj4) > -1);
-  assert("collides with soft", collisions.find(obj2) > -1);
-
-  assert("does not collide with spectral", collisions.find(obj3) == -1);
+  assert("collides with hard", contains(collisions, obj4));
+  assert("collides with soft", contains(collisions, obj2));
+  assert("does not collide with spectral", !contains(collisions, obj3));
 
   // Clean up test objects
   WM.markForDelete(obj1);
@@ -113,10 +93,10 @@ void getCollisions() {
 void resolveMovement() {
   WM.startUp();
 
-  auto subject = new Object("subject");
-  auto softObject = new Object("soft");
-  auto hardObject = new Object("hard");
-  auto spectralObject = new Object("spectral");
+  auto subject = WM.create<Object>("subject");
+  auto softObject = WM.create<Object>("soft");
+  auto hardObject = WM.create<Object>("hard");
+  auto spectralObject = WM.create<Object>("spectral");
 
   subject->setPosition(Vector(0, 0));
   softObject->setPosition(Vector(2, 2));
@@ -133,8 +113,9 @@ void resolveMovement() {
   hardObject->setVelocity(Vector(-1, -1));
   spectralObject->setVelocity(Vector(-1, -1));
 
-  Vector targetPosition, targetVelocity, targetAcceleration, position, velocity, acceleration;
-  
+  Vector targetPosition, targetVelocity, targetAcceleration, position, velocity,
+    acceleration;
+
   targetPosition = softObject->getPosition();
   WM.resolveMovement(subject, targetPosition);
   assertEq("moves HARD on SOFT", subject->getPosition(), targetPosition);
@@ -153,11 +134,13 @@ void resolveMovement() {
 
   WM.resolveMovement(subject, targetPosition);
   assertEq("does not move HARD over HARD", subject->getPosition(), position);
-  assertEq("reflects velocity (subject)", subject->getVelocity(), targetVelocity);
+  assertEq("reflects velocity (subject)", subject->getVelocity(),
+           targetVelocity);
   assertEq("reflects velocity (object)", hardObject->getVelocity(), velocity);
   assertEq("reflects acceleration (subject)", subject->getAcceleration(),
            targetAcceleration);
-  assertEq("reflects acceleration (object)", hardObject->getAcceleration(), acceleration);
+  assertEq("reflects acceleration (object)", hardObject->getAcceleration(),
+           acceleration);
 
   targetPosition = Vector(0, 0);
   WM.resolveMovement(subject, targetPosition);
@@ -172,7 +155,8 @@ void resolveMovement() {
 
   targetPosition = spectralObject->getPosition();
   WM.resolveMovement(subject, targetPosition);
-  assertEq("moves SPECTRAL on SPECTRAL", subject->getPosition(), targetPosition);
+  assertEq("moves SPECTRAL on SPECTRAL", subject->getPosition(),
+           targetPosition);
 
   targetPosition = hardObject->getPosition();
   WM.resolveMovement(subject, targetPosition);
@@ -180,14 +164,16 @@ void resolveMovement() {
 
   targetPosition = Vector(0, 0);
   WM.resolveMovement(subject, targetPosition);
-  assertEq("moves SPECTRAL on empty spot", subject->getPosition(), targetPosition);
+  assertEq("moves SPECTRAL on empty spot", subject->getPosition(),
+           targetPosition);
 
   subject->setSolidness(Solidness::SOFT);
   subject->setPosition(Vector(0, 0));
 
   targetPosition = softObject->getPosition();
   WM.resolveMovement(subject, targetPosition);
-  assertEq("moves SPECTRAL over SPECTRAL", subject->getPosition(), targetPosition);
+  assertEq("moves SPECTRAL over SPECTRAL", subject->getPosition(),
+           targetPosition);
 
   targetPosition = spectralObject->getPosition();
   WM.resolveMovement(subject, targetPosition);
@@ -199,7 +185,8 @@ void resolveMovement() {
 
   targetPosition = Vector(0, 0);
   WM.resolveMovement(subject, targetPosition);
-  assertEq("moves SOFT over empty spot", subject->getPosition(), targetPosition);
+  assertEq("moves SOFT over empty spot", subject->getPosition(),
+           targetPosition);
 
   position = subject->getPosition();
   velocity = Vector(1, 1);
@@ -213,63 +200,25 @@ void resolveMovement() {
   subject->setAcceleration(acceleration);
   hardObject->setVelocity(targetVelocity);
   hardObject->setAcceleration(targetAcceleration);
-  
+
   // Almost on hard, but with part of the bounding box colliding
   targetPosition = hardObject->getPosition() - velocity;
   WM.resolveMovement(subject, targetPosition);
   assertEq("does not move HARD on HARD with bounding box collision",
            subject->getPosition(), position);
-  assertEq("reflects velocity (subject)", subject->getVelocity(), targetVelocity);
-  assertEq("reflects acceleration (subject)", subject->getAcceleration(), targetAcceleration);
+  assertEq("reflects velocity (subject)", subject->getVelocity(),
+           targetVelocity);
+  assertEq("reflects acceleration (subject)", subject->getAcceleration(),
+           targetAcceleration);
   assertEq("reflects velocity (object)", hardObject->getVelocity(), velocity);
-  assertEq("reflects acceleration (object)", hardObject->getAcceleration(), acceleration);
+  assertEq("reflects acceleration (object)", hardObject->getAcceleration(),
+           acceleration);
 
   // Clean up test objects
   WM.markForDelete(subject);
   WM.markForDelete(softObject);
   WM.markForDelete(hardObject);
   WM.update();
-
-  WM.shutDown();
-}
-
-void viewFollowing() {
-  WM.startUp();
-
-  auto subject = new Object;
-  subject->setPosition(Vector());
-
-  auto initialView = Box(Vector(5, 5), 10, 10);
-  WM.setView(initialView);
-  WM.setBoundary(Box(20, 20));
-
-  WM.setViewFollowing(subject);
-  WM.resolveMovement(subject, Vector(10, 10));
-  assertEq("does not update view", WM.getView(), initialView);
-  WM.resolveMovement(subject, Vector(11, 11));
-
-  assertEq("updates the view", WM.getView(), Box(Vector(6, 6), 10, 10));
-
-  WM.resolveMovement(subject, Vector(11, 5));
-  assertEq("updates the view (vertical lower bound)", WM.getView(),
-           Box(Vector(6, 0), 10, 10));
-
-  WM.resolveMovement(subject, Vector(11, 15));
-  assertEq("updates the view (vertical upper bound)", WM.getView(),
-           Box(Vector(6, 10), 10, 10));
-
-  WM.resolveMovement(subject, Vector(5, 11));
-  assertEq("updates the view (horizontal lower bound)", WM.getView(),
-           Box(Vector(0, 6), 10, 10));
-
-  WM.resolveMovement(subject, Vector(15, 11));
-  assertEq("updates the view (horizontal upper bound)", WM.getView(),
-           Box(Vector(10, 6), 10, 10));
-
-  WM.setViewDeadZone(Box(WM.getView().getCorner(), 5, 5));
-  WM.resolveMovement(subject, Vector(12, 10));
-  assertEq("does not update the view within dead zone", WM.getView(),
-           Box(Vector(10, 6), 10, 10));
 
   WM.shutDown();
 }
@@ -289,7 +238,7 @@ void outOfBounds() {
     }
   };
 
-  auto obj1 = new TestObject;
+  auto obj1 = WM.create<TestObject>();
 
   obj1->setPosition(Vector());
   obj1->setBox(Box(1, 1));
@@ -309,7 +258,7 @@ void objectManagement() {
   WM.startUp();
   array<Object*, 5> objects;
 
-  for (int i = 0; i < 5; i++) objects[i] = new Object;
+  for (int i = 0; i < 5; i++) objects[i] = WM.create<Object>();
 
   objects[0]->setType("lol");
   objects[1]->setType("asd");
@@ -321,54 +270,29 @@ void objectManagement() {
   WM.update();
 
   auto activeObjects = WM.getAllObjects();
-  assertEq("has active objects", activeObjects.getCount(), 4);
+  assertEq("has active objects", activeObjects.size(), 4);
   auto allObjects = WM.getAllObjects(true);
-  assertEq("has all the objects", allObjects.getCount(), 5);
+  assertEq("has all the objects", allObjects.size(), 5);
   auto activeTypeObjects = WM.getAllObjectsByType("type");
-  assertEq("filters active objects by type", activeTypeObjects.getCount(), 2);
+  assertEq("filters active objects by type", activeTypeObjects.size(), 2);
   auto allTypeObjects = WM.getAllObjectsByType("type", true);
-  assertEq("filters all objects by type", allTypeObjects.getCount(), 3);
+  assertEq("filters all objects by type", allTypeObjects.size(), 3);
 
   WM.markForDelete(objects[0]);
   WM.update();
   activeObjects = WM.getAllObjects();
-  assertEq("has one less object", activeObjects.getCount(), 3);
-
-  WM.removeObject(objects[1]);
-  WM.update();
-  activeObjects = WM.getAllObjects();
-  assertEq("removes an object", activeObjects.getCount(), 2);
-  delete (objects[1]);
+  assertEq("has one less object", activeObjects.size(), 3);
 
   WM.shutDown();
   activeObjects = WM.getAllObjects();
-  assertEq("removes everything", activeObjects.getCount(), 0);
-}
-
-void setters() {
-  WM.setView(Box(Vector(0, 0), 10, 10));
-  assertEq("sets view", WM.getView(), Box(Vector(0, 0), 10, 10));
-
-  WM.setBoundary(Box(Vector(0, 0), 10, 10));
-  assertEq("sets boundary", WM.getBoundary(), Box(Vector(0, 0), 10, 10));
-
-  WM.setViewDeadZone(Box(Vector(0, 0), 10, 10));
-  assertEq("sets view dead zone", WM.getViewDeadZone(),
-           Box(Vector(0, 0), 10, 10));
-
-  WM.setView(Box(Vector(0, 0), 10, 10));
-  assertEq("sets view", WM.getView(), Box(Vector(0, 0), 10, 10));
+  assertEq("removes everything", activeObjects.size(), 0);
 }
 
 auto main() -> int {
-  test("setters", setters);
   test("object management", objectManagement);
   test("collisions ", getCollisions);
   test("resolve movements", resolveMovement);
   test("outOfBounds", outOfBounds);
   test("draw", draw);
-  test("viewFollowing", viewFollowing);
-  test("worldToView", worldToView);
-  test("viewToWorld", worldToView);
   return report();
 }

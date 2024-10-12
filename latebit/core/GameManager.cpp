@@ -7,7 +7,7 @@
 #include "latebit/core/events/EventStep.h"
 #include "latebit/core/graphics/DisplayManager.h"
 #include "latebit/core/input/InputManager.h"
-#include "latebit/core/objects/WorldManager.h"
+#include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Logger.h"
 
 #ifdef __EMSCRIPTEN__
@@ -52,7 +52,7 @@ auto GameManager::startUp() -> int {
   // By default boundary equates view and it's the whole window
   Box boundary(Vector(0, 0), DM::WINDOW_WIDTH, DM::WINDOW_HEIGHT);
   WM.setBoundary(boundary);
-  WM.setView(boundary);
+  WM.getView().setView(boundary);
 
   Log.info("GameManager::startUp(): Started successfully");
   return Manager::startUp();
@@ -156,7 +156,7 @@ void GameManager::run() {
   EventStep step(0);
 
   EmscriptenLoopArgs args = {&adjustTime, &loopTime, &steps,
-                             clock,       frameTime, &this->paused};
+                             clock.get(),       frameTime, &this->paused};
 
   emscripten_set_main_loop_arg(loop, &args, 0, 1);
   emscripten_set_main_loop_timing(EM_TIMING_RAF, 33);

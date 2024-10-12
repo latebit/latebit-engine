@@ -74,13 +74,15 @@ void draw() {
   DM::shutDown();
 
   static int scale = 0;
-  const auto frames = vector<Keyframe>{{Color::RED}}; 
-  const auto sprite2 = Sprite("s", 1, 1, 1, frames, [](Vector, const vector<Color::Color> *, uint8_t, uint8_t, uint8_t s) -> int { 
-    scale = s;
-    return 0;
-  });
+  const auto frames = vector<Keyframe>{{Color::RED}};
+  const auto sprite2 = Sprite("s", 1, 1, 1, frames,
+                              [](Vector, const vector<Color::Color> *, uint8_t,
+                                 uint8_t, uint8_t s) -> int {
+                                scale = s;
+                                return 0;
+                              });
   animation.setSprite(&sprite2);
-  
+
   assertOk("draws the frame", animation.draw(Vector(), 2));
   assertEq("uses correct scale", scale, 2);
 

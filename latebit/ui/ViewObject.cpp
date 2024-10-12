@@ -5,7 +5,7 @@
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/graphics/DisplayManager.h"
 #include "latebit/core/objects/SceneGraph.h"
-#include "latebit/core/objects/WorldManager.h"
+#include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Math.h"
 
 namespace lb {

@@ -1,4 +1,5 @@
 #include "Animation.h"
+
 #include <cstdint>
 
 #include "latebit/core/GameManager.h"

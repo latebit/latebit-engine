@@ -4,6 +4,7 @@
 #include "latebit/core/events/EventInput.h"
 #include "latebit/core/graphics/DisplayManager.h"
 #include "latebit/core/objects/Object.h"
+#include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Logger.h"
 
 using namespace lb;
@@ -83,7 +84,7 @@ class TestObject : public Object {
 auto main() -> int {
   Log.setDestination(LogDestination::STDOUT);
   GM.startUp();
-  new TestObject();
+  WM.create<TestObject>();
   GM.run();
   return 0;
 }

@@ -3,9 +3,10 @@
 #include <array>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "latebit/core/events/Event.h"
-#include "latebit/core/objects/ObjectList.h"
+#include "latebit/core/objects/Object.h"
 
 using namespace std;
 
@@ -27,7 +28,7 @@ class Manager {
   array<string, MAX_EVENTS> events = {};
 
   // List of subscribers. Every element matches an event in `events`
-  array<ObjectList, MAX_EVENTS> subscribers = {};
+  array<vector<Object *>, MAX_EVENTS> subscribers = {};
 
  public:
   Manager(string type) : type(std::move(type)){};

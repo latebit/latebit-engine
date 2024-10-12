@@ -136,17 +136,13 @@ auto main() -> int {
                                               "sheet", 4, 1);
       assertEq("frame count is correct", sprite.getFrameCount(), 4);
       assert("content of first frame is correct",
-             sprite.getFrame(0) ==
-               vector<Color::Color>({Color::YELLOW}));
+             sprite.getFrame(0) == vector<Color::Color>({Color::YELLOW}));
       assert("content of second frame is correct",
-             sprite.getFrame(1) ==
-               vector<Color::Color>({Color::ORANGE}));
-      assert(
-        "content of third frame is correct",
-        sprite.getFrame(2) == vector<Color::Color>({Color::RED}));
+             sprite.getFrame(1) == vector<Color::Color>({Color::ORANGE}));
+      assert("content of third frame is correct",
+             sprite.getFrame(2) == vector<Color::Color>({Color::RED}));
       assert("content of fourth frame is correct",
-             sprite.getFrame(3) ==
-               vector<Color::Color>({Color::DARK_PURPLE}));
+             sprite.getFrame(3) == vector<Color::Color>({Color::DARK_PURPLE}));
     });
 
     test("validations", []() {

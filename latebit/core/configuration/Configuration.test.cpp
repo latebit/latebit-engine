@@ -7,7 +7,7 @@ auto main() -> int {
     assertEq("parses max_frame_rate", Configuration::getMaxFrameRate(), 60);
 
     assertEq("parses initial_window_title",
-             Configuration::getInitialWindowTitle(), "LateBit");
+             Configuration::getInitialWindowTitle(), "Latebit");
   });
 
   test("parses a broken file without changing values", []() -> void {
@@ -17,7 +17,7 @@ auto main() -> int {
     assertEq("parses max_frame_rate", Configuration::getMaxFrameRate(), 60);
 
     assertEq("parses initial_window_title",
-             Configuration::getInitialWindowTitle(), "LateBit");
+             Configuration::getInitialWindowTitle(), "Latebit");
   });
 
   test("parses a correct configuration file", []() -> void {

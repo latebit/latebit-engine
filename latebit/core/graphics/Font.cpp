@@ -22,8 +22,8 @@ auto Font::getHorizontalSpacing() const -> int {
   return this->horizontalSpacing;
 }
 
-bool isInputGlyph(int code) { return code > 13 && code < 25; }
-bool isASCIICharacter(int code) { return code > 31 && code < 127; }
+auto isInputGlyph(int code) -> bool { return code > 13 && code < 25; }
+auto isASCIICharacter(int code) -> bool { return code > 31 && code < 127; }
 
 auto Font::getGlyph(char c) const -> const Glyph& {
   int code = static_cast<int>(c);

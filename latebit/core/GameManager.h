@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ctime>
+#include <memory>
 
 #include "latebit/core/utils/Clock.h"
 #include "latebit/core/utils/Manager.h"
@@ -24,12 +25,13 @@ class GameManager : public Manager {
   bool paused = false;
 
   // A reference to the game loop clock
-  Clock *clock = new Clock;
+  unique_ptr<Clock> clock = make_unique<Clock>();
 
  public:
   GameManager(GameManager const &) = delete;
   void operator=(GameManager const &) = delete;
   static auto getInstance() -> GameManager &;
+  ~GameManager() = default;
 
   auto startUp() -> int override;
   void shutDown() override;

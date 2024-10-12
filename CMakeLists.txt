@@ -7,7 +7,7 @@ include(cmake/Utils.cmake)
 include(cmake/Package.cmake)
 
 set(SRC ${CMAKE_SOURCE_DIR}/latebit)
-file(GLOB_RECURSE ALL_FILES "${SRC}/*")
+file(GLOB_RECURSE ALL_FILES "${SRC}/**/*.cpp" "${SRC}/**/*.h")
 
 # This allows clean includes (such as "core/graphics/..." instead of "../src/core/...")
 include_directories(${CMAKE_SOURCE_DIR})
@@ -18,7 +18,7 @@ add_subdirectory(latebit/core)
 add_subdirectory(test)
 
 add_custom_target(format
-	COMMAND clang-format -n --Werror -ferror-limit=1 ${ALL_FILES}
+	COMMAND clang-format -i ${ALL_FILES}
 )
 
 add_custom_target(tidy

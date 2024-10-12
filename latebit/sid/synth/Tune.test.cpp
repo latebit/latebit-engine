@@ -5,7 +5,7 @@
 
 using namespace sid;
 
-int main() {
+auto main() -> int {
   test("==", []() {
     Tune t1, t2;
     assert("empty equals empty", t1 == t2);

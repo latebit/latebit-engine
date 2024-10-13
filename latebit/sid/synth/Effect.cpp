@@ -1,10 +1,6 @@
-#include <cstdio>
-#include <cstdlib>
-
-#include "Oscillator.h"
+#include "Effect.h"
 #include "latebit/utils/Math.h"
 
-using namespace std;
 using namespace sid;
 
 namespace sid {
@@ -28,7 +24,7 @@ auto Effect::processFrequency(float step) -> float {
 auto Effect::processVolume(float sample) -> float {
   if (this->type == EffectType::FADEIN || this->type == EffectType::FADEOUT) {
     sample *= this->previous;
-    this->previous = clamp(this->previous + this->amount, 0.0, 1.0);
+    this->previous = lb::clamp(this->previous + this->amount, 0.0, 1.0);
   }
   return sample;
 }

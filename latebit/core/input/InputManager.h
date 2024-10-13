@@ -2,8 +2,6 @@
 
 #include <SDL2/SDL_keycode.h>
 
-#include <unordered_map>
-
 #include "latebit/core/utils/Manager.h"
 
 #define IM lb::InputManager::getInstance()

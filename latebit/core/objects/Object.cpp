@@ -160,14 +160,14 @@ auto Object::unsubscribeAll() -> int {
 }
 
 auto Object::setActive(bool active) -> int {
-  if (this->sceneGraph->setActive(this, active) != 0) return -1;
+  this->sceneGraph->setActive(this, active);
   this->active = active;
   return 0;
 }
 auto Object::isActive() const -> bool { return this->active; }
 
 auto Object::setVisible(bool visible) -> int {
-  if (this->sceneGraph->setVisible(this, visible) != 0) return -1;
+  this->sceneGraph->setVisible(this, visible);
   this->visible = visible;
   return 0;
 }

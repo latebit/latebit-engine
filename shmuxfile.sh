@@ -5,14 +5,14 @@ wasm:
 
 native:
   # Creates a native build
-  cmake --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release -B build .
-  cmake --build build -j8 -t latebit
+  cmake --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release -B build -G Ninja .
+  cmake --build build -j8
 
 debug:
   # Creates a debug build
   export LSAN_OPTIONS="suppressions=asan.supp"
-  cmake --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Debug -B build .
-  cmake --build build -j8 -t latebit
+  cmake --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Debug -B build .
+  cmake --build build -j8
 
 tidy:
   # Lints the code with clang-tidy
@@ -28,11 +28,10 @@ package:
 
 test:
   # Runs the test executable
-  cmake --build build -t test
+  cmake --build build -j8 -t test
 
 prepare: clean
   # Prepares current directory for development
-  cmake --toolchain=~/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build .
   ln -s build/compile_commands.json compile_commands.json
 
 clean:

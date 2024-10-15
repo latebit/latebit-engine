@@ -16,8 +16,7 @@ void insertObject() {
   nonSolidObj->setSolidness(Solidness::SPECTRAL);
 
   // Check if the object was inserted successfully
-  assertOk("inserts object into the scene graph",
-           sg.insertObject(obj.get()));
+  assertOk("inserts object into the scene graph", sg.insertObject(obj.get()));
   assertEq("scene graph contains the object", sg.getActiveObjects().size(), 1);
   assertEq("scene graph contains the active object",
            sg.getActiveObjects().size(), 1);
@@ -42,8 +41,8 @@ void removeObject() {
 
   // Check if the object was removed successfully
   assertOk("removes object from the scene graph", sg.removeObject(subject));
-  assertEq("scene graph does not contain the object", sg.getActiveObjects().size(),
-           0);
+  assertEq("scene graph does not contain the object",
+           sg.getActiveObjects().size(), 0);
   assertEq("scene graph does not contain the active object",
            sg.getActiveObjects().size(), 0);
   assertEq("scene graph does not contain the solid object",

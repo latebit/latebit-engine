@@ -44,7 +44,7 @@ class Sprite {
       duration(duration),
       label(std::move(label)),
       frames(std::move(frames)),
-      drawKeyframeAtPosition(draw){};
+      drawKeyframeAtPosition(draw) {};
 
   ~Sprite() = default;
 

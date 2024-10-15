@@ -163,7 +163,8 @@ class Object {
   virtual auto eventHandler(const Event* e) -> int;
   // Draw single sprite frame and bounding box (if debug).
   virtual auto draw() -> int;
-  // Called just before object is destroyed. Can be overridden to cleanup resources.
+  // Called just before object is destroyed. Can be overridden to cleanup
+  // resources.
   virtual void teardown() {};
 
   // Set object to be active or not active.

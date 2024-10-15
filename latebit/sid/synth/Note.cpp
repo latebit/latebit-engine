@@ -25,8 +25,8 @@ namespace sid {
 
 // Highlight the position of the error in the symbol with parentheses
 // This assumes the symbol has size SYMBOL_SIZE
-auto highlightErrorPosition(const Symbol& symbol,
-                            int position) -> const string {
+auto highlightErrorPosition(const Symbol& symbol, int position)
+  -> const string {
   string result = "";
   for (int i = 0; i < SYMBOL_SIZE; i++) {
     if (i == position) {

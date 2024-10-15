@@ -17,7 +17,7 @@ class View {
   Box viewDeadZone = Box();
 
  public:
-  explicit View(const WorldManager *world) : world(world){};
+  explicit View(const WorldManager *world) : world(world) {};
 
   // Set the current view (i.e., visible portion of the world)
   void setView(Box v);

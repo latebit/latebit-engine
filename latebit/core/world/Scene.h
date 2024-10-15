@@ -1,19 +1,19 @@
 #pragma once
 
-#include "latebit/core/world/SceneGraph.h"
-
 #include <memory>
 #include <string>
+
+#include "latebit/core/world/SceneGraph.h"
 
 namespace lb {
 class WorldManager;
 class Scene {
-  protected:
+ protected:
   // All objects. This vector owns all the objects in the graph and its
   // responsible for their memory management
   vector<unique_ptr<Object>> objects = {};
   bool active = false;
- 
+
  private:
   SceneGraph* graph = nullptr;
   string label = "";
@@ -31,7 +31,7 @@ class Scene {
   void addObject(unique_ptr<Object> o);
   // Remove object from the scene
   void removeObject(Object* o);
-  
+
   // Runs the scene activation sequence (i.e., add objects to the graph)
   void activate();
   // Runs the scene deactivation sequence

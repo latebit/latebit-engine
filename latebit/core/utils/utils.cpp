@@ -47,4 +47,4 @@ auto contains(Box container, Box content) -> bool {
   return containerLeft <= contentLeft && contentRight <= containerRight &&
          containerTop <= contentTop && contentBottom <= containerBottom;
 }
-}
+}  // namespace lb

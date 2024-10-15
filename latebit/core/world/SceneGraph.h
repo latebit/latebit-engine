@@ -32,7 +32,7 @@ class SceneGraph {
   ~SceneGraph() = default;
 
   // Insert object in the scene. This method takes ownership of the object.
-  auto insertObject(Object* o) -> int;
+  auto insertObject(Object *o) -> int;
 
   // Remove object from the scene
   auto removeObject(Object *o) -> int;

@@ -19,9 +19,12 @@ class EventView : public Event {
   const int value = 0;
 
  public:
-  EventView() : Event(VIEW_EVENT){};
+  EventView() : Event(VIEW_EVENT) {};
   EventView(string objectType, int value, bool delta = false)
-    : Event(VIEW_EVENT), objectType(std::move(objectType)), delta(delta), value(value){};
+    : Event(VIEW_EVENT),
+      objectType(std::move(objectType)),
+      delta(delta),
+      value(value) {};
 
   // Get the type of the ViewObject to update
   [[nodiscard]] auto getObjectType() const -> string;

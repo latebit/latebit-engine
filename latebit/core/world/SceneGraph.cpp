@@ -13,7 +13,7 @@ SceneGraph::SceneGraph() {
   }
 };
 
-auto SceneGraph::insertObject(Object* rawO) -> int {
+auto SceneGraph::insertObject(Object *rawO) -> int {
   if (rawO->isActive()) {
     insert(active, rawO);
   } else {
@@ -70,8 +70,8 @@ auto SceneGraph::getVisibleObjects(int altitude) const -> vector<Object *> {
   return visible.at(altitude);
 }
 
-auto SceneGraph::setSolidness(Object *rawO,
-                              Solidness::Solidness solidness) -> int {
+auto SceneGraph::setSolidness(Object *rawO, Solidness::Solidness solidness)
+  -> int {
   bool isSolid = solidness == Solidness::HARD || solidness == Solidness::SOFT;
 
   if (rawO->isSolid()) remove(solid, rawO);

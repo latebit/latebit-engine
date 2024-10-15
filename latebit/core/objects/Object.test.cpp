@@ -74,7 +74,7 @@ void eventSubscription() {
 
   class TestObject : public Object {
    public:
-    TestObject() : Object("TestObject"){};
+    TestObject() : Object("TestObject") {};
     auto eventHandler(const Event* e) -> int override {
       emittedCount[e->getType()]++;
       return 0;

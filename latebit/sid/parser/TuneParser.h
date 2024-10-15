@@ -28,18 +28,18 @@ struct ParserOptions {
 class TuneParser {
  private:
   // Parses a Tune from a stream. Returns nullptr if the stream is invalid.
-  static auto fromStream(istream *str,
-                         const ParserOptions *opts) -> unique_ptr<Tune>;
+  static auto fromStream(istream *str, const ParserOptions *opts)
+    -> unique_ptr<Tune>;
 
  public:
   // Parses a Tune from a file. It's a wrapper around TuneParser::fromStream.
   // Returns nullptr if the file is invalid.
-  static auto fromFile(const string filename,
-                       const ParserOptions *opts) -> unique_ptr<Tune>;
+  static auto fromFile(const string filename, const ParserOptions *opts)
+    -> unique_ptr<Tune>;
   // Parses a Tune from a string. It's a wrapper around TuneParser::fromStream.
   // Returns nullptr if the string is invalid.
-  static auto fromString(string str,
-                         const ParserOptions *opts) -> unique_ptr<Tune>;
+  static auto fromString(string str, const ParserOptions *opts)
+    -> unique_ptr<Tune>;
   // Converts a Tune to a string.
   static auto toString(const Tune &tune) -> string;
 };

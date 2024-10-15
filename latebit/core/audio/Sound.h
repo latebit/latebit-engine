@@ -27,7 +27,7 @@ class Sound {
   void operator=(Sound const &) = delete;
 
   Sound(string label = "", unique_ptr<Tune> sound = nullptr)
-    : sound(std::move(sound)), label(label){};
+    : sound(std::move(sound)), label(label) {};
   ~Sound() = default;
 
   // Get label associated with the sound. Used to retrieve the resource.

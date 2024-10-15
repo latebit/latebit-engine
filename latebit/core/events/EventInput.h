@@ -21,12 +21,12 @@ class EventInput : public Event {
   EventInput()
     : Event(INPUT_EVENT),
       key(InputKey::UNDEFINED_KEY),
-      action(InputAction::UNDEFINED_ACTION){};
+      action(InputAction::UNDEFINED_ACTION) {};
 
   // Create input event with an InputKey representing the control being acted
   // on, and an action representing the action on the given control
   EventInput(InputKey::InputKey k, InputAction::InputAction a)
-    : Event(INPUT_EVENT), key(k), action(a){};
+    : Event(INPUT_EVENT), key(k), action(a) {};
 
   // Return the key value for this event
   [[nodiscard]] auto getKey() const -> InputKey::InputKey;

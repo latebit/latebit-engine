@@ -13,4 +13,4 @@ auto equals(float a, float b, float tolerance = 0.0001f) -> bool;
 auto random(int max, int min) -> int;
 
 auto random(int max) -> int;
-}
+}  // namespace lb

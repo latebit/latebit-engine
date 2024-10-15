@@ -26,7 +26,7 @@ class Music {
   Music(Music const &) = delete;
   void operator=(Music const &) = delete;
   Music(string label = "", unique_ptr<Tune> music = nullptr)
-    : music(std::move(music)), label(label){};
+    : music(std::move(music)), label(label) {};
   ~Music() = default;
 
   // Get label associated with the music. Used to retrieve the resource.

@@ -1,4 +1,5 @@
 #include "Effect.h"
+
 #include "latebit/utils/Math.h"
 
 using namespace sid;

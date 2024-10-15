@@ -13,7 +13,7 @@ class Event {
   const string type;
 
  public:
-  Event(string  type = UNDEFINED_EVENT) : type(std::move(type)){};
+  Event(string type = UNDEFINED_EVENT) : type(std::move(type)) {};
   virtual ~Event() = default;
 
   // Get the type of the event

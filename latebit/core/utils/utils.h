@@ -16,4 +16,4 @@ auto intersects(Box box1, Box box2) -> bool;
 
 // Return true if container contains content
 auto contains(Box container, Box content) -> bool;
-}
+}  // namespace lb

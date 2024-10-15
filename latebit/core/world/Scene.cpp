@@ -1,6 +1,7 @@
 #include "Scene.h"
 
 #include <algorithm>
+
 #include "latebit/core/objects/Object.h"
 
 namespace lb {
@@ -37,7 +38,7 @@ void Scene::removeObject(Object* o) {
   }
 }
 
-void Scene::setSceneGraph(SceneGraph & graph) { this->graph = &graph; }
+void Scene::setSceneGraph(SceneGraph& graph) { this->graph = &graph; }
 void Scene::setLabel(const string label) { this->label = label; }
 
 }  // namespace lb

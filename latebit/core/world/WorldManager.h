@@ -1,8 +1,8 @@
 #pragma once
 
+#include <memory>
 #include <utility>
 #include <vector>
-#include <memory>
 
 #include "SceneGraph.h"
 #include "View.h"
@@ -54,8 +54,9 @@ class WorldManager : public Manager {
     -> vector<Object *>;
 
   // Returns a list of all active objects of a given type
-  [[nodiscard]] auto getAllObjectsByType(
-    string type, bool includeInactive = false) const -> vector<Object *>;
+  [[nodiscard]] auto getAllObjectsByType(string type,
+                                         bool includeInactive = false) const
+    -> vector<Object *>;
 
   // Returns a list of object colliding with the object at a given position
   auto getCollisions(Object *o, Vector where) const -> vector<Object *>;
@@ -82,7 +83,7 @@ class WorldManager : public Manager {
   }
 
   template <typename T, typename... Args>
-  auto createObject(Scene* scene, Args &&...args) -> T * {
+  auto createObject(Scene *scene, Args &&...args) -> T * {
     static_assert(std::is_base_of<Object, T>::value,
                   "T must inherit from Object");
     auto object = std::make_unique<T>(std::forward<Args>(args)...);
@@ -96,7 +97,7 @@ class WorldManager : public Manager {
 
   // Activate a scene by their label
   auto deactivateScene(const string label) -> int;
-  
+
   // Activate a scene by their label, deactivating all the others
   auto switchToScene(const string label) -> int;
 

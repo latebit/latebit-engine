@@ -59,8 +59,9 @@ auto WorldManager::getAllObjects(bool includeInactive) const
   return this->sceneGraph.getActiveObjects();
 }
 
-auto WorldManager::getAllObjectsByType(
-  std::string type, bool includeInactive) const -> vector<Object *> {
+auto WorldManager::getAllObjectsByType(std::string type,
+                                       bool includeInactive) const
+  -> vector<Object *> {
   vector<Object *> result = {};
   auto all = this->getAllObjects(includeInactive);
   result.reserve(all.size());
@@ -74,8 +75,8 @@ auto WorldManager::getAllObjectsByType(
   return result;
 }
 
-auto WorldManager::getCollisions(Object *o,
-                                 Vector where) const -> vector<Object *> {
+auto WorldManager::getCollisions(Object *o, Vector where) const
+  -> vector<Object *> {
   vector<Object *> collisions = {};
   auto solid = this->sceneGraph.getSolidObjects();
   auto box = o->getWorldBox(where);
@@ -202,29 +203,35 @@ auto WorldManager::getSceneGraph() -> SceneGraph & { return this->sceneGraph; }
 auto WorldManager::getView() -> View & { return this->view; }
 
 auto WorldManager::activateScene(const string label) -> int {
-  for (auto &scene: this->scenes) {
+  for (auto &scene : this->scenes) {
     if (scene->label == label) {
       scene->activate();
       return 0;
     }
   }
-  Log.error("WorldManager::activateScene(): Could not activate scene %s. Scene not found", label.c_str());
+  Log.error(
+    "WorldManager::activateScene(): Could not activate scene %s. Scene not "
+    "found",
+    label.c_str());
   return -1;
 }
 
 auto WorldManager::deactivateScene(const string label) -> int {
-  for (auto &scene: this->scenes) {
+  for (auto &scene : this->scenes) {
     if (scene->label == label) {
       scene->deactivate();
       return 0;
     }
   }
-  Log.error("WorldManager::deactivateScene(): Could not deactivate scene %s. Scene not found", label.c_str());
+  Log.error(
+    "WorldManager::deactivateScene(): Could not deactivate scene %s. Scene not "
+    "found",
+    label.c_str());
   return -1;
 }
 
 auto WorldManager::switchToScene(const string label) -> int {
-  for (auto &scene: this->scenes) {
+  for (auto &scene : this->scenes) {
     if (scene->active) scene->deactivate();
     if (scene->label == label) scene->activate();
   }

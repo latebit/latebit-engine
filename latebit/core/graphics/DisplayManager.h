@@ -76,13 +76,13 @@ class DisplayManager {
   // Draws a frame in the given position, scaling it by the given factor
   [[nodiscard]] static auto drawKeyframe(Position position,
                                          const Keyframe *frame, uint8_t width,
-                                         uint8_t height,
-                                         uint8_t scaling) -> int;
+                                         uint8_t height, uint8_t scaling)
+    -> int;
 
   // Draws a rectangle outline at the given world position (top left cell)
   [[nodiscard]] static auto drawRectangle(Position position, int width,
-                                          int height,
-                                          Color::Color borderColor) -> int;
+                                          int height, Color::Color borderColor)
+    -> int;
 
   // Draws a rectangle at the given world position (top left cell)
   [[nodiscard]] static auto drawRectangle(Position position, int width,

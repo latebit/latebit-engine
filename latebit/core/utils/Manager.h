@@ -31,7 +31,7 @@ class Manager {
   array<vector<Object *>, MAX_EVENTS> subscribers = {};
 
  public:
-  Manager(string type) : type(std::move(type)){};
+  Manager(string type) : type(std::move(type)) {};
   virtual ~Manager() = default;
 
   // Returns the manager type

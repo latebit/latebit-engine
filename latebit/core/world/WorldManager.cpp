@@ -1,6 +1,7 @@
 #include "WorldManager.h"
 
-#include <cstdio>
+#include <memory>
+#include <string>
 #include <vector>
 
 #include "latebit/core/events/EventCollision.h"
@@ -26,6 +27,7 @@ auto WorldManager::getInstance() -> WorldManager & {
 }
 
 auto WorldManager::startUp() -> int {
+  this->scenes.clear();
   this->sceneGraph.clear();
   this->view = View(this);
   Log.info("WorldManager::startUp(): Started successfully");
@@ -33,6 +35,7 @@ auto WorldManager::startUp() -> int {
 }
 
 void WorldManager::shutDown() {
+  this->scenes.clear();
   this->sceneGraph.clear();
   Manager::shutDown();
   Log.info("WorldManager::shutDown(): Shut down successfully");
@@ -197,4 +200,35 @@ auto WorldManager::getBoundary() const -> Box { return this->boundary; }
 
 auto WorldManager::getSceneGraph() -> SceneGraph & { return this->sceneGraph; }
 auto WorldManager::getView() -> View & { return this->view; }
+
+auto WorldManager::activateScene(const string label) -> int {
+  for (auto &scene: this->scenes) {
+    if (scene->label == label) {
+      scene->activate();
+      return 0;
+    }
+  }
+  Log.error("WorldManager::activateScene(): Could not activate scene %s. Scene not found", label.c_str());
+  return -1;
+}
+
+auto WorldManager::deactivateScene(const string label) -> int {
+  for (auto &scene: this->scenes) {
+    if (scene->label == label) {
+      scene->deactivate();
+      return 0;
+    }
+  }
+  Log.error("WorldManager::deactivateScene(): Could not deactivate scene %s. Scene not found", label.c_str());
+  return -1;
+}
+
+auto WorldManager::switchToScene(const string label) -> int {
+  for (auto &scene: this->scenes) {
+    if (scene->active) scene->deactivate();
+    if (scene->label == label) scene->activate();
+  }
+  return 0;
+}
+
 }  // namespace lb

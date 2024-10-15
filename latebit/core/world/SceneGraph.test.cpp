@@ -17,8 +17,8 @@ void insertObject() {
 
   // Check if the object was inserted successfully
   assertOk("inserts object into the scene graph",
-           sg.insertObject(std::move(obj)));
-  assertEq("scene graph contains the object", sg.getAllObjects().size(), 1);
+           sg.insertObject(obj.get()));
+  assertEq("scene graph contains the object", sg.getActiveObjects().size(), 1);
   assertEq("scene graph contains the active object",
            sg.getActiveObjects().size(), 1);
   assertEq("scene graph contains the solid object", sg.getSolidObjects().size(),
@@ -26,7 +26,7 @@ void insertObject() {
   assertEq("scene graph contains the visible object",
            sg.getVisibleObjects(altitude).size(), 1);
   assertOk("inserts non solid object into the scene graph",
-           sg.insertObject(std::move(nonSolidObj)));
+           sg.insertObject(nonSolidObj.get()));
   assertEq("scene graph does not contain the non-solid object",
            sg.getSolidObjects().size(), 1);
 }
@@ -38,11 +38,11 @@ void removeObject() {
   auto altitude = obj->getAltitude();
 
   // Insert object into the scene graph
-  sg.insertObject(std::move(obj));
+  sg.insertObject(obj.get());
 
   // Check if the object was removed successfully
   assertOk("removes object from the scene graph", sg.removeObject(subject));
-  assertEq("scene graph does not contain the object", sg.getAllObjects().size(),
+  assertEq("scene graph does not contain the object", sg.getActiveObjects().size(),
            0);
   assertEq("scene graph does not contain the active object",
            sg.getActiveObjects().size(), 0);
@@ -61,10 +61,10 @@ void getActiveObjects() {
   obj2->setActive(false);
 
   // Insert objects into the scene graph
-  sg.insertObject(std::move(obj1));
-  sg.insertObject(std::move(obj2));
-  sg.insertObject(std::move(obj3));
-  sg.insertObject(std::move(obj4));
+  sg.insertObject(obj1.get());
+  sg.insertObject(obj2.get());
+  sg.insertObject(obj3.get());
+  sg.insertObject(obj4.get());
 
   // Check if all objects are returned
   assertEq("returns all objects from the scene graph",
@@ -84,10 +84,10 @@ void getInactiveObjects() {
        subject4 = obj4.get();
   obj2->setActive(false);
 
-  sg.insertObject(std::move(obj1));
-  sg.insertObject(std::move(obj2));
-  sg.insertObject(std::move(obj3));
-  sg.insertObject(std::move(obj4));
+  sg.insertObject(obj1.get());
+  sg.insertObject(obj2.get());
+  sg.insertObject(obj3.get());
+  sg.insertObject(obj4.get());
 
   auto inactive = sg.getInactiveObjects();
 
@@ -105,9 +105,9 @@ void getSolidObjects() {
   auto subject1 = obj1.get(), subject2 = obj2.get(), subject3 = obj3.get();
   obj2->setSolidness(Solidness::SPECTRAL);
 
-  sg.insertObject(std::move(obj1));
-  sg.insertObject(std::move(obj2));
-  sg.insertObject(std::move(obj3));
+  sg.insertObject(obj1.get());
+  sg.insertObject(obj2.get());
+  sg.insertObject(obj3.get());
 
   auto solid = sg.getSolidObjects();
 
@@ -129,9 +129,9 @@ void getVisibleObjects() {
   obj3->setAltitude(1);
 
   // Insert objects into the scene graph
-  sg.insertObject(std::move(obj1));
-  sg.insertObject(std::move(obj2));
-  sg.insertObject(std::move(obj3));
+  sg.insertObject(obj1.get());
+  sg.insertObject(obj2.get());
+  sg.insertObject(obj3.get());
 
   // Get visible objects with altitude 1 from the scene graph
   auto visible = sg.getVisibleObjects(1);
@@ -164,7 +164,7 @@ void setSolidness() {
   SceneGraph sg;
   auto obj = make_unique<Object>();
   auto subject = obj.get();
-  sg.insertObject(std::move(obj));
+  sg.insertObject(subject);
 
   int result = sg.setSolidness(subject, Solidness::HARD);
   assertEq("sets solidness of the object to HARD", result, 0);
@@ -181,7 +181,7 @@ void setAltitude() {
   SceneGraph sg;
   auto obj = make_unique<Object>();
   auto subject = obj.get();
-  sg.insertObject(std::move(obj));
+  sg.insertObject(subject);
 
   int result = sg.setAltitude(subject, 1);
   assertEq("sets altitude of the object to 1", result, 0);
@@ -199,7 +199,7 @@ void setVisible() {
   auto obj = make_unique<Object>();
   auto subject = obj.get();
   auto altitude = obj->getAltitude();
-  sg.insertObject(std::move(obj));
+  sg.insertObject(subject);
 
   // The following assertions are order dependent
   assertOk("sets visible", sg.setVisible(subject, true));
@@ -215,7 +215,7 @@ void setActive() {
   SceneGraph sg;
   auto obj = make_unique<Object>();
   auto subject = obj.get();
-  sg.insertObject(std::move(obj));
+  sg.insertObject(subject);
 
   // The following assertions are order dependent
   assertOk("sets active", sg.setActive(subject, true));

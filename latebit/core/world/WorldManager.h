@@ -1,12 +1,15 @@
 #pragma once
 
+#include <utility>
 #include <vector>
+#include <memory>
 
 #include "SceneGraph.h"
 #include "View.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/objects/Object.h"
 #include "latebit/core/utils/Manager.h"
+#include "latebit/core/world/Scene.h"
 
 #define WM lb::WorldManager::getInstance()
 
@@ -28,6 +31,8 @@ class WorldManager : public Manager {
   SceneGraph sceneGraph = SceneGraph();
   // The current View
   View view = View(this);
+
+  vector<unique_ptr<Scene>> scenes = {};
 
   // Move object and check if it is out of bounds
   void moveAndCheckBounds(Object *o, Vector position);
@@ -65,14 +70,35 @@ class WorldManager : public Manager {
   auto markForDelete(Object *o) -> int;
 
   template <typename T, typename... Args>
-  static auto create(Args &&...args) -> T * {
-    static_assert(std::is_base_of<Object, T>::value,
-                  "T must inherit from Object");
-    auto obj = std::make_unique<T>(std::forward<Args>(args)...);
-    T *ptr = obj.get();
-    getInstance().sceneGraph.insertObject(std::move(obj));
+  auto createScene(const string label, Args &&...args) -> T * {
+    static_assert(std::is_base_of<Scene, T>::value,
+                  "T must inherit from Scene");
+    auto scene = std::make_unique<T>(std::forward<Args>(args)...);
+    scene->setSceneGraph(this->sceneGraph);
+    scene->setLabel(label);
+    T *ptr = scene.get();
+    this->scenes.push_back(std::move(scene));
     return ptr;
   }
+
+  template <typename T, typename... Args>
+  auto createObject(Scene* scene, Args &&...args) -> T * {
+    static_assert(std::is_base_of<Object, T>::value,
+                  "T must inherit from Object");
+    auto object = std::make_unique<T>(std::forward<Args>(args)...);
+    T *ptr = object.get();
+    scene->addObject(std::move(object));
+    return ptr;
+  }
+
+  // Activate a scene by their label
+  auto activateScene(const string label) -> int;
+
+  // Activate a scene by their label
+  auto deactivateScene(const string label) -> int;
+  
+  // Activate a scene by their label, deactivating all the others
+  auto switchToScene(const string label) -> int;
 
   // Draws all the active objects in the view
   void draw();

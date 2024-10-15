@@ -1,14 +1,10 @@
 #include "SceneGraph.h"
 
-#include <algorithm>
-#include <memory>
-
 #include "latebit/core/objects/Object.h"
 #include "latebit/core/objects/ObjectUtils.h"
 
 namespace lb {
 SceneGraph::SceneGraph() {
-  all.reserve(100);
   active.reserve(100);
   inactive.reserve(100);
   solid.reserve(100);
@@ -17,30 +13,25 @@ SceneGraph::SceneGraph() {
   }
 };
 
-auto SceneGraph::insertObject(unique_ptr<Object> o) -> int {
-  auto rawO = o.get();
-
-  if (o->isActive()) {
+auto SceneGraph::insertObject(Object* rawO) -> int {
+  if (rawO->isActive()) {
     insert(active, rawO);
   } else {
     insert(inactive, rawO);
   }
 
-  if (o->isSolid()) {
+  if (rawO->isSolid()) {
     insert(solid, rawO);
   }
 
-  if (o->isVisible()) {
-    insert(visible.at(o->getAltitude()), rawO);
+  if (rawO->isVisible()) {
+    insert(visible.at(rawO->getAltitude()), rawO);
   }
 
-  insert(all, std::move(o));
   return 0;
 }
 
 auto SceneGraph::removeObject(Object *rawO) -> int {
-  if (!rawO) return 0;
-
   if (rawO->isActive()) {
     remove(active, rawO);
   } else {
@@ -56,11 +47,6 @@ auto SceneGraph::removeObject(Object *rawO) -> int {
     remove(visible, rawO);
   }
 
-  all.erase(std::remove_if(all.begin(), all.end(),
-                           [rawO](const std::unique_ptr<Object> &p) {
-                             return p.get() == rawO;
-                           }),
-            all.end());
   return 0;
 }
 
@@ -142,12 +128,7 @@ auto SceneGraph::setVisible(Object *rawO, bool isVisible) -> int {
   return 0;
 }
 
-auto SceneGraph::getAllObjects() const -> const vector<unique_ptr<Object>> & {
-  return this->all;
-}
-
 auto SceneGraph::clear() -> void {
-  all.clear();
   active.clear();
   inactive.clear();
   solid.clear();

@@ -32,8 +32,10 @@ void viewToWorld() {
 void viewFollowing() {
   WM.startUp();
 
-  auto subject = WM.create<Object>();
+  auto scene = WM.createScene<Scene>("main");
+  auto subject = WM.createObject<Object>(scene);
   subject->setPosition(Vector());
+  scene->activate();
 
   auto initialView = Box(Vector(5, 5), 10, 10);
   WM.getView().setView(initialView);
@@ -72,8 +74,10 @@ void viewFollowing() {
 }
 
 auto main() -> int {
+  WM.startUp();
   test("viewFollowing", viewFollowing);
   test("worldToView", worldToView);
   test("viewToWorld", worldToView);
+  WM.shutDown();
   return report();
 }

@@ -39,11 +39,12 @@ auto main() -> int {
 
   GM.startUp();
   
-  WM.create<TestObject>(Vector(50, 10), Vector(), Vector(0.01, 0), Color::RED, 10);
-  WM.create<TestObject>(Vector(100, 10), Vector(), Vector(-0.01, 0), Color::GREEN, 10);
+  auto scene = WM.createScene<Scene>("main");
+  WM.createObject<TestObject>(scene, Vector(50, 10), Vector(), Vector(0.01, 0), Color::RED, 10);
+  WM.createObject<TestObject>(scene, Vector(100, 10), Vector(), Vector(-0.01, 0), Color::GREEN, 10);
 
-  WM.create<TestObject>(Vector(50, 40), Vector(1, 0), Vector(), Color::YELLOW, 10);
-  WM.create<TestObject>(Vector(100, 40), Vector(-1, 0), Vector(), Color::PINK, 10);
+  WM.createObject<TestObject>(scene, Vector(50, 40), Vector(1, 0), Vector(), Color::YELLOW, 10);
+  WM.createObject<TestObject>(scene, Vector(100, 40), Vector(-1, 0), Vector(), Color::PINK, 10);
 
   GM.run();
   return 0;

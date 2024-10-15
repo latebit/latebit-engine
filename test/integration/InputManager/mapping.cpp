@@ -84,7 +84,9 @@ class TestObject : public Object {
 auto main() -> int {
   Log.setDestination(LogDestination::STDOUT);
   GM.startUp();
-  WM.create<TestObject>();
+  auto scene = WM.createScene<Scene>("main");
+  WM.createObject<TestObject>(scene);
+  scene->activate();
   GM.run();
   return 0;
 }

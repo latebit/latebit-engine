@@ -1,7 +1,6 @@
 #include "latebit/core/world/WorldManager.h"
 
 #include <array>
-#include <cstdio>
 #include <vector>
 
 #include "../../../test/lib/test.h"
@@ -32,10 +31,12 @@ void draw() {
   };
 
   // Initialize objects and results array
+  auto scene = WM.createScene<Scene>("main");
   for (int i = 0; i < 5; i++) {
     drawCount[i] = 0;
-    WM.create<TestObject>(i);
+    WM.createObject<TestObject>(scene, i);
   };
+  scene->activate();
 
   WM.draw();
   for (int i : drawCount) {
@@ -45,7 +46,8 @@ void draw() {
   WM.shutDown();
   WM.startUp();
 
-  WM.create<TestObject>(0, Vector(-2, -2));
+  scene = WM.createScene<Scene>("main");
+  WM.createObject<TestObject>(scene, 0, Vector(-2, -2));
   WM.draw();
   assertEq("does not draw out of bounds", drawCount[0], 1);
 
@@ -56,10 +58,12 @@ void getCollisions() {
   WM.startUp();
 
   // Create test objects
-  auto obj1 = WM.create<Object>();
-  auto obj2 = WM.create<Object>();
-  auto obj3 = WM.create<Object>();
-  auto obj4 = WM.create<Object>();
+  auto scene = WM.createScene<Scene>("main");
+  auto obj1 = WM.createObject<Object>(scene);
+  auto obj2 = WM.createObject<Object>(scene);
+  auto obj3 = WM.createObject<Object>(scene);
+  auto obj4 = WM.createObject<Object>(scene);
+  scene->activate();
 
   // Set positions of test objects
   obj1->setPosition(Vector(0, 0));
@@ -93,10 +97,12 @@ void getCollisions() {
 void resolveMovement() {
   WM.startUp();
 
-  auto subject = WM.create<Object>("subject");
-  auto softObject = WM.create<Object>("soft");
-  auto hardObject = WM.create<Object>("hard");
-  auto spectralObject = WM.create<Object>("spectral");
+  auto scene = WM.createScene<Scene>("main");
+  auto subject = WM.createObject<Object>(scene, "subject");
+  auto softObject = WM.createObject<Object>(scene, "soft");
+  auto hardObject = WM.createObject<Object>(scene, "hard");
+  auto spectralObject = WM.createObject<Object>(scene, "spectral");
+  scene->activate();
 
   subject->setPosition(Vector(0, 0));
   softObject->setPosition(Vector(2, 2));
@@ -238,7 +244,9 @@ void outOfBounds() {
     }
   };
 
-  auto obj1 = WM.create<TestObject>();
+  auto scene = WM.createScene<Scene>("main");
+  auto obj1 = WM.createObject<TestObject>(scene);
+  scene->activate();
 
   obj1->setPosition(Vector());
   obj1->setBox(Box(1, 1));
@@ -258,7 +266,9 @@ void objectManagement() {
   WM.startUp();
   array<Object*, 5> objects;
 
-  for (int i = 0; i < 5; i++) objects[i] = WM.create<Object>();
+  auto scene = WM.createScene<Scene>("main");
+  for (int i = 0; i < 5; i++) objects[i] = WM.createObject<Object>(scene);
+  scene->activate();
 
   objects[0]->setType("lol");
   objects[1]->setType("asd");

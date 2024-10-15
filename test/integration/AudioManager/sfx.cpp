@@ -5,6 +5,7 @@
 #include "latebit/core/events/EventStep.h"
 #include "latebit/core/objects/Object.h"
 #include "latebit/core/world/WorldManager.h"
+#include "latebit/core/world/Scene.h"
 #include "latebit/utils/Logger.h"
 
 using namespace lb;
@@ -72,7 +73,9 @@ int main() {
     return 1;
   }
 
-  WM.create<TestObject>();
+  auto scene = WM.createScene<Scene>("main");
+  WM.createObject<TestObject>(scene);
+  scene->activate();
   GM.run();
 
   return 0;

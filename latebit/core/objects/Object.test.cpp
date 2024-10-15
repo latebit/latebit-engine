@@ -131,7 +131,8 @@ void eventSubscription() {
 }
 
 void visible() {
-  auto subject = WM.create<Object>();
+  auto scene = WM.createScene<Scene>("main");
+  auto subject = WM.createObject<Object>(scene);
 
   subject->setVisible(false);
   assert("is invisible", !subject->isVisible());

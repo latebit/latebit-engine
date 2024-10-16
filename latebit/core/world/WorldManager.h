@@ -101,6 +101,9 @@ class WorldManager : public Manager {
   // Activate a scene by their label, deactivating all the others
   auto switchToScene(const string label) -> int;
 
+  // Returns the active scene
+  [[nodiscard]] auto getScenes() const -> const vector<unique_ptr<Scene>> &;
+
   // Draws all the active objects in the view
   void draw();
 

@@ -1,6 +1,7 @@
 #include "WorldManager.h"
 
 #include <array>
+#include <memory>
 #include <vector>
 
 #include "../../../test/lib/test.h"
@@ -296,6 +297,59 @@ void objectManagement() {
   WM.shutDown();
   activeObjects = WM.getAllObjects();
   assertEq("removes everything", activeObjects.size(), 0);
+
+  WM.startUp();
+  scene = WM.createScene<Scene>("main");
+  auto obj1 = WM.createObject<Object>(scene);
+
+  assert("object is in the scene", scene->getObjects()[0].get() == obj1);
+  assertEq("object is not in the world (inactive scene)", WM.getAllObjects().size(), 0);
+  scene->activate();
+  assertEq("object is in the world (active scene)", WM.getAllObjects().size(), 1);
+}
+
+void sceneManagement() {
+  WM.startUp();
+
+  auto scene1 = WM.createScene<Scene>("main");
+  auto scene2 = WM.createScene<Scene>("other");
+
+  assertEq("has all scenes", WM.getScenes().size(), 2);
+
+  scene1->activate();
+  const vector<unique_ptr<Scene>>& scenes = WM.getScenes();
+
+  bool isMainActive = false;
+  for (auto &scene : scenes) {
+    if (scene.get() == scene1 && scene.get()->isActive()) {
+      isMainActive = true;
+    }
+  }
+  assert("activates scene", isMainActive);
+
+  WM.switchToScene("other");
+  bool isMainInactive = false;
+  bool isOtherActive = false;
+  for (auto &scene : scenes) {
+    if (scene.get() == scene2 && scene.get()->isActive()) {
+      isOtherActive = true;
+    }
+    if (scene.get() == scene1 && !scene.get()->isActive()) {
+      isMainInactive = true;
+    }
+  }
+  assert("switches to other scene", isMainInactive && isOtherActive);
+
+  WM.deactivateScene("other");
+  bool isOtherInactive = false;
+  for (auto &scene : scenes) {
+    if (scene.get() == scene2 && !scene.get()->isActive()) {
+      isOtherInactive = true;
+    }
+  }
+  assert("deactivates other scene", isOtherInactive);
+
+  WM.shutDown();
 }
 
 auto main() -> int {
@@ -304,7 +358,6 @@ auto main() -> int {
   test("resolve movements", resolveMovement);
   test("outOfBounds", outOfBounds);
   test("draw", draw);
-
-  
+  test("scene management", sceneManagement);
   return report();
 }

@@ -238,4 +238,8 @@ auto WorldManager::switchToScene(const string label) -> int {
   return 0;
 }
 
+auto WorldManager::getScenes() const -> const vector<unique_ptr<Scene>> & {
+  return this->scenes;
+}
+
 }  // namespace lb

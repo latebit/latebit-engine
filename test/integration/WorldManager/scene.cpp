@@ -50,11 +50,11 @@ class TestScene: public Scene {
     }
 
     void onActivated() override {
-      this->objects[0]->setActive(true);
+      getObjects()[0]->setActive(true);
     }
     
     void onDeactivated() override {
-      this->objects[0]->setActive(false);
+      getObjects()[0]->setActive(false);
     }
 };
 

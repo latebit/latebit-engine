@@ -22,9 +22,10 @@ void Scene::deactivate() {
 }
 
 void Scene::addObject(unique_ptr<Object> o) {
+  auto ptr = o.get();
   this->objects.push_back(std::move(o));
   if (active) {
-    this->graph->insertObject(o.get());
+    this->graph->insertObject(ptr);
   }
 }
 
@@ -40,5 +41,8 @@ void Scene::removeObject(Object* o) {
 
 void Scene::setSceneGraph(SceneGraph& graph) { this->graph = &graph; }
 void Scene::setLabel(const string label) { this->label = label; }
+auto Scene::isActive() const -> bool { return active; }
+auto Scene::getObjects() const -> const vector<unique_ptr<Object>>& { return objects; }
+auto Scene::getLabel() const -> const string& { return label; }
 
 }  // namespace lb

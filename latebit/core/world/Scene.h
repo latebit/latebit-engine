@@ -8,13 +8,11 @@
 namespace lb {
 class WorldManager;
 class Scene {
- protected:
+ private:
   // All objects. This vector owns all the objects in the graph and its
   // responsible for their memory management
   vector<unique_ptr<Object>> objects = {};
   bool active = false;
-
- private:
   SceneGraph* graph = nullptr;
   string label = "";
   void setSceneGraph(SceneGraph& graph);
@@ -36,5 +34,12 @@ class Scene {
   void activate();
   // Runs the scene deactivation sequence
   void deactivate();
+
+  // Returns the objects in the scene
+  [[nodiscard]] auto getObjects() const -> const vector<unique_ptr<Object>>&;
+  // Returns the scene label
+  [[nodiscard]] auto getLabel() const -> const string&;
+  // Returns true if the scene is active
+  [[nodiscard]] auto isActive() const -> bool;
 };
 }  // namespace lb

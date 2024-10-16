@@ -21,7 +21,7 @@ InputManager::InputManager() : Manager("InputManager") {
 }
 
 auto InputManager::startUp() -> int {
-  if (!DM::isStarted()) {
+  if (!DM.isStarted()) {
     Log.error(
       "InputManager::startUp(): Cannot start. DisplayManager is not started");
     return -1;

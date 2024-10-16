@@ -5,6 +5,7 @@
 
 #include "latebit/core/GameManager.h"
 #include "latebit/core/ResourceManager.h"
+#include "latebit/core/graphics/DisplayManager.h"
 #include "latebit/core/input/InputManager.h"
 #include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Logger.h"
@@ -102,7 +103,7 @@ auto Object::drawBoundingBox() const -> int {
   float width = box.getWidth();
   float height = box.getHeight();
 
-  return DM::drawRectangle(corner, width, height, Color::RED);
+  return DM.drawRectangle(corner, width, height, Color::RED);
 }
 
 auto Object::subscribe(string eventType) -> int {

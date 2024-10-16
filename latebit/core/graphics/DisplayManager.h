@@ -12,10 +12,11 @@
 #include "latebit/core/geometry/Box.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/graphics/Keyframe.h"
+#include "latebit/core/utils/Manager.h"
 
 using namespace std;
 
-#define DM lb::DisplayManager
+#define DM lb::DisplayManager::getInstance()
 
 namespace lb {
 
@@ -42,70 +43,66 @@ using Position = Vector;
 const Color::Color WINDOW_BACKGROUND_COLOR_DEFAULT = Color::BLACK;
 
 const string DUMMY_VIDEODRIVER = "dummy";
+// Window width in cells
+const int WINDOW_WIDTH = 240;
+// Window width in cells
+const int WINDOW_HEIGHT = 160;
 
-// Converts cell coodinates to pixel coordinates
-auto cellsToPixels(Position cells) -> Vector;
-// Converts pixel coodinates to cell coordinates
-auto pixelsToCells(Vector pixels) -> Position;
-
-class DisplayManager {
- private:
-  DisplayManager() = default;
+class DisplayManager : public Manager {
+private:
+  DisplayManager();
   // The window has an initial given size in pixels and cells. All we draw
   // are characters and all the coordinates we use are in cells
-  static SDL_Window *window;
-  static SDL_Renderer *renderer;
+  SDL_Window *window = nullptr;
+  SDL_Renderer *renderer = nullptr;
   // Background color of the window
-  static Color::Color backgroundColor;
+  Color::Color backgroundColor = Color::BLACK;
 
   // Returns appropriate renderer flags for the current driver
-  [[nodiscard]] static auto getRendererFlags() -> int;
+  [[nodiscard]] auto getRendererFlags() -> int;
 
  public:
-  // Window width in cells
-  static constexpr int WINDOW_WIDTH = 240;
-  // Window width in cells
-  static constexpr int WINDOW_HEIGHT = 160;
-
-  [[nodiscard]] static auto isStarted() -> bool;
+  static auto getInstance() -> DisplayManager &;
+  DisplayManager(DisplayManager const &) = delete;
+  void operator=(DisplayManager const &) = delete;
 
   // Sets up the window and font
-  static auto startUp() -> int;
-  static void shutDown();
+  auto startUp() -> int override;
+  void shutDown() override;
 
   // Draws a frame in the given position, scaling it by the given factor
-  [[nodiscard]] static auto drawKeyframe(Position position,
+  [[nodiscard]] auto drawKeyframe(Position position,
                                          const Keyframe *frame, uint8_t width,
                                          uint8_t height, uint8_t scaling)
     -> int;
 
   // Draws a rectangle outline at the given world position (top left cell)
-  [[nodiscard]] static auto drawRectangle(Position position, int width,
+  [[nodiscard]] auto drawRectangle(Position position, int width,
                                           int height, Color::Color borderColor)
     -> int;
 
   // Draws a rectangle at the given world position (top left cell)
-  [[nodiscard]] static auto drawRectangle(Position position, int width,
+  [[nodiscard]] auto drawRectangle(Position position, int width,
                                           int height, Color::Color borderColor,
                                           Color::Color fillColor) -> int;
 
   // Draws a string to the window at the given world position
-  [[nodiscard]] static auto drawString(
+  [[nodiscard]] auto drawString(
     Position postion, string string, TextAlignment::TextAlignment alignment,
     Color::Color color, TextSize::TextSize size = TextSize::NORMAL,
     Font font = DEFAULT_FONT) -> int;
 
   // Returns the bounding box of a given string. Dimensions are in cells
-  [[nodiscard]] static auto measureString(
+  [[nodiscard]] auto measureString(
     string string, TextSize::TextSize size = TextSize::NORMAL,
     Font font = DEFAULT_FONT) -> Box;
 
   // Change the background color of the window
-  static void setBackground(Color::Color color);
+  void setBackground(Color::Color color);
 
   // Swap the buffers for drawing.
   // This is the result of Double Buffering: first we draw to a hidden buffer
   // and then we display it to the screen
-  static auto swapBuffers() -> int;
+  auto swapBuffers() -> int;
 };
 }  // namespace lb

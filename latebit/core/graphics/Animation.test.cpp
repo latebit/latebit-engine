@@ -4,6 +4,7 @@
 #include "latebit/core/GameManager.h"
 #include "latebit/core/ResourceManager.h"
 #include "latebit/core/geometry/Vector.h"
+#include "latebit/core/graphics/DisplayManager.h"
 
 using namespace std;
 
@@ -39,7 +40,7 @@ void setSlowdownCount() {
 }
 
 void draw() {
-  DM::startUp();
+  DM.startUp();
   auto filename = FIXTURES_FOLDER + "/correct.lbspr";
   auto label = "sprite";
 
@@ -71,16 +72,21 @@ void draw() {
   GM.resume();
   assertOk("draws the frame", animation.draw(Vector()));
   assertEq("index is updated", animation.getIndex(), 0);
-  DM::shutDown();
+  DM.shutDown();
 
   static int scale = 0;
+  class TestSprite : public Sprite {
+   public:
+    TestSprite(string label, uint8_t width, uint8_t height, uint8_t duration,
+               vector<Keyframe> frames)
+      : Sprite(label, width, height, duration, frames) {}
+    [[nodiscard]] auto drawKeyframe(int /*index*/, Vector /*position*/, uint8_t s) const -> int override {
+      scale = s;
+      return 0;
+    }
+  };
   const auto frames = vector<Keyframe>{{Color::RED}};
-  const auto sprite2 = Sprite("s", 1, 1, 1, frames,
-                              [](Vector, const vector<Color::Color> *, uint8_t,
-                                 uint8_t, uint8_t s) -> int {
-                                scale = s;
-                                return 0;
-                              });
+  auto sprite2 = TestSprite("s", 1, 1, 1, frames);
   animation.setSprite(&sprite2);
 
   assertOk("draws the frame", animation.draw(Vector(), 2));

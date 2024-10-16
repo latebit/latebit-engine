@@ -32,19 +32,24 @@ void draw() {
              sprite.drawKeyframe(10, Vector()));
 
   static auto scale = 0;
-  Sprite sprite2 = Sprite("s", 1, 1, 1, frames,
-                          [](Vector, const vector<Color::Color> *, uint8_t,
-                             uint8_t, uint8_t s) -> int {
-                            scale = s;
-                            return 0;
-                          });
+  class TestSprite : public Sprite {
+   public:
+    TestSprite(string label, uint8_t width, uint8_t height, uint8_t duration,
+               vector<Keyframe> frames)
+      : Sprite(label, width, height, duration, frames) {}
+    [[nodiscard]] auto drawKeyframe(int /*index*/, Vector /*position*/, uint8_t s) const -> int override {
+      scale = s;
+      return 0;
+    }
+  };
+  auto sprite2 = TestSprite("s", 1, 1, 1, frames);
 
   assertOk("draws with scale", sprite2.drawKeyframe(0, Vector(), 2));
   assertEq("calls draw with scale", scale, 2);
 }
 
 auto main() -> int {
-  DM::startUp();
+  DM.startUp();
   test("constructor", constructor);
   test("draw", draw);
   test("equals (==)", []() {
@@ -64,6 +69,6 @@ auto main() -> int {
     assert("not equals different label", !(sprite1 == sprite6));
     assert("not equals empty sprite", !(sprite1 == Sprite()));
   });
-  DM::shutDown();
+  DM.shutDown();
   return report();
 }

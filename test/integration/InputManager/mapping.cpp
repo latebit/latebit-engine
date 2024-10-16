@@ -33,8 +33,8 @@ class TestObject : public Object {
     action << "Last action: " << this->lastAction << ".";
 
     result +=
-      DM::drawString(Vector(20, 20), key.str(), TextAlignment::LEFT, Color::RED);
-    result += DM::drawString(Vector(20, 40), action.str(), TextAlignment::LEFT,
+      DM.drawString(Vector(20, 20), key.str(), TextAlignment::LEFT, Color::RED);
+    result += DM.drawString(Vector(20, 40), action.str(), TextAlignment::LEFT,
                             Color::BLUE);
     return result;
   }

@@ -11,7 +11,7 @@ auto main() -> int {
     GM.startUp();
     assert("starts up", GM.isStarted());
 
-    Box wanted(Vector(0, 0), DM::WINDOW_WIDTH, DM::WINDOW_HEIGHT);
+    Box wanted(Vector(0, 0), WINDOW_WIDTH, WINDOW_HEIGHT);
     assertEq("boundary is set up", WM.getBoundary(), wanted);
     assertEq("view is set up", WM.getView().getView(), wanted);
     assertEq("is not over", GM.getGameOver(), false);

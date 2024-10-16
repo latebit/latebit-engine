@@ -4,6 +4,7 @@
 #include <string>
 
 #include "latebit/core/geometry/Vector.h"
+#include "latebit/core/graphics/DisplayManager.h"
 #include "latebit/utils/Logger.h"
 
 using namespace std;
@@ -28,7 +29,7 @@ auto Sprite::getLabel() const -> std::string { return this->label; }
 auto Sprite::drawKeyframe(int index, Vector position, uint8_t scale) const
   -> int {
   auto frame = this->getFrame(index);
-  return drawKeyframeAtPosition(position, &frame, this->width, this->height,
+  return DM.drawKeyframe(position, &frame, this->width, this->height,
                                 scale);
 }
 

@@ -45,7 +45,7 @@ auto main() -> int {
 
   WM.createObject<TestObject>(scene, Vector(50, 40), Vector(1, 0), Vector(), Color::YELLOW, 10);
   WM.createObject<TestObject>(scene, Vector(100, 40), Vector(-1, 0), Vector(), Color::PINK, 10);
-
+  scene->activate();
   GM.run();
   return 0;
 }

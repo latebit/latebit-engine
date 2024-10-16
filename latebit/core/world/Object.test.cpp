@@ -1,4 +1,4 @@
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
 
 #include <string>
 #include <unordered_map>
@@ -13,7 +13,7 @@
 #include "latebit/core/events/EventStep.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/input/InputManager.h"
-#include "latebit/core/objects/ObjectUtils.h"
+#include "latebit/core/world/ObjectUtils.h"
 #include "latebit/core/world/WorldManager.h"
 
 void altitude() {

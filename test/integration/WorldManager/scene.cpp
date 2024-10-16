@@ -1,4 +1,3 @@
-#include "latebit/core/world/Scene.h"
 #include <memory>
 #include "latebit/core/GameManager.h"
 #include "latebit/core/events/EventInput.h"
@@ -6,7 +5,8 @@
 #include "latebit/core/graphics/Colors.h"
 #include "latebit/core/graphics/Keyframe.h"
 #include "latebit/core/input/InputManager.h"
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
+#include "latebit/core/world/Scene.h"
 #include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Logger.h"
 

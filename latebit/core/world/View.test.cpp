@@ -1,7 +1,7 @@
 #include "../../../test/lib/test.h"
 #include "latebit/core/geometry/Box.h"
 #include "latebit/core/geometry/Vector.h"
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
 #include "latebit/core/world/WorldManager.h"
 
 using namespace std;

@@ -7,9 +7,9 @@
 #include "SceneGraph.h"
 #include "View.h"
 #include "latebit/core/geometry/Vector.h"
-#include "latebit/core/objects/Object.h"
-#include "latebit/core/utils/Manager.h"
+#include "latebit/core/world/Object.h"
 #include "latebit/core/world/Scene.h"
+#include "latebit/core/utils/Manager.h"
 
 #define WM lb::WorldManager::getInstance()
 

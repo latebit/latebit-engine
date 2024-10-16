@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
 #include "test/lib/test.h"
 
 const string MANAGER_TEST_EVENT = "TestEvent";

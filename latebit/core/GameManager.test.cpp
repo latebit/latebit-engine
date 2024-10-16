@@ -1,7 +1,5 @@
 #include "latebit/core/GameManager.h"
 
-#include <cstdio>
-
 #include "../../test/lib/test.h"
 #include "latebit/core/graphics/DisplayManager.h"
 #include "latebit/core/world/WorldManager.h"

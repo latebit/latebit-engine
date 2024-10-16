@@ -3,7 +3,7 @@
 
 #include "Event.h"
 #include "latebit/core/geometry/Vector.h"
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
 
 namespace lb {
 

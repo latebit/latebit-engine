@@ -5,7 +5,7 @@
 #include "latebit/core/graphics/Colors.h"
 #include "latebit/core/graphics/Keyframe.h"
 #include "latebit/core/graphics/Sprite.h"
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
 #include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Logger.h"
 

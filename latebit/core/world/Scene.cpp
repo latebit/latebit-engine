@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
 
 namespace lb {
 void Scene::activate() {

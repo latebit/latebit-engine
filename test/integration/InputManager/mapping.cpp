@@ -3,7 +3,7 @@
 #include "latebit/core/GameManager.h"
 #include "latebit/core/events/EventInput.h"
 #include "latebit/core/graphics/DisplayManager.h"
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
 #include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Logger.h"
 

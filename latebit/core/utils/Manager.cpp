@@ -1,7 +1,7 @@
 #include "Manager.h"
 
 #include "latebit/core/events/Event.h"
-#include "latebit/core/objects/ObjectUtils.h"
+#include "latebit/core/world/ObjectUtils.h"
 
 namespace lb {
 

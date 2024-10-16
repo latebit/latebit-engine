@@ -1,7 +1,7 @@
 #pragma once
 
 #include "latebit/core/geometry/Box.h"
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
 
 namespace lb {
 class WorldManager;

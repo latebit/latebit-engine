@@ -3,7 +3,7 @@
 #include "latebit/core/audio/Music.h"
 #include "latebit/core/audio/Sound.h"
 #include "latebit/core/events/EventStep.h"
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
 #include "latebit/core/world/WorldManager.h"
 #include "latebit/core/world/Scene.h"
 #include "latebit/utils/Logger.h"

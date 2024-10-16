@@ -1,4 +1,4 @@
-#include "latebit/core/world/WorldManager.h"
+#include "WorldManager.h"
 
 #include <array>
 #include <vector>
@@ -7,8 +7,8 @@
 #include "latebit/core/events/EventOut.h"
 #include "latebit/core/geometry/Box.h"
 #include "latebit/core/geometry/Vector.h"
-#include "latebit/core/objects/Object.h"
-#include "latebit/core/objects/ObjectUtils.h"
+#include "latebit/core/world/Object.h"
+#include "latebit/core/world/ObjectUtils.h"
 
 using namespace std;
 using namespace lb;
@@ -304,5 +304,7 @@ auto main() -> int {
   test("resolve movements", resolveMovement);
   test("outOfBounds", outOfBounds);
   test("draw", draw);
+
+  
   return report();
 }

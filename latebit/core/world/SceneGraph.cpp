@@ -1,7 +1,7 @@
 #include "SceneGraph.h"
 
-#include "latebit/core/objects/Object.h"
-#include "latebit/core/objects/ObjectUtils.h"
+#include "latebit/core/world/Object.h"
+#include "latebit/core/world/ObjectUtils.h"
 
 namespace lb {
 SceneGraph::SceneGraph() {

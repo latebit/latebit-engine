@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "latebit/core/events/Event.h"
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
 
 using namespace std;
 

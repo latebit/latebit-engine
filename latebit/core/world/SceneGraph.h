@@ -3,7 +3,7 @@
 #include <array>
 #include <vector>
 
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
 
 namespace lb {
 const int MAX_ALTITUDE = 4;

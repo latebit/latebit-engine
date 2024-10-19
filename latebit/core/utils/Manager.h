@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "latebit/core/events/Event.h"
-#include "latebit/core/world/Object.h"
+#include "latebit/core/events/EventTarget.h"
 
 using namespace std;
 
@@ -28,7 +28,7 @@ class Manager {
   array<string, MAX_EVENTS> events = {};
 
   // List of subscribers. Every element matches an event in `events`
-  array<vector<Object *>, MAX_EVENTS> subscribers = {};
+  array<vector<EventTarget *>, MAX_EVENTS> subscribers = {};
 
  public:
   Manager(string type) : type(std::move(type)) {};
@@ -53,10 +53,10 @@ class Manager {
 
   // Register interest in an event type, to be notified when
   // events of that type occur
-  auto subscribe(Object *o, string eventType) -> int;
+  auto subscribe(EventTarget *o, string eventType) -> int;
 
   // Unregister interest in a given event type and stop being
   // notified
-  auto unsubscribe(Object *o, string eventType) -> int;
+  auto unsubscribe(EventTarget *o, string eventType) -> int;
 };
 };  // namespace lb

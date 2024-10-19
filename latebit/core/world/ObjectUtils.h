@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Object.h"
+#include "latebit/core/events/EventTarget.h"
 
 // Set of helper to work with object abstracting the underlying container
 namespace lb {
@@ -13,6 +14,9 @@ const int CHUNK_SIZE = 100;
 
 // Remove an object from a vector
 void remove(vector<Object*>& l, Object* o);
+
+// Remove an event target from a vector
+void remove(vector<EventTarget*>& l, EventTarget* o);
 
 // Return true if the object is in the vector
 auto contains(vector<Object*> l, Object* o) -> bool;

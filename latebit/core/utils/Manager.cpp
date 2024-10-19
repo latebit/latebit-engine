@@ -16,7 +16,7 @@ auto Manager::startUp() -> int {
 
 void Manager::shutDown() { this->started = false; }
 
-auto Manager::subscribe(Object* o, string eventType) -> int {
+auto Manager::subscribe(EventTarget* o, string eventType) -> int {
   if (!this->isValid(eventType)) {
     return -1;
   }
@@ -39,7 +39,7 @@ auto Manager::subscribe(Object* o, string eventType) -> int {
   return 0;
 }
 
-auto Manager::unsubscribe(Object* o, string eventType) -> int {
+auto Manager::unsubscribe(EventTarget* o, string eventType) -> int {
   if (!this->isValid(eventType)) {
     return -1;
   }
@@ -68,15 +68,13 @@ auto Manager::onEvent(const Event* event) const -> int {
   for (int i = 0; i < this->eventCount; i++) {
     auto currentEvent = this->events[i];
     if (currentEvent == event->getType()) {
-      int result = 0;
       auto subscribers = this->subscribers[i];
       for (auto& subscriber : subscribers) {
         if (subscriber == nullptr) continue;
 
         if (subscriber->isActive()) {
-          result = subscriber->eventHandler(event);
+          subscriber->eventHandler(event);
           count++;
-          if (result > 0) break;
         }
       }
     }

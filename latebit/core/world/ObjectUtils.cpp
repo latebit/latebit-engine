@@ -5,9 +5,13 @@
 namespace lb {
 
 void remove(vector<Object*>& l, Object* o) {
-  l.erase(
-    std::remove_if(l.begin(), l.end(), [o](const Object* p) { return p == o; }),
-    l.end());
+  auto it = std::remove_if(l.begin(), l.end(), [o](const Object* p) { return p == o; });
+  l.erase(it, l.end());
+}
+
+void remove(vector<EventTarget*>& l, EventTarget* o) {
+  auto it = std::remove_if(l.begin(), l.end(), [o](const EventTarget* p) { return p == o; });
+  l.erase(it, l.end());
 }
 
 auto contains(const vector<unique_ptr<Object>>& l, Object* o) -> bool {

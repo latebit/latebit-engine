@@ -232,7 +232,7 @@ auto WorldManager::deactivateScene(const string label) -> int {
 
 auto WorldManager::switchToScene(const string label) -> int {
   for (auto &scene : this->scenes) {
-    if (scene->active) scene->deactivate();
+    if (scene->isActive()) scene->deactivate();
     if (scene->label == label) scene->activate();
   }
   return 0;

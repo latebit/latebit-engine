@@ -31,7 +31,7 @@ void removeObject() {
 
   assertEq("scene does not contain the object", scene->getObjects().size(), 0);
   auto objects = WM.getAllObjects();
-  assertEq("world manager does not contains the object", objects.size(), 1);
+  assertEq("world manager does not contain the object", objects.size(), 0);
   WM.shutDown();
 }
 

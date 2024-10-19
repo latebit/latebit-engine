@@ -30,13 +30,13 @@ void Scene::addObject(unique_ptr<Object> o) {
 }
 
 void Scene::removeObject(Object* o) {
+  if (isActive()) {
+    this->graph->removeObject(o);
+  }
   this->objects.erase(
     std::remove_if(this->objects.begin(), this->objects.end(),
                    [o](const unique_ptr<Object>& p) { return p.get() == o; }),
     this->objects.end());
-  if (isActive()) {
-    this->graph->removeObject(o);
-  }
 }
 
 void Scene::setSceneGraph(SceneGraph& graph) { this->graph = &graph; }

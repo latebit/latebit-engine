@@ -19,14 +19,16 @@ class Scene : public EventTarget {
   SceneGraph* graph = nullptr;
   // Scene label
   string label = "";
+  // Scene activation flag
+  bool active = false;
+
   // Set the scene graph for this scene
   void setSceneGraph(SceneGraph& graph);
   // Set the scene label
   void setLabel(const string label);
-
-  // Scene activation flag
-  bool active = false;
-
+  // Add object to the scene and the managed graph
+  void addObject(unique_ptr<Object> o);
+ 
  public:
   Scene() = default;
   virtual ~Scene() = default;
@@ -36,8 +38,6 @@ class Scene : public EventTarget {
   // Called after the scene is deactivated
   virtual void onDeactivated(){};
 
-  // Add object to the scene
-  void addObject(unique_ptr<Object> o);
   // Remove object from the scene
   void removeObject(Object* o);
 

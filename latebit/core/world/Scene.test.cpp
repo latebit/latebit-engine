@@ -5,13 +5,11 @@
 
 using namespace lb;
 
-void addObject() {
+void createObject() {
   WM.startUp();
   auto scene = WM.createScene<Scene>("scene");
+  scene->createObject<Object>();
   scene->activate();
-  auto obj = make_unique<Object>();
-
-  scene->addObject(std::move(obj));
 
   assertEq("scene contains the object", scene->getObjects().size(), 1);
   auto objects = WM.getAllObjects();
@@ -22,11 +20,9 @@ void addObject() {
 void removeObject() {
   WM.startUp();
   auto scene = WM.createScene<Scene>("scene");
+  auto subject = scene->createObject<Object>();
   scene->activate();
-  auto obj = make_unique<Object>();
-  auto subject = obj.get();
 
-  scene->addObject(std::move(obj));
   scene->removeObject(subject);
 
   assertEq("scene does not contain the object", scene->getObjects().size(), 0);
@@ -37,33 +33,45 @@ void removeObject() {
 
 void activate() {
   WM.startUp();
-  auto scene = WM.createScene<Scene>("scene");
-  auto obj = make_unique<Object>();
 
+  static int onActivatedInvocations = 0;
+  class TestScene : public Scene {
+   public:
+    bool activated = false;
+    void onActivated() override { onActivatedInvocations++; }
+  };
+
+  auto scene = WM.createScene<TestScene>("scene");
   scene->activate();
 
   assert("scene is active", scene->isActive());
+  assertEq("onActivated is invoked", onActivatedInvocations, 1);
   WM.shutDown();
 }
 
 void deactivate() {
   WM.startUp();
-  auto scene = WM.createScene<Scene>("scene");
-  auto obj = make_unique<Object>();
 
-  scene->addObject(std::move(obj));
-  scene->activate();
+  static int onDeactivatedInvocations = 0;
+  class TestScene : public Scene {
+   public:
+    bool activated = false;
+    void onDeactivated() override { onDeactivatedInvocations++; }
+  };
+
+  auto scene = WM.createScene<TestScene>("scene");
   scene->deactivate();
 
-  assert("scene is not active", !scene->isActive());
+  assert("scene is not active", scene->isActive());
+  assertEq("onDeactivated is invoked", onDeactivatedInvocations, 1);
   WM.shutDown();
 }
 
 auto main() -> int {
-  test("addObject", addObject);
   test("removeObject", removeObject);
   test("activate", activate);
   test("deactivate", deactivate);
+  test("createObject", createObject);
 
   return report();
 }

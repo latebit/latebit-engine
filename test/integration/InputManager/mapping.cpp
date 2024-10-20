@@ -85,7 +85,7 @@ auto main() -> int {
   Log.setDestination(LogDestination::STDOUT);
   GM.startUp();
   auto scene = WM.createScene<Scene>("main");
-  WM.createObject<TestObject>(scene);
+  scene->createObject<TestObject>();
   scene->activate();
   GM.run();
   return 0;

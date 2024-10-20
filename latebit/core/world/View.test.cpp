@@ -33,7 +33,7 @@ void viewFollowing() {
   WM.startUp();
 
   auto scene = WM.createScene<Scene>("main");
-  auto subject = WM.createObject<Object>(scene);
+  auto subject = scene->createObject<Object>();
   subject->setPosition(Vector());
   scene->activate();
 

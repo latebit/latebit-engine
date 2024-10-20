@@ -40,7 +40,7 @@ class TestScene : public Scene {
   string other = "";
   TestScene(Color::Color color, Vector position, const string other)
     : Scene(), other(other) {
-    WM.createObject<TestObject>(this, position, color, other);
+    this->createObject<TestObject>(position, color, other);
     subscribe(INPUT_EVENT);
   }
 

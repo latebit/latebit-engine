@@ -82,16 +82,6 @@ class WorldManager : public Manager {
     return ptr;
   }
 
-  template <typename T, typename... Args>
-  auto createObject(Scene *scene, Args &&...args) -> T * {
-    static_assert(std::is_base_of<Object, T>::value,
-                  "T must inherit from Object");
-    auto object = std::make_unique<T>(std::forward<Args>(args)...);
-    T *ptr = object.get();
-    scene->addObject(std::move(object));
-    return ptr;
-  }
-
   // Activate a scene by their label
   auto activateScene(const string label) -> int;
 

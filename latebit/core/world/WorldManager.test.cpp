@@ -35,7 +35,7 @@ void draw() {
   auto scene = WM.createScene<Scene>("main");
   for (int i = 0; i < 5; i++) {
     drawCount[i] = 0;
-    WM.createObject<TestObject>(scene, i);
+    scene->createObject<TestObject>(i);
   };
   scene->activate();
 
@@ -48,7 +48,7 @@ void draw() {
   WM.startUp();
 
   scene = WM.createScene<Scene>("main");
-  WM.createObject<TestObject>(scene, 0, Vector(-2, -2));
+  scene->createObject<TestObject>(0, Vector(-2, -2));
   WM.draw();
   assertEq("does not draw out of bounds", drawCount[0], 1);
 
@@ -60,10 +60,10 @@ void getCollisions() {
 
   // Create test objects
   auto scene = WM.createScene<Scene>("main");
-  auto obj1 = WM.createObject<Object>(scene);
-  auto obj2 = WM.createObject<Object>(scene);
-  auto obj3 = WM.createObject<Object>(scene);
-  auto obj4 = WM.createObject<Object>(scene);
+  auto obj1 = scene->createObject<Object>();
+  auto obj2 = scene->createObject<Object>();
+  auto obj3 = scene->createObject<Object>();
+  auto obj4 = scene->createObject<Object>();
   scene->activate();
 
   // Set positions of test objects
@@ -99,10 +99,10 @@ void resolveMovement() {
   WM.startUp();
 
   auto scene = WM.createScene<Scene>("main");
-  auto subject = WM.createObject<Object>(scene, "subject");
-  auto softObject = WM.createObject<Object>(scene, "soft");
-  auto hardObject = WM.createObject<Object>(scene, "hard");
-  auto spectralObject = WM.createObject<Object>(scene, "spectral");
+  auto subject = scene->createObject<Object>("subject");
+  auto softObject = scene->createObject<Object>("soft");
+  auto hardObject = scene->createObject<Object>("hard");
+  auto spectralObject = scene->createObject<Object>("spectral");
   scene->activate();
 
   subject->setPosition(Vector(0, 0));
@@ -246,7 +246,7 @@ void outOfBounds() {
   };
 
   auto scene = WM.createScene<Scene>("main");
-  auto obj1 = WM.createObject<TestObject>(scene);
+  auto obj1 = scene->createObject<TestObject>();
   scene->activate();
 
   obj1->setPosition(Vector());
@@ -268,7 +268,7 @@ void objectManagement() {
   array<Object*, 5> objects;
 
   auto scene = WM.createScene<Scene>("main");
-  for (int i = 0; i < 5; i++) objects[i] = WM.createObject<Object>(scene);
+  for (int i = 0; i < 5; i++) objects[i] = scene->createObject<Object>();
   scene->activate();
 
   objects[0]->setType("lol");
@@ -300,7 +300,7 @@ void objectManagement() {
 
   WM.startUp();
   scene = WM.createScene<Scene>("main");
-  auto obj1 = WM.createObject<Object>(scene);
+  auto obj1 = scene->createObject<Object>();
 
   assert("object is in the scene", scene->getObjects()[0].get() == obj1);
   assertEq("object is not in the world (inactive scene)", WM.getAllObjects().size(), 0);

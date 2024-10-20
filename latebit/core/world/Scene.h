@@ -52,5 +52,14 @@ class Scene : public EventTarget {
   [[nodiscard]] auto getLabel() const -> const string&;
   // Returns true if the scene is active
   [[nodiscard]] auto isActive() const -> bool override;
+
+  template <typename T, typename... Args>
+  auto createObject(Args &&...args) -> T * {
+    static_assert(std::is_base_of<Object, T>::value, "T must inherit from Object");
+    auto object = std::make_unique<T>(std::forward<Args>(args)...);
+    T *ptr = object.get();
+    this->addObject(std::move(object));
+    return ptr;
+  }
 };
 }  // namespace lb

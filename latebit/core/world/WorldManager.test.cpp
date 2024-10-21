@@ -78,7 +78,7 @@ void getCollisions() {
   obj3->setSolidness(Solidness::SPECTRAL);
 
   // Call getCollisions function
-  vector<Object*> collisions = WM.getCollisions(obj1, Vector(0, 0));
+  vector<Object *> collisions = WM.getCollisions(obj1, Vector(0, 0));
 
   // Check if obj4 is in the collisions list
   assert("collides with hard", contains(collisions, obj4));
@@ -236,7 +236,7 @@ void outOfBounds() {
 
   class TestObject : public Object {
    public:
-    auto eventHandler(const Event* e) -> int override {
+    auto eventHandler(const Event *e) -> int override {
       if (e->getType() == OUT_EVENT) {
         outOfBounds_emitted = true;
         return 1;
@@ -265,7 +265,7 @@ void outOfBounds() {
 
 void objectManagement() {
   WM.startUp();
-  array<Object*, 5> objects;
+  array<Object *, 5> objects;
 
   auto scene = WM.createScene<Scene>("main");
   for (int i = 0; i < 5; i++) objects[i] = scene->createObject<Object>();
@@ -303,9 +303,11 @@ void objectManagement() {
   auto obj1 = scene->createObject<Object>();
 
   assert("object is in the scene", scene->getObjects()[0].get() == obj1);
-  assertEq("object is not in the world (inactive scene)", WM.getAllObjects().size(), 0);
+  assertEq("object is not in the world (inactive scene)",
+           WM.getAllObjects().size(), 0);
   scene->activate();
-  assertEq("object is in the world (active scene)", WM.getAllObjects().size(), 1);
+  assertEq("object is in the world (active scene)", WM.getAllObjects().size(),
+           1);
 }
 
 void sceneManagement() {
@@ -317,7 +319,7 @@ void sceneManagement() {
   assertEq("has all scenes", WM.getScenes().size(), 2);
 
   scene1->activate();
-  const vector<unique_ptr<Scene>>& scenes = WM.getScenes();
+  const vector<unique_ptr<Scene>> &scenes = WM.getScenes();
 
   bool isMainActive = false;
   for (auto &scene : scenes) {

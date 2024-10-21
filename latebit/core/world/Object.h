@@ -57,7 +57,7 @@ class Object : public EventTarget {
 
   // Box defining the bounds of this object.
   Box boundingBox = Box(1, 1);
-  
+
   // True if the engine interacts with this object.
   bool active = true;
 

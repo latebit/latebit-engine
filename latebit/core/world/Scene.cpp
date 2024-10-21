@@ -41,7 +41,9 @@ void Scene::removeObject(Object* o) {
 
 void Scene::setSceneGraph(SceneGraph& graph) { this->graph = &graph; }
 void Scene::setLabel(const string label) { this->label = label; }
-auto Scene::getObjects() const -> const vector<unique_ptr<Object>>& { return objects; }
+auto Scene::getObjects() const -> const vector<unique_ptr<Object>>& {
+  return objects;
+}
 auto Scene::getLabel() const -> const string& { return label; }
 auto Scene::isActive() const -> bool { return active; }
 

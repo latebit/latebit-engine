@@ -5,12 +5,14 @@
 namespace lb {
 
 void remove(vector<Object*>& l, Object* o) {
-  auto it = std::remove_if(l.begin(), l.end(), [o](const Object* p) { return p == o; });
+  auto it =
+    std::remove_if(l.begin(), l.end(), [o](const Object* p) { return p == o; });
   l.erase(it, l.end());
 }
 
 void remove(vector<EventTarget*>& l, EventTarget* o) {
-  auto it = std::remove_if(l.begin(), l.end(), [o](const EventTarget* p) { return p == o; });
+  auto it = std::remove_if(l.begin(), l.end(),
+                           [o](const EventTarget* p) { return p == o; });
   l.erase(it, l.end());
 }
 

@@ -63,7 +63,7 @@ class Sprite {
 
   // Draw the i-th frame of the sprite at the given position
   [[nodiscard]] auto virtual drawKeyframe(int index, Vector position,
-                                  uint8_t scale = 1) const -> int;
+                                          uint8_t scale = 1) const -> int;
 };
 
 }  // namespace lb

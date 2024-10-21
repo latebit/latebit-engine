@@ -37,7 +37,8 @@ void draw() {
     TestSprite(string label, uint8_t width, uint8_t height, uint8_t duration,
                vector<Keyframe> frames)
       : Sprite(label, width, height, duration, frames) {}
-    [[nodiscard]] auto drawKeyframe(int /*index*/, Vector /*position*/, uint8_t s) const -> int override {
+    [[nodiscard]] auto drawKeyframe(int /*index*/, Vector /*position*/,
+                                    uint8_t s) const -> int override {
       scale = s;
       return 0;
     }

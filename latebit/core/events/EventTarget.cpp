@@ -40,11 +40,11 @@ auto EventTarget::unsubscribe(std::string eventType) -> int {
 
 auto EventTarget::unsubscribeAll() -> int {
   auto result = 0;
-  
+
   for (auto& e : this->events) {
     result |= unsubscribe(e);
   }
-  
+
   return result;
 }
 

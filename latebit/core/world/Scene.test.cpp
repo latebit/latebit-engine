@@ -1,4 +1,5 @@
 #include "Scene.h"
+
 #include "latebit/core/world/Object.h"
 #include "latebit/core/world/WorldManager.h"
 #include "test/lib/test.h"

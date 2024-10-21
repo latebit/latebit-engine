@@ -49,7 +49,7 @@ const int WINDOW_WIDTH = 240;
 const int WINDOW_HEIGHT = 160;
 
 class DisplayManager : public Manager {
-private:
+ private:
   DisplayManager();
   // The window has an initial given size in pixels and cells. All we draw
   // are characters and all the coordinates we use are in cells
@@ -71,31 +71,30 @@ private:
   void shutDown() override;
 
   // Draws a frame in the given position, scaling it by the given factor
-  [[nodiscard]] auto drawKeyframe(Position position,
-                                         const Keyframe *frame, uint8_t width,
-                                         uint8_t height, uint8_t scaling)
-    -> int;
+  [[nodiscard]] auto drawKeyframe(Position position, const Keyframe *frame,
+                                  uint8_t width, uint8_t height,
+                                  uint8_t scaling) -> int;
 
   // Draws a rectangle outline at the given world position (top left cell)
-  [[nodiscard]] auto drawRectangle(Position position, int width,
-                                          int height, Color::Color borderColor)
-    -> int;
+  [[nodiscard]] auto drawRectangle(Position position, int width, int height,
+                                   Color::Color borderColor) -> int;
 
   // Draws a rectangle at the given world position (top left cell)
-  [[nodiscard]] auto drawRectangle(Position position, int width,
-                                          int height, Color::Color borderColor,
-                                          Color::Color fillColor) -> int;
+  [[nodiscard]] auto drawRectangle(Position position, int width, int height,
+                                   Color::Color borderColor,
+                                   Color::Color fillColor) -> int;
 
   // Draws a string to the window at the given world position
-  [[nodiscard]] auto drawString(
-    Position postion, string string, TextAlignment::TextAlignment alignment,
-    Color::Color color, TextSize::TextSize size = TextSize::NORMAL,
-    Font font = DEFAULT_FONT) -> int;
+  [[nodiscard]] auto drawString(Position postion, string string,
+                                TextAlignment::TextAlignment alignment,
+                                Color::Color color,
+                                TextSize::TextSize size = TextSize::NORMAL,
+                                Font font = DEFAULT_FONT) -> int;
 
   // Returns the bounding box of a given string. Dimensions are in cells
-  [[nodiscard]] auto measureString(
-    string string, TextSize::TextSize size = TextSize::NORMAL,
-    Font font = DEFAULT_FONT) -> Box;
+  [[nodiscard]] auto measureString(string string,
+                                   TextSize::TextSize size = TextSize::NORMAL,
+                                   Font font = DEFAULT_FONT) -> Box;
 
   // Change the background color of the window
   void setBackground(Color::Color color);

@@ -58,8 +58,8 @@ auto DisplayManager::startUp() -> int {
     return -1;
   }
 
-  this->renderer = SDL_CreateRenderer(
-    this->window, -1, this->getRendererFlags());
+  this->renderer =
+    SDL_CreateRenderer(this->window, -1, this->getRendererFlags());
   if (this->renderer == nullptr) {
     Log.error("DisplayManager::startUp(): Cannot create renderer. %s",
               SDL_GetError());
@@ -147,8 +147,7 @@ auto DisplayManager::drawKeyframe(Position position, const Keyframe* frame,
     }
   }
 
-  SDL_Texture* texture =
-    SDL_CreateTextureFromSurface(this->renderer, surface);
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(this->renderer, surface);
 
   if (texture == nullptr) {
     Log.error("DisplayManager::drawFrame(): Cannot create texture. %s",
@@ -179,8 +178,7 @@ auto DisplayManager::drawRectangle(Position position, int width, int height,
 
   if (fillColor != Color::UNDEFINED_COLOR) {
     auto fill = toSDLColor(fillColor);
-    SDL_SetRenderDrawColor(this->renderer, fill.r, fill.g, fill.b,
-                           fill.a);
+    SDL_SetRenderDrawColor(this->renderer, fill.r, fill.g, fill.b, fill.a);
     SDL_RenderFillRect(this->renderer, &rectangle);
   }
 
@@ -240,8 +238,7 @@ auto DisplayManager::drawString(Position position, string string,
         break;
     }
 
-    if (this->drawKeyframe(position, &content, gWidth, gHeight,
-                                     size) != 0) {
+    if (this->drawKeyframe(position, &content, gWidth, gHeight, size) != 0) {
       return -1;
     }
   }
@@ -280,7 +277,7 @@ auto DisplayManager::swapBuffers() -> int {
   return 0;
 }
 
-auto DisplayManager::getInstance() -> DisplayManager & {
+auto DisplayManager::getInstance() -> DisplayManager& {
   static DisplayManager instance;
   return instance;
 }

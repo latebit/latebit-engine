@@ -29,8 +29,7 @@ auto Sprite::getLabel() const -> std::string { return this->label; }
 auto Sprite::drawKeyframe(int index, Vector position, uint8_t scale) const
   -> int {
   auto frame = this->getFrame(index);
-  return DM.drawKeyframe(position, &frame, this->width, this->height,
-                                scale);
+  return DM.drawKeyframe(position, &frame, this->width, this->height, scale);
 }
 
 auto Sprite::operator==(const Sprite& other) const -> bool {

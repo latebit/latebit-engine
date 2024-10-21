@@ -28,15 +28,15 @@ class Scene : public EventTarget {
   void setLabel(const string label);
   // Add object to the scene and the managed graph
   void addObject(unique_ptr<Object> o);
- 
+
  public:
   Scene() = default;
   virtual ~Scene() = default;
 
   // Called after the scene is activated
-  virtual void onActivated(){};
+  virtual void onActivated() {};
   // Called after the scene is deactivated
-  virtual void onDeactivated(){};
+  virtual void onDeactivated() {};
 
   // Remove object from the scene
   void removeObject(Object* o);
@@ -54,10 +54,11 @@ class Scene : public EventTarget {
   [[nodiscard]] auto isActive() const -> bool override;
 
   template <typename T, typename... Args>
-  auto createObject(Args &&...args) -> T * {
-    static_assert(std::is_base_of<Object, T>::value, "T must inherit from Object");
+  auto createObject(Args&&... args) -> T* {
+    static_assert(std::is_base_of<Object, T>::value,
+                  "T must inherit from Object");
     auto object = std::make_unique<T>(std::forward<Args>(args)...);
-    T *ptr = object.get();
+    T* ptr = object.get();
     this->addObject(std::move(object));
     return ptr;
   }

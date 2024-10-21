@@ -37,7 +37,6 @@ void activate() {
   static int onActivatedInvocations = 0;
   class TestScene : public Scene {
    public:
-    bool activated = false;
     void onActivated() override { onActivatedInvocations++; }
   };
 
@@ -55,14 +54,13 @@ void deactivate() {
   static int onDeactivatedInvocations = 0;
   class TestScene : public Scene {
    public:
-    bool activated = false;
     void onDeactivated() override { onDeactivatedInvocations++; }
   };
 
   auto scene = WM.createScene<TestScene>("scene");
   scene->deactivate();
 
-  assert("scene is not active", scene->isActive());
+  assert("scene is not active", !scene->isActive());
   assertEq("onDeactivated is invoked", onDeactivatedInvocations, 1);
   WM.shutDown();
 }

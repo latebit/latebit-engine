@@ -23,9 +23,15 @@ jobs:
           - os: ubuntu-22.04
             c_compiler: clang-15
             cxx_compiler: clang++-15
+            arch: null
           - os: macos-13
             c_compiler: clang
             cxx_compiler: clang++
+            arch: x86_64
+          - os: macos-13
+            c_compiler: emcc
+            cxx_compiler: em++
+            arch: arm64
 
     env:
       VCPKG_ENABLE_METRICS: 0
@@ -69,6 +75,7 @@ jobs:
         cmake
         --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake
         -B build
+        -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }}
         -S .
       env:
         CMAKE_BUILD_TYPE: Release

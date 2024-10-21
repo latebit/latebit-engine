@@ -41,9 +41,14 @@ auto EventTarget::unsubscribe(std::string eventType) -> int {
 auto EventTarget::unsubscribeAll() -> int {
   auto result = 0;
 
+  // Cannot use unsubscribe() here because it modifies the set while iterating
   for (auto& e : this->events) {
-    result |= unsubscribe(e);
+    result |= IM.unsubscribe(this, e);
+    result |= GM.unsubscribe(this, e);
+    result |= WM.unsubscribe(this, e);
   }
+
+  this->events.clear();
 
   return result;
 }

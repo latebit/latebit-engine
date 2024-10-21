@@ -14,8 +14,8 @@
 using namespace std;
 
 namespace sid {
-auto getSymbolsFromLine(const string &line,
-                        char delimiter = '|') -> vector<string> {
+auto getSymbolsFromLine(const string &line, char delimiter = '|')
+  -> vector<string> {
   vector<string> result;
   istringstream ss(line);
   string item = getLine(&ss, delimiter);
@@ -28,8 +28,8 @@ auto getSymbolsFromLine(const string &line,
   return result;
 }
 
-auto TuneParser::fromStream(istream *stream,
-                            const ParserOptions *opts) -> unique_ptr<Tune> {
+auto TuneParser::fromStream(istream *stream, const ParserOptions *opts)
+  -> unique_ptr<Tune> {
   string version = getLine(stream);
   if (version != "#v0.1#") {
     Log.error(
@@ -133,8 +133,8 @@ auto TuneParser::fromStream(istream *stream,
   return make_unique<Tune>(bpm, ticksPerBeat, beatsCount, std::move(tracks));
 }
 
-auto TuneParser::fromFile(const string filename,
-                          const ParserOptions *opts) -> unique_ptr<Tune> {
+auto TuneParser::fromFile(const string filename, const ParserOptions *opts)
+  -> unique_ptr<Tune> {
   ifstream file(filename);
   if (!file.is_open()) {
     Log.error("TuneParser::fromFile(): Could not open file %s",
@@ -145,8 +145,8 @@ auto TuneParser::fromFile(const string filename,
   return fromStream(&file, opts);
 }
 
-auto TuneParser::fromString(string str,
-                            const ParserOptions *opts) -> unique_ptr<Tune> {
+auto TuneParser::fromString(string str, const ParserOptions *opts)
+  -> unique_ptr<Tune> {
   istringstream stream(str);
   return fromStream(&stream, opts);
 }

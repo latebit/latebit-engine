@@ -1,8 +1,5 @@
 #include "Oscillator.h"
 
-#include <cstdio>
-#include <cstdlib>
-
 #include "latebit/sid/synth/Configuration.h"
 #include "latebit/sid/synth/Wavetable.h"
 #include "latebit/utils/Math.h"
@@ -61,7 +58,7 @@ void Oscillator::setPitch(int note) {
 }
 
 void Oscillator::setVolume(float volume) {
-  this->volume = clamp(volume, 0.0, 1.0);
+  this->volume = lb::clamp(volume, 0.0, 1.0);
 }
 void Oscillator::setWave(WaveType::WaveType wave) { this->waveType = wave; }
 void Oscillator::setEffect(EffectType::EffectType effect) {

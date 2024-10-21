@@ -5,7 +5,7 @@ using namespace std;
 
 namespace lb {
 const int DEFAULT_FRAME_RATE = 60;
-const string DEFAULT_TITLE = "LateBit";
+const string DEFAULT_TITLE = "Latebit";
 
 const array<string, 2> CONFIG_KEYS = {"max_frame_rate", "initial_window_title"};
 

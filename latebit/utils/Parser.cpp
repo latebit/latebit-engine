@@ -15,8 +15,8 @@ auto getLine(istream* file, char delimiter) -> string {
   return line;
 }
 
-auto getNextNonCommentLine(istream* stream, char commentChar,
-                           char delimiter) -> string {
+auto getNextNonCommentLine(istream* stream, char commentChar, char delimiter)
+  -> string {
   string line = getLine(stream, delimiter);
 
   while (!line.empty()) {

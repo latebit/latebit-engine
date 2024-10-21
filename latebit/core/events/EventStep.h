@@ -11,7 +11,7 @@ class EventStep : public Event {
 
  public:
   // Creates a new event on every step of the game loop
-  EventStep(int count = 0) : Event(STEP_EVENT), stepCount(count){};
+  EventStep(int count = 0) : Event(STEP_EVENT), stepCount(count) {};
 
   // Returns the step count
   [[nodiscard]] auto getStepCount() const -> int;

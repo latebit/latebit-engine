@@ -3,9 +3,10 @@
 #include <array>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "latebit/core/events/Event.h"
-#include "latebit/core/objects/ObjectList.h"
+#include "latebit/core/events/EventTarget.h"
 
 using namespace std;
 
@@ -27,10 +28,10 @@ class Manager {
   array<string, MAX_EVENTS> events = {};
 
   // List of subscribers. Every element matches an event in `events`
-  array<ObjectList, MAX_EVENTS> subscribers = {};
+  array<vector<EventTarget *>, MAX_EVENTS> subscribers = {};
 
  public:
-  Manager(string type) : type(std::move(type)){};
+  Manager(string type) : type(std::move(type)) {};
   virtual ~Manager() = default;
 
   // Returns the manager type
@@ -48,14 +49,14 @@ class Manager {
 
   // Broadcasts the event to all the interested subscribers.
   // Returns count of events sent.
-  auto onEvent(const Event *event) const -> int;
+  auto broadcast(const Event *event) const -> int;
 
   // Register interest in an event type, to be notified when
   // events of that type occur
-  auto subscribe(Object *o, string eventType) -> int;
+  auto subscribe(EventTarget *o, string eventType) -> int;
 
   // Unregister interest in a given event type and stop being
   // notified
-  auto unsubscribe(Object *o, string eventType) -> int;
+  auto unsubscribe(EventTarget *o, string eventType) -> int;
 };
 };  // namespace lb

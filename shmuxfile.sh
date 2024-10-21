@@ -5,7 +5,7 @@ wasm:
 
 native:
   # Creates a native build
-  cmake --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release -B build .
+  cmake --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release -B build -G Ninja .
   cmake --build build -j8
 
 debug:

@@ -3,7 +3,7 @@
 
 #include "Event.h"
 #include "latebit/core/geometry/Vector.h"
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
 
 namespace lb {
 
@@ -19,13 +19,11 @@ class EventCollision : public Event {
   const Object *secondObject = nullptr;
 
  public:
-  EventCollision() : Event(COLLISION_EVENT){};
+  EventCollision() : Event(COLLISION_EVENT) {};
   // Creates a collision event between two objects at a given position
   EventCollision(Object *o1, Object *o2, Vector pos)
-    : Event(COLLISION_EVENT),
-      position(pos),
-      firstObject(o1),
-      secondObject(o2){};
+    : Event(COLLISION_EVENT), position(pos), firstObject(o1), secondObject(o2) {
+      };
 
   // Returns the first object involved in the collision
   [[nodiscard]] auto getFirstObject() const -> const Object *;

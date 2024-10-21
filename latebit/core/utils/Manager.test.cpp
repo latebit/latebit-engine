@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
 #include "test/lib/test.h"
 
 const string MANAGER_TEST_EVENT = "TestEvent";
@@ -12,7 +12,7 @@ int emittedCount = 0;
 auto main() -> int {
   class TestManager : public Manager {
    public:
-    TestManager() : Manager("TestType"){};
+    TestManager() : Manager("TestType") {};
     [[nodiscard]] auto isValid(string eventType) const -> bool override {
       return eventType == MANAGER_TEST_EVENT;
     };
@@ -20,7 +20,7 @@ auto main() -> int {
 
   class TestObject : public Object {
    public:
-    TestObject() : Object("TestObject"){};
+    TestObject() : Object("TestObject") {};
     auto eventHandler(const Event* e) -> int override {
       if (e->getType() == MANAGER_TEST_EVENT) {
         emittedCount++;
@@ -60,17 +60,17 @@ auto main() -> int {
     auto event = Event();
 
     manager.subscribe(&obj, MANAGER_TEST_EVENT);
-    manager.onEvent(&event);
+    manager.broadcast(&event);
     assertEq("does not trigger for wrong type", emittedCount, 0);
 
     auto withCorrectType = Event(MANAGER_TEST_EVENT);
 
     assertOk("makes the object inactive", obj.setActive(false));
-    manager.onEvent(&withCorrectType);
+    manager.broadcast(&withCorrectType);
     assertEq("does not trigger if object is inactive", emittedCount, 0);
 
     assertOk("makes the object active", obj.setActive(true));
-    manager.onEvent(&withCorrectType);
+    manager.broadcast(&withCorrectType);
     assertEq("triggers for correct type", emittedCount, 1);
 
     assert("returns true for valid events",

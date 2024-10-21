@@ -4,7 +4,7 @@
 
 #include "latebit/core/events/Event.h"
 #include "latebit/core/graphics/Colors.h"
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
 
 namespace lb {
 enum ViewObjectLocation {

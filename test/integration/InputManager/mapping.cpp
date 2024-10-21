@@ -3,7 +3,8 @@
 #include "latebit/core/GameManager.h"
 #include "latebit/core/events/EventInput.h"
 #include "latebit/core/graphics/DisplayManager.h"
-#include "latebit/core/objects/Object.h"
+#include "latebit/core/world/Object.h"
+#include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Logger.h"
 
 using namespace lb;
@@ -32,8 +33,8 @@ class TestObject : public Object {
     action << "Last action: " << this->lastAction << ".";
 
     result +=
-      DM::drawString(Vector(20, 20), key.str(), TextAlignment::LEFT, Color::RED);
-    result += DM::drawString(Vector(20, 40), action.str(), TextAlignment::LEFT,
+      DM.drawString(Vector(20, 20), key.str(), TextAlignment::LEFT, Color::RED);
+    result += DM.drawString(Vector(20, 40), action.str(), TextAlignment::LEFT,
                             Color::BLUE);
     return result;
   }
@@ -83,7 +84,9 @@ class TestObject : public Object {
 auto main() -> int {
   Log.setDestination(LogDestination::STDOUT);
   GM.startUp();
-  new TestObject();
+  auto scene = WM.createScene<Scene>("main");
+  scene->createObject<TestObject>();
+  scene->activate();
   GM.run();
   return 0;
 }

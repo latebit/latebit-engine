@@ -7,7 +7,7 @@
 #include "latebit/core/events/EventStep.h"
 #include "latebit/core/graphics/DisplayManager.h"
 #include "latebit/core/input/InputManager.h"
-#include "latebit/core/objects/WorldManager.h"
+#include "latebit/core/world/WorldManager.h"
 #include "latebit/utils/Logger.h"
 
 #ifdef __EMSCRIPTEN__
@@ -31,7 +31,7 @@ auto GameManager::startUp() -> int {
     return -1;
   }
 
-  if (DM::startUp() != 0) {
+  if (DM.startUp() != 0) {
     Log.error("GameManager::startUp(): Error starting DisplayManager");
     return -1;
   }
@@ -50,9 +50,9 @@ auto GameManager::startUp() -> int {
   this->setFrameTime(1000 / Configuration::getMaxFrameRate());
 
   // By default boundary equates view and it's the whole window
-  Box boundary(Vector(0, 0), DM::WINDOW_WIDTH, DM::WINDOW_HEIGHT);
+  Box boundary(Vector(0, 0), WINDOW_WIDTH, WINDOW_HEIGHT);
   WM.setBoundary(boundary);
-  WM.setView(boundary);
+  WM.getView().setView(boundary);
 
   Log.info("GameManager::startUp(): Started successfully");
   return Manager::startUp();
@@ -72,7 +72,7 @@ void GameManager::shutDown() {
   setGameOver(true);
   AM.shutDown();
   IM.shutDown();
-  DM::shutDown();
+  DM.shutDown();
   WM.shutDown();
   Manager::shutDown();
   Log.info("GameManager::shutDown(): Shut down successfully");
@@ -99,7 +99,7 @@ void GameManager::run() {
 
     // Send a step event to all subscribers
     const auto evt = EventStep(steps++);
-    onEvent(&evt);
+    broadcast(&evt);
 
     IM.getInput();
 
@@ -108,7 +108,7 @@ void GameManager::run() {
     }
 
     WM.draw();
-    DM::swapBuffers();
+    DM.swapBuffers();
 
     loopTime = clock->delta();
     sleep(frameTime - loopTime);
@@ -139,14 +139,14 @@ void GameManager::loop(void* a) {
   EmscriptenLoopArgs* args = (EmscriptenLoopArgs*)a;
   // Send a step event to all subscribers
   const auto evt = EventStep(++(*args->steps));
-  GM.onEvent(&evt);
+  GM.broadcast(&evt);
 
   IM.getInput();
   if (!*args->paused) {
     WM.update();
   }
   WM.draw();
-  DM::swapBuffers();
+  DM.swapBuffers();
 };
 
 void GameManager::run() {
@@ -156,7 +156,7 @@ void GameManager::run() {
   EventStep step(0);
 
   EmscriptenLoopArgs args = {&adjustTime, &loopTime, &steps,
-                             clock,       frameTime, &this->paused};
+                             clock.get(), frameTime, &this->paused};
 
   emscripten_set_main_loop_arg(loop, &args, 0, 1);
   emscripten_set_main_loop_timing(EM_TIMING_RAF, 33);

@@ -1,10 +1,8 @@
 #include "latebit/core/GameManager.h"
 
-#include <cstdio>
-
 #include "../../test/lib/test.h"
 #include "latebit/core/graphics/DisplayManager.h"
-#include "latebit/core/objects/WorldManager.h"
+#include "latebit/core/world/WorldManager.h"
 
 using namespace lb;
 
@@ -13,9 +11,9 @@ auto main() -> int {
     GM.startUp();
     assert("starts up", GM.isStarted());
 
-    Box wanted(Vector(0, 0), DM::WINDOW_WIDTH, DM::WINDOW_HEIGHT);
+    Box wanted(Vector(0, 0), WINDOW_WIDTH, WINDOW_HEIGHT);
     assertEq("boundary is set up", WM.getBoundary(), wanted);
-    assertEq("view is set up", WM.getView(), wanted);
+    assertEq("view is set up", WM.getView().getView(), wanted);
     assertEq("is not over", GM.getGameOver(), false);
     assertEq("is not paused", GM.isPaused(), false);
 

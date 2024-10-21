@@ -1,40 +1,22 @@
 #include "Object.h"
 
-#include <array>
 #include <cstdint>
 #include <string>
 
-#include "SceneGraph.h"
-#include "WorldManager.h"
-#include "latebit/core/GameManager.h"
 #include "latebit/core/ResourceManager.h"
-#include "latebit/core/geometry/Vector.h"
 #include "latebit/core/graphics/DisplayManager.h"
-#include "latebit/core/input/InputManager.h"
-#include "latebit/utils/Logger.h"
+#include "latebit/core/world/WorldManager.h"
 
 using namespace std;
 
 namespace lb {
 
-Object::Object() {
+Object::Object() : sceneGraph(&WM.getSceneGraph()) {
   static int id = 0;
   this->id = id++;
-  WM.insertObject(this);
 }
 
 Object::Object(const string& type) : Object() { this->type = type; }
-
-Object::~Object() {
-  auto count = this->eventCount;
-  for (int i = 0; i < count; i++) {
-    unsubscribe(this->events[i]);
-  }
-
-  // This object is owned by the world manager,
-  // so resources for this object are freed in WorldManager::shutDown/update
-  WM.removeObject(this);
-}
 
 auto Object::getId() const -> int { return this->id; }
 
@@ -49,7 +31,7 @@ auto Object::getScale() const -> uint8_t { return this->scale; }
 
 void Object::setAltitude(int a) {
   if (a <= MAX_ALTITUDE && a >= 0) {
-    WM.getSceneGraph().setAltitude(this, a);
+    this->sceneGraph->setAltitude(this, a);
     this->altitude = a;
   }
 }
@@ -59,14 +41,14 @@ void Object::setVelocity(Vector v) { this->velocity = v; }
 auto Object::getVelocity() const -> Vector { return this->velocity; }
 
 void Object::setAcceleration(Vector a) { this->acceleration = a; }
-auto Object::getAcceleration() const -> Vector { return  this->acceleration; }
+auto Object::getAcceleration() const -> Vector { return this->acceleration; }
 
 auto Object::isSolid() const -> bool {
   return this->solidness != Solidness::SPECTRAL;
 }
 
 void Object::setSolidness(Solidness::Solidness s) {
-  WM.getSceneGraph().setSolidness(this, s);
+  this->sceneGraph->setSolidness(this, s);
   this->solidness = s;
 }
 auto Object::getSolidness() const -> Solidness::Solidness {
@@ -118,63 +100,18 @@ auto Object::drawBoundingBox() const -> int {
   float width = box.getWidth();
   float height = box.getHeight();
 
-  return DM::drawRectangle(corner, width, height, Color::RED);
-}
-
-auto Object::subscribe(string eventType) -> int {
-  if (this->eventCount >= MAX_EVENTS_PER_OBEJCT) {
-    Log.error(
-      "Object::subscribe(): Cannot subscribe. %s has reached maximum "
-      "subscriptions %d",
-      MAX_EVENTS_PER_OBEJCT, this->toString().c_str());
-    return -1;
-  }
-
-  this->events[this->eventCount] = eventType;
-  this->eventCount++;
-
-  if (IM.subscribe(this, eventType) == 0) {
-    return 0;
-  }
-
-  if (GM.subscribe(this, eventType) == 0) {
-    return 0;
-  }
-
-  // WM handles custom (user defined) events, hence it's the fallback
-  return WM.subscribe(this, eventType);
-}
-
-auto Object::unsubscribe(string eventType) -> int {
-  for (int i = 0; i < this->eventCount; i++) {
-    if (this->events[i] == eventType) {
-      this->events[i] = this->events[this->eventCount - 1];
-      this->eventCount--;
-      break;
-    }
-  }
-
-  if (IM.unsubscribe(this, eventType) == 0) {
-    return 0;
-  }
-
-  if (GM.unsubscribe(this, eventType) == 0) {
-    return 0;
-  }
-
-  // WM handles custom (user defined) events, hence it's the fallback
-  return WM.unsubscribe(this, eventType);
+  return DM.drawRectangle(corner, width, height, Color::RED);
 }
 
 auto Object::setActive(bool active) -> int {
-  if (WM.getSceneGraph().setActive(this, active) != 0) return -1;
+  this->sceneGraph->setActive(this, active);
   this->active = active;
   return 0;
 }
 auto Object::isActive() const -> bool { return this->active; }
 
 auto Object::setVisible(bool visible) -> int {
-  if (WM.getSceneGraph().setVisible(this, visible) != 0) return -1;
+  this->sceneGraph->setVisible(this, visible);
   this->visible = visible;
   return 0;
 }

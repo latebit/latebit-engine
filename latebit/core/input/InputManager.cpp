@@ -50,7 +50,7 @@ void InputManager::getInput() const {
         if (key == InputKey::UNDEFINED_KEY) return;
 
         const auto evt = EventInput(key, InputAction::PRESSED);
-        onEvent(&evt);
+        broadcast(&evt);
         break;
       }
       case SDL_KEYUP: {
@@ -58,7 +58,7 @@ void InputManager::getInput() const {
         if (key == InputKey::UNDEFINED_KEY) return;
 
         const auto evt = EventInput(key, InputAction::RELEASED);
-        onEvent(&evt);
+        broadcast(&evt);
         break;
       }
       case SDL_QUIT:

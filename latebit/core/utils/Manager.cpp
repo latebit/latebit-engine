@@ -62,7 +62,7 @@ auto Manager::unsubscribe(EventTarget* o, string eventType) -> int {
   return 0;
 }
 
-auto Manager::onEvent(const Event* event) const -> int {
+auto Manager::broadcast(const Event* event) const -> int {
   int count = 0;
 
   for (int i = 0; i < this->eventCount; i++) {

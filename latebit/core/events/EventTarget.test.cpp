@@ -33,22 +33,22 @@ void whenActive() {
   assertOk("subscribes to custom", obj.subscribe("custom"));
 
   EventCollision collision;
-  WM.onEvent(&collision);
+  WM.broadcast(&collision);
   assertEq("responds to Collision", emittedCount[COLLISION_EVENT], 1);
   EventOut out;
-  WM.onEvent(&out);
+  WM.broadcast(&out);
   assertEq("responds to Out", emittedCount[OUT_EVENT], 1);
 
   EventStep step;
-  GM.onEvent(&step);
+  GM.broadcast(&step);
   assertEq("responds to Step", emittedCount[STEP_EVENT], 1);
 
   EventInput input;
-  IM.onEvent(&input);
+  IM.broadcast(&input);
   assertEq("responds to Keyboard", emittedCount[INPUT_EVENT], 1);
 
   Event customEvent("custom");
-  WM.onEvent(&customEvent);
+  WM.broadcast(&customEvent);
   assertEq("responds to custom event", emittedCount["custom"], 1);
 
   assertOk("unsubscribes to Collision", obj.unsubscribe(COLLISION_EVENT));
@@ -57,19 +57,19 @@ void whenActive() {
   assertOk("unsubscribes to Input", obj.unsubscribe(INPUT_EVENT));
   assertOk("unsubscribes to custom", obj.unsubscribe("custom"));
 
-  WM.onEvent(&collision);
+  WM.broadcast(&collision);
   assertEq("does not respond to Collision", emittedCount[COLLISION_EVENT], 1);
 
-  WM.onEvent(&out);
+  WM.broadcast(&out);
   assertEq("does not respond to Out", emittedCount[OUT_EVENT], 1);
 
-  GM.onEvent(&step);
+  GM.broadcast(&step);
   assertEq("does not respond to Step", emittedCount[STEP_EVENT], 1);
 
-  IM.onEvent(&input);
+  IM.broadcast(&input);
   assertEq("does not respond to Keyboard", emittedCount[INPUT_EVENT], 1);
 
-  WM.onEvent(&customEvent);
+  WM.broadcast(&customEvent);
   assertEq("does not respond to custom event", emittedCount["custom"], 1);
 }
 
@@ -98,22 +98,22 @@ void whenInactive() {
   assertOk("subscribes to custom", obj.subscribe("custom"));
 
   EventCollision collision;
-  WM.onEvent(&collision);
+  WM.broadcast(&collision);
   assertEq("does not respond to Collision", emittedCount[COLLISION_EVENT], 0);
   EventOut out;
-  WM.onEvent(&out);
+  WM.broadcast(&out);
   assertEq("does not respond to Out", emittedCount[OUT_EVENT], 0);
 
   EventStep step;
-  GM.onEvent(&step);
+  GM.broadcast(&step);
   assertEq("does not respond to Step", emittedCount[STEP_EVENT], 0);
 
   EventInput input;
-  IM.onEvent(&input);
+  IM.broadcast(&input);
   assertEq("does not respond to Keyboard", emittedCount[INPUT_EVENT], 0);
 
   Event customEvent("custom");
-  WM.onEvent(&customEvent);
+  WM.broadcast(&customEvent);
   assertEq("does not respond to custom event", emittedCount["custom"], 0);
 
   assertOk("unsubscribes to Collision", obj.unsubscribe(COLLISION_EVENT));
@@ -122,19 +122,19 @@ void whenInactive() {
   assertOk("unsubscribes to Input", obj.unsubscribe(INPUT_EVENT));
   assertOk("unsubscribes to custom", obj.unsubscribe("custom"));
 
-  WM.onEvent(&collision);
+  WM.broadcast(&collision);
   assertEq("does not respond to Collision", emittedCount[COLLISION_EVENT], 0);
 
-  WM.onEvent(&out);
+  WM.broadcast(&out);
   assertEq("does not respond to Out", emittedCount[OUT_EVENT], 0);
 
-  GM.onEvent(&step);
+  GM.broadcast(&step);
   assertEq("does not respond to Step", emittedCount[STEP_EVENT], 0);
 
-  IM.onEvent(&input);
+  IM.broadcast(&input);
   assertEq("does not respond to Keyboard", emittedCount[INPUT_EVENT], 0);
 
-  WM.onEvent(&customEvent);
+  WM.broadcast(&customEvent);
   assertEq("does not respond to custom event", emittedCount["custom"], 0);
 }
 

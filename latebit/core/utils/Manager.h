@@ -49,7 +49,7 @@ class Manager {
 
   // Broadcasts the event to all the interested subscribers.
   // Returns count of events sent.
-  auto onEvent(const Event *event) const -> int;
+  auto broadcast(const Event *event) const -> int;
 
   // Register interest in an event type, to be notified when
   // events of that type occur

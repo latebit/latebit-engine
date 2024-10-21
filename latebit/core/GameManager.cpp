@@ -99,7 +99,7 @@ void GameManager::run() {
 
     // Send a step event to all subscribers
     const auto evt = EventStep(steps++);
-    onEvent(&evt);
+    broadcast(&evt);
 
     IM.getInput();
 
@@ -139,7 +139,7 @@ void GameManager::loop(void* a) {
   EmscriptenLoopArgs* args = (EmscriptenLoopArgs*)a;
   // Send a step event to all subscribers
   const auto evt = EventStep(++(*args->steps));
-  GM.onEvent(&evt);
+  GM.broadcast(&evt);
 
   IM.getInput();
   if (!*args->paused) {

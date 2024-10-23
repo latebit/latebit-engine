@@ -1,7 +1,7 @@
 wasm:
   # Creates a wasm build
-  emmake cmake -DWASM=1 -B build-wasm .
-  emmake cmake --build build-wasm
+  emcmake cmake -B build .
+  emmake cmake --build build
 
 native:
   # Creates a native build

@@ -158,8 +158,8 @@ void GameManager::run() {
   EmscriptenLoopArgs args = {&adjustTime, &loopTime, &steps,
                              clock.get(), frameTime, &this->paused};
 
-  emscripten_set_main_loop_arg(loop, &args, 0, 1);
-  emscripten_set_main_loop_timing(EM_TIMING_RAF, 33);
+  auto frames = Configuration::getMaxFrameRate();
+  emscripten_set_main_loop_arg(loop, &args, frames, 1);
 }
 void GameManager::setGameOver(bool gameOver) {
   this->gameOver = gameOver;

@@ -8,8 +8,8 @@
 using namespace lb;
 
 namespace lbui {
-Text::Text(const string label, const string text, const TextOptions options)
-  : Object(label) {
+Text::Text(const string type, const string text, const TextOptions options)
+  : Object(type) {
   this->options = options;
   this->setContent(text);
   this->setSolidness(Solidness::SPECTRAL);
@@ -43,9 +43,9 @@ void Text::setContent(const string text) {
 void Text::setPosition(Vector position) {
   auto box = this->getBox();
   if (options.alignment == TextAlignment::CENTER) {
-    position.setX(-box.getWidth() / 2);
+    position.setX(position.getX() - box.getWidth() / 2);
   } else if (options.alignment == TextAlignment::RIGHT) {
-    position.setX(-box.getWidth());
+    position.setX(position.getX() - box.getWidth());
   }
   Object::setPosition(position);
 }

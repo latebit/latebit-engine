@@ -34,7 +34,7 @@ class Text : public Object {
   TextOptions options;
 
  public:
-  Text(const string label, const string text,
+  Text(const string type, const string text,
        const TextOptions options = TextOptions());
 
   // Draws this object on the screen

@@ -1,24 +1,26 @@
 #include "Menu.h"
 
 #include "latebit/core/events/EventInput.h"
+#include "latebit/core/geometry/Vector.h"
+#include "latebit/ui/Control.h"
 
 using namespace lb;
 
 namespace lbui {
-Menu::Menu(Scene *scene) : scene(scene) { subscribe(INPUT_EVENT); }
+Menu::Menu() { subscribe(INPUT_EVENT); }
 
 void Menu::focusItem(int index) {
-  auto text = this->items.at(index);
-  auto label = text->getContent();
+  auto text = this->controls.at(index);
+  auto label = text->getLabel();
   label.replace(0, 1, BULLET);
-  text->setContent(label);
+  text->setLabel(label);
 }
 
 void Menu::blurItem(int index) {
-  auto text = this->items.at(index);
-  auto label = text->getContent();
+  auto text = this->controls.at(index);
+  auto label = text->getLabel();
   label.replace(0, 1, " ");
-  text->setContent(label);
+  text->setLabel(label);
 }
 
 auto Menu::eventHandler(const Event *e) -> int {
@@ -27,16 +29,17 @@ auto Menu::eventHandler(const Event *e) -> int {
     if (event->getAction() == InputAction::PRESSED) {
       if (event->getKey() == InputKey::DOWN) {
         blurItem(selected);
-        selected = (selected + 1) % items.size();
+        selected = (selected + 1) % controls.size();
         focusItem(selected);
         return 1;
       } else if (event->getKey() == InputKey::UP) {
         blurItem(selected);
-        selected = (selected - 1) % items.size();
+        selected = (selected - 1) % controls.size();
         focusItem(selected);
         return 1;
       } else if (event->getKey() == InputKey::START) {
-        callbacks.at(selected)();
+        auto item = controls.at(selected);
+        if (item) item->onSubmit();
         return 1;
       }
     }
@@ -44,15 +47,14 @@ auto Menu::eventHandler(const Event *e) -> int {
   return 0;
 }
 
-void Menu::addItem(string label, function<void()> onSelected) {
-  auto item = scene->createObject<Text>(this->getType() + "-" + label, "  " + label);
+void Menu::addControl(Control *control) {
   auto box = this->getBox();
   auto itemPosition = this->getPosition() + Vector(0, box.getHeight() + GAP);
-  item->setPosition(itemPosition);
-  this->callbacks.push_back(onSelected);
-  this->items.push_back(item);
+  control->setPosition(itemPosition);
+  this->controls.push_back(control);
+  control->setLabel("  " + control->getLabel());
 
-  auto itemBox = item->getBox();
+  auto itemBox = control->getBox();
   auto width =
     box.getWidth() > itemBox.getWidth() ? box.getWidth() : itemBox.getWidth();
   auto height = box.getHeight() + itemBox.getHeight() + GAP;
@@ -60,7 +62,7 @@ void Menu::addItem(string label, function<void()> onSelected) {
   box.setHeight(height);
   this->setBox(box);
 
-  if (items.size() == 1) {
+  if (controls.size() == 1) {
     focusItem(0);
   }
 }
@@ -69,14 +71,14 @@ void Menu::setPosition(Vector p) {
   // Watch out! This is order-dependent
   auto delta = p - this->getPosition();
   Object::setPosition(p);
-  for (auto &item : items) {
+  for (auto &item : controls) {
     item->setPosition(item->getPosition() + delta);
   }
 }
 
 void Menu::setDebug(bool debug) {
   Object::setDebug(debug);
-  for (auto &item : items) {
+  for (auto &item : controls) {
     item->setDebug(debug);
   }
 }

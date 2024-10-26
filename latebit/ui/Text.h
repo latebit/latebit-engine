@@ -9,8 +9,7 @@
 using namespace lb;
 
 namespace lbui {
-class TextOptions {
- public:
+struct TextOptions {
   // Text size, according to the DisplayManager
   TextSize::TextSize size = TextSize::NORMAL;
   // Text alignment, according to the DisplayManager.

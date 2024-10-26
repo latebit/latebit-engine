@@ -165,35 +165,43 @@ auto DisplayManager::drawKeyframe(Position position, const Keyframe* frame,
   return 0;
 }
 
-auto DisplayManager::drawRectangle(Position position, int width, int height,
-                                   Color::Color borderColor,
-                                   Color::Color fillColor) -> int {
+auto DisplayManager::fillRectangle(Position position, uint8_t width,
+                                   uint8_t height, Color::Color color) -> int {
   if (this->window == nullptr) return -1;
 
-  auto viewPosition = WM.getView().worldToView(position);
-  auto pixelPosition = cellsToPixels(viewPosition);
+  if (color != Color::UNDEFINED_COLOR) {
+    auto viewPosition = WM.getView().worldToView(position);
+    auto pixelPosition = cellsToPixels(viewPosition);
 
-  SDL_Rect rectangle = {(int)pixelPosition.getX(), (int)pixelPosition.getY(),
-                        width * CELL_SIZE, height * CELL_SIZE};
+    SDL_Rect rectangle = {(int)pixelPosition.getX(), (int)pixelPosition.getY(),
+                          width * CELL_SIZE, height * CELL_SIZE};
 
-  if (fillColor != Color::UNDEFINED_COLOR) {
-    auto fill = toSDLColor(fillColor);
+    auto fill = toSDLColor(color);
     SDL_SetRenderDrawColor(this->renderer, fill.r, fill.g, fill.b, fill.a);
     SDL_RenderFillRect(this->renderer, &rectangle);
   }
 
-  auto border = toSDLColor(borderColor);
-  SDL_SetRenderDrawColor(this->renderer, border.r, border.g, border.b,
-                         border.a);
-  SDL_RenderDrawRect(this->renderer, &rectangle);
-
   return 0;
 }
 
-auto DisplayManager::drawRectangle(Position position, int width, int height,
-                                   Color::Color borderColor) -> int {
-  return drawRectangle(position, width, height, borderColor,
-                       Color::UNDEFINED_COLOR);
+auto DisplayManager::strokeRectangle(Position position, uint8_t width,
+                                     uint8_t height,
+                                     Color::Color color) -> int {
+  if (this->window == nullptr) return -1;
+
+  if (color != Color::UNDEFINED_COLOR) {
+    auto viewPosition = WM.getView().worldToView(position);
+    auto pixelPosition = cellsToPixels(viewPosition);
+
+    SDL_Rect rectangle = {(int)pixelPosition.getX(), (int)pixelPosition.getY(),
+                          width * CELL_SIZE, height * CELL_SIZE};
+
+    auto fill = toSDLColor(color);
+    SDL_SetRenderDrawColor(this->renderer, fill.r, fill.g, fill.b, fill.a);
+    SDL_RenderDrawRect(this->renderer, &rectangle);
+  }
+
+  return 0;
 }
 
 auto DisplayManager::drawString(Position position, string string,

@@ -10,6 +10,7 @@
 #include "latebit/ui/Button.h"
 #include "latebit/ui/Checkbox.h"
 #include "latebit/ui/Menu.h"
+#include "latebit/ui/Rectangle.h"
 #include "latebit/ui/Text.h"
 #include "latebit/ui/utils.h"
 #include "latebit/utils/Logger.h"
@@ -30,12 +31,22 @@ auto main() -> int {
 
   auto menu = scene->createObject<Menu>();
 
-  auto start = scene->createObject<Button>(scene, "Start Game", []() { printf("Start\n"); });
+  auto start = scene->createObject<Button>(scene, "Start Game",
+                                           []() { printf("Start\n"); });
   Checkbox* checkbox = nullptr;
-  checkbox =  scene->createObject<Checkbox>(scene, "Options", false, [&checkbox]() { printf("Options %d\n", checkbox->getValue()); });
+  checkbox = scene->createObject<Checkbox>(
+    scene, "Options", false,
+    [&checkbox]() { printf("Options %d\n", checkbox->getValue()); });
   menu->addControl(start);
   menu->addControl(checkbox);
   setPositionOnScreen(menu, ScreenPosition::MIDDLE_CENTER);
+
+  auto rect = scene->createObject<Rectangle>(
+    RectangleOptions{.height = 40,
+                     .width = 120,
+                     .fill = Color::WHITE,
+                     .stroke = {Color::BLACK, Color::UNDEFINED_COLOR, Color::BLACK, Color::DARK_GRAY }});
+  setPositionOnScreen(rect, ScreenPosition::BOTTOM_CENTER, Vector{0, -10});
 
   scene->activate();
 

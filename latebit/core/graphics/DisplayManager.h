@@ -76,13 +76,12 @@ class DisplayManager : public Manager {
                                   uint8_t scaling) -> int;
 
   // Draws a rectangle outline at the given world position (top left cell)
-  [[nodiscard]] auto drawRectangle(Position position, int width, int height,
-                                   Color::Color borderColor) -> int;
+  [[nodiscard]] auto strokeRectangle(Position position, uint8_t width, uint8_t height,
+                                     Color::Color color) -> int;
 
   // Draws a rectangle at the given world position (top left cell)
-  [[nodiscard]] auto drawRectangle(Position position, int width, int height,
-                                   Color::Color borderColor,
-                                   Color::Color fillColor) -> int;
+  [[nodiscard]] auto fillRectangle(Position position, uint8_t width, uint8_t height,
+                                   Color::Color color) -> int;
 
   // Draws a string to the window at the given world position
   [[nodiscard]] auto drawString(Position postion, string string,

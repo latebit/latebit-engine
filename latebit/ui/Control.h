@@ -13,10 +13,5 @@ class Control : public Object {
   virtual void onBlur() {};
   // Fired when the control is focused and START is pressed
   virtual void onSubmit() {};
-  // Fired when the control changes value
-  virtual void onChange() {};
-
-  virtual auto getLabel() -> string { return getType(); };
-  virtual void setLabel(const string s) { setType(s); };
 };
 }  // namespace lbui

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "latebit/core/geometry/Vector.h"
+#include "latebit/core/graphics/Keyframe.h"
 #include "latebit/core/world/Object.h"
 #include "latebit/ui/Control.h"
 
@@ -9,16 +10,13 @@ using namespace lb;
 namespace lbui {
 class Menu : public Object {
  private:
-  // Space between elements in the menu
-  const int GAP = 2;
-  // Character used to highlight menu element
-  const string BULLET = ">";
-
+  static const Keyframe CARET;
   // Index of the currently selected element
   uint8_t selected = 0;
   // Elements in this menu
   vector<Control *> controls = {};
-
+  // Position where the caret should be drawn
+  Vector caretPosition;
   // Focuses on the element at index
   void focusItem(int index);
   // Un-focuses the element at index
@@ -27,6 +25,8 @@ class Menu : public Object {
  public:
   Menu();
   auto eventHandler(const Event *e) -> int override;
+
+  auto draw() -> int override;
 
   // Add item in the menu
   void addControl(Control* control);

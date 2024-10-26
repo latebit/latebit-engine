@@ -8,6 +8,7 @@
 #include "latebit/core/world/Scene.h"
 #include "latebit/core/world/WorldManager.h"
 #include "latebit/ui/Button.h"
+#include "latebit/ui/Checkbox.h"
 #include "latebit/ui/Menu.h"
 #include "latebit/ui/Text.h"
 #include "latebit/ui/utils.h"
@@ -30,9 +31,10 @@ auto main() -> int {
   auto menu = scene->createObject<Menu>();
 
   auto start = scene->createObject<Button>(scene, "Start Game", []() { printf("Start\n"); });
-  auto options = scene->createObject<Button>(scene, "Options", []() { printf("Options\n"); });
+  Checkbox* checkbox = nullptr;
+  checkbox =  scene->createObject<Checkbox>(scene, "Options", false, [&checkbox]() { printf("Options %d\n", checkbox->getValue()); });
   menu->addControl(start);
-  menu->addControl(options);
+  menu->addControl(checkbox);
   setPositionOnScreen(menu, ScreenPosition::MIDDLE_CENTER);
 
   scene->activate();

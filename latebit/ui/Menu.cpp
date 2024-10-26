@@ -2,25 +2,46 @@
 
 #include "latebit/core/events/EventInput.h"
 #include "latebit/core/geometry/Vector.h"
+#include "latebit/core/graphics/Colors.h"
+#include "latebit/core/graphics/DisplayManager.h"
+#include "latebit/core/graphics/Keyframe.h"
+#include "latebit/core/world/Object.h"
 #include "latebit/ui/Control.h"
 
 using namespace lb;
 
 namespace lbui {
+// Space between elements in the menu
+const int GAP = 4;
+// Size of the caret
+const int CARET_HEIGHT = 5;
+const int CARET_WIDTH = 4;
+
+const Keyframe Menu::CARET = {
+  Color::WHITE, Color::WHITE, Color::UNDEFINED_COLOR, Color::UNDEFINED_COLOR,
+  Color::WHITE, Color::WHITE, Color::WHITE,           Color::UNDEFINED_COLOR,
+  Color::WHITE, Color::WHITE, Color::WHITE,           Color::WHITE,
+  Color::WHITE, Color::WHITE, Color::WHITE,           Color::UNDEFINED_COLOR,
+  Color::WHITE, Color::WHITE, Color::UNDEFINED_COLOR, Color::UNDEFINED_COLOR};
+
 Menu::Menu() { subscribe(INPUT_EVENT); }
 
-void Menu::focusItem(int index) {
-  auto text = this->controls.at(index);
-  auto label = text->getLabel();
-  label.replace(0, 1, BULLET);
-  text->setLabel(label);
+auto Menu::draw() -> int {
+  return DM.drawKeyframe(caretPosition, &Menu::CARET, CARET_WIDTH, CARET_HEIGHT, 1);
 }
 
 void Menu::blurItem(int index) {
-  auto text = this->controls.at(index);
-  auto label = text->getLabel();
-  label.replace(0, 1, " ");
-  text->setLabel(label);
+  auto control = this->controls.at(index);
+  if (control) control->onBlur();
+}
+
+void Menu::focusItem(int index) {
+  auto control = this->controls.at(index);
+  if (control) {
+    auto position = control->getPosition();
+    this->caretPosition = position - Vector{CARET_WIDTH + GAP, -1};
+    control->onFocus();
+  }
 }
 
 auto Menu::eventHandler(const Event *e) -> int {
@@ -49,10 +70,9 @@ auto Menu::eventHandler(const Event *e) -> int {
 
 void Menu::addControl(Control *control) {
   auto box = this->getBox();
-  auto itemPosition = this->getPosition() + Vector(0, box.getHeight() + GAP);
+  auto itemPosition = this->getPosition() + Vector(CARET_WIDTH + GAP, box.getHeight() + GAP);
   control->setPosition(itemPosition);
   this->controls.push_back(control);
-  control->setLabel("  " + control->getLabel());
 
   auto itemBox = control->getBox();
   auto width =
@@ -74,6 +94,7 @@ void Menu::setPosition(Vector p) {
   for (auto &item : controls) {
     item->setPosition(item->getPosition() + delta);
   }
+  this->caretPosition = this->caretPosition + delta;
 }
 
 void Menu::setDebug(bool debug) {

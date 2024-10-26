@@ -6,9 +6,9 @@ namespace lb {
 class Vector {
  private:
   // The horizontal component of the vector
-  float x;
+  float x = 0;
   // The vertical component of the vector
-  float y;
+  float y = 0;
 
  public:
   Vector(float x = 0.0f, float y = 0.0f);

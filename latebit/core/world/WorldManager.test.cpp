@@ -58,7 +58,6 @@ void draw() {
 void getCollisions() {
   WM.startUp();
 
-  // Create test objects
   auto scene = WM.createScene<Scene>("main");
   auto obj1 = scene->createObject<Object>();
   auto obj2 = scene->createObject<Object>();
@@ -66,26 +65,26 @@ void getCollisions() {
   auto obj4 = scene->createObject<Object>();
   scene->activate();
 
-  // Set positions of test objects
+  // Objects need a non-zero box to collide
   obj1->setPosition(Vector(0, 0));
+  obj1->setBox({1, 1});
   obj2->setPosition(Vector(1, 1));
+  obj2->setBox({1, 1});
   obj3->setPosition(Vector(2, 2));
+  obj3->setBox({1, 1});
   obj4->setPosition(Vector(0, 0));
+  obj4->setBox({1, 1});
 
-  // Set obj1 as solid
   obj1->setSolidness(Solidness::HARD);
   obj2->setSolidness(Solidness::SOFT);
   obj3->setSolidness(Solidness::SPECTRAL);
 
-  // Call getCollisions function
   vector<Object *> collisions = WM.getCollisions(obj1, Vector(0, 0));
 
-  // Check if obj4 is in the collisions list
   assert("collides with hard", contains(collisions, obj4));
   assert("collides with soft", contains(collisions, obj2));
   assert("does not collide with spectral", !contains(collisions, obj3));
 
-  // Clean up test objects
   WM.markForDelete(obj1);
   WM.markForDelete(obj2);
   WM.markForDelete(obj3);

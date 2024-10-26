@@ -10,11 +10,11 @@ namespace lb {
 class Box {
  private:
   // Bottom left corner of box
-  Vector corner;
+  Vector corner = {};
   // Width of box
-  float width;
+  float width = 0;
   // Height of box
-  float height;
+  float height = 0;
 
  public:
   Box();

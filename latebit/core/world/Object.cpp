@@ -63,7 +63,7 @@ auto Object::setSprite(string label) -> int {
   if (s == nullptr) return -1;
 
   this->animation.setSprite(s);
-  setBox({Vector(), (float)s->getWidth(), (float)s->getHeight()});
+  this->setBox({(float)s->getWidth(), (float)s->getHeight()});
 
   return 0;
 }

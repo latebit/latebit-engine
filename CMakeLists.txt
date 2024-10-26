@@ -15,6 +15,7 @@ include_directories(${CMAKE_SOURCE_DIR})
 add_subdirectory(latebit/utils)
 add_subdirectory(latebit/sid)
 add_subdirectory(latebit/core)
+add_subdirectory(latebit/ui)
 add_subdirectory(test)
 
 add_custom_target(format

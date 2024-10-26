@@ -16,7 +16,7 @@ else ()
 foreach(test_file ${INTEGRATION_TESTS_FILES})
   get_filename_component(FILE_NAME ${test_file} NAME_WE)
   add_executable(${FILE_NAME}.test ${test_file})
-  target_link_libraries(${FILE_NAME}.test latebit latebit-test)
+  target_link_libraries(${FILE_NAME}.test latebit latebit-test ui)
   # Note: not adding the test to ctest, as these tests are meant to be run manually
 endforeach()
 endif()

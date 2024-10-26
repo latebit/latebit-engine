@@ -20,13 +20,14 @@ auto Rectangle::draw() -> int {
     auto color = options.stroke[i];
     if (color == Color::UNDEFINED_COLOR) color = options.fill;
 
-    result += DM.fillRectangle(getPosition() + Vector{(float)i, (float)i},
-                               box.getWidth() - 2*i, box.getHeight() - 2*i, color);
+    result +=
+      DM.fillRectangle(getPosition() + Vector{(float)i, (float)i},
+                       box.getWidth() - 2 * i, box.getHeight() - 2 * i, color);
   }
 
   result += DM.fillRectangle(
     getPosition() + Vector{(float)strokes, (float)strokes},
-    box.getWidth() - 2*strokes, box.getHeight() - 2*strokes, options.fill);
+    box.getWidth() - 2 * strokes, box.getHeight() - 2 * strokes, options.fill);
 
   return result;
 };

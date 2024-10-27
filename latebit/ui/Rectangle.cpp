@@ -16,6 +16,9 @@ auto Rectangle::draw() -> int {
   auto strokes = options.stroke.size();
   int result = 0;
 
+  // This looks crazy, but drawing whole rectangles reduces the amount of
+  // drawing calls compared to draw borders one by one (i.e., 4 times less
+  // calls) which is more efficient.
   for (uint8_t i = 0; i < strokes; i++) {
     auto color = options.stroke[i];
     if (color == Color::UNDEFINED_COLOR) color = options.fill;

@@ -4,6 +4,7 @@
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/graphics/Colors.h"
 #include "latebit/core/graphics/Keyframe.h"
+#include "latebit/core/input/InputManager.h"
 #include "latebit/core/world/Object.h"
 #include "latebit/ui/Control.h"
 
@@ -56,6 +57,14 @@ auto Menu::eventHandler(const Event *e) -> int {
       } else if (event->getKey() == InputKey::START) {
         auto item = controls.at(selected);
         if (item) item->onSubmit();
+        return 1;
+      } else if (event->getKey() == InputKey::LEFT) {
+        auto item = controls.at(selected);
+        if (item) item->onChange(-1);
+        return 1;
+      } else if (event->getKey() == InputKey::RIGHT) {
+        auto item = controls.at(selected);
+        if (item) item->onChange(1);
         return 1;
       }
     }

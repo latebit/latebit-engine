@@ -13,5 +13,7 @@ class Control : public Object {
   virtual void onBlur() {};
   // Fired when the control is focused and START is pressed
   virtual void onSubmit() {};
+  // Fired when the control is focused and value has incremented
+  virtual void onChange([[maybe_unused]] int delta) {}
 };
 }  // namespace lbui

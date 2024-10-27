@@ -1,3 +1,5 @@
+#pragma once 
+
 #include <utility>
 
 #include "latebit/core/geometry/Vector.h"

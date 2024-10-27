@@ -1,22 +1,22 @@
 #pragma once
 
 #include "latebit/core/geometry/Vector.h"
-#include "latebit/core/graphics/Keyframe.h"
 #include "latebit/core/world/Object.h"
 #include "latebit/ui/Control.h"
+#include "latebit/ui/Icon.h"
 
 using namespace lb;
 
 namespace lbui {
 class Menu : public Object {
  private:
-  static const Keyframe CARET;
+  static const Icon CARET;
   // Index of the currently selected element
   uint8_t selected = 0;
   // Elements in this menu
   vector<Control *> controls = {};
   // Position where the caret should be drawn
-  Vector caretPosition;
+  Vector caretPosition = {};
   // Focuses on the element at index
   void focusItem(int index);
   // Un-focuses the element at index

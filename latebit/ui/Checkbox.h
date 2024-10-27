@@ -3,9 +3,9 @@
 #include <functional>
 #include <string>
 
-#include "latebit/core/graphics/Keyframe.h"
 #include "latebit/core/world/Scene.h"
 #include "latebit/ui/Control.h"
+#include "latebit/ui/Menu.h"
 #include "latebit/ui/Text.h"
 
 using namespace std;
@@ -14,10 +14,10 @@ namespace lbui {
 
 class Checkbox : public Control {
  private:
+  static const array<Icon, 2> CHECKS; 
   Text* text;
   function<void()> callback;
   bool value;
-  const static array<Keyframe, 2> CHECKS; 
 
  public:
   Checkbox(Scene* scene, const string label, bool initialValue, function<void()> onSubmit);

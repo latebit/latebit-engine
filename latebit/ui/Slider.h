@@ -1,4 +1,7 @@
 #include "Control.h"
+
+#include <functional>
+
 #include "latebit/core/world/Scene.h"
 #include "latebit/ui/Icon.h"
 #include "latebit/ui/Text.h"

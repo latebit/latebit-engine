@@ -1,3 +1,5 @@
+#pragma once
+
 #include "latebit/core/graphics/Colors.h"
 #include "latebit/core/graphics/Keyframe.h"
 #include "latebit/core/world/Object.h"

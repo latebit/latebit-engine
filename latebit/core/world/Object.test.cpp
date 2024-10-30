@@ -48,10 +48,8 @@ void solidness() {
 void boundingBox() {
   Object subject;
   subject.setPosition(Vector(1, 1));
-  RM.loadTextSprite(FIXTURES_FOLDER + "/correct.lbspr", "sprite");
-
-  subject.setSprite("sprite");
-
+  assertOk("loads sprite", RM.loadTextSprite(FIXTURES_FOLDER + "/correct.lbspr", "sprite"));
+  assertOk("sets the sprite", subject.setSprite("sprite"));
   assertEq("sets bounding box", subject.getBox(), Box(Vector(), 3, 4));
   assertEq("gets bounding box in world coordinates", subject.getWorldBox(),
            Box(Vector(1, 1), 3, 4));
@@ -115,7 +113,7 @@ auto main() -> int {
     assertEq("sets an altitude", subject.getAltitude(), 0);
     assertEq("sets a solidness", subject.getSolidness(), Solidness::HARD);
     assertEq("sets a scale", subject.getScale(), 1);
-    assert("sets a bounding box", subject.getBox() == Box(Vector(), 1, 1));
+    assert("sets a bounding box", subject.getBox() == Box());
     assert("sets an animation", subject.getAnimation() == Animation());
   });
 

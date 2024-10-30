@@ -56,7 +56,7 @@ class Object : public EventTarget {
   Animation animation = Animation();
 
   // Box defining the bounds of this object.
-  Box boundingBox = Box(1, 1);
+  Box boundingBox = Box();
 
   // True if the engine interacts with this object.
   bool active = true;
@@ -83,41 +83,41 @@ class Object : public EventTarget {
   [[nodiscard]] auto getId() const -> int;
 
   // Sets the type identifier of this object.
-  void setType(string t);
+  virtual void setType(string t);
   // Returns the type identifier of this object.
   [[nodiscard]] auto getType() const -> string;
 
   // Sets the position of this object in the game world.
-  void setPosition(Vector p);
+  virtual void setPosition(Vector p);
   // Returns the position of this object in the game world.
   [[nodiscard]] auto getPosition() const -> Vector;
 
-  void setScale(uint8_t scale);
+  virtual void setScale(uint8_t scale);
   [[nodiscard]] auto getScale() const -> uint8_t;
 
   // Sets the the rendering layer for this object.
-  void setAltitude(int a);
+  virtual void setAltitude(int a);
   // Returns the rendering layer of this object.
   [[nodiscard]] auto getAltitude() const -> int;
 
   // Sets the velocity vector of this object.
   // For any practical purposes, it is recommended to clamp the components of
   // the velocity vector to a range that makes sense for your game.
-  void setVelocity(Vector v);
+  virtual void setVelocity(Vector v);
   // Returns the velocity vector of this object.
   [[nodiscard]] auto getVelocity() const -> Vector;
 
   // Sets the acceleration vector of this object.
   // For any practical purposes, it is recommended to clamp the components of
   // the acceleration vector to a range that makes sense for your game.
-  void setAcceleration(Vector v);
+  virtual void setAcceleration(Vector v);
   // Returns the acceleration vector of this object.
   [[nodiscard]] auto getAcceleration() const -> Vector;
 
   // Returns true if this object is not SPECTRAL.
   [[nodiscard]] auto isSolid() const -> bool;
   // Sets the solidness of this object.
-  void setSolidness(Solidness::Solidness s);
+  virtual void setSolidness(Solidness::Solidness s);
   // Returns the solidness of this object.
   [[nodiscard]] auto getSolidness() const -> Solidness::Solidness;
 
@@ -127,7 +127,7 @@ class Object : public EventTarget {
   [[nodiscard]] auto getAnimation() const -> Animation;
 
   // Sets the debug flag for this object.
-  void setDebug(bool debug);
+  virtual void setDebug(bool debug);
   // Returns the debug flag for this object.
   [[nodiscard]] auto getDebug() const -> bool;
 
@@ -156,12 +156,12 @@ class Object : public EventTarget {
   virtual void teardown() {};
 
   // Set object to be active or not active.
-  auto setActive(bool active = true) -> int;
+  virtual auto setActive(bool active = true) -> int;
   // Return true if object is active, else false.
   [[nodiscard]] auto isActive() const -> bool override;
 
   // Set object to be visible or invisible.
-  auto setVisible(bool visible = true) -> int;
+  virtual auto setVisible(bool visible = true) -> int;
   // Return true if object is visible, else false.
   [[nodiscard]] auto isVisible() const -> bool;
 

@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.28.1)
 
-# Project settings
 project(sid VERSION ${VERSION} LANGUAGES C CXX)
 get_package_files(sid)
 

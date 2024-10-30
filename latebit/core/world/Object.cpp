@@ -63,7 +63,7 @@ auto Object::setSprite(string label) -> int {
   if (s == nullptr) return -1;
 
   this->animation.setSprite(s);
-  setBox({Vector(), (float)s->getWidth(), (float)s->getHeight()});
+  this->setBox({(float)s->getWidth(), (float)s->getHeight()});
 
   return 0;
 }
@@ -100,7 +100,7 @@ auto Object::drawBoundingBox() const -> int {
   float width = box.getWidth();
   float height = box.getHeight();
 
-  return DM.drawRectangle(corner, width, height, Color::RED);
+  return DM.strokeRectangle(corner, width, height, Color::RED);
 }
 
 auto Object::setActive(bool active) -> int {

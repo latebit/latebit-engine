@@ -5,6 +5,10 @@
 #include "latebit/ui/Icon.h"
 #include "latebit/ui/Rectangle.h"
 
+#include <functional>
+
+using namespace std;
+
 namespace lbui {
 
 // clang-format off
@@ -33,13 +37,13 @@ class Dialog : public Object {
   vector<string> pages = {};
 
   // Callback that will be called when the dialog ends
-  std::function<void()> onEnd;
+  function<void()> onEnd;
 
   // Reset the dialog to its initial state
   void reset();
  public:
 
-  Dialog(Scene* scene, vector<string> pages, std::function<void()> onEnd, RectangleOptions options = RectangleOptions{
+  Dialog(Scene* scene, vector<string> pages, function<void()> onEnd, RectangleOptions options = RectangleOptions{
     .height = 40,
     .width = WINDOW_WIDTH - 2,
     .fill = Color::WHITE,

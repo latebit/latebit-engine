@@ -13,7 +13,7 @@ auto main() -> int {
 
     Box wanted(Vector(0, 0), WINDOW_WIDTH, WINDOW_HEIGHT);
     assertEq("boundary is set up", WM.getBoundary(), wanted);
-    assertEq("view is set up", WM.getView().getView(), wanted);
+    assertEq("view is set up", WM.getCamera().getView(), wanted);
     assertEq("is not over", GM.getGameOver(), false);
     assertEq("is not paused", GM.isPaused(), false);
 

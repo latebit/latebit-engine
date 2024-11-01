@@ -8,25 +8,25 @@ using namespace std;
 using namespace lb;
 
 void worldToView() {
-  auto initialView = WM.getView().getView();
-  WM.getView().setView(Box(Vector(5, 5), 10, 10));
+  auto initialView = WM.getCamera().getView();
+  WM.getCamera().setView(Box(Vector(5, 5), 10, 10));
 
   assertEq("converts world position to view position",
-           WM.getView().worldToView(Vector(5, 5)), Vector(0, 0));
+           WM.getCamera().worldToView(Vector(5, 5)), Vector(0, 0));
   assertEq("converts world position to view position (origin)",
-           WM.getView().worldToView(Vector(0, 0)), Vector(-5, -5));
-  WM.getView().setView(initialView);
+           WM.getCamera().worldToView(Vector(0, 0)), Vector(-5, -5));
+  WM.getCamera().setView(initialView);
 }
 
 void viewToWorld() {
-  auto initialView = WM.getView().getView();
-  WM.getView().setView(Box(Vector(5, 5), 10, 10));
+  auto initialView = WM.getCamera().getView();
+  WM.getCamera().setView(Box(Vector(5, 5), 10, 10));
 
   assertEq("converts view position to world position",
-           WM.getView().viewToWorld(Vector(0, 0)), Vector(5, 5));
+           WM.getCamera().viewToWorld(Vector(0, 0)), Vector(5, 5));
   assertEq("converts view position to world position (origin)",
-           WM.getView().worldToView(Vector(-5, -5)), Vector(0, 0));
-  WM.getView().setView(initialView);
+           WM.getCamera().worldToView(Vector(-5, -5)), Vector(0, 0));
+  WM.getCamera().setView(initialView);
 }
 
 void viewFollowing() {
@@ -38,36 +38,36 @@ void viewFollowing() {
   scene->activate();
 
   auto initialView = Box(Vector(5, 5), 10, 10);
-  WM.getView().setView(initialView);
+  WM.getCamera().setView(initialView);
   WM.setBoundary(Box(20, 20));
 
-  WM.getView().setViewFollowing(subject);
+  WM.getCamera().setViewFollowing(subject);
   WM.resolveMovement(subject, Vector(10, 10));
-  assertEq("does not update view", WM.getView().getView(), initialView);
+  assertEq("does not update view", WM.getCamera().getView(), initialView);
   WM.resolveMovement(subject, Vector(11, 11));
 
-  assertEq("updates the view", WM.getView().getView(),
+  assertEq("updates the view", WM.getCamera().getView(),
            Box(Vector(6, 6), 10, 10));
 
   WM.resolveMovement(subject, Vector(11, 5));
-  assertEq("updates the view (vertical lower bound)", WM.getView().getView(),
+  assertEq("updates the view (vertical lower bound)", WM.getCamera().getView(),
            Box(Vector(6, 0), 10, 10));
 
   WM.resolveMovement(subject, Vector(11, 15));
-  assertEq("updates the view (vertical upper bound)", WM.getView().getView(),
+  assertEq("updates the view (vertical upper bound)", WM.getCamera().getView(),
            Box(Vector(6, 10), 10, 10));
 
   WM.resolveMovement(subject, Vector(5, 11));
-  assertEq("updates the view (horizontal lower bound)", WM.getView().getView(),
+  assertEq("updates the view (horizontal lower bound)", WM.getCamera().getView(),
            Box(Vector(0, 6), 10, 10));
 
   WM.resolveMovement(subject, Vector(15, 11));
-  assertEq("updates the view (horizontal upper bound)", WM.getView().getView(),
+  assertEq("updates the view (horizontal upper bound)", WM.getCamera().getView(),
            Box(Vector(10, 6), 10, 10));
 
-  WM.getView().setViewDeadZone(Box(WM.getView().getView().getCorner(), 5, 5));
+  WM.getCamera().setViewDeadZone(Box(WM.getCamera().getView().getCorner(), 5, 5));
   WM.resolveMovement(subject, Vector(12, 10));
-  assertEq("does not update the view within dead zone", WM.getView().getView(),
+  assertEq("does not update the view within dead zone", WM.getCamera().getView(),
            Box(Vector(10, 6), 10, 10));
 
   WM.shutDown();

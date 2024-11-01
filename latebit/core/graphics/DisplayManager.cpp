@@ -108,7 +108,7 @@ auto DisplayManager::drawKeyframe(Position position, const Keyframe* frame,
   }
 
   scaling = clamp(scaling, 1, 10);
-  auto viewPosition = WM.getView().worldToView(position);
+  auto viewPosition = WM.getCamera().worldToView(position);
   auto pixelPosition = cellsToPixels(viewPosition);
   auto cellSize = CELL_SIZE * scaling;
 
@@ -170,7 +170,7 @@ auto DisplayManager::fillRectangle(Position position, uint8_t width,
   if (this->window == nullptr) return -1;
 
   if (color != Color::UNDEFINED_COLOR) {
-    auto viewPosition = WM.getView().worldToView(position);
+    auto viewPosition = WM.getCamera().worldToView(position);
     auto pixelPosition = cellsToPixels(viewPosition);
 
     SDL_Rect rectangle = {(int)pixelPosition.getX(), (int)pixelPosition.getY(),
@@ -190,7 +190,7 @@ auto DisplayManager::strokeRectangle(Position position, uint8_t width,
   if (this->window == nullptr) return -1;
 
   if (color != Color::UNDEFINED_COLOR) {
-    auto viewPosition = WM.getView().worldToView(position);
+    auto viewPosition = WM.getCamera().worldToView(position);
     auto pixelPosition = cellsToPixels(viewPosition);
 
     SDL_Rect rectangle = {(int)pixelPosition.getX(), (int)pixelPosition.getY(),
@@ -210,7 +210,7 @@ auto DisplayManager::drawString(Position position, string string,
                                 Font font) -> int {
   if (this->window == nullptr) return -1;
 
-  Position viewPosition = WM.getView().worldToView(position);
+  Position viewPosition = WM.getCamera().worldToView(position);
   int len = string.size();
   int gWidth = font.getGlyphWidth();
   int gHeight = font.getGlyphHeight();

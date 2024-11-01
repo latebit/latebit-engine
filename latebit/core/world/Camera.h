@@ -6,7 +6,7 @@
 namespace lb {
 class WorldManager;
 
-class View {
+class Camera {
  private:
   const WorldManager *world = nullptr;
   // The boundaries of the visible portion of the world in cells
@@ -17,7 +17,7 @@ class View {
   Box viewDeadZone = Box();
 
  public:
-  explicit View(const WorldManager *world) : world(world) {};
+  explicit Camera(const WorldManager *world) : world(world) {};
 
   // Set the current view (i.e., visible portion of the world)
   void setView(Box v);

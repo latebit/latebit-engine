@@ -10,7 +10,7 @@
 #include "latebit/core/utils/utils.h"
 #include "latebit/core/world/Object.h"
 #include "latebit/core/world/ObjectUtils.h"
-#include "latebit/core/world/View.h"
+#include "latebit/core/world/Camera.h"
 #include "latebit/utils/Logger.h"
 
 #define WM lb::WorldManager::getInstance()
@@ -29,7 +29,7 @@ auto WorldManager::getInstance() -> WorldManager & {
 auto WorldManager::startUp() -> int {
   this->scenes.clear();
   this->sceneGraph.clear();
-  this->view = View(this);
+  this->camera = Camera(this);
   Log.info("WorldManager::startUp(): Started successfully");
   return Manager::startUp();
 }
@@ -146,12 +146,12 @@ void WorldManager::moveAndCheckBounds(Object *o, Vector position) {
     o->eventHandler(&event);
   }
 
-  if (this->view.getViewFollowing() == o) {
-    auto viewDeadZone = this->view.getViewDeadZone();
+  if (this->camera.getViewFollowing() == o) {
+    auto viewDeadZone = this->camera.getViewDeadZone();
 
     // Move the view if the object is outside of the dead zone
     if (!contains(viewDeadZone, final)) {
-      this->view.setViewPosition(position);
+      this->camera.setViewPosition(position);
     }
   }
 }
@@ -189,7 +189,7 @@ void WorldManager::draw() {
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
     auto visible = this->sceneGraph.getVisibleObjects(i);
     for (auto &o : visible) {
-      if (o != nullptr && intersects(o->getWorldBox(), this->view.getView())) {
+      if (o != nullptr && intersects(o->getWorldBox(), this->camera.getView())) {
         o->draw();
       };
     }
@@ -200,7 +200,7 @@ void WorldManager::setBoundary(Box b) { this->boundary = b; }
 auto WorldManager::getBoundary() const -> Box { return this->boundary; }
 
 auto WorldManager::getSceneGraph() -> SceneGraph & { return this->sceneGraph; }
-auto WorldManager::getView() -> View & { return this->view; }
+auto WorldManager::getCamera() -> Camera & { return this->camera; }
 
 auto WorldManager::activateScene(const string label) -> int {
   for (auto &scene : this->scenes) {

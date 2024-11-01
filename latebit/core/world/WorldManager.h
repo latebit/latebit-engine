@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "SceneGraph.h"
-#include "View.h"
+#include "Camera.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/utils/Manager.h"
 #include "latebit/core/world/Object.h"
@@ -17,7 +17,7 @@ using namespace std;
 
 namespace lb {
 
-class View;
+class Camera;
 
 class WorldManager : public Manager {
  private:
@@ -30,7 +30,7 @@ class WorldManager : public Manager {
   // The current SceneGraph
   SceneGraph sceneGraph = SceneGraph();
   // The current View
-  View view = View(this);
+  Camera camera = Camera(this);
 
   vector<unique_ptr<Scene>> scenes = {};
 
@@ -105,6 +105,6 @@ class WorldManager : public Manager {
   // Returns the current SceneGraph
   [[nodiscard]] auto getSceneGraph() -> SceneGraph &;
   // Returns the current View
-  [[nodiscard]] auto getView() -> View &;
+  [[nodiscard]] auto getCamera() -> Camera &;
 };
 }  // namespace lb

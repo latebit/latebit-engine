@@ -28,11 +28,11 @@ void scale() {
 void distance() {
   Vector a;
   Vector b(1, 0);
-  assertEq("vertical distance", a.distance(&b), 1.0);
+  assertEq("vertical distance", a.distance(b), 1.0);
   b = Vector(0, 1);
-  assertEq("horizontal distance", a.distance(&b), 1.0);
+  assertEq("horizontal distance", a.distance(b), 1.0);
   b = Vector(1, 1);
-  assertEq("other distance", a.distance(&b), std::sqrt(2));
+  assertEq("other distance", a.distance(b), std::sqrt(2));
 }
 
 void normalize() {

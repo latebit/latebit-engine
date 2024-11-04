@@ -36,7 +36,9 @@ class Vector {
   void scale(float a);
 
   // Returns the distance between this vector and another
-  auto distance(const Vector *other) -> float;
+  auto distance(const Vector &other) -> float;
+
+  auto dot(const Vector &other) -> float;
 
   // Sum vectors
   auto operator+(const Vector &other) const -> Vector;

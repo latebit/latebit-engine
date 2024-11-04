@@ -94,17 +94,6 @@ auto WorldManager::getCollisions(Object *o, Vector where) const
   return collisions;
 }
 
-void bounce(Object *object, Object *otherObject) {
-  // We assume same mass and completely elastic collision
-  auto velocity = object->getVelocity();
-  object->setVelocity(otherObject->getVelocity());
-  otherObject->setVelocity(velocity);
-
-  auto acceleration = object->getAcceleration();
-  object->setAcceleration(otherObject->getAcceleration());
-  otherObject->setAcceleration(acceleration);
-}
-
 void WorldManager::resolveMovement(Object *object, Vector position) {
   // Non-solid can always move, since they have no collisions
   if (!object->isSolid()) {
@@ -118,7 +107,6 @@ void WorldManager::resolveMovement(Object *object, Vector position) {
     return moveAndCheckBounds(object, position);
   }
 
-  bool shouldMove = true;
   for (auto otherObject : collisions) {
     auto event = EventCollision(object, otherObject, position);
     object->eventHandler(&event);
@@ -126,13 +114,34 @@ void WorldManager::resolveMovement(Object *object, Vector position) {
 
     if (object->getSolidness() == Solidness::HARD &&
         otherObject->getSolidness() == Solidness::HARD) {
-      bounce(object, otherObject);
-      shouldMove = false;
-      break;
+      auto bounciness = min(object->getBounciness(), otherObject->getBounciness());
+
+      auto v1 = object->getVelocity();
+      auto v2 = otherObject->getVelocity();
+      auto m1 = object->getMass();
+      auto m2 = otherObject->getMass();
+
+      auto direction = otherObject->getPosition() - object->getPosition();
+      direction.normalize();
+      auto relativeVelocity = v1 - v2;
+      auto velocityAlongNormal = relativeVelocity.dot(direction);
+
+      if (velocityAlongNormal <= 0) continue;
+
+      auto impulse = (velocityAlongNormal * (1+bounciness)) / (1/m1 + 1/m2);
+      direction.scale(impulse);
+      auto d1 = direction;
+      d1.scale(1/m1);
+      auto d2 = direction;
+      d2.scale(1/m2);
+
+      object->setVelocity(v1 - d1);
+      otherObject->setVelocity(v2 + d2);
+      return;
     }
   }
 
-  if (shouldMove) moveAndCheckBounds(object, position);
+  moveAndCheckBounds(object, position);
 }
 
 void WorldManager::moveAndCheckBounds(Object *o, Vector position) {

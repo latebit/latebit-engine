@@ -31,8 +31,12 @@ void Vector::scale(float a) {
   this->y *= a;
 }
 
-auto Vector::distance(const Vector* other) -> float {
-  return (*this - *other).getMagnitude();
+auto Vector::distance(const Vector& other) -> float {
+  return (*this - other).getMagnitude();
+}
+
+auto Vector::dot(const Vector& other) -> float {
+  return this->x * other.x + this->y * other.y;
 }
 
 void Vector::normalize() {

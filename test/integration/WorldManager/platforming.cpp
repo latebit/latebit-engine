@@ -13,11 +13,12 @@ using namespace lb;
 class Player : public Object {
  public:
   Player() {
-    setAcceleration({0, 0.01});
+    setAcceleration({0, 0.1});
     setSolidness(Solidness::Solidness::HARD);
     subscribe(INPUT_EVENT);
     setBox({ 10, 10 });
     setDebug(true);
+    setMass(0.01);
   }
 
   auto eventHandler(const Event *e) -> int override {

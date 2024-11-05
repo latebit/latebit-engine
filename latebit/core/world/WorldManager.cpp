@@ -8,9 +8,9 @@
 #include "latebit/core/events/EventOut.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/utils/utils.h"
+#include "latebit/core/world/Camera.h"
 #include "latebit/core/world/Object.h"
 #include "latebit/core/world/ObjectUtils.h"
-#include "latebit/core/world/Camera.h"
 #include "latebit/utils/Logger.h"
 
 #define WM lb::WorldManager::getInstance()
@@ -59,9 +59,8 @@ auto WorldManager::getAllObjects(bool includeInactive) const
   return this->sceneGraph.getActiveObjects();
 }
 
-auto WorldManager::getAllObjectsByType(std::string type,
-                                       bool includeInactive) const
-  -> vector<Object *> {
+auto WorldManager::getAllObjectsByType(
+  std::string type, bool includeInactive) const -> vector<Object *> {
   vector<Object *> result = {};
   auto all = this->getAllObjects(includeInactive);
   result.reserve(all.size());
@@ -75,8 +74,8 @@ auto WorldManager::getAllObjectsByType(std::string type,
   return result;
 }
 
-auto WorldManager::getCollisions(Object *o, Vector where) const
-  -> vector<Object *> {
+auto WorldManager::getCollisions(Object *o,
+                                 Vector where) const -> vector<Object *> {
   vector<Object *> collisions = {};
   auto solid = this->sceneGraph.getSolidObjects();
   auto box = o->getWorldBox(where);
@@ -94,54 +93,57 @@ auto WorldManager::getCollisions(Object *o, Vector where) const
   return collisions;
 }
 
-void WorldManager::resolveMovement(Object *object, Vector position) {
+void WorldManager::resolveMovement(Object *o, Vector position) {
   // Non-solid can always move, since they have no collisions
-  if (!object->isSolid()) {
-    return moveAndCheckBounds(object, position);
+  if (!o->isSolid()) {
+    return moveAndCheckBounds(o, position);
   }
 
-  vector<Object *> collisions = getCollisions(object, position);
+  vector<Object *> collisions = getCollisions(o, position);
 
   // In absence of collisions, just move
   if (collisions.empty()) {
-    return moveAndCheckBounds(object, position);
+    return moveAndCheckBounds(o, position);
   }
 
-  for (auto otherObject : collisions) {
-    auto event = EventCollision(object, otherObject, position);
-    object->eventHandler(&event);
-    otherObject->eventHandler(&event);
+  for (auto o2 : collisions) {
+    auto event = EventCollision(o, o2, position);
+    o->eventHandler(&event);
+    o2->eventHandler(&event);
 
-    if (object->getSolidness() == Solidness::HARD &&
-        otherObject->getSolidness() == Solidness::HARD) {
-      auto bounciness = min(object->getBounciness(), otherObject->getBounciness());
+    if (o->getSolidness() == Solidness::HARD &&
+        o2->getSolidness() == Solidness::HARD) {
+      auto bounciness = min(o->getBounciness(), o2->getBounciness());
 
-      auto v1 = object->getVelocity();
-      auto v2 = otherObject->getVelocity();
-      auto m1 = object->getMass();
-      auto m2 = otherObject->getMass();
+      auto v1 = o->getVelocity();
+      auto v2 = o2->getVelocity();
+      auto m1 = o->getMass();
+      auto m2 = o2->getMass();
 
-      auto direction = otherObject->getPosition() - object->getPosition();
+      auto direction = o2->getPosition() - o->getPosition();
       direction.normalize();
       auto relativeVelocity = v1 - v2;
       auto velocityAlongNormal = relativeVelocity.dot(direction);
 
       if (velocityAlongNormal <= 0) continue;
 
-      auto impulse = (velocityAlongNormal * (1+bounciness)) / (1/m1 + 1/m2);
+      auto inverseM1 = 1 / m1;
+      auto inverseM2 = 1 / m2;
+      auto impulse =
+        (velocityAlongNormal * (1 + bounciness)) / (inverseM1 + inverseM2);
       direction.scale(impulse);
       auto d1 = direction;
-      d1.scale(1/m1);
+      d1.scale(inverseM1);
       auto d2 = direction;
-      d2.scale(1/m2);
+      d2.scale(inverseM2);
 
-      object->setVelocity(v1 - d1);
-      otherObject->setVelocity(v2 + d2);
+      o->setVelocity(v1 - d1);
+      o2->setVelocity(v2 + d2);
       return;
     }
   }
 
-  moveAndCheckBounds(object, position);
+  moveAndCheckBounds(o, position);
 }
 
 void WorldManager::moveAndCheckBounds(Object *o, Vector position) {
@@ -198,7 +200,8 @@ void WorldManager::draw() {
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
     auto visible = this->sceneGraph.getVisibleObjects(i);
     for (auto &o : visible) {
-      if (o != nullptr && intersects(o->getWorldBox(), this->camera.getView())) {
+      if (o != nullptr &&
+          intersects(o->getWorldBox(), this->camera.getView())) {
         o->draw();
       };
     }

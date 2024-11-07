@@ -120,22 +120,17 @@ void WorldManager::resolveMovement(Object *o, Vector position) {
       auto m1 = o->getMass();
       auto m2 = o2->getMass();
 
-      auto direction = o2->getPosition() - o->getPosition();
-      direction.normalize();
-      auto relativeVelocity = v1 - v2;
-      auto velocityAlongNormal = relativeVelocity.dot(direction);
+      auto direction = (o2->getPosition() - position).normalize();
+      auto velocityAlongNormal = (v2 - v1).dot(direction);
 
-      if (velocityAlongNormal <= 0) continue;
+      if (velocityAlongNormal > 0) continue;
 
       auto inverseM1 = 1 / m1;
       auto inverseM2 = 1 / m2;
       auto impulse =
-        (velocityAlongNormal * (1 + bounciness)) / (inverseM1 + inverseM2);
-      direction.scale(impulse);
-      auto d1 = direction;
-      d1.scale(inverseM1);
-      auto d2 = direction;
-      d2.scale(inverseM2);
+        (velocityAlongNormal * -(1 + bounciness)) / (inverseM1 + inverseM2);
+      auto d1 = direction * impulse * inverseM1;
+      auto d2 = direction * impulse * inverseM2;
 
       o->setVelocity(v1 - d1);
       o2->setVelocity(v2 + d2);

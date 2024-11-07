@@ -16,13 +16,13 @@ void getMagnitude() {
 
 void scale() {
   Vector subject;
-  subject.scale(10);
-  assertEq("scales nothing", subject.getMagnitude(), 0.0);
+  Vector result = subject * 10;
+  assertEq("scales nothing", result, 0.0);
 
   subject = Vector(1, 1);
-  subject.scale(2);
+  result = subject * 2;
 
-  assertEq("scales correctly", subject.getMagnitude(), std::sqrt(8));
+  assertEq("scales correctly", result.getMagnitude(), std::sqrt(8));
 }
 
 void distance() {
@@ -37,13 +37,10 @@ void distance() {
 
 void normalize() {
   Vector subject;
-  subject.normalize();
-
-  assertEq("does nothing with null length", subject.getMagnitude(), 0.0);
+  assertEq("does nothing with null length", (subject.normalize()).getMagnitude(), 0.0);
 
   subject = Vector(123, 345);
-  subject.normalize();
-  assertEq("has length 1", subject.getMagnitude(), 1.0);
+  assertEq("has length 1", (subject.normalize()).getMagnitude(), 1.0);
 }
 
 void eq() {

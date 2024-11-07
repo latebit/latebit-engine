@@ -29,21 +29,21 @@ class Vector {
   // Returns the length of the vector
   [[nodiscard]] auto getMagnitude() const -> float;
 
-  // Normalize the vector to be of length 1
-  void normalize();
-
-  // Scale the vector by a factor a
-  void scale(float a);
+  // Returns a new vector that is the normalized version (magnitude 1) of this vector
+  [[nodiscard]] auto normalize() const -> Vector;
 
   // Returns the distance between this vector and another
   auto distance(const Vector &other) -> float;
 
+  // Returns the dot product of this vector and another
   auto dot(const Vector &other) -> float;
-
-  // Sum vectors
+  // Returns a new vector that is the sum of two vectors
   auto operator+(const Vector &other) const -> Vector;
-  // Subtract vectors
+  // Returns a new vector that is the difference of two vectors
   auto operator-(const Vector &other) const -> Vector;
+  // Returns a new vector scaled by a value
+  auto operator*(const float value) const -> Vector;
+
   // Returns true if two vectors are the same
   auto operator==(const Vector &other) const -> bool;
   // Returns true if two vectors are not the same

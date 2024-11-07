@@ -26,11 +26,6 @@ auto Vector::getMagnitude() const -> float {
   return std::sqrt(this->x * this->x + this->y * this->y);
 }
 
-void Vector::scale(float a) {
-  this->x *= a;
-  this->y *= a;
-}
-
 auto Vector::distance(const Vector& other) -> float {
   return (*this - other).getMagnitude();
 }
@@ -39,16 +34,20 @@ auto Vector::dot(const Vector& other) -> float {
   return this->x * other.x + this->y * other.y;
 }
 
-void Vector::normalize() {
+auto Vector::normalize() const -> Vector {
   float length = getMagnitude();
   if (length > 0) {
-    this->x = this->x / length;
-    this->y = this->y / length;
+    return { this->x / length, this->y / length };
   }
+  return *this;
 }
 
 auto Vector::operator+(const Vector& other) const -> Vector {
   return {this->x + other.x, this->y + other.y};
+}
+
+auto Vector::operator*(const float value) const -> Vector {
+  return {this->x * value, this->y * value};
 }
 
 auto Vector::operator-(const Vector& other) const -> Vector {

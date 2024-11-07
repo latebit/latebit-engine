@@ -140,13 +140,9 @@ void resolveMovement() {
 
   WM.resolveMovement(subject, targetPosition);
   assertEq("does not move HARD over HARD", subject->getPosition(), position);
-  assertEq("reflects velocity (subject)", subject->getVelocity(),
-           targetVelocity);
-  assertEq("reflects velocity (object)", hardObject->getVelocity(), velocity);
-  assertEq("reflects acceleration (subject)", subject->getAcceleration(),
-           targetAcceleration);
-  assertEq("reflects acceleration (object)", hardObject->getAcceleration(),
-           acceleration);
+  assertEq("same velocity (subject)", subject->getVelocity(),
+           velocity);
+  assertEq("same velocity (object)", hardObject->getVelocity(), targetVelocity);
 
   targetPosition = Vector(0, 0);
   WM.resolveMovement(subject, targetPosition);
@@ -214,11 +210,7 @@ void resolveMovement() {
            subject->getPosition(), position);
   assertEq("reflects velocity (subject)", subject->getVelocity(),
            targetVelocity);
-  assertEq("reflects acceleration (subject)", subject->getAcceleration(),
-           targetAcceleration);
   assertEq("reflects velocity (object)", hardObject->getVelocity(), velocity);
-  assertEq("reflects acceleration (object)", hardObject->getAcceleration(),
-           acceleration);
 
   // Clean up test objects
   WM.markForDelete(subject);

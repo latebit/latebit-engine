@@ -84,9 +84,13 @@ auto main() -> int {
     ->createObject<lbui::Text>("five", "Parallel movement",
                                lbui::TextOptions{.color = Color::WHITE})->setPosition({0, 120});
 
-  scene->createObject<TestObject>(Vector(50, 130), Vector(-0.05, 0), Vector(),
+  scene->createObject<TestObject>(Vector(50, 130), Vector(-0.5, 0), Vector(),
                                   Color::RED);
-  scene->createObject<TestObject>(Vector(50, 140), Vector(0.05, 0), Vector(), Color::GREEN);
+  scene->createObject<TestObject>(Vector(50, 140), Vector(0.5, 0), Vector(), Color::GREEN);
+
+  scene->createObject<TestObject>(Vector(150, 130), Vector(0, 0.5), Vector(),
+                                  Color::ORANGE);
+  scene->createObject<TestObject>(Vector(160, 130), Vector(0, -0.5), Vector(), Color::LIGHT_GRAY);
 
   scene->activate();
   GM.run();

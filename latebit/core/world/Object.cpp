@@ -1,5 +1,6 @@
 #include "Object.h"
 
+#include <cmath>
 #include <cstdint>
 #include <string>
 
@@ -126,6 +127,6 @@ auto Object::getBounciness() const -> float { return this->bounciness; }
 auto Object::setBounciness(float b) -> void { this->bounciness = clamp(b, 0.0, 1.0); }
 
 auto Object::getMass() const -> float { return this->mass; }
-auto Object::setMass(float m) -> void { this->mass = clamp(m, 0.0, 1000.0); }
+auto Object::setMass(float m) -> void { this->mass = abs(m); }
 
 }  // namespace lb

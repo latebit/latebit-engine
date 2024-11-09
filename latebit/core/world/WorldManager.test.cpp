@@ -123,11 +123,11 @@ void resolveMovement() {
     acceleration;
 
   targetPosition = softObject->getPosition();
-  WM.resolveMovement(subject, targetPosition);
+  WM.updatePhysics();
   assertEq("moves HARD on SOFT", subject->getPosition(), targetPosition);
 
   targetPosition = spectralObject->getPosition();
-  WM.resolveMovement(subject, targetPosition);
+  WM.updatePhysics();
   assertEq("moves HARD on SPECTRAL", subject->getPosition(), targetPosition);
 
   position = subject->getPosition();
@@ -138,34 +138,34 @@ void resolveMovement() {
   targetVelocity = hardObject->getVelocity();
   targetAcceleration = hardObject->getAcceleration();
 
-  WM.resolveMovement(subject, targetPosition);
+  WM.updatePhysics();
   assertEq("does not move HARD over HARD", subject->getPosition(), position);
   assertEq("same velocity (subject)", subject->getVelocity(),
            velocity);
   assertEq("same velocity (object)", hardObject->getVelocity(), targetVelocity);
 
   targetPosition = Vector(0, 0);
-  WM.resolveMovement(subject, targetPosition);
+  WM.updatePhysics();
   assertEq("moves HARD on empty spot", subject->getPosition(), targetPosition);
 
   subject->setSolidness(Solidness::SPECTRAL);
   subject->setPosition(Vector(0, 0));
 
   targetPosition = softObject->getPosition();
-  WM.resolveMovement(subject, targetPosition);
+  WM.updatePhysics();
   assertEq("moves SPECTRAL on SOFT", subject->getPosition(), targetPosition);
 
   targetPosition = spectralObject->getPosition();
-  WM.resolveMovement(subject, targetPosition);
+  WM.updatePhysics();
   assertEq("moves SPECTRAL on SPECTRAL", subject->getPosition(),
            targetPosition);
 
   targetPosition = hardObject->getPosition();
-  WM.resolveMovement(subject, targetPosition);
+  WM.updatePhysics();
   assertEq("moves SPECTRAL on HARD", subject->getPosition(), targetPosition);
 
   targetPosition = Vector(0, 0);
-  WM.resolveMovement(subject, targetPosition);
+  WM.updatePhysics();
   assertEq("moves SPECTRAL on empty spot", subject->getPosition(),
            targetPosition);
 
@@ -173,20 +173,20 @@ void resolveMovement() {
   subject->setPosition(Vector(0, 0));
 
   targetPosition = softObject->getPosition();
-  WM.resolveMovement(subject, targetPosition);
+  WM.updatePhysics();
   assertEq("moves SPECTRAL over SPECTRAL", subject->getPosition(),
            targetPosition);
 
   targetPosition = spectralObject->getPosition();
-  WM.resolveMovement(subject, targetPosition);
+  WM.updatePhysics();
   assertEq("moves SOFT over SPECTRAL", subject->getPosition(), targetPosition);
 
   targetPosition = hardObject->getPosition();
-  WM.resolveMovement(subject, targetPosition);
+  WM.updatePhysics();
   assertEq("moves SOFT over SPECTRAL", subject->getPosition(), targetPosition);
 
   targetPosition = Vector(0, 0);
-  WM.resolveMovement(subject, targetPosition);
+  WM.updatePhysics();
   assertEq("moves SOFT over empty spot", subject->getPosition(),
            targetPosition);
 
@@ -205,7 +205,7 @@ void resolveMovement() {
 
   // Almost on hard, but with part of the bounding box colliding
   targetPosition = hardObject->getPosition() - velocity;
-  WM.resolveMovement(subject, targetPosition);
+  WM.updatePhysics();
   assertEq("does not move HARD on HARD with bounding box collision",
            subject->getPosition(), position);
   assertEq("reflects velocity (subject)", subject->getVelocity(),
@@ -243,12 +243,12 @@ void outOfBounds() {
   obj1->setPosition(Vector());
   obj1->setBox(Box(1, 1));
 
-  WM.resolveMovement(obj1, Vector(-2, 0));
+  WM.updatePhysics();
 
   assert("emits out of bounds event", outOfBounds_emitted);
 
   outOfBounds_emitted = false;
-  WM.resolveMovement(obj1, Vector(-3, 0));
+  WM.updatePhysics();
   assert("does not emit out of bounds if already out", !outOfBounds_emitted);
 
   WM.shutDown();

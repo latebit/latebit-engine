@@ -42,31 +42,31 @@ void viewFollowing() {
   WM.setBoundary(Box(20, 20));
 
   WM.getCamera().setViewFollowing(subject);
-  WM.resolveMovement(subject, Vector(10, 10));
+  WM.updatePhysics();
   assertEq("does not update view", WM.getCamera().getView(), initialView);
-  WM.resolveMovement(subject, Vector(11, 11));
+  WM.updatePhysics();
 
   assertEq("updates the view", WM.getCamera().getView(),
            Box(Vector(6, 6), 10, 10));
 
-  WM.resolveMovement(subject, Vector(11, 5));
+  WM.updatePhysics();
   assertEq("updates the view (vertical lower bound)", WM.getCamera().getView(),
            Box(Vector(6, 0), 10, 10));
 
-  WM.resolveMovement(subject, Vector(11, 15));
+  WM.updatePhysics();
   assertEq("updates the view (vertical upper bound)", WM.getCamera().getView(),
            Box(Vector(6, 10), 10, 10));
 
-  WM.resolveMovement(subject, Vector(5, 11));
+  WM.updatePhysics();
   assertEq("updates the view (horizontal lower bound)", WM.getCamera().getView(),
            Box(Vector(0, 6), 10, 10));
 
-  WM.resolveMovement(subject, Vector(15, 11));
+  WM.updatePhysics();
   assertEq("updates the view (horizontal upper bound)", WM.getCamera().getView(),
            Box(Vector(10, 6), 10, 10));
 
   WM.getCamera().setViewDeadZone(Box(WM.getCamera().getView().getCorner(), 5, 5));
-  WM.resolveMovement(subject, Vector(12, 10));
+  WM.updatePhysics();
   assertEq("does not update the view within dead zone", WM.getCamera().getView(),
            Box(Vector(10, 6), 10, 10));
 

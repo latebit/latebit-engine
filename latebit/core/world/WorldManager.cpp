@@ -93,52 +93,91 @@ auto WorldManager::getCollisions(Object *o,
   return collisions;
 }
 
-void WorldManager::resolveMovement(Object *o, Vector position) {
-  // Non-solid can always move, since they have no collisions
-  if (!o->isSolid()) {
-    return moveAndCheckBounds(o, position);
-  }
+void WorldManager::updatePhysics() {
+  auto active = this->sceneGraph.getActiveObjects();
+  for (auto &object : active) {
+    auto newVelocity = object->getVelocity() + object->getAcceleration();
+    object->setVelocity(newVelocity);
 
-  vector<Object *> collisions = getCollisions(o, position);
+    auto oldPosition = object->getPosition();
+    auto newPosition = object->getPosition() + newVelocity;
 
-  // In absence of collisions, just move
-  if (collisions.empty()) {
-    return moveAndCheckBounds(o, position);
-  }
+    // No need to resolve movement is there is no movement.
+    if (oldPosition == newPosition) continue;
 
-  for (auto o2 : collisions) {
-    auto event = EventCollision(o, o2, position);
-    o->eventHandler(&event);
-    o2->eventHandler(&event);
-
-    if (o->getSolidness() == Solidness::HARD &&
-        o2->getSolidness() == Solidness::HARD) {
-      auto bounciness = min(o->getBounciness(), o2->getBounciness());
-
-      auto v1 = o->getVelocity();
-      auto v2 = o2->getVelocity();
-      auto m1 = o->getMass();
-      auto m2 = o2->getMass();
-
-      auto direction = (o2->getPosition() - position).normalize();
-      auto velocityAlongNormal = (v2 - v1).dot(direction);
-
-      if (velocityAlongNormal > 0) continue;
-
-      auto inverseM1 = 1 / m1;
-      auto inverseM2 = 1 / m2;
-      auto impulse =
-        (velocityAlongNormal * -(1 + bounciness)) / (inverseM1 + inverseM2);
-      auto d1 = direction * impulse * inverseM1;
-      auto d2 = direction * impulse * inverseM2;
-
-      o->setVelocity(v1 - d1);
-      o2->setVelocity(v2 + d2);
-      return;
+    // Non-solid objects don't collide and can always move
+    if (!object->isSolid()) {
+      moveAndCheckBounds(object, newPosition);
+      continue;
     }
-  }
 
-  moveAndCheckBounds(o, position);
+    const auto collisions = getCollisions(object, newPosition);
+
+    // In absence of collisions, just move
+    if (collisions.empty()) {
+      moveAndCheckBounds(object, newPosition);
+      continue;
+    }
+
+    // Each collision can update these vectors, so we need them outside the loop
+    Vector p1 = newPosition;
+    Vector v1 = object->getVelocity();
+
+    for (auto &collider : collisions) {
+      auto event = EventCollision(object, collider, newPosition);
+      object->eventHandler(&event);
+      collider->eventHandler(&event);
+
+      const bool needsCollisionResolution =
+        object->getSolidness() == Solidness::HARD &&
+        collider->getSolidness() == Solidness::HARD;
+
+      if (!needsCollisionResolution) continue;
+
+      // Collisions are resolved by applying the minimum displacement necessary
+      // to push the objects apart. This is done by calculating the overlap
+      // between the two objects and moving the object in the direction of the
+      // smaller overlap.
+
+      const Vector p2 = collider->getPosition();
+      const Box b1 = object->getWorldBox(p1);
+      const Box b2 = collider->getWorldBox();
+      const Vector c1 = b1.getCenter();
+      const Vector c2 = b2.getCenter();
+
+      // The minimum distance between the two objects for them to not overlap
+      const float nonOverlappingDistanceX = (b1.getWidth() + b2.getWidth()) / 2;
+      const float nonOverlappingDistanceY =
+        (b1.getHeight() + b2.getHeight()) / 2;
+
+      const float distanceX = abs(c1.getX() - c2.getX());
+      const float distanceY = abs(c1.getY() - c2.getY());
+
+      const Vector overlap = {nonOverlappingDistanceX - distanceX,
+                              nonOverlappingDistanceY - distanceY};
+
+      if (overlap.getX() < overlap.getY()) {
+        if (c1.getX() < c2.getX()) {
+          p1.setX(p2.getX() - b1.getWidth());
+          v1.setX(min(0.0f, v1.getX()));
+        } else {
+          p1.setX(p2.getX() + b2.getWidth());
+          v1.setX(max(0.0f, v1.getX()));
+        }
+      } else {
+        if (c1.getY() < c2.getY()) {
+          p1.setY(p2.getY() - b1.getHeight());
+          v1.setY(min(0.0f, v1.getY()));
+        } else {
+          p1.setY(p2.getY() + b2.getHeight());
+          v1.setY(max(0.0f, v1.getY()));
+        }
+      }
+    }
+
+    moveAndCheckBounds(object, p1);
+    object->setVelocity(v1);
+  }
 }
 
 void WorldManager::moveAndCheckBounds(Object *o, Vector position) {
@@ -171,17 +210,7 @@ void WorldManager::update() {
   }
   deletions.clear();
 
-  auto active = this->sceneGraph.getActiveObjects();
-  for (auto &object : active) {
-    auto oldPosition = object->getPosition();
-    auto newVelocity = object->getVelocity() + object->getAcceleration();
-    auto newPosition = object->getPosition() + newVelocity;
-
-    object->setVelocity(newVelocity);
-    if (oldPosition != newPosition) {
-      this->resolveMovement(object, newPosition);
-    }
-  }
+  this->updatePhysics();
 }
 
 auto WorldManager::markForDelete(Object *o) -> int {

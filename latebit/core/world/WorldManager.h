@@ -61,8 +61,8 @@ class WorldManager : public Manager {
   // Returns a list of object colliding with the object at a given position
   auto getCollisions(Object *o, Vector where) const -> vector<Object *>;
 
-  // Moves an object to a given position and resolves
-  void resolveMovement(Object *o, Vector position);
+    // Runs an update on the physics of all objects
+  void updatePhysics();
 
   // Updates all active objects and frees resources for deleted ones
   void update();

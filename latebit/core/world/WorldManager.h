@@ -104,7 +104,7 @@ class WorldManager : public Manager {
 
   // Returns the current SceneGraph
   [[nodiscard]] auto getSceneGraph() -> SceneGraph &;
-  // Returns the current View
+  // Returns the Camera
   [[nodiscard]] auto getCamera() -> Camera &;
 };
 }  // namespace lb

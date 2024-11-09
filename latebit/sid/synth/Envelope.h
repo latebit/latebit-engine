@@ -1,12 +1,5 @@
 #pragma once
 
-#include <memory>
-#include <vector>
-
-#include "Configuration.h"
-#include "Oscillator.h"
-#include "Tune.h"
-
 namespace sid {
 
 namespace EnvelopeState {

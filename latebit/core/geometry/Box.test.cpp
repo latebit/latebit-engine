@@ -48,11 +48,20 @@ void setHeight() {
   assertEq("sets height correctly", box.getHeight(), height);
 }
 
+void getCenter() {
+  Box box(Vector(1, 2), 4, 6);
+  assertEq("returns center of box", box.getCenter(), {3, 5});
+
+  Box box2({0, 0}, 0, 0);
+  assertEq("returns center of null box", box2.getCenter(), {});
+};
+
 auto main() -> int {
   test("constructor", constructor);
   test("parametrized constructor", parametrizedConstructor);
   test("setCorner", setCorner);
   test("setWidth", setWidth);
   test("setHeight", setHeight);
+  test("getCenter", getCenter);
   return report();
 }

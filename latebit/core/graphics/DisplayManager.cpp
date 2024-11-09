@@ -9,8 +9,6 @@
 #include <SDL2/SDL_video.h>
 #include <sys/types.h>
 
-#include <cstdint>
-
 #include "Colors.h"
 #include "Font.h"
 #include "Keyframe.h"
@@ -89,14 +87,13 @@ auto DisplayManager::getRendererFlags() -> int {
 }
 
 auto DisplayManager::drawKeyframe(Position position, const Keyframe* frame,
-                                  uint8_t width, uint8_t height,
-                                  uint8_t scaling) -> int {
+                                  int width, int height, int scaling) -> int {
   if (!this->isStarted()) {
     Log.error("DisplayManager::drawFrame(): Display Manager is not started");
     return -1;
   }
 
-  if (frame->size() != width * height) {
+  if (static_cast<int>(frame->size()) != width * height) {
     Log.error(
       "DisplayManager::drawFrame(): Invalid frame size. Expected %d, got %d",
       width * height, frame->size());
@@ -121,8 +118,8 @@ auto DisplayManager::drawKeyframe(Position position, const Keyframe* frame,
     return -1;
   }
 
-  for (uint8_t i = 0; i < height; i++) {
-    for (uint8_t j = 0; j < width; j++) {
+  for (int i = 0; i < height; i++) {
+    for (int j = 0; j < width; j++) {
       auto index = i * width + j;
       auto color = toSDLColor(frame->at(index));
 
@@ -165,8 +162,8 @@ auto DisplayManager::drawKeyframe(Position position, const Keyframe* frame,
   return 0;
 }
 
-auto DisplayManager::fillRectangle(Position position, uint8_t width,
-                                   uint8_t height, Color::Color color) -> int {
+auto DisplayManager::fillRectangle(Position position, int width, int height,
+                                   Color::Color color) -> int {
   if (this->window == nullptr) return -1;
 
   if (color != Color::UNDEFINED_COLOR) {
@@ -184,8 +181,7 @@ auto DisplayManager::fillRectangle(Position position, uint8_t width,
   return 0;
 }
 
-auto DisplayManager::strokeRectangle(Position position, uint8_t width,
-                                     uint8_t height,
+auto DisplayManager::strokeRectangle(Position position, int width, int height,
                                      Color::Color color) -> int {
   if (this->window == nullptr) return -1;
 

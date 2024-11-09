@@ -33,16 +33,18 @@ void altitude() {
 void solidness() {
   Object subject;
 
-  subject.setSolidness(Solidness::SOFT);
-  assertEq("updates solidness", subject.getSolidness(), Solidness::SOFT);
+  subject.setBodyType(BodyType::TRIGGER);
+  assert("updates solidness", subject.getBodyType() == BodyType::TRIGGER);
   assert("updates current scene",
          contains(WM.getSceneGraph().getSolidObjects(), &subject));
 
-  assert("SOFT is solid", subject.isSolid());
-  subject.setSolidness(Solidness::HARD);
-  assert("HARD is solid", subject.isSolid());
-  subject.setSolidness(Solidness::SPECTRAL);
-  assert("SPECTRAL is not solid", !subject.isSolid());
+  assert("TRIGGER is solid", subject.isSolid());
+  subject.setBodyType(BodyType::DYNAMIC);
+  assert("DYNAMIC is solid", subject.isSolid());
+  subject.setBodyType(BodyType::STATIC);
+  assert("STATIC is solid", subject.isSolid());
+  subject.setBodyType(BodyType::KINEMATIC);
+  assert("KINEMATIC is not solid", !subject.isSolid());
 }
 
 void boundingBox() {
@@ -111,7 +113,7 @@ auto main() -> int {
     assertEq("sets a velocity", subject.getVelocity(), Vector());
     assertEq("sets a acceleration", subject.getAcceleration(), Vector());
     assertEq("sets an altitude", subject.getAltitude(), 0);
-    assertEq("sets a solidness", subject.getSolidness(), Solidness::HARD);
+    assert("sets a solidness", subject.getBodyType() == BodyType::KINEMATIC);
     assertEq("sets a scale", subject.getScale(), 1);
     assert("sets a bounding box", subject.getBox() == Box());
     assert("sets an animation", subject.getAnimation() == Animation());

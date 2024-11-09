@@ -46,15 +46,15 @@ void Object::setAcceleration(Vector a) { this->acceleration = a; }
 auto Object::getAcceleration() const -> Vector { return this->acceleration; }
 
 auto Object::isSolid() const -> bool {
-  return this->solidness != Solidness::SPECTRAL;
+  return this->body != BodyType::KINEMATIC;
 }
 
-void Object::setSolidness(Solidness::Solidness s) {
-  this->sceneGraph->setSolidness(this, s);
-  this->solidness = s;
+void Object::setBodyType(BodyType s) {
+  this->sceneGraph->setBodyType(this, s);
+  this->body = s;
 }
-auto Object::getSolidness() const -> Solidness::Solidness {
-  return this->solidness;
+auto Object::getBodyType() const -> BodyType {
+  return this->body;
 }
 
 void Object::setAnimation(Animation a) { this->animation = a; }

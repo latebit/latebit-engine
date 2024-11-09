@@ -12,7 +12,7 @@ Text::Text(const string type, const string text, const TextOptions options)
   : Object(type) {
   this->options = options;
   this->setContent(text);
-  this->setSolidness(Solidness::SPECTRAL);
+  this->setBodyType(lb::BodyType::KINEMATIC);
 }
 
 auto Text::draw() -> int {

@@ -70,31 +70,23 @@ auto SceneGraph::getVisibleObjects(int altitude) const -> vector<Object *> {
   return visible.at(altitude);
 }
 
-auto SceneGraph::setSolidness(Object *rawO, Solidness::Solidness solidness)
-  -> int {
-  bool isSolid = solidness == Solidness::HARD || solidness == Solidness::SOFT;
+void SceneGraph::setBodyType(Object *rawO, BodyType type) {
+  bool isSolid = type != BodyType::KINEMATIC;
 
   if (rawO->isSolid()) remove(solid, rawO);
 
   if (isSolid) insert(solid, rawO);
-
-  return 0;
 }
 
-auto SceneGraph::setAltitude(Object *rawO, int altitude) -> int {
-  if (altitude < 0 || altitude > MAX_ALTITUDE) {
-    return -1;
-  }
+void SceneGraph::setAltitude(Object *rawO, int altitude) {
+  if (altitude < 0 || altitude > MAX_ALTITUDE) return;
 
   remove(visible.at(rawO->getAltitude()), rawO);
   insert(visible.at(altitude), rawO);
-  return 0;
 }
 
-auto SceneGraph::setActive(Object *rawO, bool isActive) -> int {
-  if (rawO->isActive() == isActive) {
-    return 0;
-  }
+void SceneGraph::setActive(Object *rawO, bool isActive){
+  if (rawO->isActive() == isActive) return;
 
   // Switching from active to inactive
   if (rawO->isActive()) {
@@ -102,7 +94,7 @@ auto SceneGraph::setActive(Object *rawO, bool isActive) -> int {
     insert(inactive, rawO);
     if (rawO->isSolid()) remove(solid, rawO);
 
-    return 0;
+    return;
   }
 
   // Switching from inactive to active
@@ -110,22 +102,19 @@ auto SceneGraph::setActive(Object *rawO, bool isActive) -> int {
   remove(inactive, rawO);
 
   if (rawO->isSolid()) insert(solid, rawO);
-
-  return 0;
 }
 
-auto SceneGraph::setVisible(Object *rawO, bool isVisible) -> int {
-  if (rawO->isVisible() == isVisible) return 0;
+void SceneGraph::setVisible(Object *rawO, bool isVisible){
+  if (rawO->isVisible() == isVisible) return;
 
   auto altitude = rawO->getAltitude();
 
   if (!isVisible) {
     remove(visible.at(altitude), rawO);
-    return 0;
+    return;
   }
 
   insert(visible.at(altitude), rawO);
-  return 0;
 }
 
 auto SceneGraph::clear() -> void {

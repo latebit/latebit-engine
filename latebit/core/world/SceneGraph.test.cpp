@@ -12,8 +12,9 @@ void insertObject() {
   SceneGraph sg;
   auto obj = make_unique<Object>();
   auto altitude = obj->getAltitude();
+  obj->setBodyType(BodyType::DYNAMIC);
   auto nonSolidObj = make_unique<Object>();
-  nonSolidObj->setSolidness(Solidness::SPECTRAL);
+  nonSolidObj->setBodyType(BodyType::KINEMATIC);
 
   // Check if the object was inserted successfully
   assertOk("inserts object into the scene graph", sg.insertObject(obj.get()));
@@ -102,7 +103,9 @@ void getSolidObjects() {
   auto obj1 = make_unique<Object>(), obj2 = make_unique<Object>(),
        obj3 = make_unique<Object>();
   auto subject1 = obj1.get(), subject2 = obj2.get(), subject3 = obj3.get();
-  obj2->setSolidness(Solidness::SPECTRAL);
+  obj1->setBodyType(BodyType::DYNAMIC);
+  obj2->setBodyType(BodyType::KINEMATIC);
+  obj3->setBodyType(BodyType::DYNAMIC);
 
   sg.insertObject(obj1.get());
   sg.insertObject(obj2.get());
@@ -159,21 +162,17 @@ void getVisibleObjects() {
   assertEq("size", visible.size(), 1);
 }
 
-void setSolidness() {
+void setBodyType() {
   SceneGraph sg;
-  auto obj = make_unique<Object>();
-  auto subject = obj.get();
-  sg.insertObject(subject);
+  auto dynamic = make_unique<Object>();
+  sg.insertObject(dynamic.get());
 
-  int result = sg.setSolidness(subject, Solidness::HARD);
-  assertEq("sets solidness of the object to HARD", result, 0);
-  assertEq("scene graph contains the solid object", sg.getSolidObjects().size(),
-           1);
+  sg.setBodyType(dynamic.get(), BodyType::DYNAMIC);
+  assertEq("graph contains the object", sg.getSolidObjects().size(), 1);
 
-  result = sg.setSolidness(subject, Solidness::SPECTRAL);
-  assertEq("sets solidness of the object to SPECTRAL", result, 0);
-  assertEq("scene graph does not contain the solid object",
-           sg.getSolidObjects().size(), 0);
+  auto kinematic = make_unique<Object>();
+  sg.setBodyType(kinematic.get(), BodyType::KINEMATIC);
+  assertEq("graph does not contain the object", sg.getSolidObjects().size(), 1);
 }
 
 void setAltitude() {
@@ -182,13 +181,11 @@ void setAltitude() {
   auto subject = obj.get();
   sg.insertObject(subject);
 
-  int result = sg.setAltitude(subject, 1);
-  assertEq("sets altitude of the object to 1", result, 0);
+  sg.setAltitude(subject, 1);
   assertEq("scene graph contains the visible object",
            sg.getVisibleObjects(1).size(), 1);
 
-  result = sg.setAltitude(subject, -1);
-  assertEq("does not set altitude of the object to -1", result, -1);
+  sg.setAltitude(subject, -1);
   assertEq("scene graph does not contain the visible object",
            sg.getVisibleObjects(-1).size(), 0);
 }
@@ -201,11 +198,11 @@ void setVisible() {
   sg.insertObject(subject);
 
   // The following assertions are order dependent
-  assertOk("sets visible", sg.setVisible(subject, true));
+  sg.setVisible(subject, true);
   assertEq("visible list contains the object",
            sg.getVisibleObjects(altitude).size(), 1);
 
-  assertOk("sets invisible", sg.setVisible(subject, false));
+  sg.setVisible(subject, false);
   assertEq("visible list does not contain the object",
            sg.getVisibleObjects(altitude).size(), 0);
 }
@@ -217,21 +214,17 @@ void setActive() {
   sg.insertObject(subject);
 
   // The following assertions are order dependent
-  assertOk("sets active", sg.setActive(subject, true));
+  sg.setActive(subject, true);
   assert("list of active objects contains object",
          contains(sg.getActiveObjects(), subject));
   assert("list of inactive objects does not contain object",
          !contains(sg.getInactiveObjects(), subject));
-  assert("list of solid objects contains object",
-         contains(sg.getSolidObjects(), subject));
 
-  assertOk("sets inactive", sg.setActive(subject, false));
+  sg.setActive(subject, false);
   assert("list of active objects does not contain object",
          !contains(sg.getActiveObjects(), subject));
   assert("list of inactive objects contains object",
          contains(sg.getInactiveObjects(), subject));
-  assert("list of solid objects does not contain object",
-         !contains(sg.getSolidObjects(), subject));
 }
 
 auto main() -> int {
@@ -241,7 +234,7 @@ auto main() -> int {
   test("getInactiveObjects", getInactiveObjects);
   test("getSolidObjects", getSolidObjects);
   test("getVisibleObjects", getVisibleObjects);
-  test("setSolidness", setSolidness);
+  test("setBodyType", setBodyType);
   test("setAltitude", setAltitude);
   test("setVisible", setVisible);
   test("setActive", setActive);

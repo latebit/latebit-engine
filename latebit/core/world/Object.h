@@ -11,16 +11,17 @@
 using namespace std;
 
 namespace lb {
-namespace Solidness {
-enum Solidness {
-  // Collides and impedes movement.
-  HARD,
-  // Collides but does not impede movement.
-  SOFT,
-  // Skip collision detection.
-  SPECTRAL,
+
+enum class BodyType {
+  // Body that responds to collision, overlaps, and moves.
+  DYNAMIC,
+  // Body that responds to collisions, overlaps, and doesn't move.
+  STATIC,
+  // Body that responds to overlaps and moves, but doesn't collide.
+  TRIGGER,
+  // Body that does not respond to collisions nor overlaps, but moves.
+  KINEMATIC,
 };
-}
 
 const int MAX_EVENTS_PER_OBEJCT = 20;
 
@@ -49,8 +50,8 @@ class Object : public EventTarget {
   // Acceleration vector of this object.
   Vector acceleration = Vector();
 
-  // Solidness of the object
-  Solidness::Solidness solidness = Solidness::HARD;
+  // The type of body in the physic simulation this object represents
+  BodyType body = BodyType::DYNAMIC;
 
   float bounciness = 1.0;
 
@@ -118,12 +119,12 @@ class Object : public EventTarget {
   // Returns the acceleration vector of this object.
   [[nodiscard]] auto getAcceleration() const -> Vector;
 
-  // Returns true if this object is not SPECTRAL.
+  // Returns true if this object participates in overlaps or collisions.
   [[nodiscard]] auto isSolid() const -> bool;
-  // Sets the solidness of this object.
-  virtual void setSolidness(Solidness::Solidness s);
-  // Returns the solidness of this object.
-  [[nodiscard]] auto getSolidness() const -> Solidness::Solidness;
+  // Sets the body type of this object.
+  virtual void setBodyType(BodyType s);
+  // Returns the body type of this object.
+  [[nodiscard]] auto getBodyType() const -> BodyType;
 
   // Sets the animation for this object.
   void setAnimation(Animation a);

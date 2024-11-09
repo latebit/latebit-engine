@@ -94,8 +94,12 @@ auto WorldManager::getCollisions(Object *o,
 }
 
 void WorldManager::resolveMovement(Object *o, Vector position) {
-  // Non-solid can always move, since they have no collisions
-  if (!o->isSolid()) {
+  // Static objects don't move
+  if (o->getBodyType() == BodyType::STATIC) return;
+
+  // Kinematic objects don't participate in collisions nor overlaps and can
+  // always move
+  if (o->getBodyType() == BodyType::KINEMATIC) {
     return moveAndCheckBounds(o, position);
   }
 
@@ -111,30 +115,71 @@ void WorldManager::resolveMovement(Object *o, Vector position) {
     o->eventHandler(&event);
     o2->eventHandler(&event);
 
-    if (o->getSolidness() == Solidness::HARD &&
-        o2->getSolidness() == Solidness::HARD) {
-      auto bounciness = min(o->getBounciness(), o2->getBounciness());
+    if (o->getBodyType() == BodyType::DYNAMIC) {
+      if (o2->getBodyType() == BodyType::DYNAMIC) {
+        auto bounciness = min(o->getBounciness(), o2->getBounciness());
 
-      auto v1 = o->getVelocity();
-      auto v2 = o2->getVelocity();
-      auto m1 = o->getMass();
-      auto m2 = o2->getMass();
+        auto v1 = o->getVelocity();
+        auto v2 = o2->getVelocity();
+        auto m1 = o->getMass();
+        auto m2 = o2->getMass();
 
-      auto direction = (o2->getPosition() - position).normalize();
-      auto velocityAlongNormal = (v2 - v1).dot(direction);
+        auto direction = (o2->getPosition() - position).normalize();
+        auto velocityAlongNormal = (v2 - v1).dot(direction);
 
-      if (velocityAlongNormal > 0) continue;
+        if (velocityAlongNormal > 0) continue;
 
-      auto inverseM1 = 1 / m1;
-      auto inverseM2 = 1 / m2;
-      auto impulse =
-        (velocityAlongNormal * -(1 + bounciness)) / (inverseM1 + inverseM2);
-      auto d1 = direction * impulse * inverseM1;
-      auto d2 = direction * impulse * inverseM2;
+        auto inverseM1 = 1 / m1;
+        auto inverseM2 = 1 / m2;
+        auto impulse =
+          (velocityAlongNormal * -(1 + bounciness)) / (inverseM1 + inverseM2);
+        auto d1 = direction * impulse * inverseM1;
+        auto d2 = direction * impulse * inverseM2;
 
-      o->setVelocity(v1 - d1);
-      o2->setVelocity(v2 + d2);
-      return;
+        o->setVelocity(v1 - d1);
+        o2->setVelocity(v2 + d2);
+        return;
+      }
+
+      if (o2->getBodyType() == BodyType::STATIC) {
+        auto bounciness = min(o->getBounciness(), o2->getBounciness());
+
+        auto v1 = o->getVelocity();
+        auto m1 = o->getMass();
+
+        // Calculate the overlap along each axis
+        auto box1 = o->getBox();
+        auto box2 = o2->getBox();
+        auto center1 =
+          o->getPosition() + Vector(box1.getWidth() / 2, box1.getHeight() / 2);
+        auto center2 =
+          o2->getPosition() + Vector(box2.getWidth() / 2, box2.getHeight() / 2);
+
+        float overlapX = (box1.getWidth() / 2 + box2.getWidth() / 2) -
+                         abs(center1.getX() - center2.getX());
+        float overlapY = (box1.getHeight() / 2 + box2.getHeight() / 2) -
+                         abs(center1.getY() - center2.getY());
+
+        Vector normal =
+          overlapX < overlapY
+            ? Vector((center1.getX() > center2.getX()) ? 1 : -1, 0)
+            : Vector(0, (center1.getY() > center2.getY()) ? 1 : -1);
+
+        auto velocityAlongNormal = v1.dot(normal);
+
+        // Skip if the object is moving away
+        if (velocityAlongNormal > 0) continue;
+
+        auto normalVelocity = normal * velocityAlongNormal;
+        auto tangentVelocity = v1 - normalVelocity;
+
+        auto inverseM1 = 1 / m1;
+        auto impulse = (velocityAlongNormal * -(1 + bounciness)) / (inverseM1);
+        auto deltaV1 = normal * impulse * inverseM1;
+
+        o->setVelocity(tangentVelocity - (normalVelocity + deltaV1));
+        return moveAndCheckBounds(o, o->getPosition() + o->getVelocity());
+      }
     }
   }
 

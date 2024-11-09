@@ -75,9 +75,10 @@ void getCollisions() {
   obj4->setPosition(Vector(0, 0));
   obj4->setBox({1, 1});
 
-  obj1->setSolidness(Solidness::HARD);
-  obj2->setSolidness(Solidness::SOFT);
-  obj3->setSolidness(Solidness::SPECTRAL);
+  obj1->setBodyType(BodyType::DYNAMIC);
+  obj2->setBodyType(BodyType::TRIGGER);
+  obj3->setBodyType(BodyType::KINEMATIC);
+  obj4->setBodyType(BodyType::DYNAMIC);
 
   vector<Object *> collisions = WM.getCollisions(obj1, Vector(0, 0));
 
@@ -109,10 +110,10 @@ void resolveMovement() {
   hardObject->setPosition(Vector(4, 4));
   spectralObject->setPosition(Vector(6, 6));
 
-  subject->setSolidness(Solidness::HARD);
-  softObject->setSolidness(Solidness::SOFT);
-  hardObject->setSolidness(Solidness::HARD);
-  spectralObject->setSolidness(Solidness::SPECTRAL);
+  subject->setBodyType(BodyType::DYNAMIC);
+  softObject->setBodyType(BodyType::TRIGGER);
+  hardObject->setBodyType(BodyType::DYNAMIC);
+  spectralObject->setBodyType(BodyType::KINEMATIC);
 
   subject->setVelocity(Vector(1, 1));
   softObject->setVelocity(Vector(-1, -1));
@@ -148,7 +149,7 @@ void resolveMovement() {
   WM.resolveMovement(subject, targetPosition);
   assertEq("moves HARD on empty spot", subject->getPosition(), targetPosition);
 
-  subject->setSolidness(Solidness::SPECTRAL);
+  subject->setBodyType(BodyType::KINEMATIC);
   subject->setPosition(Vector(0, 0));
 
   targetPosition = softObject->getPosition();
@@ -169,7 +170,7 @@ void resolveMovement() {
   assertEq("moves SPECTRAL on empty spot", subject->getPosition(),
            targetPosition);
 
-  subject->setSolidness(Solidness::SOFT);
+  subject->setBodyType(BodyType::TRIGGER);
   subject->setPosition(Vector(0, 0));
 
   targetPosition = softObject->getPosition();
@@ -196,7 +197,7 @@ void resolveMovement() {
   targetVelocity = Vector(-1, -1);
   targetAcceleration = Vector(-2, -2);
 
-  subject->setSolidness(Solidness::HARD);
+  subject->setBodyType(BodyType::DYNAMIC);
   subject->setBox(Box(Vector(), 1.5, 1.5));
   subject->setVelocity(velocity);
   subject->setAcceleration(acceleration);

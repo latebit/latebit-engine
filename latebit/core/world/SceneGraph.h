@@ -49,17 +49,17 @@ class SceneGraph {
   // Returns all active visible objects on a given rendering layer
   [[nodiscard]] auto getVisibleObjects(int altitude) const -> vector<Object *>;
 
-  // Update solidness for a given object
-  auto setSolidness(Object *o, Solidness::Solidness solidness) -> int;
+  // Update body type for a given object
+  void setBodyType(Object *o, BodyType solidness);
 
   // Update rendering layer for a given object
-  auto setAltitude(Object *o, int altitude) -> int;
+  void setAltitude(Object *o, int altitude);
 
   // Update visibility for a given object
-  auto setVisible(Object *o, bool isVisible) -> int;
+  void setVisible(Object *o, bool isVisible);
 
   // Marks an object as active
-  auto setActive(Object *o, bool isActive) -> int;
+  void setActive(Object *o, bool isActive);
 
   // Resets the graph
   void clear();

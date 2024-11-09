@@ -17,7 +17,7 @@ class Camera {
   Box viewDeadZone = Box();
 
  public:
-  explicit Camera(const WorldManager *world) : world(world) {};
+  Camera(const WorldManager *world) : world(world) {};
 
   // Set the current view (i.e., visible portion of the world)
   void setView(Box v);

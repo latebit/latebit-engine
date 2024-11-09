@@ -83,9 +83,7 @@ auto Object::getWorldBox(Vector center) const -> Box {
 auto Object::eventHandler([[maybe_unused]] const Event* e) -> int { return 0; }
 
 auto Object::draw() -> int {
-  Vector p = getPosition();
-
-  int result = this->animation.draw(p, this->scale);
+  int result = this->animation.draw(this->position, this->scale);
   if (this->debug) {
     result += drawBoundingBox();
   }

@@ -75,4 +75,15 @@ auto Camera::viewToWorld(Vector viewPosition) -> Vector {
   auto viewOrigin = this->view.getCorner();
   return viewPosition + viewOrigin;
 }
+
+
+void Camera::update() {
+  if (this->viewFollowing == nullptr) return;
+
+  auto following = this->viewFollowing->getWorldBox();
+  // Move the view if the object is outside of the dead zone
+  if (!contains(this->viewDeadZone, following)) {
+    this->setViewPosition(following.getCenter());
+  }
+}
 };  // namespace lb

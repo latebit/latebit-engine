@@ -5,11 +5,8 @@
 #include <vector>
 
 #include "../../../test/lib/test.h"
-#include "latebit/core/events/EventOut.h"
-#include "latebit/core/geometry/Box.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/world/Object.h"
-#include "latebit/core/world/ObjectUtils.h"
 
 using namespace std;
 using namespace lb;
@@ -51,205 +48,6 @@ void draw() {
   scene->createObject<TestObject>(0, Vector(-2, -2));
   WM.draw();
   assertEq("does not draw out of bounds", drawCount[0], 1);
-
-  WM.shutDown();
-}
-
-void getCollisions() {
-  WM.startUp();
-
-  auto scene = WM.createScene<Scene>("main");
-  auto obj1 = scene->createObject<Object>();
-  auto obj2 = scene->createObject<Object>();
-  auto obj3 = scene->createObject<Object>();
-  auto obj4 = scene->createObject<Object>();
-  scene->activate();
-
-  // Objects need a non-zero box to collide
-  obj1->setPosition(Vector(0, 0));
-  obj1->setBox({1, 1});
-  obj2->setPosition(Vector(1, 1));
-  obj2->setBox({1, 1});
-  obj3->setPosition(Vector(2, 2));
-  obj3->setBox({1, 1});
-  obj4->setPosition(Vector(0, 0));
-  obj4->setBox({1, 1});
-
-  obj1->setSolidness(Solidness::HARD);
-  obj2->setSolidness(Solidness::SOFT);
-  obj3->setSolidness(Solidness::SPECTRAL);
-
-  vector<Object *> collisions = WM.getCollisions(obj1, Vector(0, 0));
-
-  assert("collides with hard", contains(collisions, obj4));
-  assert("collides with soft", contains(collisions, obj2));
-  assert("does not collide with spectral", !contains(collisions, obj3));
-
-  WM.markForDelete(obj1);
-  WM.markForDelete(obj2);
-  WM.markForDelete(obj3);
-  WM.markForDelete(obj4);
-  WM.update();
-
-  WM.shutDown();
-}
-
-void resolveMovement() {
-  WM.startUp();
-
-  auto scene = WM.createScene<Scene>("main");
-  auto subject = scene->createObject<Object>("subject");
-  auto softObject = scene->createObject<Object>("soft");
-  auto hardObject = scene->createObject<Object>("hard");
-  auto spectralObject = scene->createObject<Object>("spectral");
-  scene->activate();
-
-  subject->setPosition(Vector(0, 0));
-  softObject->setPosition(Vector(2, 2));
-  hardObject->setPosition(Vector(4, 4));
-  spectralObject->setPosition(Vector(6, 6));
-
-  subject->setSolidness(Solidness::HARD);
-  softObject->setSolidness(Solidness::SOFT);
-  hardObject->setSolidness(Solidness::HARD);
-  spectralObject->setSolidness(Solidness::SPECTRAL);
-
-  subject->setVelocity(Vector(1, 1));
-  softObject->setVelocity(Vector(-1, -1));
-  hardObject->setVelocity(Vector(-1, -1));
-  spectralObject->setVelocity(Vector(-1, -1));
-
-  Vector targetPosition, targetVelocity, targetAcceleration, position, velocity,
-    acceleration;
-
-  targetPosition = softObject->getPosition();
-  WM.updatePhysics();
-  assertEq("moves HARD on SOFT", subject->getPosition(), targetPosition);
-
-  targetPosition = spectralObject->getPosition();
-  WM.updatePhysics();
-  assertEq("moves HARD on SPECTRAL", subject->getPosition(), targetPosition);
-
-  position = subject->getPosition();
-  velocity = subject->getVelocity();
-  acceleration = subject->getAcceleration();
-
-  targetPosition = hardObject->getPosition();
-  targetVelocity = hardObject->getVelocity();
-  targetAcceleration = hardObject->getAcceleration();
-
-  WM.updatePhysics();
-  assertEq("does not move HARD over HARD", subject->getPosition(), position);
-  assertEq("same velocity (subject)", subject->getVelocity(),
-           velocity);
-  assertEq("same velocity (object)", hardObject->getVelocity(), targetVelocity);
-
-  targetPosition = Vector(0, 0);
-  WM.updatePhysics();
-  assertEq("moves HARD on empty spot", subject->getPosition(), targetPosition);
-
-  subject->setSolidness(Solidness::SPECTRAL);
-  subject->setPosition(Vector(0, 0));
-
-  targetPosition = softObject->getPosition();
-  WM.updatePhysics();
-  assertEq("moves SPECTRAL on SOFT", subject->getPosition(), targetPosition);
-
-  targetPosition = spectralObject->getPosition();
-  WM.updatePhysics();
-  assertEq("moves SPECTRAL on SPECTRAL", subject->getPosition(),
-           targetPosition);
-
-  targetPosition = hardObject->getPosition();
-  WM.updatePhysics();
-  assertEq("moves SPECTRAL on HARD", subject->getPosition(), targetPosition);
-
-  targetPosition = Vector(0, 0);
-  WM.updatePhysics();
-  assertEq("moves SPECTRAL on empty spot", subject->getPosition(),
-           targetPosition);
-
-  subject->setSolidness(Solidness::SOFT);
-  subject->setPosition(Vector(0, 0));
-
-  targetPosition = softObject->getPosition();
-  WM.updatePhysics();
-  assertEq("moves SPECTRAL over SPECTRAL", subject->getPosition(),
-           targetPosition);
-
-  targetPosition = spectralObject->getPosition();
-  WM.updatePhysics();
-  assertEq("moves SOFT over SPECTRAL", subject->getPosition(), targetPosition);
-
-  targetPosition = hardObject->getPosition();
-  WM.updatePhysics();
-  assertEq("moves SOFT over SPECTRAL", subject->getPosition(), targetPosition);
-
-  targetPosition = Vector(0, 0);
-  WM.updatePhysics();
-  assertEq("moves SOFT over empty spot", subject->getPosition(),
-           targetPosition);
-
-  position = subject->getPosition();
-  velocity = Vector(1, 1);
-  acceleration = Vector(2, 2);
-  targetVelocity = Vector(-1, -1);
-  targetAcceleration = Vector(-2, -2);
-
-  subject->setSolidness(Solidness::HARD);
-  subject->setBox(Box(Vector(), 1.5, 1.5));
-  subject->setVelocity(velocity);
-  subject->setAcceleration(acceleration);
-  hardObject->setVelocity(targetVelocity);
-  hardObject->setAcceleration(targetAcceleration);
-
-  // Almost on hard, but with part of the bounding box colliding
-  targetPosition = hardObject->getPosition() - velocity;
-  WM.updatePhysics();
-  assertEq("does not move HARD on HARD with bounding box collision",
-           subject->getPosition(), position);
-  assertEq("reflects velocity (subject)", subject->getVelocity(),
-           targetVelocity);
-  assertEq("reflects velocity (object)", hardObject->getVelocity(), velocity);
-
-  // Clean up test objects
-  WM.markForDelete(subject);
-  WM.markForDelete(softObject);
-  WM.markForDelete(hardObject);
-  WM.update();
-
-  WM.shutDown();
-}
-
-bool outOfBounds_emitted = false;
-void outOfBounds() {
-  WM.startUp();
-
-  class TestObject : public Object {
-   public:
-    auto eventHandler(const Event *e) -> int override {
-      if (e->getType() == OUT_EVENT) {
-        outOfBounds_emitted = true;
-        return 1;
-      }
-      return 0;
-    }
-  };
-
-  auto scene = WM.createScene<Scene>("main");
-  auto obj1 = scene->createObject<TestObject>();
-  scene->activate();
-
-  obj1->setPosition(Vector());
-  obj1->setBox(Box(1, 1));
-
-  WM.updatePhysics();
-
-  assert("emits out of bounds event", outOfBounds_emitted);
-
-  outOfBounds_emitted = false;
-  WM.updatePhysics();
-  assert("does not emit out of bounds if already out", !outOfBounds_emitted);
 
   WM.shutDown();
 }
@@ -347,9 +145,6 @@ void sceneManagement() {
 
 auto main() -> int {
   test("object management", objectManagement);
-  test("collisions ", getCollisions);
-  test("resolve movements", resolveMovement);
-  test("outOfBounds", outOfBounds);
   test("draw", draw);
   test("scene management", sceneManagement);
   return report();

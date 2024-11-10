@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <unordered_map>
 
 #include "latebit/core/GameManager.h"
@@ -32,7 +33,7 @@ void whenActive() {
   assertOk("subscribes to Input", obj.subscribe(INPUT_EVENT));
   assertOk("subscribes to custom", obj.subscribe("custom"));
 
-  EventCollision collision;
+  EventCollision collision(nullptr, nullptr, Vector());
   WM.broadcast(&collision);
   assertEq("responds to Collision", emittedCount[COLLISION_EVENT], 1);
   EventOut out;
@@ -97,7 +98,7 @@ void whenInactive() {
   assertOk("subscribes to Input", obj.subscribe(INPUT_EVENT));
   assertOk("subscribes to custom", obj.subscribe("custom"));
 
-  EventCollision collision;
+  EventCollision collision(nullptr, nullptr, Vector());
   WM.broadcast(&collision);
   assertEq("does not respond to Collision", emittedCount[COLLISION_EVENT], 0);
   EventOut out;

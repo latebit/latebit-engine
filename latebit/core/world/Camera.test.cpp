@@ -2,6 +2,7 @@
 #include "latebit/core/geometry/Box.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/world/Object.h"
+#include "latebit/core/world/Physics.h"
 #include "latebit/core/world/WorldManager.h"
 
 using namespace std;
@@ -29,8 +30,14 @@ void viewToWorld() {
   WM.getCamera().setView(initialView);
 }
 
+void moveTo(Physics& physics, Camera& camera, Object* o, const Vector p) {
+  physics.moveTo(o, p);
+  camera.update();
+};
+
 void viewFollowing() {
   WM.startUp();
+  auto &physics = WM.getPhysics();
 
   auto scene = WM.createScene<Scene>("main");
   auto subject = scene->createObject<Object>();
@@ -38,36 +45,37 @@ void viewFollowing() {
   scene->activate();
 
   auto initialView = Box(Vector(5, 5), 10, 10);
-  WM.getCamera().setView(initialView);
+  auto &camera = WM.getCamera();
+  camera.setView(initialView);
   WM.setBoundary(Box(20, 20));
 
-  WM.getCamera().setViewFollowing(subject);
-  WM.updatePhysics();
-  assertEq("does not update view", WM.getCamera().getView(), initialView);
-  WM.updatePhysics();
+  camera.setViewFollowing(subject);
 
-  assertEq("updates the view", WM.getCamera().getView(),
-           Box(Vector(6, 6), 10, 10));
+  moveTo(physics, camera, subject, { 10, 10 });
+  assertEq("does not update view", camera.getView(), initialView);
 
-  WM.updatePhysics();
-  assertEq("updates the view (vertical lower bound)", WM.getCamera().getView(),
+  moveTo(physics, camera, subject, { 11, 11 });
+  assertEq("updates the view", camera.getView(), Box(Vector(6, 6), 10, 10));
+
+  moveTo(physics, camera, subject, { 11, 5 });
+  assertEq("updates the view (vertical lower bound)", camera.getView(),
            Box(Vector(6, 0), 10, 10));
 
-  WM.updatePhysics();
-  assertEq("updates the view (vertical upper bound)", WM.getCamera().getView(),
+  moveTo(physics, camera, subject, { 11, 15 });
+  assertEq("updates the view (vertical upper bound)", camera.getView(),
            Box(Vector(6, 10), 10, 10));
 
-  WM.updatePhysics();
-  assertEq("updates the view (horizontal lower bound)", WM.getCamera().getView(),
+  moveTo(physics, camera, subject, { 5, 11 });
+  assertEq("updates the view (horizontal lower bound)", camera.getView(),
            Box(Vector(0, 6), 10, 10));
 
-  WM.updatePhysics();
-  assertEq("updates the view (horizontal upper bound)", WM.getCamera().getView(),
+  moveTo(physics, camera, subject, { 15, 11 });
+  assertEq("updates the view (horizontal upper bound)", camera.getView(),
            Box(Vector(10, 6), 10, 10));
 
-  WM.getCamera().setViewDeadZone(Box(WM.getCamera().getView().getCorner(), 5, 5));
-  WM.updatePhysics();
-  assertEq("does not update the view within dead zone", WM.getCamera().getView(),
+  camera.setViewDeadZone(Box(camera.getView().getCorner(), 5, 5));
+  moveTo(physics, camera, subject, { 12, 10 });
+  assertEq("does not update the view within dead zone", camera.getView(),
            Box(Vector(10, 6), 10, 10));
 
   WM.shutDown();

@@ -37,7 +37,7 @@ class Object : public EventTarget {
   // Pointer to the scene graph this object belongs to.
   SceneGraph* sceneGraph;
 
-  // Position of the object in World coordinates.
+  // Position of the top-left corner of the object in World coordinates.
   Vector position = Vector();
 
   // Rendering layer for this object.
@@ -51,10 +51,6 @@ class Object : public EventTarget {
 
   // Solidness of the object
   Solidness::Solidness solidness = Solidness::HARD;
-
-  float bounciness = 1.0;
-
-  float mass = 1.0;
 
   // The animation for this object.
   Animation animation = Animation();
@@ -168,12 +164,6 @@ class Object : public EventTarget {
   virtual auto setVisible(bool visible = true) -> int;
   // Return true if object is visible, else false.
   [[nodiscard]] auto isVisible() const -> bool;
-
-  [[nodiscard]] auto getBounciness() const -> float;
-  auto setBounciness(float b) -> void;
-
-  [[nodiscard]] auto getMass() const -> float;
-  auto setMass(float m) -> void;
 
   // Represent the object as a string
   [[nodiscard]] auto toString() const -> string;

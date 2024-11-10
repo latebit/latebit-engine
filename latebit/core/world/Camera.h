@@ -43,5 +43,7 @@ class Camera {
   auto worldToView(Vector worldPosition) -> Vector;
 
   auto viewToWorld(Vector viewPosition) -> Vector;
+
+  void update();
 };
 }  // namespace lb

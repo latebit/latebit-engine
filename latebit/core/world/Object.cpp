@@ -1,13 +1,12 @@
 #include "Object.h"
 
-#include <cmath>
 #include <cstdint>
 #include <string>
 
 #include "latebit/core/ResourceManager.h"
 #include "latebit/core/graphics/DisplayManager.h"
 #include "latebit/core/world/WorldManager.h"
-#include "latebit/utils/Math.h"
+#include "latebit/utils/Logger.h"
 
 using namespace std;
 
@@ -50,6 +49,12 @@ auto Object::isSolid() const -> bool {
 }
 
 void Object::setSolidness(Solidness::Solidness s) {
+  if (this->boundingBox == Box()) {
+    Log.warning(
+      "Object::setSolidness(): No bounds set for solid object %s. Objects "
+      "without bounds won't collide",
+      this->toString().c_str());
+  }
   this->sceneGraph->setSolidness(this, s);
   this->solidness = s;
 }
@@ -120,11 +125,5 @@ auto Object::isVisible() const -> bool { return this->visible; }
 auto Object::toString() const -> string {
   return "Object(id=" + to_string(this->id) + ",type=" + this->type + ")";
 }
-
-auto Object::getBounciness() const -> float { return this->bounciness; }
-auto Object::setBounciness(float b) -> void { this->bounciness = clamp(b, 0.0, 1.0); }
-
-auto Object::getMass() const -> float { return this->mass; }
-auto Object::setMass(float m) -> void { this->mass = abs(m); }
 
 }  // namespace lb

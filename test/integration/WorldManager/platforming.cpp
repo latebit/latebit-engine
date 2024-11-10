@@ -65,13 +65,15 @@ class Player : public Object {
   auto onInputReleased(const InputKey::InputKey key) -> int {
     switch (key) {
       case InputKey::RIGHT:
-        setVelocity({});
-        // setAcceleration({ -0.05, getAcceleration().getY() });
+        if (getVelocity().getX() > 0) {
+          setAcceleration({-0.1, getAcceleration().getY()});
+        }
         stopAtZero = true;
         return 1;
       case InputKey::LEFT:
-        setVelocity({});
-        // setAcceleration({ 0.05, getAcceleration().getY() });
+        if (getVelocity().getX() < 0) {
+          setAcceleration({0.1, getAcceleration().getY()});
+        }
         stopAtZero = true;
         return 1;
       default:
@@ -100,7 +102,6 @@ auto main() -> int {
   auto wall = scene->createObject<Object>();
   wall->setBox({10, WINDOW_HEIGHT - 30});
   wall->setPosition({0, 0});
-  wall->setBounciness(0);
   wall->setDebug(true);
   wall->setSolidness(Solidness::HARD);
   wall->setType("Wall");
@@ -108,7 +109,6 @@ auto main() -> int {
   auto floor = scene->createObject<Object>();
   floor->setBox({WINDOW_WIDTH*100, 3000});
   floor->setPosition({0, WINDOW_HEIGHT - 30});
-  floor->setBounciness(0);
   floor->setDebug(true);
   floor->setSolidness(Solidness::HARD);
   floor->setType("Floor");
@@ -116,7 +116,6 @@ auto main() -> int {
   auto platform = scene->createObject<Object>();
   platform->setBox({100, 10});
   platform->setPosition({100, WINDOW_HEIGHT - 55});
-  platform->setBounciness(0);
   platform->setDebug(true);
   floor->setSolidness(Solidness::HARD);
   platform->setType("Platform");
@@ -125,7 +124,6 @@ auto main() -> int {
   auto prop = scene->createObject<Object>();
   prop->setBox({10, 10});
   prop->setPosition({WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2});
-  prop->setBounciness(0);
   prop->setDebug(true);
   prop->setSolidness(Solidness::SPECTRAL);
 

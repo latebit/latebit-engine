@@ -33,6 +33,10 @@ auto Box::getWidth() const -> float { return this->width; }
 void Box::setHeight(float height) { this->height = height; }
 auto Box::getHeight() const -> float { return this->height; }
 
+auto Box::getCenter() const -> Vector {
+  return this->corner + Vector(this->width / 2, this->height / 2);
+}
+
 auto Box::operator==(const Box& other) const -> bool {
   return this->corner == other.corner && equals(this->width, other.width) &&
          equals(this->height, other.height);

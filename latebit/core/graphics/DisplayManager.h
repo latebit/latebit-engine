@@ -5,8 +5,6 @@
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_video.h>
 
-#include <cstdint>
-
 #include "Colors.h"
 #include "Font.h"
 #include "latebit/core/geometry/Box.h"
@@ -72,15 +70,14 @@ class DisplayManager : public Manager {
 
   // Draws a frame in the given position, scaling it by the given factor
   [[nodiscard]] auto drawKeyframe(Position position, const Keyframe *frame,
-                                  uint8_t width, uint8_t height,
-                                  uint8_t scaling) -> int;
+                                  int width, int height, int scaling) -> int;
 
   // Draws a rectangle outline at the given world position (top left cell)
-  [[nodiscard]] auto strokeRectangle(Position position, uint8_t width, uint8_t height,
+  [[nodiscard]] auto strokeRectangle(Position position, int width, int height,
                                      Color::Color color) -> int;
 
   // Draws a rectangle at the given world position (top left cell)
-  [[nodiscard]] auto fillRectangle(Position position, uint8_t width, uint8_t height,
+  [[nodiscard]] auto fillRectangle(Position position, int width, int height,
                                    Color::Color color) -> int;
 
   // Draws a string to the window at the given world position

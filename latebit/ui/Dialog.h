@@ -1,11 +1,11 @@
 
+#include <functional>
+
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/world/Object.h"
 #include "latebit/core/world/Scene.h"
 #include "latebit/ui/Icon.h"
 #include "latebit/ui/Rectangle.h"
-
-#include <functional>
 
 using namespace std;
 
@@ -41,16 +41,17 @@ class Dialog : public Object {
 
   // Reset the dialog to its initial state
   void reset();
- public:
 
-  Dialog(Scene* scene, vector<string> pages, function<void()> onEnd, RectangleOptions options = RectangleOptions{
-    .height = 40,
-    .width = WINDOW_WIDTH - 2,
-    .fill = Color::WHITE,
-    .stroke = {Color::BLACK, Color::WHITE, Color::BLACK, Color::BLACK}});
-  
+ public:
+  Dialog(Scene* scene, vector<string> pages, function<void()> onEnd,
+         RectangleOptions options = RectangleOptions{
+           .height = 40,
+           .width = WINDOW_WIDTH - 2,
+           .fill = Color::WHITE,
+           .stroke = {Color::BLACK, Color::WHITE, Color::BLACK, Color::BLACK}});
+
   auto eventHandler(const Event* e) -> int override;
-  
+
   // Draw the dialog and its subcomponents
   auto draw() -> int override;
 

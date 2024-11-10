@@ -1,3 +1,6 @@
+#include "latebit/core/events/EventTarget.h"
+
+#include <cstddef>
 #include <unordered_map>
 
 #include "latebit/core/GameManager.h"
@@ -5,9 +8,8 @@
 #include "latebit/core/events/EventInput.h"
 #include "latebit/core/events/EventOut.h"
 #include "latebit/core/events/EventStep.h"
-#include "latebit/core/events/EventTarget.h"
-#include "latebit/core/world/WorldManager.h"
 #include "latebit/core/input/InputManager.h"
+#include "latebit/core/world/WorldManager.h"
 #include "test/lib/test.h"
 
 void whenActive() {
@@ -16,7 +18,7 @@ void whenActive() {
 
   class TestEventTarget : public EventTarget {
    public:
-    TestEventTarget() : EventTarget(){};
+    TestEventTarget() : EventTarget() {};
     auto eventHandler(const Event* e) -> int override {
       emittedCount[e->getType()]++;
       return 0;
@@ -32,7 +34,7 @@ void whenActive() {
   assertOk("subscribes to Input", obj.subscribe(INPUT_EVENT));
   assertOk("subscribes to custom", obj.subscribe("custom"));
 
-  EventCollision collision;
+  EventCollision collision(nullptr, nullptr, Vector());
   WM.broadcast(&collision);
   assertEq("responds to Collision", emittedCount[COLLISION_EVENT], 1);
   EventOut out;
@@ -79,7 +81,7 @@ void whenInactive() {
 
   class TestEventTarget : public EventTarget {
    public:
-    TestEventTarget() : EventTarget(){};
+    TestEventTarget() : EventTarget() {};
 
     auto eventHandler(const Event* e) -> int override {
       emittedCount[e->getType()]++;
@@ -97,7 +99,7 @@ void whenInactive() {
   assertOk("subscribes to Input", obj.subscribe(INPUT_EVENT));
   assertOk("subscribes to custom", obj.subscribe("custom"));
 
-  EventCollision collision;
+  EventCollision collision(nullptr, nullptr, Vector());
   WM.broadcast(&collision);
   assertEq("does not respond to Collision", emittedCount[COLLISION_EVENT], 0);
   EventOut out;

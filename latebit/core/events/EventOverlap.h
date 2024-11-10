@@ -7,9 +7,9 @@
 
 namespace lb {
 
-const std::string COLLISION_EVENT = "lb::collision";
+const std::string OVERLAP_EVENT = "lb::overlap";
 
-class EventCollision : public Event {
+class EventOverlap : public Event {
  private:
   // Position where the collision occurs
   const Vector position = Vector();
@@ -19,10 +19,10 @@ class EventCollision : public Event {
   const Object *two = nullptr;
 
  public:
-  // Creates a collision event between two objects at a given position
+  // Creates an overlap event between two objects at a given position
   // Even though the objects are called one and two, the order is arbitrary.
-  EventCollision(Object *o1, Object *o2, Vector p)
-    : Event(COLLISION_EVENT), position(p), one(o1), two(o2) {};
+  EventOverlap(Object *o1, Object *o2, Vector p)
+    : Event(OVERLAP_EVENT), position(p), one(o1), two(o2) {};
 
   // Returns the first object involved in the collision
   [[nodiscard]] auto getFirstObject() const -> const Object * {

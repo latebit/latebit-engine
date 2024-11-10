@@ -29,7 +29,7 @@ class Menu : public Object {
   auto draw() -> int override;
 
   // Add item in the menu
-  void addControl(Control* control);
+  void addControl(Control *control);
   // Change position of the menu
   void setPosition(Vector p) override;
   // Set to true to draw bounding box for this element and its children

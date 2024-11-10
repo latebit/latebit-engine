@@ -6,6 +6,7 @@
 #include "latebit/core/ResourceManager.h"
 #include "latebit/core/graphics/DisplayManager.h"
 #include "latebit/core/world/WorldManager.h"
+#include "latebit/utils/Logger.h"
 
 using namespace std;
 
@@ -48,6 +49,12 @@ auto Object::isSolid() const -> bool {
 }
 
 void Object::setSolidness(Solidness::Solidness s) {
+  if (this->boundingBox == Box()) {
+    Log.warning(
+      "Object::setSolidness(): No bounds set for solid object %s. Objects "
+      "without bounds won't collide",
+      this->toString().c_str());
+  }
   this->sceneGraph->setSolidness(this, s);
   this->solidness = s;
 }
@@ -81,9 +88,7 @@ auto Object::getWorldBox(Vector center) const -> Box {
 auto Object::eventHandler([[maybe_unused]] const Event* e) -> int { return 0; }
 
 auto Object::draw() -> int {
-  Vector p = getPosition();
-
-  int result = this->animation.draw(p, this->scale);
+  int result = this->animation.draw(this->position, this->scale);
   if (this->debug) {
     result += drawBoundingBox();
   }

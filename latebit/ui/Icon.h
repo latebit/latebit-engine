@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 #include <utility>
 
@@ -17,17 +17,13 @@ class Icon {
   const int scaling = 1;
 
  public:
-  Icon(Keyframe frame, int width, int height,
-       int scaling = 1)
-    : frame(std::move(frame)),
-      width(width),
-      height(height),
-      scaling(scaling) {}
+  Icon(Keyframe frame, int width, int height, int scaling = 1)
+    : frame(std::move(frame)), width(width), height(height), scaling(scaling) {}
 
   [[nodiscard]] auto draw(Vector position) const -> int {
     return DM.drawKeyframe(position, &frame, width, height, scaling);
   }
-  
+
   [[nodiscard]] auto getHeight() const -> int { return height; }
   [[nodiscard]] auto getWidth() const -> int { return width; }
   [[nodiscard]] auto getScaling() const -> int { return scaling; }

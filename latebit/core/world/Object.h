@@ -37,7 +37,7 @@ class Object : public EventTarget {
   // Pointer to the scene graph this object belongs to.
   SceneGraph* sceneGraph;
 
-  // Position of the object in World coordinates.
+  // Position of the top-left corner of the object in World coordinates.
   Vector position = Vector();
 
   // Rendering layer for this object.

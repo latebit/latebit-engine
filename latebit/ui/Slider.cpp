@@ -67,8 +67,8 @@ void Slider::onChange(int v) {
 }
 
 auto Slider::draw() -> int {
-  auto position =
-    this->text->getPosition() + Vector{this->text->getBox().getWidth() + GAP, 0};
+  auto position = this->text->getPosition() +
+                  Vector{this->text->getBox().getWidth() + GAP, 0};
   int result = 0;
   for (int i = 0; i < NUMBER_OF_BARS; i++) {
     result += BARS[i < value].draw(position +

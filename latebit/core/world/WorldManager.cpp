@@ -4,13 +4,11 @@
 #include <string>
 #include <vector>
 
-#include "latebit/core/events/EventCollision.h"
-#include "latebit/core/events/EventOut.h"
-#include "latebit/core/geometry/Vector.h"
 #include "latebit/core/utils/utils.h"
+#include "latebit/core/world/Camera.h"
 #include "latebit/core/world/Object.h"
 #include "latebit/core/world/ObjectUtils.h"
-#include "latebit/core/world/View.h"
+#include "latebit/core/world/Physics.h"
 #include "latebit/utils/Logger.h"
 
 #define WM lb::WorldManager::getInstance()
@@ -29,7 +27,7 @@ auto WorldManager::getInstance() -> WorldManager & {
 auto WorldManager::startUp() -> int {
   this->scenes.clear();
   this->sceneGraph.clear();
-  this->view = View(this);
+  this->camera = Camera(this);
   Log.info("WorldManager::startUp(): Started successfully");
   return Manager::startUp();
 }
@@ -75,87 +73,6 @@ auto WorldManager::getAllObjectsByType(std::string type,
   return result;
 }
 
-auto WorldManager::getCollisions(Object *o, Vector where) const
-  -> vector<Object *> {
-  vector<Object *> collisions = {};
-  auto solid = this->sceneGraph.getSolidObjects();
-  auto box = o->getWorldBox(where);
-  collisions.reserve(solid.size());
-
-  for (auto current : solid) {
-    if (current == o) continue;
-    auto currentBox = current->getWorldBox();
-
-    if (intersects(box, currentBox)) {
-      collisions.push_back(current);
-    }
-  }
-
-  return collisions;
-}
-
-void bounce(Object *object, Object *otherObject) {
-  // We assume same mass and completely elastic collision
-  auto velocity = object->getVelocity();
-  object->setVelocity(otherObject->getVelocity());
-  otherObject->setVelocity(velocity);
-
-  auto acceleration = object->getAcceleration();
-  object->setAcceleration(otherObject->getAcceleration());
-  otherObject->setAcceleration(acceleration);
-}
-
-void WorldManager::resolveMovement(Object *object, Vector position) {
-  // Non-solid can always move, since they have no collisions
-  if (!object->isSolid()) {
-    return moveAndCheckBounds(object, position);
-  }
-
-  vector<Object *> collisions = getCollisions(object, position);
-
-  // In absence of collisions, just move
-  if (collisions.empty()) {
-    return moveAndCheckBounds(object, position);
-  }
-
-  bool shouldMove = true;
-  for (auto otherObject : collisions) {
-    auto event = EventCollision(object, otherObject, position);
-    object->eventHandler(&event);
-    otherObject->eventHandler(&event);
-
-    if (object->getSolidness() == Solidness::HARD &&
-        otherObject->getSolidness() == Solidness::HARD) {
-      bounce(object, otherObject);
-      shouldMove = false;
-      break;
-    }
-  }
-
-  if (shouldMove) moveAndCheckBounds(object, position);
-}
-
-void WorldManager::moveAndCheckBounds(Object *o, Vector position) {
-  auto initial = o->getWorldBox();
-  o->setPosition(position);
-  auto final = o->getWorldBox();
-  auto boundary = WM.getBoundary();
-
-  if (intersects(initial, boundary) && !intersects(final, boundary)) {
-    auto event = EventOut();
-    o->eventHandler(&event);
-  }
-
-  if (this->view.getViewFollowing() == o) {
-    auto viewDeadZone = this->view.getViewDeadZone();
-
-    // Move the view if the object is outside of the dead zone
-    if (!contains(viewDeadZone, final)) {
-      this->view.setViewPosition(position);
-    }
-  }
-}
-
 void WorldManager::update() {
   if (!isStarted()) return;
 
@@ -165,17 +82,10 @@ void WorldManager::update() {
   }
   deletions.clear();
 
-  auto active = this->sceneGraph.getActiveObjects();
-  for (auto &object : active) {
-    auto oldPosition = object->getPosition();
-    auto newVelocity = object->getVelocity() + object->getAcceleration();
-    auto newPosition = object->getPosition() + newVelocity;
-
-    object->setVelocity(newVelocity);
-    if (oldPosition != newPosition) {
-      this->resolveMovement(object, newPosition);
-    }
-  }
+  this->physics.update();
+  // Note: camera update must be called after physics update, else we'd be
+  // following objects one tick behind
+  this->camera.update();
 }
 
 auto WorldManager::markForDelete(Object *o) -> int {
@@ -189,7 +99,8 @@ void WorldManager::draw() {
   for (int i = 0; i <= MAX_ALTITUDE; i++) {
     auto visible = this->sceneGraph.getVisibleObjects(i);
     for (auto &o : visible) {
-      if (o != nullptr && intersects(o->getWorldBox(), this->view.getView())) {
+      if (o != nullptr &&
+          intersects(o->getWorldBox(), this->camera.getView())) {
         o->draw();
       };
     }
@@ -200,7 +111,8 @@ void WorldManager::setBoundary(Box b) { this->boundary = b; }
 auto WorldManager::getBoundary() const -> Box { return this->boundary; }
 
 auto WorldManager::getSceneGraph() -> SceneGraph & { return this->sceneGraph; }
-auto WorldManager::getView() -> View & { return this->view; }
+auto WorldManager::getCamera() -> Camera & { return this->camera; }
+auto WorldManager::getPhysics() -> Physics & { return this->physics; }
 
 auto WorldManager::activateScene(const string label) -> int {
   for (auto &scene : this->scenes) {

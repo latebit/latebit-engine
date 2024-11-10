@@ -25,6 +25,8 @@ class Box {
   // Create box with upper left corner at topLeft, width, and height
   Box(Vector topLeft, float width, float height);
 
+  [[nodiscard]] auto getCenter() const -> Vector;
+
   // Set upper left corner of box
   void setCorner(Vector corner);
   // Get upper left corner of box

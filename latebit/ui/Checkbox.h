@@ -14,20 +14,21 @@ namespace lbui {
 
 class Checkbox : public Control {
  private:
-  static const array<Icon, 2> CHECKS; 
+  static const array<Icon, 2> CHECKS;
   Text* text;
   function<void(bool)> callback;
   bool value;
 
  public:
-  Checkbox(Scene* scene, const string label, bool initialValue, function<void(bool)> onSubmit);
-  
+  Checkbox(Scene* scene, const string label, bool initialValue,
+           function<void(bool)> onSubmit);
+
   // Returns the label of the control
   auto getLabel() -> string;
 
   // Set the label of the control
   void setLabel(const string l);
-  
+
   // Set the position of the control and its children
   void setPosition(Vector p) override;
 

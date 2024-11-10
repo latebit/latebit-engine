@@ -1,4 +1,4 @@
-#include "View.h"
+#include "Camera.h"
 
 #include "latebit/core/utils/utils.h"
 #include "latebit/core/world/WorldManager.h"
@@ -7,10 +7,10 @@
 
 namespace lb {
 
-void View::setView(Box v) { this->view = v; }
-auto View::getView() const -> Box { return this->view; }
+void Camera::setView(Box v) { this->view = v; }
+auto Camera::getView() const -> Box { return this->view; }
 
-auto View::setViewPosition(Vector where) -> void {
+auto Camera::setViewPosition(Vector where) -> void {
   auto viewHeight = this->view.getHeight();
   auto viewWidth = this->view.getWidth();
   auto boundary = this->world->getBoundary();
@@ -34,7 +34,7 @@ auto View::setViewPosition(Vector where) -> void {
   this->view = Box(newCorner, viewWidth, viewHeight);
 }
 
-auto View::setViewFollowing(Object* o) -> int {
+auto Camera::setViewFollowing(Object* o) -> int {
   if (o == nullptr) {
     this->viewFollowing = nullptr;
     return 0;
@@ -53,9 +53,9 @@ auto View::setViewFollowing(Object* o) -> int {
   return -1;
 }
 
-auto View::getViewFollowing() -> Object* { return this->viewFollowing; }
+auto Camera::getViewFollowing() -> Object* { return this->viewFollowing; }
 
-void View::setViewDeadZone(Box d) {
+void Camera::setViewDeadZone(Box d) {
   if (!contains(this->view, d)) {
     Log.error("View::setViewDeadZone(): Dead zone larger than view");
     return;
@@ -64,15 +64,25 @@ void View::setViewDeadZone(Box d) {
   this->viewDeadZone = d;
 }
 
-auto View::getViewDeadZone() const -> Box { return this->viewDeadZone; }
+auto Camera::getViewDeadZone() const -> Box { return this->viewDeadZone; }
 
-auto View::worldToView(Vector worldPosition) -> Vector {
+auto Camera::worldToView(Vector worldPosition) -> Vector {
   auto viewOrigin = this->view.getCorner();
   return worldPosition - viewOrigin;
 }
 
-auto View::viewToWorld(Vector viewPosition) -> Vector {
+auto Camera::viewToWorld(Vector viewPosition) -> Vector {
   auto viewOrigin = this->view.getCorner();
   return viewPosition + viewOrigin;
+}
+
+void Camera::update() {
+  if (this->viewFollowing == nullptr) return;
+
+  auto following = this->viewFollowing->getWorldBox();
+  // Move the view if the object is outside of the dead zone
+  if (!contains(this->viewDeadZone, following)) {
+    this->setViewPosition(following.getCenter());
+  }
 }
 };  // namespace lb

@@ -4,8 +4,9 @@
 #include <utility>
 #include <vector>
 
+#include "Camera.h"
+#include "Physics.h"
 #include "SceneGraph.h"
-#include "View.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/utils/Manager.h"
 #include "latebit/core/world/Object.h"
@@ -17,7 +18,8 @@ using namespace std;
 
 namespace lb {
 
-class View;
+class Camera;
+class Physics;
 
 class WorldManager : public Manager {
  private:
@@ -30,7 +32,9 @@ class WorldManager : public Manager {
   // The current SceneGraph
   SceneGraph sceneGraph = SceneGraph();
   // The current View
-  View view = View(this);
+  Camera camera = Camera(this);
+
+  Physics physics = Physics(&sceneGraph, this);
 
   vector<unique_ptr<Scene>> scenes = {};
 
@@ -57,12 +61,6 @@ class WorldManager : public Manager {
   [[nodiscard]] auto getAllObjectsByType(string type,
                                          bool includeInactive = false) const
     -> vector<Object *>;
-
-  // Returns a list of object colliding with the object at a given position
-  auto getCollisions(Object *o, Vector where) const -> vector<Object *>;
-
-  // Moves an object to a given position and resolves
-  void resolveMovement(Object *o, Vector position);
 
   // Updates all active objects and frees resources for deleted ones
   void update();
@@ -104,7 +102,9 @@ class WorldManager : public Manager {
 
   // Returns the current SceneGraph
   [[nodiscard]] auto getSceneGraph() -> SceneGraph &;
-  // Returns the current View
-  [[nodiscard]] auto getView() -> View &;
+  // Returns the Camera
+  [[nodiscard]] auto getCamera() -> Camera &;
+  // Returns the Physics
+  [[nodiscard]] auto getPhysics() -> Physics &;
 };
 }  // namespace lb

@@ -1,4 +1,5 @@
 #include "latebit/ui/Checkbox.h"
+
 #include "Checkbox.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/graphics/Colors.h"
@@ -7,7 +8,7 @@
 #include "latebit/ui/Icon.h"
 
 namespace lbui {
-// Space between the checkbox and the label 
+// Space between the checkbox and the label
 const int GAP = 4;
 
 const int CHECK_SIZE = 5;
@@ -33,7 +34,7 @@ const array<Icon, 2> Checkbox::CHECKS = {
 // clang-format on
 
 Checkbox::Checkbox(Scene* scene, const std::string label, bool initialValue,
-               std::function<void(bool)> onSubmit) {
+                   std::function<void(bool)> onSubmit) {
   this->text = scene->createObject<Text>(label, label);
   auto textBox = this->text->getBox();
   textBox.setWidth(textBox.getWidth() + GAP + CHECK_SIZE);
@@ -59,7 +60,7 @@ void Checkbox::setPosition(Vector p) {
   this->text->setPosition(p + Vector{CHECK_SIZE + GAP, 0});
 }
 
-void Checkbox::onSubmit() { 
+void Checkbox::onSubmit() {
   this->value = !this->value;
   this->callback(this->value);
 }

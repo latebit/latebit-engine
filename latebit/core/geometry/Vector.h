@@ -29,7 +29,8 @@ class Vector {
   // Returns the length of the vector
   [[nodiscard]] auto getMagnitude() const -> float;
 
-  // Returns a new vector that is the normalized version (magnitude 1) of this vector
+  // Returns a new vector that is the normalized version (magnitude 1) of this
+  // vector
   [[nodiscard]] auto normalize() const -> Vector;
 
   // Returns the distance between this vector and another

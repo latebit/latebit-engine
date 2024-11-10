@@ -9,10 +9,11 @@ class WorldManager;
 class Physics {
  private:
   const SceneGraph* sceneGraph = nullptr;
-  const WorldManager *world = nullptr;
+  const WorldManager* world = nullptr;
 
  public:
-  Physics(SceneGraph* graph, WorldManager* world) : sceneGraph(graph), world(world) {};
+  Physics(SceneGraph* graph, WorldManager* world)
+    : sceneGraph(graph), world(world) {};
   ~Physics() = default;
 
   // Update the physics of the world

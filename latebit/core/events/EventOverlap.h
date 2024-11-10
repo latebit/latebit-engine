@@ -22,7 +22,7 @@ class EventOverlap : public Event {
   // Creates an overlap event between two objects at a given position
   // Even though the objects are called one and two, the order is arbitrary.
   EventOverlap(Object *o1, Object *o2, Vector p)
-    : Event(OVERLAP_EVENT), position(p), one(o1), two(o2){};
+    : Event(OVERLAP_EVENT), position(p), one(o1), two(o2) {};
 
   // Returns the first object involved in the collision
   [[nodiscard]] auto getFirstObject() const -> const Object * {

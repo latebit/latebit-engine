@@ -37,7 +37,8 @@ void dist() {
 
 void normalize() {
   Vector subject;
-  assertEq("does nothing with null length", (subject.normalize()).getMagnitude(), 0.0);
+  assertEq("does nothing with null length",
+           (subject.normalize()).getMagnitude(), 0.0);
 
   subject = Vector(123, 345);
   assertEq("has length 1", (subject.normalize()).getMagnitude(), 1.0);

@@ -22,7 +22,8 @@ Icon ICON = {
     6, 3};
 // clang-format on
 
-Dialog::Dialog(Scene* scene, vector<string> pages, std::function<void()> onEnd, RectangleOptions options) {
+Dialog::Dialog(Scene* scene, vector<string> pages, std::function<void()> onEnd,
+               RectangleOptions options) {
   this->rectangle = scene->createObject<Rectangle>(options);
   this->pages = pages;
   this->onEnd = onEnd;

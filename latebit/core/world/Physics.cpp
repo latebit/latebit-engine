@@ -1,4 +1,5 @@
 #include "Physics.h"
+
 #include "latebit/core/events/EventCollision.h"
 #include "latebit/core/events/EventOut.h"
 #include "latebit/core/events/EventOverlap.h"
@@ -32,7 +33,8 @@ void Physics::update() {
       continue;
     }
 
-    // Collisions can update these vectors, so we need them mutable and outside the loop
+    // Collisions can update these vectors, so we need them mutable and outside
+    // the loop
     Vector p1 = newPosition;
     Vector v1 = object->getVelocity();
 
@@ -97,8 +99,7 @@ void Physics::update() {
   }
 }
 
-auto Physics::getOverlapsAt(Object *o,
-                            Vector where) const -> vector<Object *> {
+auto Physics::getOverlapsAt(Object *o, Vector where) const -> vector<Object *> {
   vector<Object *> collisions = {};
   auto solid = this->sceneGraph->getSolidObjects();
   auto box = o->getWorldBox(where);

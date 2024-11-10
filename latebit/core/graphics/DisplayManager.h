@@ -70,8 +70,7 @@ class DisplayManager : public Manager {
 
   // Draws a frame in the given position, scaling it by the given factor
   [[nodiscard]] auto drawKeyframe(Position position, const Keyframe *frame,
-                                  int width, int height,
-                                  int scaling) -> int;
+                                  int width, int height, int scaling) -> int;
 
   // Draws a rectangle outline at the given world position (top left cell)
   [[nodiscard]] auto strokeRectangle(Position position, int width, int height,

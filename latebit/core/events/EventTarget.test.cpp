@@ -1,3 +1,5 @@
+#include "latebit/core/events/EventTarget.h"
+
 #include <cstddef>
 #include <unordered_map>
 
@@ -6,9 +8,8 @@
 #include "latebit/core/events/EventInput.h"
 #include "latebit/core/events/EventOut.h"
 #include "latebit/core/events/EventStep.h"
-#include "latebit/core/events/EventTarget.h"
-#include "latebit/core/world/WorldManager.h"
 #include "latebit/core/input/InputManager.h"
+#include "latebit/core/world/WorldManager.h"
 #include "test/lib/test.h"
 
 void whenActive() {
@@ -17,7 +18,7 @@ void whenActive() {
 
   class TestEventTarget : public EventTarget {
    public:
-    TestEventTarget() : EventTarget(){};
+    TestEventTarget() : EventTarget() {};
     auto eventHandler(const Event* e) -> int override {
       emittedCount[e->getType()]++;
       return 0;
@@ -80,7 +81,7 @@ void whenInactive() {
 
   class TestEventTarget : public EventTarget {
    public:
-    TestEventTarget() : EventTarget(){};
+    TestEventTarget() : EventTarget() {};
 
     auto eventHandler(const Event* e) -> int override {
       emittedCount[e->getType()]++;

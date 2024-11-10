@@ -37,7 +37,7 @@ auto Vector::dot(const Vector& other) -> float {
 auto Vector::normalize() const -> Vector {
   float length = getMagnitude();
   if (length > 0) {
-    return { this->x / length, this->y / length };
+    return {this->x / length, this->y / length};
   }
   return *this;
 }

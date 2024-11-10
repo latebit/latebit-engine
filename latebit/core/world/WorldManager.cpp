@@ -57,8 +57,9 @@ auto WorldManager::getAllObjects(bool includeInactive) const
   return this->sceneGraph.getActiveObjects();
 }
 
-auto WorldManager::getAllObjectsByType(
-  std::string type, bool includeInactive) const -> vector<Object *> {
+auto WorldManager::getAllObjectsByType(std::string type,
+                                       bool includeInactive) const
+  -> vector<Object *> {
   vector<Object *> result = {};
   auto all = this->getAllObjects(includeInactive);
   result.reserve(all.size());

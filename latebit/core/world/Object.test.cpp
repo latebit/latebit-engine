@@ -48,7 +48,8 @@ void solidness() {
 void boundingBox() {
   Object subject;
   subject.setPosition(Vector(1, 1));
-  assertOk("loads sprite", RM.loadTextSprite(FIXTURES_FOLDER + "/correct.lbspr", "sprite"));
+  assertOk("loads sprite",
+           RM.loadTextSprite(FIXTURES_FOLDER + "/correct.lbspr", "sprite"));
   assertOk("sets the sprite", subject.setSprite("sprite"));
   assertEq("sets bounding box", subject.getBox(), Box(Vector(), 3, 4));
   assertEq("gets bounding box in world coordinates", subject.getWorldBox(),

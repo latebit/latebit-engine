@@ -76,7 +76,6 @@ auto Camera::viewToWorld(Vector viewPosition) -> Vector {
   return viewPosition + viewOrigin;
 }
 
-
 void Camera::update() {
   if (this->viewFollowing == nullptr) return;
 

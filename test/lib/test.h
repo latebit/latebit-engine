@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <string>
 
 #include "latebit/core/geometry/Box.h"
@@ -29,9 +30,8 @@ auto assertMatch(string name, string want, string pattern) -> int;
 auto assertOk(string name, int got) -> int;
 auto assertFail(string name, int got) -> int;
 
-auto suite(string name, void (*test)()) -> void;
-
-auto test(string name, void (*test)()) -> void;
+auto suite(string name, function<void()> test) -> void;
+auto test(string name, function<void()> test) -> void;
 
 // Report test stats at the end of a run
 // It returns the number of failed tests and can therefore be used as status

@@ -97,7 +97,7 @@ void timing(float delta) {
   }
 }
 
-auto suite(std::string name, void (*test)()) -> void {
+auto suite(std::string name, function<void()> test) -> void {
   if (!FOCUS.empty() && FOCUS != name) {
     std::cout << yellow(name + " (skip)\n\r");
     return;
@@ -108,7 +108,7 @@ auto suite(std::string name, void (*test)()) -> void {
   timing(c.delta());
 }
 
-auto test(std::string name, void (*test)()) -> void {
+auto test(std::string name, function<void()> test) -> void {
   std::cout << "  " + name + "\n\r";
   test();
 }

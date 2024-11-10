@@ -25,7 +25,7 @@ void scale() {
   assertEq("scales correctly", result.getMagnitude(), std::sqrt(8));
 }
 
-void distance() {
+void dist() {
   Vector a;
   Vector b(1, 0);
   assertEq("vertical distance", a.distance(b), 1.0);
@@ -79,7 +79,7 @@ void notOperator() {
 auto main() -> int {
   test("getMagnitude", getMagnitude);
   test("scale", scale);
-  test("distance", distance);
+  test("distance", dist);
   test("normalize", normalize);
   test("equals (==)", eq);
   test("plus (+)", plusOperator);

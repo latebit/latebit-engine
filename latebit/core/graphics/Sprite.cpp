@@ -1,6 +1,5 @@
 #include "Sprite.h"
 
-#include <cstdint>
 #include <string>
 
 #include "latebit/core/geometry/Vector.h"
@@ -20,13 +19,13 @@ auto Sprite::getFrame(int index) const -> Keyframe {
   return this->frames[index];
 }
 
-auto Sprite::getFrameCount() const -> uint8_t { return this->frames.size(); }
-auto Sprite::getWidth() const -> uint8_t { return this->width; }
-auto Sprite::getHeight() const -> uint8_t { return this->height; }
-auto Sprite::getDuration() const -> uint8_t { return this->duration; }
+auto Sprite::getFrameCount() const -> int { return this->frames.size(); }
+auto Sprite::getWidth() const -> int { return this->width; }
+auto Sprite::getHeight() const -> int { return this->height; }
+auto Sprite::getDuration() const -> int { return this->duration; }
 auto Sprite::getLabel() const -> std::string { return this->label; }
 
-auto Sprite::drawKeyframe(int index, Vector position, uint8_t scale) const
+auto Sprite::drawKeyframe(int index, Vector position, int scale) const
   -> int {
   auto frame = this->getFrame(index);
   return DM.drawKeyframe(position, &frame, this->width, this->height, scale);

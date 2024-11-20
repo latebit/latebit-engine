@@ -198,9 +198,7 @@ auto SpriteParser::fromStream(istream *stream, string label) -> Sprite {
     frames.push_back(content);
   }
 
-  Sprite sprite(label, (uint8_t)width, (uint8_t)height, (uint8_t)duration,
-                frames);
-  return sprite;
+  return {label, width, height, duration, frames};
 }
 
 auto SpriteParser::toString(const Sprite &sprite) -> string {

@@ -60,6 +60,7 @@ void Physics::update() {
 
       const Vector p2 = overlapper->getPosition();
       const Box b1 = object->getWorldBox(p1);
+      const Vector d = object->getBox().getCorner();
       const Box b2 = overlapper->getWorldBox();
       const Vector c1 = b1.getCenter();
       const Vector c2 = b2.getCenter();
@@ -77,18 +78,18 @@ void Physics::update() {
 
       if (overlap.getX() < overlap.getY()) {
         if (c1.getX() < c2.getX()) {
-          p1.setX(p2.getX() - b1.getWidth());
+          p1.setX(p2.getX() - b1.getWidth() - d.getX());
           v1.setX(min(0.0f, v1.getX()));
         } else {
-          p1.setX(p2.getX() + b2.getWidth());
+          p1.setX(p2.getX() + b2.getWidth() - d.getX());
           v1.setX(max(0.0f, v1.getX()));
         }
       } else {
         if (c1.getY() < c2.getY()) {
-          p1.setY(p2.getY() - b1.getHeight());
+          p1.setY(p2.getY() - b1.getHeight() - d.getY());
           v1.setY(min(0.0f, v1.getY()));
         } else {
-          p1.setY(p2.getY() + b2.getHeight());
+          p1.setY(p2.getY() + b2.getHeight() - d.getY());
           v1.setY(max(0.0f, v1.getY()));
         }
       }

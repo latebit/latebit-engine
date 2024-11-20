@@ -77,11 +77,11 @@ void draw() {
   static int scale = 0;
   class TestSprite : public Sprite {
    public:
-    TestSprite(string label, uint8_t width, uint8_t height, uint8_t duration,
+    TestSprite(string label, int width, int height, int duration,
                vector<Keyframe> frames)
       : Sprite(label, width, height, duration, frames) {}
     [[nodiscard]] auto drawKeyframe(int /*index*/, Vector /*position*/,
-                                    uint8_t s) const -> int override {
+                                    int s) const -> int override {
       scale = s;
       return 0;
     }

@@ -66,6 +66,10 @@ jobs:
           libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev fcitx-libs-dev \
           libpipewire-0.3-dev libwayland-dev libdecor-0-dev -y
 
+    - name: Install System Dependencies (macOS)
+      if: matrix.os == 'macos-14'
+      run: brew install ninja
+
     - name: Install vcpkg
       if: matrix.c_compiler != 'emcc'
       uses: lukka/run-vcpkg@v11
@@ -76,12 +80,11 @@ jobs:
         --toolchain=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake
         -B build
         -DCMAKE_OSX_ARCHITECTURES=${{ matrix.arch }}
-        -S .
       env:
         CMAKE_BUILD_TYPE: Release
         CC: ${{ matrix.c_compiler }}
         CXX: ${{ matrix.cxx_compiler }}
-        
+    
     - name: Build
       run: |
         cmake --build build -j8

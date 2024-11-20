@@ -210,6 +210,20 @@ void overlapResponse() {
     reset(subject);
   });
 
+  test("when subject's local box is displaced compared to the worlds box",
+       [&]() {
+         subject->setPosition(Vector(0, 0));
+         subject->setVelocity(Vector(1, 1));
+         subject->setBox({{1, 1}, 1, 1});
+         hard->setPosition(Vector(2, 2));
+         hard->setVelocity(Vector(0, 0));
+         hard->setBox({1, 1});
+         physics.update();
+         assertEq("pushes HARD next to HARD", subject->getWorldBox().getCorner(), {2, 2});
+         reset(subject);
+         reset(hard);
+       });
+
   WM.shutDown();
 }
 

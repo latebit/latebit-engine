@@ -80,7 +80,6 @@ auto Object::getBox() const -> Box { return this->boundingBox; }
 
 auto Object::getWorldBox() const -> Box { return getWorldBox(this->position); }
 auto Object::getWorldBox(Vector center) const -> Box {
-  auto boundingBox = this->boundingBox;
   auto corner = boundingBox.getCorner() + center;
   return {corner, boundingBox.getWidth(), boundingBox.getHeight()};
 }

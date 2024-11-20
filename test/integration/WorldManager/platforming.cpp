@@ -15,10 +15,10 @@ class Player : public Object {
   bool stopAtZero = false;
 
   Player() {
-    // setAcceleration({0, 0.1});
+    setAcceleration({0, 0.1});
     subscribe(INPUT_EVENT);
     subscribe(STEP_EVENT);
-    setBox({ 10, 10 });
+    setBox({{4, 4}, 10, 10});
     setDebug(true);
     setSolidness(lb::Solidness::HARD);
     setType("Player");
@@ -29,7 +29,7 @@ class Player : public Object {
       auto input = static_cast<const EventInput *>(e);
       if (input->getAction() == lb::InputAction::PRESSED)
         return onInputPressed(input->getKey());
-      
+
       if (input->getAction() == lb::InputAction::RELEASED)
         return onInputReleased(input->getKey());
     }
@@ -42,7 +42,7 @@ class Player : public Object {
   }
 
   auto onInputPressed(const InputKey::InputKey key) -> int {
-    switch(key) {
+    switch (key) {
       case InputKey::A:
         if (getVelocity().getY() == 0) {
           setVelocity({getVelocity().getX(), -3});
@@ -77,11 +77,11 @@ class Player : public Object {
         stopAtZero = true;
         return 1;
       default:
-        return 0; 
+        return 0;
     }
   }
 
-  auto onStep(const EventStep*) -> int {
+  auto onStep(const EventStep *) -> int {
     if (stopAtZero) {
       if (equals(getVelocity().getX(), 0)) {
         setAcceleration({0, getAcceleration().getY()});
@@ -105,9 +105,16 @@ auto main() -> int {
   wall->setDebug(true);
   wall->setSolidness(Solidness::HARD);
   wall->setType("Wall");
-  
+
+  auto wall2 = scene->createObject<Object>();
+  wall2->setBox({10, WINDOW_HEIGHT - 30});
+  wall2->setPosition({WINDOW_WIDTH-10, 0});
+  wall2->setDebug(true);
+  wall2->setSolidness(Solidness::HARD);
+  wall2->setType("Wall");
+
   auto floor = scene->createObject<Object>();
-  floor->setBox({WINDOW_WIDTH*100, 3000});
+  floor->setBox({WINDOW_WIDTH * 100, 3000});
   floor->setPosition({0, WINDOW_HEIGHT - 30});
   floor->setDebug(true);
   floor->setSolidness(Solidness::HARD);
@@ -120,7 +127,6 @@ auto main() -> int {
   floor->setSolidness(Solidness::HARD);
   platform->setType("Platform");
 
-
   auto prop = scene->createObject<Object>();
   prop->setBox({10, 10});
   prop->setPosition({WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2});
@@ -128,7 +134,7 @@ auto main() -> int {
   prop->setSolidness(Solidness::SPECTRAL);
 
   auto player = scene->createObject<Player>();
-  player->setPosition({WINDOW_WIDTH / 2, WINDOW_HEIGHT - 40 });
+  player->setPosition({WINDOW_WIDTH / 2, WINDOW_HEIGHT - 60});
   scene->activate();
 
   GM.run();

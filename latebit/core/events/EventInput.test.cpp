@@ -12,10 +12,11 @@ auto main() -> int {
   });
 
   test("constructor with parameters", []() {
-    EventInput event(InputKey::A, InputAction::PRESSED);
+    EventInput event(InputKey::A, InputAction::PRESSED, true);
     assertEq("sets correct key", event.getKey(), InputKey::A);
     assertEq("sets correct keyboard action", event.getAction(),
              InputAction::PRESSED);
+    assertEq("sets correct repeat", event.getRepeat(), true);
   });
 
   return report();

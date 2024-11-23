@@ -42,23 +42,26 @@ auto InputManager::isValid(string eventType) const -> bool {
 
 void InputManager::getInput() const {
   SDL_Event event;
+  auto lastKey = InputKey::UNDEFINED_KEY;
 
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
       case SDL_KEYDOWN: {
         const auto key = fromSDLKeyCode(event.key.keysym.sym);
-        if (key == InputKey::UNDEFINED_KEY) return;
+        if (key == InputKey::UNDEFINED_KEY) break;
 
-        const auto evt = EventInput(key, InputAction::PRESSED);
+        const auto evt = EventInput(key, InputAction::PRESSED, event.key.repeat != 0 && key == lastKey);
         broadcast(&evt);
+        lastKey = key;
         break;
       }
       case SDL_KEYUP: {
         const auto key = fromSDLKeyCode(event.key.keysym.sym);
-        if (key == InputKey::UNDEFINED_KEY) return;
+        if (key == InputKey::UNDEFINED_KEY) break;
 
-        const auto evt = EventInput(key, InputAction::RELEASED);
+        const auto evt = EventInput(key, InputAction::RELEASED, event.key.repeat != 0 && key == lastKey);
         broadcast(&evt);
+        lastKey = key;
         break;
       }
       case SDL_QUIT:

@@ -134,9 +134,6 @@ auto Dialog::setPosition(Vector position) -> void {
   // when it's not part of the current view
   Object::setPosition(position);
   this->rectangle->setPosition(position);
-  // We need to make sure the object is moved as well, else we skip drawing it
-  // when it's not part of the current view
-  Object::setPosition(position);
 }
 
 }  // namespace lbui

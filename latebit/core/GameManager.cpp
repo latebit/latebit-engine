@@ -47,7 +47,7 @@ auto GameManager::startUp() -> int {
   }
 
   this->setRandomSeed();
-  this->setFrameTime(1000 / Configuration::getMaxFrameRate());
+  this->setFrameTime(1000000 / Configuration::getMaxFrameRate());
 
   // By default boundary equates view and it's the whole window
   Box boundary(Vector(0, 0), WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -111,7 +111,7 @@ void GameManager::run() {
     DM.swapBuffers();
 
     loopTime = clock->delta();
-    sleep(frameTime - loopTime);
+    sleep(this->frameTime - loopTime);
   }
 }
 

@@ -3,6 +3,7 @@
 #include "../../test/lib/test.h"
 #include "latebit/core/graphics/DisplayManager.h"
 #include "latebit/core/world/WorldManager.h"
+#include "latebit/core/configuration/Configuration.h"
 
 using namespace lb;
 
@@ -45,6 +46,14 @@ auto main() -> int {
     assertEq("game is not paused", GM.isPaused(), false);
 
     GM.shutDown();
+  });
+
+  test("read configuration", []() {
+    Configuration::fromFile(FIXTURES_FOLDER + "/latebit.cfg");
+    GM.startUp();
+    assertEq("max frame rate is 30", GM.getFrameTime(), 33333);
+    GM.shutDown();
+    Configuration::reset();
   });
 
   return report();

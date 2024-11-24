@@ -11,7 +11,7 @@ using namespace std;
 namespace lb {
 
 // duration of a frame in microseconds
-const int FRAME_TIME_DEFAULT = 33333;  // ~30fps
+const long int FRAME_TIME_DEFAULT = 33333;  // ~30fps
 
 class GameManager : public Manager {
  private:
@@ -20,7 +20,7 @@ class GameManager : public Manager {
   // True when game loop is done
   bool gameOver = false;
   // Duration of a frame in microseconds
-  int frameTime = FRAME_TIME_DEFAULT;
+  long int frameTime = FRAME_TIME_DEFAULT;
   // Set to true when the game loop is paused
   bool paused = false;
 

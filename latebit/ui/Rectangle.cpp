@@ -3,12 +3,20 @@
 #include <cstdint>
 
 #include "latebit/core/geometry/Vector.h"
+#include "latebit/core/graphics/Animation.h"
 #include "latebit/core/graphics/Colors.h"
 #include "latebit/core/graphics/DisplayManager.h"
+#include "latebit/core/world/Object.h"
 
 namespace lbui {
 Rectangle::Rectangle(RectangleOptions options) : options(std::move(options)) {
   this->setBox({(float)options.width, (float)options.height});
+  
+  // UI elements do not participate in collisions and animations
+  this->setSolidness(lb::Solidness::SPECTRAL);
+  auto a = this->getAnimation();
+  a.setSlowdownCount(STOP_ANIMATION_SLOWDOWN);
+  this->setAnimation(a);
 }
 
 auto Rectangle::draw() -> int {

@@ -57,8 +57,6 @@ class Dialog : public Object {
 
   auto setActive(bool active) -> int override;
 
-  auto setVisible(bool visible) -> int override;
-
   auto setPosition(Vector position) -> void override;
 };
 

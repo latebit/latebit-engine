@@ -27,12 +27,25 @@ Icon ICON = {
 Dialog::Dialog(Scene* scene, vector<string> pages, std::function<void()> onEnd,
                RectangleOptions options) {
   this->rectangle = scene->createObject<Rectangle>(options);
+  // Rectangle drawing will be entirely handled by this object by issuing
+  // draw() when needed. We set it to invisible and inactive to make Dialog
+  // entirely manage its lifecycle.
+  this->rectangle->setVisible(false);
+  this->rectangle->setActive(false);
+  this->rectangle->setPosition(getPosition());
+
   this->setBox(this->rectangle->getBox());
   this->pages = pages;
   this->onEnd = onEnd;
   this->setActive(false);
   subscribe(INPUT_EVENT);
   subscribe(STEP_EVENT);
+
+  // UI elements do not participate in collisions and animations
+  this->setSolidness(lb::Solidness::SPECTRAL);
+  auto a = this->getAnimation();
+  a.setSlowdownCount(STOP_ANIMATION_SLOWDOWN);
+  this->setAnimation(a);
 }
 
 void Dialog::reset() {
@@ -100,8 +113,10 @@ auto Dialog::draw() -> int {
   const auto caretPosition = rect.getCorner() +
                              Vector{rect.getWidth(), rect.getHeight()} -
                              PADDING - Vector{2, 0};
-  const auto textPosition = WM.getCamera().viewToWorld(rect.getCorner() + PADDING);
+  const auto textPosition =
+    WM.getCamera().viewToWorld(rect.getCorner() + PADDING);
 
+  result += rectangle->draw();
   result += caret.draw(caretPosition + Vector{0, caretDeltaY});
   result += DM.drawString(textPosition, renderedBuffer, TextAlignment::LEFT,
                           Color::BLACK);
@@ -111,24 +126,14 @@ auto Dialog::draw() -> int {
 auto Dialog::setActive(bool active) -> int {
   this->rectangle->setActive(active);
   Object::setActive(active);
-  this->setVisible(active);
-  return 0;
-}
-
-auto Dialog::setVisible(bool visible) -> int {
-  // Note: this is order dependent!
-  // Making the rectangle visible after the object will render the text
-  // underneath the rectangle
-  this->rectangle->setVisible(visible);
-  Object::setVisible(visible);
   return 0;
 }
 
 auto Dialog::setPosition(Vector position) -> void {
-  this->rectangle->setPosition(position);
   // We need to make sure the object is moved as well, else we skip drawing it
   // when it's not part of the current view
   Object::setPosition(position);
+  this->rectangle->setPosition(position);
 }
 
 }  // namespace lbui

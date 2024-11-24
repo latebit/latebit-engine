@@ -4,6 +4,7 @@
 #include "latebit/core/events/EventStep.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/graphics/Colors.h"
+#include "latebit/core/graphics/DisplayManager.h"
 #include "latebit/core/input/InputManager.h"
 #include "latebit/core/world/Object.h"
 #include "latebit/core/world/WorldManager.h"
@@ -88,7 +89,7 @@ auto Dialog::eventHandler(const Event* e) -> int {
       return 1;
     }
 
-    if (event->getStepCount() % 5 == 0) {
+    if (event->getStepCount() % 3 == 0) {
       if (pages.size() == 0) {
         return 0;
       }
@@ -119,7 +120,6 @@ auto Dialog::draw() -> int {
   result += caret.draw(caretPosition + Vector{0, caretDeltaY});
   result += DM.drawString(textPosition, renderedBuffer, TextAlignment::LEFT,
                           Color::BLACK);
-
   return result;
 }
 
@@ -134,6 +134,9 @@ auto Dialog::setPosition(Vector position) -> void {
   // when it's not part of the current view
   Object::setPosition(position);
   this->rectangle->setPosition(position);
+  // We need to make sure the object is moved as well, else we skip drawing it
+  // when it's not part of the current view
+  Object::setPosition(position);
 }
 
 }  // namespace lbui

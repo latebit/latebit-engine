@@ -4,8 +4,10 @@
 #include "latebit/core/events/EventStep.h"
 #include "latebit/core/geometry/Vector.h"
 #include "latebit/core/graphics/Colors.h"
+#include "latebit/core/graphics/DisplayManager.h"
 #include "latebit/core/input/InputManager.h"
 #include "latebit/core/world/Object.h"
+#include "latebit/core/world/WorldManager.h"
 #include "latebit/ui/Rectangle.h"
 #include "latebit/utils/Math.h"
 
@@ -25,6 +27,7 @@ Icon ICON = {
 Dialog::Dialog(Scene* scene, vector<string> pages, std::function<void()> onEnd,
                RectangleOptions options) {
   this->rectangle = scene->createObject<Rectangle>(options);
+  this->setBox(this->rectangle->getBox());
   this->pages = pages;
   this->onEnd = onEnd;
   this->setActive(false);
@@ -73,7 +76,7 @@ auto Dialog::eventHandler(const Event* e) -> int {
       return 1;
     }
 
-    if (event->getStepCount() % 5 == 0) {
+    if (event->getStepCount() % 3 == 0) {
       if (pages.size() == 0) {
         return 0;
       }
@@ -97,12 +100,11 @@ auto Dialog::draw() -> int {
   const auto caretPosition = rect.getCorner() +
                              Vector{rect.getWidth(), rect.getHeight()} -
                              PADDING - Vector{2, 0};
-  const auto textPosition = rect.getCorner() + PADDING;
+  const auto textPosition = WM.getCamera().viewToWorld(rect.getCorner() + PADDING);
 
   result += caret.draw(caretPosition + Vector{0, caretDeltaY});
   result += DM.drawString(textPosition, renderedBuffer, TextAlignment::LEFT,
                           Color::BLACK);
-
   return result;
 }
 
@@ -124,6 +126,9 @@ auto Dialog::setVisible(bool visible) -> int {
 
 auto Dialog::setPosition(Vector position) -> void {
   this->rectangle->setPosition(position);
+  // We need to make sure the object is moved as well, else we skip drawing it
+  // when it's not part of the current view
+  Object::setPosition(position);
 }
 
 }  // namespace lbui

@@ -27,12 +27,17 @@ class GameScene : public Scene {
   GameScene() : Scene() {
     DM.setBackground(Color::ORANGE);
     dialog = createObject<Dialog>(
-      this, vector<string>{"It's dangerous to go alone!", "Take this!"}, []() {
+      this, vector<string>{"It's dangerous to go alone!", "Take this!"},
+      [&]() { 
         Log.info("Dialog ended");
-      }, RectangleOptions{.height = 40, .width = WINDOW_WIDTH - 2,
-                          .fill = Color::YELLOW,
-                          .stroke = {Color::BLACK, Color::YELLOW, Color::BLUE }});
+        dialog->setVisible(false);
+      },
+      RectangleOptions{.height = 40,
+                       .width = WINDOW_WIDTH - 2,
+                       .fill = Color::YELLOW,
+                       .stroke = {Color::BLACK, Color::YELLOW, Color::BLUE}});
     dialog->setPosition({1, WINDOW_HEIGHT - 41});
+    dialog->setVisible(false);
 
     stringstream ss;
     ss << "Press " << (char)InputGlyph::A << " to see dialog";
@@ -40,7 +45,7 @@ class GameScene : public Scene {
       "Instructions", ss.str(),
       TextOptions{.size = TextSize::NORMAL, .color = Color::WHITE});
     setPositionOnScreen(text, ScreenPosition::MIDDLE_CENTER, Vector{0, -10});
-    
+
     subscribe(INPUT_EVENT);
   }
 
@@ -49,6 +54,7 @@ class GameScene : public Scene {
       const auto inputEvent = static_cast<const EventInput*>(event);
       if (inputEvent->getAction() == InputAction::PRESSED &&
           inputEvent->getKey() == InputKey::A) {
+        dialog->setVisible(true);
         dialog->setActive(true);
       }
     }
